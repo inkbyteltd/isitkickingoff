@@ -31,6 +31,8 @@
   .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
   .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
   .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12}
   @media (max-width:640px){
     .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
     .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
@@ -101,7 +103,7 @@
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html" class="active">📰 News</a>
-      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
     </div>
   </nav>
@@ -128,7 +130,36 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v0.43 <span class="stamp">latest</span></div>
+      <div class="release-ver">v0.44 <span class="stamp">latest</span></div>
+      <div class="release-tag">Yellow BMC nav button + share with PNG of the gauge attached · Apr 2026</div>
+    </div>
+    <p class="intro">Two front-of-house improvements to drive home the brand on social. The <b>Buy Me a Coffee</b> button in the top nav is now a vivid yellow pill (BMC's signature <code>#ffdd00</code>) so it catches the eye instead of blending into the other links. And the <b>share buttons</b> now generate a 1200×630 PNG of the gauge in its current state — score, tier, region, branding, with the needle drawn at the actual reading — and attach it to the share so a tweeted snapshot brings the dashboard's visual identity with it.</p>
+    <h3>🟡 Yellow Buy Me a Coffee button in the nav</h3>
+    <ul>
+      <li>The <b>☕ Buy Me a Coffee</b> link in the top nav of all 5 pages (Dashboard, News, Snapshot, Shop, Legal) now uses BMC's brand yellow <code>#ffdd00</code> with dark text and a subtle 1px <code>#e6c700</code> border.</li>
+      <li>Hover state lifts to <code>#ffe833</code> with a soft yellow glow halo via box-shadow.</li>
+      <li>This is consistent with the yellow tip-jar CTA card already on the dashboard, so the BMC visual identity is reinforced without being shouty.</li>
+    </ul>
+    <h3>📸 Share with the gauge PNG attached</h3>
+    <ul>
+      <li>New <code>generateGaugePNGBlob()</code> renders the current reading to a <b>1200×630 PNG canvas</b> on the fly — that's the standard Twitter Card / Open Graph image aspect ratio.</li>
+      <li>The image includes: the threat-tier-coloured gauge dial with the needle pointed at today's score, a centre cap with the score number, a big readable score and tier on the right side, the active region pill, today's date, and "isitkickingoff.com" in brand orange across the bottom strip. Subtle Union Jack corner accents (navy top-left, red bottom-right) tie it to the brand.</li>
+      <li>The needle and tier text colours match the threat tier — green under 25, yellow under 50, orange under 75, red 75+.</li>
+      <li><b>Mobile path</b>: when you tap the X share button on a phone, the dashboard checks <code>navigator.canShare({ files })</code>. If supported (iOS Safari ≥15, Android Chrome ≥75) the native share sheet opens with the PNG already attached — one tap, full visual share. Works for X, WhatsApp, Messages, anywhere the native share sheet routes.</li>
+      <li><b>Desktop path</b>: X's compose endpoint can't accept file attachments via URL, so the dashboard saves the PNG to your Downloads folder, pops a toast that says <i>"📸 Gauge image saved — drag it into the X tweet box"</i>, then opens the X compose window. You drag the file in and tweet.</li>
+      <li>New <b>Save Image</b> button (download icon) added to the share row — works standalone for anyone who just wants the PNG, no platform redirect.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>. Yellow BMC button confirmed on every page (5/5).</li>
+      <li>Test-deploy patches still in place: noindex meta tag (5/5), Shop greyed out (5/5).</li>
+      <li>Sandbox parse check on inline dashboard JS (now 385KB): ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.43</div>
       <div class="release-tag">Buy Me a Coffee profile live — site-wide tip-jar wiring · Apr 2026</div>
     </div>
     <p class="intro">Our Buy Me a Coffee profile is now live at <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">buymeacoffee.com/isitkickingoff</a>. The link has been active in the top nav for a while; this release wires it through everywhere else it earns its keep — a yellow CTA card on the dashboard, a "Buy us a brew" line in every page's footer, and three BMC cross-promo entries dropped into the rotating house banners (clickable, ~10% of the rotation).</p>

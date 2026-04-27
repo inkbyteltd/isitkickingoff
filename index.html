@@ -132,6 +132,9 @@
   }
   .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
   .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  /* Yellow Buy Me A Coffee CTA in the nav (BMC brand colour) */
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700;box-shadow:0 0 0 0 rgba(255,221,0,0)}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12;box-shadow:0 0 0 3px rgba(255,221,0,0.18)}
   /* Mobile burger menu */
   @media (max-width:640px){
     .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
@@ -722,7 +725,7 @@
       <a href="./" class="active">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📰 News</a>
-      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
     </div>
   </nav>
@@ -825,6 +828,9 @@
         </button>
         <button class="share-btn" data-share="copy" aria-label="Copy link" title="Copy link">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </button>
+        <button class="share-btn" data-share="save-image" aria-label="Save gauge image as PNG" title="Save gauge image (PNG)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5h2v5h10v-5h2zm-7 1l4-4-1.4-1.4L13 10.2V3h-2v7.2L8.4 8.6 7 10l4 4z"/></svg>
         </button>
       </div>
     </div>
@@ -8061,7 +8067,200 @@ function flashCopied(btn){
   setTimeout(()=> btn.classList.remove('flash'), 1400);
 }
 
-function openShare(platform, btn){
+/* =========================================================
+   📸 GAUGE-STATE PNG GENERATOR
+   ---------------------------------------------------------
+   Renders the current gauge reading to a 1200×630 PNG (Twitter
+   summary_large_image / OG card aspect ratio). The PNG can be
+   shared as a file attachment via the Web Share API (mobile) or
+   downloaded for the user to drag into a tweet (desktop).
+   ========================================================= */
+function _tierColor(score){
+  // Match the gauge zones used elsewhere in the dashboard
+  if (score < 25) return '#3ecf8e';   // green
+  if (score < 50) return '#f4c025';   // yellow
+  if (score < 75) return '#ff8a1f';   // orange
+  return '#ef4b4b';                    // red
+}
+
+async function generateGaugePNGBlob(){
+  const { score: scoreStr, tier: tierStr, region: regionStr } = currentShareState();
+  const score = Math.max(0, Math.min(100, parseInt(scoreStr, 10) || 0));
+  const tier  = (tierStr || 'BREW').replace(/[—\-]+\s*$/,'').trim();
+  const region = regionStr || 'United Kingdom';
+
+  const W = 1200, H = 630;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // ---- Background — navy radial ----
+  const bg = ctx.createRadialGradient(W*0.7, H*0.3, 0, W*0.5, H*0.5, W*0.7);
+  bg.addColorStop(0,    '#1a2030');
+  bg.addColorStop(0.55, '#0d1117');
+  bg.addColorStop(1,    '#07090c');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle Union Jack corner accents
+  ctx.fillStyle = 'rgba(1, 33, 105, 0.18)';
+  ctx.beginPath(); ctx.arc(0, 0, 360, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(196, 16, 46, 0.10)';
+  ctx.beginPath(); ctx.arc(W, H, 320, 0, Math.PI*2); ctx.fill();
+
+  // ---- Gauge dial — left half, centred at (380, 380) ----
+  const cx = 380, cy = 380, R = 230;
+  // Arc colour zones (180° span — 9 o'clock to 3 o'clock over the top)
+  const zones = [
+    [Math.PI,            Math.PI * 5/4,      '#3ecf8e'],
+    [Math.PI * 5/4,      Math.PI * 3/2,      '#f4c025'],
+    [Math.PI * 3/2,      Math.PI * 7/4,      '#ff8a1f'],
+    [Math.PI * 7/4,      Math.PI * 2,        '#ef4b4b'],
+  ];
+  ctx.lineWidth = 44;
+  ctx.lineCap = 'butt';
+  for (const [a1, a2, col] of zones){
+    ctx.strokeStyle = col;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, a1, a2);
+    ctx.stroke();
+  }
+
+  // Tick marks
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.lineWidth = 3;
+  for (let i = 0; i < 11; i++){
+    const ang = Math.PI + i * (Math.PI / 10);
+    const x1 = cx + (R - 32) * Math.cos(ang);
+    const y1 = cy + (R - 32) * Math.sin(ang);
+    const x2 = cx + (R + 4)  * Math.cos(ang);
+    const y2 = cy + (R + 4)  * Math.sin(ang);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+
+  // Needle pointing at current score
+  const needleAngle = Math.PI + (score / 100) * Math.PI;
+  const needleLen = R - 8;
+  const tipX = cx + needleLen * Math.cos(needleAngle);
+  const tipY = cy + needleLen * Math.sin(needleAngle);
+  const perp = needleAngle + Math.PI / 2;
+  const halfW = 9;
+  ctx.fillStyle = _tierColor(score);
+  ctx.strokeStyle = '#b41f1f';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx + halfW * Math.cos(perp), cy + halfW * Math.sin(perp));
+  ctx.lineTo(cx - halfW * Math.cos(perp), cy - halfW * Math.sin(perp));
+  ctx.lineTo(tipX, tipY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Centre cap
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 36, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = '#0d1117';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Score number inside the gauge cap
+  ctx.fillStyle = _tierColor(score);
+  ctx.font = 'bold 36px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(score), cx, cy + 2);
+
+  // ---- Right-side text block ----
+  const textX = 720;
+
+  // Tagline
+  ctx.fillStyle = '#9aa6b8';
+  ctx.font = '600 18px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText('UK AGGRAVATION THREAT INDEX', textX, 110);
+
+  // Big score number
+  ctx.fillStyle = '#e8edf4';
+  ctx.font = 'bold 200px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.fillText(String(score), textX - 8, 145);
+
+  // /100
+  const scoreWidth = ctx.measureText(String(score)).width;
+  ctx.fillStyle = '#5f6b7d';
+  ctx.font = 'bold 48px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.fillText('/100', textX - 8 + scoreWidth + 12, 280);
+
+  // Tier label
+  ctx.fillStyle = _tierColor(score);
+  ctx.font = 'bold 56px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  // Truncate tier if too long
+  let tierShown = tier;
+  if (ctx.measureText(tier).width > 440){
+    while (tierShown.length > 4 && ctx.measureText(tierShown + '…').width > 440) tierShown = tierShown.slice(0, -1);
+    tierShown += '…';
+  }
+  ctx.fillText(tierShown, textX - 8, 370);
+
+  // Region pill
+  ctx.fillStyle = '#9aa6b8';
+  ctx.font = '600 22px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.fillText('▸  ' + region.toUpperCase(), textX - 8, 450);
+
+  // ---- Footer brand strip ----
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fillRect(0, H - 80, W, 1);
+
+  ctx.fillStyle = '#e8edf4';
+  ctx.font = 'bold 24px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.fillText('IS IT KICKING OFF?', 60, H - 56);
+
+  ctx.fillStyle = '#ff8a1f';
+  ctx.font = 'bold 20px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('isitkickingoff.com', W - 60, H - 52);
+
+  // Date
+  ctx.fillStyle = '#5f6b7d';
+  ctx.font = '600 16px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+  ctx.textAlign = 'left';
+  const today = new Date().toISOString().slice(0, 10);
+  ctx.fillText(today, 60, H - 28);
+
+  // Convert to PNG blob
+  return new Promise((resolve) => {
+    canvas.toBlob(blob => resolve(blob), 'image/png');
+  });
+}
+
+/* Trigger a download of a Blob as a named file. */
+function _downloadBlobAsPng(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+}
+
+/* Show a small toast at the bottom of the screen. */
+function _showToast(message, ms){
+  let toast = document.getElementById('iiko-toast');
+  if (!toast){
+    toast = document.createElement('div');
+    toast.id = 'iiko-toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-3);color:var(--ink);border:1px solid var(--accent);padding:12px 22px;border-radius:8px;font-family:var(--mono);font-size:13px;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.35);transition:opacity .25s;opacity:0;pointer-events:none;max-width:90vw;text-align:center';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.opacity = '1';
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, ms || 3500);
+}
+
+async function openShare(platform, btn){
   const text = buildShareText();
   const url  = buildPermalinkUrl();
   const enc = encodeURIComponent;
@@ -8086,6 +8285,51 @@ function openShare(platform, btn){
     }
     return;
   }
+
+  // Save Image button — pure download, no platform redirect
+  if (platform === 'save-image'){
+    try {
+      const blob = await generateGaugePNGBlob();
+      if (blob){
+        _downloadBlobAsPng(blob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
+        _showToast('📸 Gauge image saved to your Downloads', 3500);
+      }
+    } catch(e){ console.warn('PNG generation failed:', e); }
+    return;
+  }
+
+  // For social platforms — generate the gauge PNG and try to attach.
+  // On mobile (Web Share API supports files): single share sheet with the image attached.
+  // On desktop: download the PNG + open the platform's compose URL with text+link.
+  let pngBlob = null;
+  try { pngBlob = await generateGaugePNGBlob(); } catch(_){ /* fall through to URL-only share */ }
+
+  // Mobile / supported browsers — Web Share Level 2 with files
+  if (pngBlob && platform === 'twitter' && navigator.share && navigator.canShare){
+    const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
+    if (navigator.canShare({ files: [file] })){
+      try {
+        await navigator.share({
+          title: 'Is It Kicking Off?',
+          text:  `${text}\n${url}`,
+          files: [file],
+        });
+        return; // success — share sheet handled it
+      } catch(e){
+        // User cancelled or share failed — fall through to download path
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+  }
+
+  // Desktop / fallback path — download the image first so the user can attach
+  // it to the tweet, then open the X compose window.  X's compose endpoint
+  // doesn't accept file attachments via URL, so manual attach is the only way.
+  if (pngBlob && platform === 'twitter'){
+    _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
+    _showToast('📸 Gauge image saved — drag it into the X tweet box', 5000);
+  }
+
   const u = targets[platform]; if (!u) return;
   window.open(u, '_blank', 'noopener,noreferrer,width=600,height=520');
 }

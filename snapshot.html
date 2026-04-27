@@ -37,6 +37,8 @@
   .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
   .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
   .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12}
   @media (max-width:640px){
     .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
     .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
@@ -109,7 +111,7 @@
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html" class="active">📸 Snapshot</a>
       <a href="./news.html">📰 News</a>
-      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
     </div>
   </nav>
