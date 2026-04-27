@@ -90,6 +90,8 @@
 
   footer.foot{margin-top:24px;color:var(--ink-faint);font-family:var(--mono);font-size:10px;text-align:center;letter-spacing:.08em;text-transform:uppercase;line-height:1.6}
 </style>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1cd37e47538c4c47b71a4f5c37527b60"}'></script>
 </head>
 <body>
 <div class="wrap">
@@ -103,8 +105,8 @@
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html" class="active">📰 News</a>
-      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
     </div>
   </nav>
 
@@ -130,7 +132,40 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v0.44 <span class="stamp">latest</span></div>
+      <div class="release-ver">v0.45 <span class="stamp">latest</span></div>
+      <div class="release-tag">Cloudflare Web Analytics live · nav reorder · privacy notice updated · Apr 2026</div>
+    </div>
+    <p class="intro">We can now actually see when people visit. <b>Cloudflare Web Analytics</b> is wired into all 5 pages with a privacy-respecting beacon — no cookies, no fingerprinting, no GDPR popup. The <b>top nav</b> has been reshuffled so <b>☕ Buy Me a Coffee</b> sits in the rightmost slot (after Shop) — best position for "you've used the dashboard, now tip the kettle on". The <b>privacy notice</b> in legal.html has been updated to reflect that analytics is active.</p>
+    <h3>📊 Cloudflare Web Analytics</h3>
+    <ul>
+      <li>Beacon snippet (token <code>1cd37e47538c4c47b71a4f5c37527b60</code>) added before <code>&lt;/head&gt;</code> on Index, News, Snapshot, Shop and Legal — all 5 pages tracked.</li>
+      <li>What it captures: unique visitors, page views, top pages, top referrers, country, browser/OS. Aggregated only — no individual visitor identifiable.</li>
+      <li>What it does NOT do: set cookies, store IP addresses, fingerprint visitors, require a GDPR cookie banner. Score one for "no tracking" actually meaning no tracking.</li>
+      <li>The beacon is loaded with <code>defer</code> so it doesn't block page rendering. The CSP <code>script-src</code> already whitelists <code>static.cloudflareinsights.com</code> from v0.41, so the snippet works without further security tweaks.</li>
+      <li>Stats land in the Cloudflare dashboard at <b>Analytics &amp; Logs → Web Analytics</b> within ~30 minutes of the first visit. Useful for "what time of day do people actually look at this?", "what's the top-shared page?", "did the X post drive any traffic?".</li>
+      <li>When the public domain (<code>isitkickingoff.com</code>) goes live, you'll add it as a second hostname in the same Cloudflare Web Analytics property — same dashboard, both URLs in one view.</li>
+    </ul>
+    <h3>↔️ Nav reorder — BMC last</h3>
+    <ul>
+      <li>Top nav order is now: <b>📊 Dashboard · 📸 Snapshot · 📰 News · 🛍️ Shop · ☕ Buy Me a Coffee</b> across all 5 pages.</li>
+      <li>The yellow BMC button now lives in the rightmost slot — strongest call-to-action position, last thing the eye lands on, after the visitor has explored everything else.</li>
+    </ul>
+    <h3>📜 Privacy notice — analytics now declared</h3>
+    <ul>
+      <li>The Analytics section of the Privacy Notice in <code>legal.html</code> updated from "if we add analytics in future…" to a clear declaration that <b>Cloudflare Web Analytics is active</b>, with detail of what it captures, what it doesn't, and a link to Cloudflare's docs.</li>
+      <li>The Cookies &amp; Storage section also updated to confirm Cloudflare Web Analytics is running and does not set cookies.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>.</li>
+      <li>Test-deploy patches re-applied: noindex (5/5), Shop greyed out (5/5), CF Analytics token present (5/5), yellow BMC class on nav link (5/5).</li>
+      <li>Sandbox parse check: ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.44</div>
       <div class="release-tag">Yellow BMC nav button + share with PNG of the gauge attached · Apr 2026</div>
     </div>
     <p class="intro">Two front-of-house improvements to drive home the brand on social. The <b>Buy Me a Coffee</b> button in the top nav is now a vivid yellow pill (BMC's signature <code>#ffdd00</code>) so it catches the eye instead of blending into the other links. And the <b>share buttons</b> now generate a 1200×630 PNG of the gauge in its current state — score, tier, region, branding, with the needle drawn at the actual reading — and attach it to the share so a tweeted snapshot brings the dashboard's visual identity with it.</p>
