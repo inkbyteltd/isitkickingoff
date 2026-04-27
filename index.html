@@ -512,26 +512,51 @@
   .heatmap-scale{display:flex;align-items:center;gap:8px;margin-top:6px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
   .heatmap-scale .gradbar{flex:1;height:8px;border-radius:999px;background:linear-gradient(90deg,#3ecf8e,#f4c025 45%,#ff8a1f 70%,#ef4b4b)}
 
-  /* Ad slot */
+  /* Ad slot — currently rendering our own rotating UK-saying banners.
+     When a real AdSense / Cloudflare Ads unit is dropped in, the .iiko-banner
+     contents below can simply be replaced with the <ins class="adsbygoogle">
+     block; the surrounding .ad-slot box is reused so the layout doesn't shift. */
   .ad-slot{
-    margin:22px 0 6px;border:1px dashed var(--line-2);border-radius:14px;
+    margin:22px 0 6px;border:1px solid var(--line);border-radius:14px;
     background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:120px;padding:14px;position:relative;overflow:hidden;
+    min-height:130px;padding:14px;position:relative;overflow:hidden;
   }
   .ad-slot::before{
-    content:"Advertisement";position:absolute;top:8px;left:14px;
+    content:"Have a brew";position:absolute;top:8px;left:14px;
     font-family:var(--mono);font-size:9px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--ink-faint);
   }
-  .ad-slot .ad-placeholder{
-    color:var(--ink-faint);font-family:var(--mono);font-size:12px;
-    letter-spacing:.08em;text-align:center;line-height:1.6;
+  .ad-slot::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    /* Subtle Union Jack hint via radial gradient corners */
+    background:
+      radial-gradient(220px 110px at 100% 100%, rgba(196,16,46,.10), transparent 70%),
+      radial-gradient(220px 110px at 0% 0%, rgba(1,33,105,.12), transparent 70%);
   }
-  .ad-slot .ad-placeholder b{color:var(--ink-dim)}
-  /* Actual AdSense ins elements render at native size; center them. */
+  /* The rotating banner content */
+  .iiko-banner{
+    position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+    text-align:center;padding:10px 18px;width:100%;max-width:780px;
+  }
+  .iiko-banner .quote{
+    font-family:var(--mono);font-weight:800;font-size:clamp(15px,2.4vw,22px);
+    letter-spacing:.06em;color:var(--ink);line-height:1.35;
+    text-transform:uppercase;
+  }
+  .iiko-banner .quote .accent{color:var(--accent)}
+  .iiko-banner .attrib{
+    margin-top:8px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .iiko-banner .attrib a{color:var(--ink-dim);text-decoration:none}
+  .iiko-banner .attrib a:hover{color:var(--accent)}
+  .iiko-banner .dots{display:flex;gap:5px;margin-top:10px}
+  .iiko-banner .dots span{width:5px;height:5px;border-radius:50%;background:var(--line-2);transition:background .2s}
+  .iiko-banner .dots span.on{background:var(--accent)}
+  /* When real AdSense ins blocks land here, centre them. */
   .ad-slot .adsbygoogle{display:block;margin:0 auto}
-  @media (min-width:768px){ .ad-slot{min-height:100px} }
+  @media (min-width:768px){ .ad-slot{min-height:120px} }
 
   /* History chart */
   .hist{
@@ -823,10 +848,11 @@
 
     (Remember to also uncomment the <script> loader in <head>.)
   -->
-  <aside class="ad-slot" id="ad-slot" role="complementary" aria-label="Advertisement">
-    <div class="ad-placeholder">
-      <b>Ad slot · 728×90 / responsive</b><br/>
-      Drop your AdSense <code style="font-family:var(--mono);color:var(--ink-dim)">&lt;ins class="adsbygoogle"&gt;</code> here before launch
+  <aside class="ad-slot" id="ad-slot" role="complementary" aria-label="House banner">
+    <div class="iiko-banner" data-iiko-banner="1">
+      <div class="quote">Loading…</div>
+      <div class="attrib"></div>
+      <div class="dots"></div>
     </div>
   </aside>
 
@@ -835,10 +861,11 @@
   <section class="grid" id="signals"></section>
 
   <!-- AD SLOT 2 (above the trend chart) -->
-  <aside class="ad-slot" id="ad-slot-2" role="complementary" aria-label="Advertisement">
-    <div class="ad-placeholder">
-      <b>Ad slot · 728×90 / responsive</b><br/>
-      Drop your AdSense <code style="font-family:var(--mono);color:var(--ink-dim)">&lt;ins class="adsbygoogle"&gt;</code> here before launch
+  <aside class="ad-slot" id="ad-slot-2" role="complementary" aria-label="House banner">
+    <div class="iiko-banner" data-iiko-banner="2">
+      <div class="quote">Loading…</div>
+      <div class="attrib"></div>
+      <div class="dots"></div>
     </div>
   </aside>
 
@@ -922,7 +949,7 @@
         <tr><td>📰 News tension</td><td>7%</td><td>RSS: BBC UK, BBC Politics, Guardian UK, Sky News UK, Daily Mail, Mirror — via rss2json/allorigins/corsproxy. Keyword-match on immigration, political, crime, strike, protest themes. Rotating evergreen backdrop when all feeds fail. <b>v0.30:</b> RSS items now carry <code>{title, link, text}</code> shape, and the card surfaces up to 4 inline <b>clickable headlines</b> tagged with the matched theme (🏛 political, 🛂 immigration, 🔪 crime, ✊ industrial, 🪧 protest), each linking to the source article.</td></tr>
         <tr><td>⚽ Firm Factor</td><td>9%</td><td>Live fixtures via TheSportsDB. Now using <code>eventsnextleague.php</code> + <code>eventslastleague.php</code> per <b>stable league ID</b> (4328 EPL, 4329 Championship, 4396 EFL L1, 4397 EFL L2, 4330 Scottish Premiership, 4480 UCL, 4481 UEL, 5071 UECL) — far more reliable than dated <code>eventsday.php</code> queries. Results filtered to a ±36/60-hour window around now, deduped on idEvent, sorted earliest-first. Each fixture is cross-matched against (a) the UK firm-reputation list (Millwall Bushwhackers, West Ham ICF, Leeds Service Crew, Cardiff Soul Crew, Birmingham Zulus, Chelsea Headhunters, etc.), (b) the <b>European-ultras list</b> for travelling fans (Galatasaray UltrAslan, Beşiktaş Çarşı, Fenerbahçe GFB, Marseille South Winners, Roma Curva Sud, Lazio Irriducibili, Feyenoord Vak S, Frankfurt Ultras, Red Star Delije, Partizan Grobari, Legia Legionisci, etc.), and (c) classic flashpoint derbies (Old Firm, Millwall v West Ham, Leeds v Man Utd, Tyne-Wear, Welsh, Steel City…). Score amplifiers: notorious European club <b>visiting</b> a UK ground (+0.20), ultra-derby (+0.25 to +0.45), police-mandated weekend early KO 12:30/13:30 (+0.08), UK firm-team having LOST (+0.08). Card surfaces up to 2 flashpoint fixtures with kickoff time and tag (🥊 derby / ✈ travelling / 🌍 foreign / ⚽ UK firm). When fixtures exist but no firm flashpoint matches, the headline shows the actual fixture rather than a rotating fallback line.</td></tr>
         <tr><td>🌤️ Weather (regional)</td><td>9%</td><td>Open-Meteo per-region lat/lon, UK climate avg fallback</td></tr>
-        <tr><td>🍺 Wetherspoons Live</td><td>9%</td><td>Modelled UK-wide Spoons capacity (hour-of-day curve calibrated to real Spoons rhythms · day-of-week, weather, payday and Curry/Steak Club modifiers) plus 3 rotating featured branches from a 15-strong list</td></tr>
+        <tr><td>🍺 Wetherspoons Live</td><td>9%</td><td>Modelled UK-wide Spoons capacity (hour-of-day curve calibrated to real Spoons rhythms · day-of-week, weather, payday and Curry/Steak Club modifiers) plus 5 rotating featured branches from a 20-strong list</td></tr>
         <tr><td>🍻 Licensing &amp; Last Orders</td><td>4%</td><td>Modelled tracker of UK on-licensed venue activity (~48,600 pubs + clubs nationally per Statista 2024) and how close we are to "<b>kick-out time</b>". Hourly venues-open-fraction curve tuned to UK licensing rules — pubs typically 11pm weekday / midnight weekend close; clubs 2-3am. Card surfaces venues-open count and a <b>countdown to kick-out</b> ("KICK-OUT in 23m") when within 90 mins of close. Score peaks 22:00–02:00 (last orders + chucking-out chaos), with Friday-payday + weekend amplifiers.</td></tr>
         <tr><td>🍟 Chippy Run</td><td>2%</td><td>Modelled UK fish-and-chip + takeaway demand. Grounded in published numbers (~10,500 chip shops nationally, ~25% of UK adults order a takeaway on Friday night). Hour-of-day curve with the iconic <b>Friday 18:00–20:00 peak</b> + Sunday-evening leftover spike (nobody's cooking) + post-pub kebab/chip run weekends 22:00+. Rotating quip from a 14-line pool ("salt-and-vinegar economy in full swing", "battered sausage sales climbing", "wally jar consulted").</td></tr>
         <tr><td>💨 Vape Flavours UK</td><td>2%</td><td>Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 flavours from disposable retail-share data (Vapouround / ECigIntelligence 2024): Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol, Cherry Cola, Pink Lemonade, Mr Blue, Cotton Candy Ice, Apple Peach. Each tagged with the dominant brand (Elf Bar, Lost Mary, Geek Bar Pulse, IVG, SKE Crystal, Hayati Pro Max). Daily-rotating ranking with normalised market-share %. Hour-of-day activity curve peaks 19:00-24:00 (post-work + post-pub). Card shows the #1 flavour as the headline, top 5 as inline rows.</td></tr>
@@ -993,10 +1020,21 @@
     <p style="color:var(--ink-faint);font-size:12px;margin-top:14px">
       Disclaimer: a bit of fun, not a forecast. Be kind, drink water, share a chippy tea.
     </p>
+    <div style="margin-top:18px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+      <div style="font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-dim);line-height:1.5;flex:1 1 260px">
+        <b style="color:var(--ink)">Free forever. No ads. No tracking.</b><br/>
+        Built solo, hosted on a shoestring, run on caffeine. If the gauge made you laugh, you can chuck a brew in the tip jar.
+      </div>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer"
+         style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#ffdd00;color:#0a0d12;font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:999px;white-space:nowrap;transition:transform .15s,filter .15s"
+         onmouseover="this.style.transform='translateY(-1px)';this.style.filter='brightness(1.05)'" onmouseout="this.style.transform='';this.style.filter=''">
+        ☕ Buy us a brew
+      </a>
+    </div>
   </section>
 
   <footer class="small">
-    isitkickingoff · build v1 · © <span id="yr">2026</span><br/>
+    isitkickingoff · build v1 · © <span id="yr">2026</span> · <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">☕ Buy us a brew</a><br/>
     <span style="display:inline-block;margin-top:6px;color:var(--ink-faint)">
       <a href="./news.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">News</a> ·
       <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Privacy</a> ·
@@ -2261,6 +2299,11 @@ const WETHERSPOONS_BRANCHES = [
   { name:'The Tilly Shilling',           loc:'Farnborough',       note:'aviation-themed décor' },
   { name:'The Lord Wilson',              loc:'Halifax',           note:'curry club hotspot' },
   { name:'The Last Post',                loc:'Beeston',           note:'Tom Hardy spotted occasionally' },
+  { name:'The Sir Henry Segrave',        loc:'Southport',         note:'Lord Street · seaside Spoons' },
+  { name:'The Beckett\'s Bank',          loc:'Leeds',             note:'former Beckett\'s Bank · grand listed' },
+  { name:'The Mile Castle',              loc:'Newcastle',         note:'Bigg Market · matchday battleground' },
+  { name:'The Bankers Draft',            loc:'Sheffield',         note:'former NatWest · cathedral ceiling' },
+  { name:'The Six Chimneys',             loc:'Wakefield',         note:'Kirkgate · stag-do magnet' },
 ];
 
 function signalBooze(weatherExtras){  // kept name 'booze' for downstream compat
@@ -2310,10 +2353,10 @@ function signalBooze(weatherExtras){  // kept name 'booze' for downstream compat
 
   cap = Math.max(0, Math.min(0.99, cap));
 
-  // Three featured branches, rotated by date so it's stable per day
+  // Five featured branches, rotated by date so it's stable per day
   const baseIdx = (d.getDate() * 7 + d.getMonth() * 11) % WETHERSPOONS_BRANCHES.length;
   const featured = [];
-  for (let i = 0; i < 3; i++){
+  for (let i = 0; i < 5; i++){
     const idx = (baseIdx + i * 5) % WETHERSPOONS_BRANCHES.length;
     const b = WETHERSPOONS_BRANCHES[idx];
     // Per-branch capacity drift: ±10% deterministic from hour + branch index
@@ -3569,27 +3612,83 @@ async function fetchLondonProtests(){
   return unique.length ? unique : null;
 }
 
-function signalProtests(liveProtests){
+/* Mine the existing UK news RSS feeds (BBC/Guardian/Sky/Mail/Mirror — already
+   fetched for the News Tension signal) for protest, march, riot, strike, clash
+   and crime-flavour headlines. Civil Unrest is a real-time barometer, so
+   anything that comes in via a UK paper today should show up here too —
+   not just GDELT. Returns up to 8 unique articles in {title,domain,url} shape
+   matching the GDELT result, or null if nothing matches. */
+function _newsItemsToUnrestArticles(rawNewsItems){
+  if (!rawNewsItems || !rawNewsItems.length) return null;
+  // Unrest keywords — protest types AND crime-flavour stories that drive
+  // Civil Unrest score (riots, mass arrests, clashes, public-order violence).
+  const unrestRe = /\b(protest|protests|protesters|protestors|march|marches|marching|demonstration|demonstrations|rally|rallies|picket|pickets|demo|demos|activists|sit-?in|blockade|walkout|strike|strikers|striking|riot|riots|rioting|rioters|unrest|clash|clashes|disorder|disturbance|standoff|stand-?off|public[-\s]?order|skirmish|mass\s+arrests?|violent\s+clash)\b/i;
+  // Drop tangential foreign/celebrity stuff
+  const dropRe = /\b(hollywood|celeb|tv\s+show|football\s+match|premier\s+league)\b/i;
+
+  const out = [];
+  const seen = new Set();
+  for (const it of rawNewsItems){
+    if (typeof it !== 'object' || !it.title) continue;
+    const title = String(it.title).replace(/\s+/g,' ').trim();
+    if (!title || dropRe.test(title)) continue;
+    if (!unrestRe.test(title)) continue;
+    const key = title.toLowerCase().slice(0, 60);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    let domain = '';
+    try { if (it.link) domain = new URL(it.link).hostname.replace(/^www\./,''); } catch(_){}
+    out.push({ title, domain, url: it.link || '#', seenAt: it.pubDate || null });
+    if (out.length >= 8) break;
+  }
+  return out.length ? out : null;
+}
+
+function signalProtests(liveProtests, newsRawItems){
   const base = { key:'protests', title:'Civil Unrest', icon:'🪧', live:false, modelled:true };
   const d = new Date();
   const m = d.getMonth() + 1, dd = d.getDate(), dow = d.getDay();
 
-  // ---- Live GDELT path ----
-  if (liveProtests && liveProtests.length){
-    const top = liveProtests[0];
+  // Try to extract unrest stories from the live UK news RSS we already fetched.
+  // We blend these with GDELT so this card is properly live whenever ANY UK
+  // newsroom is running a protest / strike / clash / riot story today.
+  const newsUnrest = _newsItemsToUnrestArticles(newsRawItems);
+
+  // Merge GDELT articles + news-RSS articles, de-duped by title prefix.
+  let merged = [];
+  if (liveProtests && liveProtests.length) merged = merged.concat(liveProtests);
+  if (newsUnrest && newsUnrest.length)     merged = merged.concat(newsUnrest);
+  if (merged.length){
+    const seen = new Set();
+    merged = merged.filter(a => {
+      const k = (a.title||'').toLowerCase().slice(0,60);
+      if (seen.has(k)) return false; seen.add(k); return true;
+    });
+  }
+
+  // ---- Live path (GDELT and/or UK news RSS) ----
+  if (merged.length){
+    const top = merged[0];
     // Detect headlines that escalate beyond peaceful protest — riots/clashes/violence
-    const violenceRe = /\b(riot|rioting|rioters|clash|clashes|violence|violent|arrests|disorder|disturbance|standoff|stand-off|skirmish)\b/i;
-    const escalated = liveProtests.filter(a => violenceRe.test(a.title));
-    let score = Math.min(0.85, 0.30 + (liveProtests.length * 0.04));
+    const violenceRe = /\b(riot|rioting|rioters|clash|clashes|violence|violent|arrests|disorder|disturbance|standoff|stand-off|skirmish|mass\s+arrests?)\b/i;
+    const escalated = merged.filter(a => violenceRe.test(a.title));
+    let score = Math.min(0.85, 0.30 + (merged.length * 0.04));
     if (escalated.length) score = Math.min(0.95, score + 0.12);
     // Truncate title to keep card tidy
     const trim = s => s.length > 70 ? s.slice(0, 67).trim() + '…' : s;
+    // Source-of-truth tag for transparency
+    const gdeltN = (liveProtests || []).length;
+    const newsN  = (newsUnrest   || []).length;
+    const sourceTag =
+      gdeltN && newsN ? `${gdeltN} GDELT + ${newsN} UK newsroom` :
+      gdeltN          ? `${gdeltN} via GDELT` :
+                        `${newsN} via UK newsrooms`;
     return {
       ...base, live:true, modelled:false,
       valueLabel: trim(top.title),
-      subLabel: `${liveProtests.length} unrest headline${liveProtests.length>1?'s':''} in last 48h${escalated.length?` · ${escalated.length} flagged escalated`:''}`,
+      subLabel: `${merged.length} unrest headline${merged.length>1?'s':''} · ${sourceTag}${escalated.length?` · ${escalated.length} escalated`:''}`,
       score,
-      protestArticles: liveProtests.slice(0, 4),
+      protestArticles: merged.slice(0, 5),
     };
   }
 
@@ -6433,7 +6532,7 @@ function signalsForRegion(regionId, bulk){
   const telly    = safe(()=>signalTelly(bulk.tv), 'telly');
   const checkout = safe(()=>signalCheckout(), 'checkout');
   const petrol   = safe(()=>signalPetrol(bulk.fuel), 'petrol');
-  const protests = safe(()=>signalProtests(bulk.protests), 'protests');
+  const protests = safe(()=>signalProtests(bulk.protests, news?.extras?.rawItems), 'protests');
   const threat   = safe(()=>signalThreat(bulk.threat), 'threat');
   const aande    = safe(()=>signalAandE(weather?.extras, news?.extras?.rawItems, bh, bulk.nhs), 'aande');
   const crime    = safe(()=>signalCrime(bulk.crime, bulk.metPolice), 'crime');
@@ -8105,6 +8204,98 @@ async function fetchHistoryFromSupabase(regionId, days){
       });
     }
   } catch(_){ /* malformed hash, ignore */ }
+})();
+
+/* =========================================================
+   🇬🇧 IIKO House Banners — rotating UK sayings
+   ---------------------------------------------------------
+   While AdSense / Cloudflare Ads is not yet wired, the two
+   .ad-slot containers run our own banners.  Sayings are picked
+   in a deterministic, sequential rotation per slot so the user
+   sees a different one each time the dashboard re-renders.
+   ========================================================= */
+const IIKO_HOUSE_BANNERS = [
+  { quote:'Keep calm and have a brew.',                 attrib:'British inheritance · est. always' },
+  { quote:'Sorry, but excuse me — that\'s not on.',     attrib:'national emergency phrase' },
+  { quote:'You alright? · Yeah, you?',                  attrib:'standard greeting protocol' },
+  { quote:'Mind how you go.',                           attrib:'all-purpose UK farewell' },
+  { quote:'It\'s grim up north. · It\'s grim everywhere now.', attrib:'national consensus, 2026' },
+  { quote:'Right then. Better make a start.',           attrib:'precedes 90 minutes of standing still' },
+  { quote:'Pop the kettle on, eh?',                     attrib:'crisis management, level 1' },
+  { quote:'Could murder a brew.',                       attrib:'level 2' },
+  { quote:'Get that down ya.',                          attrib:'rite of passage' },
+  { quote:'Fancy a chippy tea?',                        attrib:'Friday-night referendum' },
+  { quote:'Bit nippy, that.',                           attrib:'-2°C, snowing horizontally' },
+  { quote:'It\'s spitting.',                            attrib:'monsoon-grade rainfall' },
+  { quote:'Cheers, drive!',                             attrib:'getting off the bus, mandatory' },
+  { quote:'Tut.',                                       attrib:'highest form of objection' },
+  { quote:'I\'ll have what they\'re having.',           attrib:'pub menu, simplified' },
+  { quote:'Same again?',                                attrib:'a question that is not a question' },
+  { quote:'Just the one.',                              attrib:'famous last words' },
+  { quote:'Going for a curry after?',                   attrib:'strategic late-pint planning' },
+  { quote:'Don\'t mind if I do.',                       attrib:'on being offered literally anything' },
+  { quote:'Lovely jubbly.',                             attrib:'Trotters Independent Trading' },
+  { quote:'Bob\'s your uncle.',                         attrib:'instructional manual, page 1' },
+  { quote:'Keep calm and carry on the carry-out.',      attrib:'modernised wartime poster' },
+  { quote:'Mustn\'t grumble.',                          attrib:'while clearly grumbling' },
+  { quote:'Could be worse, I suppose.',                 attrib:'national catchphrase' },
+  { quote:'It\'ll be reet.',                            attrib:'Yorkshire reassurance, 99.7% accurate' },
+  { quote:'No need for that.',                          attrib:'last warning before kicking off' },
+  { quote:'Hold my pint.',                              attrib:'first warning, ignored' },
+  { quote:'Have a word with yourself.',                 attrib:'pub diplomacy' },
+  { quote:'Leave it, mate. He\'s not worth it.',        attrib:'classic mate-de-escalation' },
+  { quote:'Move along now, please.',                    attrib:'PC Dixon, on duty since 1955' },
+  { quote:'Right, who\'s round is it?',                 attrib:'central question of British life' },
+  // House cross-promo — light touch, ~10% of the rotation
+  { quote:'Free forever · ad-free · Buy us a brew.',    attrib:'IIKO · buymeacoffee.com/isitkickingoff', cta:true },
+  { quote:'Like the gauge? Tip the kettle on.',         attrib:'IIKO · buymeacoffee.com/isitkickingoff', cta:true },
+  { quote:'No ads. No tracking. Just brew money.',      attrib:'IIKO · buymeacoffee.com/isitkickingoff', cta:true },
+];
+
+(function _wireHouseBanners(){
+  const banners = document.querySelectorAll('.iiko-banner[data-iiko-banner]');
+  if (!banners.length) return;
+  // Rotate every 7 seconds so visitors who linger see variety, but the first
+  // pick is deterministic from the hour so the page feels stable on load.
+  const N = IIKO_HOUSE_BANNERS.length;
+  const ROT_MS = 7000;
+  const today = new Date();
+  const seedHour = today.getFullYear()*8760 + today.getMonth()*744 + today.getDate()*24 + today.getHours();
+  banners.forEach((banner, slotIdx) => {
+    const dotsEl = banner.querySelector('.dots');
+    const quoteEl = banner.querySelector('.quote');
+    const attribEl = banner.querySelector('.attrib');
+    if (!quoteEl || !attribEl) return;
+    // Render 5 dots indicating position within a 5-step cycle.
+    const dotCount = 5;
+    if (dotsEl){
+      dotsEl.innerHTML = '';
+      for (let i=0; i<dotCount; i++){ const s = document.createElement('span'); dotsEl.appendChild(s); }
+    }
+    let cursor = (seedHour + slotIdx * 7) % N;
+    function paint(){
+      const item = IIKO_HOUSE_BANNERS[cursor % N];
+      // Make the last word of each quote pop in accent colour for visual rhythm
+      const words = item.quote.trim().split(/\s+/);
+      const lastWord = words.pop();
+      const head = words.join(' ');
+      quoteEl.innerHTML = (head ? head + ' ' : '') + '<span class="accent">' + lastWord + '</span>';
+      attribEl.textContent = item.attrib;
+      // House CTA entries are clickable; the rest of the banners are static
+      banner.style.cursor = item.cta ? 'pointer' : '';
+      banner.onclick = item.cta
+        ? () => window.open('https://buymeacoffee.com/isitkickingoff', '_blank', 'noopener,noreferrer')
+        : null;
+      if (dotsEl){
+        const spans = dotsEl.querySelectorAll('span');
+        const phase = cursor % dotCount;
+        spans.forEach((s, i) => s.classList.toggle('on', i === phase));
+      }
+      cursor = (cursor + 1) % N;
+    }
+    paint();
+    setInterval(paint, ROT_MS);
+  });
 })();
 
 /* =========================================================

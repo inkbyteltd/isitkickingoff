@@ -128,7 +128,78 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v0.41 <span class="stamp">latest</span></div>
+      <div class="release-ver">v0.43 <span class="stamp">latest</span></div>
+      <div class="release-tag">Buy Me a Coffee profile live — site-wide tip-jar wiring · Apr 2026</div>
+    </div>
+    <p class="intro">Our Buy Me a Coffee profile is now live at <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">buymeacoffee.com/isitkickingoff</a>. The link has been active in the top nav for a while; this release wires it through everywhere else it earns its keep — a yellow CTA card on the dashboard, a "Buy us a brew" line in every page's footer, and three BMC cross-promo entries dropped into the rotating house banners (clickable, ~10% of the rotation).</p>
+    <h3>☕ Yellow tip-jar CTA on the dashboard</h3>
+    <ul>
+      <li>New panel directly under the methodology disclaimer line. Headline: <b>"Free forever. No ads. No tracking."</b> Body: "Built solo, hosted on a shoestring, run on caffeine. If the gauge made you laugh, you can chuck a brew in the tip jar."</li>
+      <li>Yellow pill button (BMC's signature <code>#ffdd00</code>) reading <b>☕ Buy us a brew</b> — opens the BMC profile in a new tab with <code>rel="noopener noreferrer"</code>.</li>
+      <li>Subtle hover lift (translateY -1px + brightness boost) so it feels clickable without being pushy.</li>
+    </ul>
+    <h3>🥾 Footer "Buy us a brew" link on every page</h3>
+    <ul>
+      <li>Index, News, Snapshot, Shop, Legal — all five pages now carry an orange-accented <b>☕ Buy us a brew</b> link as the first item in the small-print footer row, before Dashboard / Privacy / Terms / Disclaimer / Contact.</li>
+      <li>Index footer also shows the link inline next to the build mark: <i>"isitkickingoff · build v1 · © 2026 · ☕ Buy us a brew"</i>.</li>
+    </ul>
+    <h3>🇬🇧 Cross-promo in the rotating house banners</h3>
+    <ul>
+      <li>Three new sayings added to the <code>IIKO_HOUSE_BANNERS</code> rotation:</li>
+      <li><i>"Free forever · ad-free · Buy us a brew."</i></li>
+      <li><i>"Like the gauge? Tip the kettle on."</i></li>
+      <li><i>"No ads. No tracking. Just brew money."</i></li>
+      <li>Each carries a <code>cta:true</code> flag — when one of these is the active banner, the entire banner becomes clickable (cursor changes, click opens BMC). The other 31 sayings remain static. Net frequency: about 1 in 11 banner displays is a brew CTA.</li>
+      <li>Visually identical to the other banners (same accent-coloured last-word treatment, same dot indicator) — these don't ad-yell at you, they just slip into the rotation.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>.</li>
+      <li>Test-deploy patches re-applied: noindex meta tag (5/5), Shop greyed out (5/5), BMC mentions present (3 in index, 1 each in news/snapshot/shop/legal).</li>
+      <li>Sandbox parse check on inline dashboard JS: ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.42</div>
+      <div class="release-tag">Spoons +2 pubs · Civil Unrest live from UK newsrooms · house banners · Apr 2026</div>
+    </div>
+    <p class="intro">Three asks landed. The Wetherspoons Live module now shows 5 featured pubs (was 3) drawn from a 20-strong list, the Civil Unrest module is now properly live whenever any UK newsroom is running a protest/strike/clash/riot story (not just GDELT), and the two ad-slot placeholders are now running our own rotating UK-saying banners — "Keep calm and have a brew" and 30 friends — until real ad units land. Both the main project index AND the deploy-test bundle have been updated, ready to push to GitHub.</p>
+    <h3>🍺 Wetherspoons Live — 5 featured pubs from a 20-strong list</h3>
+    <ul>
+      <li>Branch list grew from 15 → 20 — added <b>The Sir Henry Segrave</b> (Southport, seaside flagship), <b>The Beckett's Bank</b> (Leeds, listed banking hall), <b>The Mile Castle</b> (Newcastle, Bigg Market matchday), <b>The Bankers Draft</b> (Sheffield, cathedral-ceiling NatWest conversion), and <b>The Six Chimneys</b> (Wakefield, stag-do magnet) for proper north-of-Watford balance.</li>
+      <li>The featured-pubs loop is bumped from 3 → 5, so every day's rotation now surfaces a wider snapshot of the chain. Per-branch capacity drift still applies so each pub reads slightly different from the headline UK number.</li>
+      <li>Methodology row updated: "5 rotating featured branches from a 20-strong list".</li>
+    </ul>
+    <h3>🪧 Civil Unrest — now live from any UK newsroom</h3>
+    <ul>
+      <li>Previously the live path was GDELT-only; if GDELT was rate-limited or blocked the card silently fell back to the modelled rotating pool — even when BBC/Guardian/Sky were obviously running protest headlines.</li>
+      <li>New <code>_newsItemsToUnrestArticles()</code> helper mines the existing UK news RSS items (already fetched for News Tension) for protest/strike/march/rally/picket/riot/clash/unrest/disorder/standoff/violent-clash/mass-arrests headlines.</li>
+      <li><code>signalProtests()</code> now accepts the news rawItems and <b>merges</b> them with GDELT results. De-duped by title prefix. The card flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> whenever <i>either</i> source has unrest stories — and the sub-line tells you which (e.g. "<i>4 GDELT + 3 UK newsroom</i>").</li>
+      <li>Escalation detection (riot / clash / arrests / standoff / mass arrests) still bumps the score. Up to 5 articles surface in the card list, each clickable through to the original publisher.</li>
+      <li>Net effect: Civil Unrest is now live for the same situations a person would actually call "kicking off" — junior doctors picketing, train strikes, climate activists blocking roads, counter-protests, Palestine marches, anything the UK papers are covering today.</li>
+    </ul>
+    <h3>🇬🇧 House banners — "Keep Calm and Have a Brew" rotation</h3>
+    <ul>
+      <li>The two responsive ad placeholders are now running <b>our own rotating UK-saying banners</b> — currently <b>31 sayings</b> covering classics ("Keep calm and have a brew", "Mind how you go", "Cheers, drive!", "Mustn't grumble") and modern Britishisms ("Sorry, but excuse me — that's not on", "Could murder a brew", "It's grim everywhere now").</li>
+      <li>Subtle Union Jack hint in the corners via radial gradients (navy top-left, red bottom-right) so the banner reads as IIKO branding rather than third-party advertising.</li>
+      <li>Each saying carries a tiny attribution line ("national emergency phrase", "Yorkshire reassurance, 99.7% accurate", "first warning, ignored") — a second beat of comedy under the line itself.</li>
+      <li>Last word of every saying is highlighted in the brand orange for visual rhythm.</li>
+      <li><b>Rotation</b>: deterministic per-hour seed picks the first saying for each slot (so the page feels stable on load), then auto-cycles every 7 seconds with a small dot indicator showing the position. Each of the two slots advances independently and is offset by 7 entries so they never show the same line at the same time.</li>
+      <li>When real AdSense / Cloudflare Ads land, the surrounding <code>.ad-slot</code> box is reused — only the inner <code>.iiko-banner</code> div needs to be replaced with the <code>&lt;ins class="adsbygoogle"&gt;</code> block. No layout shift.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Both <code>/Users/hal/Documents/Claude/Projects/Kicking Off/index.html</code> AND <code>/Users/hal/Documents/Claude/Projects/Kicking Off/deploy-test/index.html</code> updated and verified to parse cleanly.</li>
+      <li>Deploy-test version retains its <b>noindex</b> meta tag and <b>Shop greyed-out</b> nav patch for the test deploy environment.</li>
+      <li>Sandbox checks: 8/8 v0.42 feature markers present in both copies.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.41</div>
       <div class="release-tag">Pre-launch sweep — security audit · favicon · permalinks · Supabase · small print · Apr 2026</div>
     </div>
     <p class="intro">The site is being readied for public deployment at <b>isitkickingoff.com</b>. This is the boring-but-essential pre-flight checklist: a security pass over how third-party data flows into the page, a proper Union Jack favicon (so browser tabs and iOS home-screen icons stop showing a beer), a permalink-share feature so a snapshot URL actually carries the score with it, scaffolding for an optional Supabase history backend, and the small-print legal pages (Privacy / Terms / Disclaimer / Cookies / Contact). No new modules — this is the "safe to send to strangers" release.</p>
@@ -1130,6 +1201,7 @@
     Build logs are written manually as features land.<br/>
     Spotted a missing change? <a href="./index.html" style="color:var(--accent)">Open the dashboard</a>.<br/>
     <span style="display:inline-block;margin-top:8px">
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;margin:0 5px">☕ Buy us a brew</a> ·
       <a href="./index.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Dashboard</a> ·
       <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Privacy</a> ·
       <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Terms</a> ·
