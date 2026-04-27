@@ -1,0 +1,4 @@
+# TEST DEPLOY — block all crawlers while we shake down hosting.
+# Replace this entire file with the production robots.txt before launch.
+User-agent: *
+Disallow: /

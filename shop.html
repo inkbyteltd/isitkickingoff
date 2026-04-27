@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shop · Is It Kicking Off?</title>
+<meta name="description" content="Threat-gauge merch for the discerning Brit. T-shirts, prepper kits, survival rations, kettle-themed mugs, McFlurry memorial hoodies." />
+<meta name="theme-color" content="#07090c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛍️%3C/text%3E%3C/svg%3E" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="IIKO Shop" />
+<style>
+  :root {
+    --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
+    --line:#232c3a; --line-2:#2e3a4d;
+    --ink:#e8edf4; --ink-dim:#9aa6b8; --ink-faint:#5f6b7d;
+    --green:#3ecf8e; --yellow:#f4c025; --amber:#ff8a1f; --red:#ef4b4b; --deep:#b41f1f;
+    --accent:#ff8a1f;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(1200px 600px at 80% -10%,rgba(255,138,31,.08),transparent 60%),var(--bg-0);min-height:100vh}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 20px 60px}
+
+  .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
+  .top-nav .nav-links{display:contents}
+  .top-nav .nav-burger{display:none}
+  .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
+  .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
+  .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  @media (max-width:640px){
+    .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
+    .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .top-nav .nav-burger .nav-burger-icon{font-size:20px;color:var(--accent);transition:transform .2s ease}
+    .top-nav.open .nav-burger .nav-burger-icon{transform:rotate(90deg)}
+    .top-nav .nav-links{display:none;flex-direction:column;width:100%;gap:4px;padding:4px 4px 6px}
+    .top-nav.open .nav-links{display:flex}
+    .top-nav a{padding:11px 16px;border-radius:8px;text-align:center;border:1px solid var(--line)}
+    .top-nav a.active{border-color:var(--accent)}
+  }
+
+  .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}
+  .mast h1{font-family:var(--mono);font-weight:800;letter-spacing:-.02em;font-size:clamp(26px,4.5vw,40px);margin:0;line-height:1}
+  .mast h1 .kick{color:var(--accent)}
+  .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+
+  h2.section{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:28px 0 14px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .product{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:14px;
+    display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s;
+  }
+  .product:hover{border-color:var(--line-2);transform:translateY(-2px)}
+  .product .preview{
+    aspect-ratio:1/1;background:var(--bg-2);border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;position:relative;border:1px solid var(--line);
+  }
+  .product .preview svg{width:80%;height:80%;display:block}
+  .product .preview .emoji{font-size:64px;line-height:1}
+  .product h3{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:0;line-height:1.3}
+  .product .desc{color:var(--ink-dim);font-size:13px;line-height:1.45;margin:0;min-height:42px}
+  .product .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px}
+  .product .price{font-family:var(--mono);font-size:14px;font-weight:800;color:var(--accent)}
+  .product .cta{
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:6px 12px;border-radius:999px;background:var(--bg-3);border:1px solid var(--line-2);
+    color:var(--ink-dim);cursor:pointer;transition:all .15s;
+  }
+  .product .cta:hover{background:var(--accent);color:#0a0d12;border-color:var(--accent)}
+  .product .cta.coming{cursor:default;opacity:.7}
+  .product .cta.coming:hover{background:var(--bg-3);color:var(--ink-dim);border-color:var(--line-2)}
+
+  /* T-shirt SVG mockups now have all design text inline within the SVG */
+
+  .featured{
+    background:linear-gradient(180deg,rgba(255,138,31,.12),var(--bg-1));
+    border:1px solid var(--line-2);border-radius:14px;padding:22px;margin-bottom:20px;
+    display:grid;grid-template-columns:1fr 1.2fr;gap:24px;align-items:center;
+  }
+  .featured .preview{aspect-ratio:1/1;max-width:280px;background:var(--bg-2);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line)}
+  .featured h2{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .featured h3{font-family:var(--mono);font-weight:800;font-size:clamp(20px,3vw,28px);letter-spacing:-.01em;color:var(--ink);margin:0 0 10px;line-height:1.2}
+  .featured p{color:var(--ink-dim);line-height:1.65;margin:0 0 16px;font-size:15px}
+  .featured .featured-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .featured .featured-row .price{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--accent)}
+  .featured .featured-row .cta{padding:11px 22px;border-radius:8px;background:var(--accent);color:#0a0d12;font-family:var(--mono);font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border:none;cursor:pointer}
+  @media (max-width:600px){
+    .featured{grid-template-columns:1fr;gap:14px}
+  }
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+    background:var(--bg-3);border:1px solid var(--accent);color:var(--ink);
+    padding:12px 22px;border-radius:8px;font-family:var(--mono);font-size:13px;
+    transition:transform .3s ease;z-index:100;
+    box-shadow:0 8px 30px rgba(0,0,0,.3);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  footer.foot{margin-top:32px;color:var(--ink-faint);font-family:var(--mono);font-size:10px;text-align:center;letter-spacing:.08em;text-transform:uppercase;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="top-nav" aria-label="Site sections">
+    <button class="nav-burger" aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+      <span class="nav-burger-icon" aria-hidden="true">☰</span>
+    </button>
+    <div class="nav-links">
+      <a href="./index.html">📊 Dashboard</a>
+      <a href="./snapshot.html">📸 Snapshot</a>
+      <a href="./news.html">📰 News</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+    </div>
+  </nav>
+
+  <header class="mast">
+    <div>
+      <h1>SHOP · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <div class="tag">Threat-gauge merch for the discerning Brit</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:22px">🛍️</div>
+  </header>
+
+  <!-- FEATURED -->
+  <section class="featured">
+    <div class="preview">
+      <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- T-shirt outline -->
+        <path d="M40 60 L80 30 L100 30 L120 50 L140 30 L160 30 L200 60 L185 90 L165 80 L165 210 L75 210 L75 80 L55 90 Z" fill="#0d1117" stroke="#ff8a1f" stroke-width="2"/>
+        <!-- Gauge mockup chest print -->
+        <g transform="translate(95,100)">
+          <path d="M5,40 A30,30 0 0 1 65,40" fill="none" stroke="#1c2430" stroke-width="6" stroke-linecap="round"/>
+          <path d="M5,40 A30,30 0 0 1 50,18" fill="none" stroke="url(#shopGrad1)" stroke-width="6" stroke-linecap="round"/>
+          <line x1="35" y1="40" x2="50" y2="22" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="35" cy="40" r="3" fill="#fff"/>
+          <text x="35" y="55" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#e8edf4" font-weight="700">68</text>
+        </g>
+        <text x="120" y="180" text-anchor="middle" font-family="ui-monospace" font-size="13" font-weight="800" fill="#e8edf4">IS IT KICKING OFF?</text>
+        <text x="120" y="195" text-anchor="middle" font-family="ui-monospace" font-size="7" letter-spacing="3" fill="#9aa6b8">UK AGGRAVATION INDEX</text>
+        <defs>
+          <linearGradient id="shopGrad1" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#3ecf8e"/>
+            <stop offset="50%" stop-color="#f4c025"/>
+            <stop offset="100%" stop-color="#ff8a1f"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div>
+      <h2>Featured</h2>
+      <h3>The Gauge Tee · Original Black</h3>
+      <p>The flagship. The actual kick-off gauge printed front-and-centre with the official tier scale beneath. 100% organic cotton, screen-printed in the UK. Wear your readiness.</p>
+      <div class="featured-row">
+        <span class="price">£28</span>
+        <button class="cta" data-product="The Gauge Tee · Original Black">Pre-order</button>
+        <span style="color:var(--ink-faint);font-family:var(--mono);font-size:11px;letter-spacing:.1em">Ships when first 100 sold</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- T-SHIRTS — 8 designs, full SVG with text inside the shirt body -->
+  <h2 class="section">👕 The Tees</h2>
+  <div class="grid">
+
+    <article class="product">
+      <div class="preview" style="background:#1a1a1a">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#0d0d0d" stroke="#ff8a1f" stroke-width="1.2"/>
+          <text x="100" y="112" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="13" font-weight="900" fill="#ff8a1f">IS IT KICKING</text>
+          <text x="100" y="130" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="13" font-weight="900" fill="#ff8a1f">OFF?</text>
+          <text x="100" y="151" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#9aa6b8" font-weight="600">EST · 2026 · UK</text>
+        </svg>
+      </div>
+      <h3>Classic Logo Tee</h3>
+      <p class="desc">The simplest one. Black tee, orange logo, no questions.</p>
+      <div class="foot"><span class="price">£24</span><button class="cta" data-product="Classic Logo Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#1a3320">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#2a8b5d" stroke="#fff" stroke-width="1.2"/>
+          <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#fff">HAVING</text>
+          <text x="100" y="134" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#fff">A BREW</text>
+          <text x="100" y="155" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#aae0c4" font-weight="600">TIER 01 · ALL CLEAR</text>
+        </svg>
+      </div>
+      <h3>Having A Brew Tee</h3>
+      <p class="desc">Tier 01. Calm. Ready. Kettle on. The lowest tier as a fashion statement.</p>
+      <div class="foot"><span class="price">£24</span><button class="cta" data-product="Having A Brew Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#5a4310">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#f4c025" stroke="#1a1a1a" stroke-width="1.2"/>
+          <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#1a1a1a">GETTING</text>
+          <text x="100" y="134" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#1a1a1a">LIPPY</text>
+          <text x="100" y="155" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#5a4310" font-weight="600">TIER 03 · VERBALS</text>
+        </svg>
+      </div>
+      <h3>Getting Lippy Tee</h3>
+      <p class="desc">Tier 03. Verbals in the beer garden. Karen's spoken to the manager.</p>
+      <div class="foot"><span class="price">£24</span><button class="cta" data-product="Getting Lippy Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#3a1a00">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#ff8a1f" stroke="#fff" stroke-width="1.2"/>
+          <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#1a0a00">PROPER</text>
+          <text x="100" y="134" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="13" font-weight="900" fill="#1a0a00">SIMMERING</text>
+          <text x="100" y="155" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#5a3818" font-weight="600">TIER 05 · ESCALATING</text>
+        </svg>
+      </div>
+      <h3>Proper Simmering Tee</h3>
+      <p class="desc">Tier 05. Bouncer eyeballing the table. Chairs scraping back.</p>
+      <div class="foot"><span class="price">£24</span><button class="cta" data-product="Proper Simmering Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#3a0a0a">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#ef4b4b" stroke="#fff" stroke-width="1.2"/>
+          <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="13" font-weight="900" fill="#1a0000">IT'S KICKING</text>
+          <text x="100" y="134" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#1a0000">OFF</text>
+          <text x="100" y="155" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#5a1010" font-weight="600">TIER 06 · FULL CONTACT</text>
+        </svg>
+      </div>
+      <h3>It's Kicking Off Tee</h3>
+      <p class="desc">Tier 06. Stella foam everywhere. The kebab shop's taking cover.</p>
+      <div class="foot"><span class="price">£26</span><button class="cta" data-product="It's Kicking Off Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#3a0000">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#b41f1f" stroke="#f5e8d8" stroke-width="1.2"/>
+          <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#f5e8d8">ALL OUT</text>
+          <text x="100" y="134" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="900" fill="#f5e8d8">SCRAP</text>
+          <text x="100" y="155" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="2" fill="#dcb8b8" font-weight="600">TIER 07 · LOCK FRIDGE</text>
+        </svg>
+      </div>
+      <h3>All Out Scrap Tee</h3>
+      <p class="desc">Tier 07. Peak tier. Wear it as a warning, or a celebration. Possibly both.</p>
+      <div class="foot"><span class="price">£26</span><button class="cta" data-product="All Out Scrap Tee">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#06122a">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#0d2240" stroke="#cf142b" stroke-width="1.2"/>
+          <!-- Mini Union Jack on chest -->
+          <g transform="translate(78,95)">
+            <rect width="44" height="26" fill="#0d2240"/>
+            <line x1="0" y1="0" x2="44" y2="26" stroke="#fff" stroke-width="3"/>
+            <line x1="44" y1="0" x2="0" y2="26" stroke="#fff" stroke-width="3"/>
+            <line x1="0" y1="0" x2="44" y2="26" stroke="#cf142b" stroke-width="1.4"/>
+            <line x1="44" y1="0" x2="0" y2="26" stroke="#cf142b" stroke-width="1.4"/>
+            <rect x="19" y="0" width="6" height="26" fill="#fff"/>
+            <rect x="0" y="10" width="44" height="6" fill="#fff"/>
+            <rect x="20.5" y="0" width="3" height="26" fill="#cf142b"/>
+            <rect x="0" y="11.5" width="44" height="3" fill="#cf142b"/>
+          </g>
+          <text x="100" y="145" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff" letter-spacing=".05em">BRITAIN AT WAR</text>
+          <text x="100" y="158" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff" letter-spacing=".05em">WITH ITSELF</text>
+          <text x="100" y="172" text-anchor="middle" font-family="ui-monospace,monospace" font-size="5" letter-spacing="2" fill="#9bb0d6" font-weight="600">UNION JACK · LIMITED</text>
+        </svg>
+      </div>
+      <h3>Union Jack Edition</h3>
+      <p class="desc">Patriotic limited edition. Mini Union Jack chest motif. Royal tea preferred.</p>
+      <div class="foot"><span class="price">£28</span><button class="cta" data-product="Union Jack Edition">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:#1a1a1a">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <path d="M25,60 L65,30 L78,30 C82,55 118,55 122,30 L135,30 L175,60 L165,90 L150,82 L150,180 L50,180 L50,82 L35,90 Z" fill="#0a0a0a" stroke="#6ab023" stroke-width="1.2"/>
+          <text x="100" y="118" text-anchor="middle" font-family="Impact,'Arial Black',sans-serif" font-size="22" font-weight="900" fill="#6ab023" letter-spacing="-0.02em">FIRM</text>
+          <text x="100" y="142" text-anchor="middle" font-family="Impact,'Arial Black',sans-serif" font-size="22" font-weight="900" fill="#6ab023" letter-spacing="-0.02em">FACTOR</text>
+          <text x="100" y="160" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6" letter-spacing="3" fill="#fff" font-weight="600">EST. TERRACES · 1985</text>
+        </svg>
+      </div>
+      <h3>Firm Factor Terraces Tee</h3>
+      <p class="desc">Old-school football print. Era-appropriate Impact font. Service Crew approved.</p>
+      <div class="foot"><span class="price">£26</span><button class="cta" data-product="Firm Factor Terraces Tee">Pre-order</button></div>
+    </article>
+
+  </div>
+
+  <!-- PREPPER / SURVIVAL -->
+  <h2 class="section">🛡️ Survival &amp; Prepper Range</h2>
+  <div class="grid">
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#cf2017 0%,#ff4019 100%)">
+        <span class="emoji">🍺</span>
+      </div>
+      <h3>Friday Night Survival Kit</h3>
+      <p class="desc">A full case of Stella, kebab voucher (any UK shop), 2× headache pills, and a self-laminated "Don't Reply" reminder card.</p>
+      <div class="foot"><span class="price">£42</span><button class="cta" data-product="Friday Night Survival Kit">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#3a3a3a 0%,#1a1a1a 100%);position:relative">
+        <span class="emoji">🛢️</span>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:#ff8a1f;text-transform:uppercase">11-Gallon Keg</div>
+      </div>
+      <h3>Apocalypse Stella Keg</h3>
+      <p class="desc">A full 11-gallon Stella keg "for emergencies." Includes a printed CO₂ canister and tap. Ration responsibly.</p>
+      <div class="foot"><span class="price">£185</span><button class="cta" data-product="Apocalypse Stella Keg">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#5d2a0d 0%,#a4520f 100%)">
+        <span class="emoji">🥧</span>
+      </div>
+      <h3>Bank Holiday Bunker Pack</h3>
+      <p class="desc">4× Stella + 2 scotch eggs + 1 pork pie + Mini Cheddars + a roll of bin liners. Survives a 4-day weekend.</p>
+      <div class="foot"><span class="price">£35</span><button class="cta" data-product="Bank Holiday Bunker Pack">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#0d2240 0%,#1a3a6f 100%);position:relative">
+        <span class="emoji">📦</span>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:#fff;text-transform:uppercase">Threat Lvl: SEVERE</div>
+      </div>
+      <h3>Civil Disorder Go-Bag</h3>
+      <p class="desc">Reinforced canvas backpack with bottle opener, hi-vis vest, A-Z map of Wetherspoons, and 2× tinned scotch eggs.</p>
+      <div class="foot"><span class="price">£68</span><button class="cta" data-product="Civil Disorder Go-Bag">Pre-order</button></div>
+    </article>
+
+  </div>
+
+  <!-- DRINKS / FOOD ACCESSORIES -->
+  <h2 class="section">🫖 Tea, Mugs &amp; Edibles</h2>
+  <div class="grid">
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#8b5a2b 0%,#5d3819 100%)">
+        <span class="emoji">🫖</span>
+      </div>
+      <h3>British Stress Tea</h3>
+      <p class="desc">Premium English Breakfast in tins labelled by tier. "FOR WHEN IT'S KICKING OFF" — clinically proven to do nothing.</p>
+      <div class="foot"><span class="price">£12</span><button class="cta" data-product="British Stress Tea">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#ff8a1f 0%,#cf2017 100%)">
+        <span class="emoji">☕</span>
+      </div>
+      <h3>The Kettle-O-Meter Mug</h3>
+      <p class="desc">Heat-reactive ceramic mug. Tier indicator on the side: pour tea in, watch the gauge climb. Perfect kitsch.</p>
+      <div class="foot"><span class="price">£18</span><button class="cta" data-product="The Kettle-O-Meter Mug">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#1c1c1c 0%,#3a3a3a 100%);position:relative">
+        <span class="emoji">🍦</span>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:#fff;text-transform:uppercase;opacity:.7">In Memoriam · Forever Broken</div>
+      </div>
+      <h3>McFlurry Memorial Hoodie</h3>
+      <p class="desc">Tribute hoodie to every McDonald's ice cream machine that's ever betrayed you. Black, embroidered.</p>
+      <div class="foot"><span class="price">£48</span><button class="cta" data-product="McFlurry Memorial Hoodie">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#6ab023 0%,#3a7a18 100%)">
+        <span class="emoji">🌭</span>
+      </div>
+      <h3>Greggs Emergency Voucher Pack</h3>
+      <p class="desc">10× emergency Greggs vouchers, redeemable when the index hits IT'S KICKING OFF tier or higher.</p>
+      <div class="foot"><span class="price">£20</span><button class="cta" data-product="Greggs Emergency Voucher Pack">Pre-order</button></div>
+    </article>
+
+  </div>
+
+  <!-- STICKERS / PINS / ACCESSORIES -->
+  <h2 class="section">🎨 Stickers, Pins &amp; Bits</h2>
+  <div class="grid">
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#3ecf8e 0%,#f4c025 33%,#ff8a1f 66%,#b41f1f 100%)">
+        <span class="emoji">📌</span>
+      </div>
+      <h3>Threat-Tier Pin Set</h3>
+      <p class="desc">Seven enamel pins, one per tier — from HAVING A BREW (green) to ALL OUT SCRAP (deep red). Gift-boxed.</p>
+      <div class="foot"><span class="price">£32</span><button class="cta" data-product="Threat-Tier Pin Set">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#ef4b4b 0%,#cf2017 100%)">
+        <span class="emoji">🚫</span>
+      </div>
+      <h3>"Don't Reply To Your Ex" Sticker Pack</h3>
+      <p class="desc">10× vinyl stickers for laptops, phone cases, fridge doors. Sunday morning insurance policy.</p>
+      <div class="foot"><span class="price">£8</span><button class="cta" data-product="Don't Reply To Your Ex Stickers">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#1e88e5 0%,#0d2240 100%)">
+        <span class="emoji">🪧</span>
+      </div>
+      <h3>Mini Picket Sign Set</h3>
+      <p class="desc">Six 4-inch picket-sign desk ornaments. Slogans rotate by mood: "JUST STOP OIL", "STAND UP", "SACK THE BOARD".</p>
+      <div class="foot"><span class="price">£22</span><button class="cta" data-product="Mini Picket Sign Set">Pre-order</button></div>
+    </article>
+
+    <article class="product">
+      <div class="preview" style="background:linear-gradient(135deg,#ff8a1f 0%,#1c2430 100%)">
+        <span class="emoji">🎒</span>
+      </div>
+      <h3>Tote: "Local Tesco Stella Run"</h3>
+      <p class="desc">Heavy-duty cotton tote. Fits 24× cans comfortably. Logo proudly displayed for the queue at self-checkout.</p>
+      <div class="foot"><span class="price">£14</span><button class="cta" data-product="Tote Local Tesco Stella Run">Pre-order</button></div>
+    </article>
+
+  </div>
+
+  <p style="margin-top:32px;color:var(--ink-faint);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-align:center;line-height:1.7">
+    All items are concept mock-ups · pre-orders open as items go into production · ships UK only initially.<br/>
+    Want a specific design? Drop a note via the Buy Me A Coffee link in the top nav.
+  </p>
+
+  <footer class="foot">
+    Threat-gauge merch · designed to sit on your shelf and judge you.<br/>
+    100% of proceeds go to keeping the gauge running.<br/>
+    <span style="display:inline-block;margin-top:8px">
+      <a href="./index.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Dashboard</a> ·
+      <a href="./news.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">News</a> ·
+      <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Privacy</a> ·
+      <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Terms</a> ·
+      <a href="./legal.html#disclaimer" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Disclaimer</a> ·
+      <a href="mailto:hello@inkbyte.co.uk" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Contact</a>
+    </span>
+  </footer>
+</div>
+
+<div id="toast" class="toast">Pre-order saved · we'll email when it ships</div>
+
+<script>
+// Top-nav burger toggle (mobile)
+(function(){
+  const nav = document.querySelector('.top-nav');
+  const burger = nav && nav.querySelector('.nav-burger');
+  if (nav && burger){
+    burger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+})();
+// Toast handler — saves pre-order interest locally for now.
+(function(){
+  const toast = document.getElementById('toast');
+  document.querySelectorAll('.cta:not(.coming)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.getAttribute('data-product') || 'item';
+      try {
+        const list = JSON.parse(localStorage.getItem('iiko-shop') || '[]');
+        if (!list.includes(name)) list.push(name);
+        localStorage.setItem('iiko-shop', JSON.stringify(list));
+      } catch(_){}
+      toast.textContent = `${name} · pre-order noted ✓`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    });
+  });
+})();
+</script>
+</body>
+</html>

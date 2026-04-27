@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Snapshot · Is It Kicking Off?</title>
+<meta name="description" content="A narrative snapshot of the UK Kick-Off Index right now — what the score means, which signals are firing, and the funny verdict." />
+<meta name="theme-color" content="#07090c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📸%3C/text%3E%3C/svg%3E" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="IIKO Snapshot" />
+<style>
+  :root {
+    --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
+    --line:#232c3a; --line-2:#2e3a4d;
+    --ink:#e8edf4; --ink-dim:#9aa6b8; --ink-faint:#5f6b7d;
+    --accent:#ff8a1f;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(255,138,31,.08), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(62,207,142,.05), transparent 60%),
+      var(--bg-0);
+    min-height:100vh;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+  .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
+  .top-nav .nav-links{display:contents}
+  .top-nav .nav-burger{display:none}
+  .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
+  .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
+  .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  @media (max-width:640px){
+    .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
+    .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .top-nav .nav-burger .nav-burger-icon{font-size:20px;color:var(--accent);transition:transform .2s ease}
+    .top-nav.open .nav-burger .nav-burger-icon{transform:rotate(90deg)}
+    .top-nav .nav-links{display:none;flex-direction:column;width:100%;gap:4px;padding:4px 4px 6px}
+    .top-nav.open .nav-links{display:flex}
+    .top-nav a{padding:11px 16px;border-radius:8px;text-align:center;border:1px solid var(--line)}
+    .top-nav a.active{border-color:var(--accent)}
+  }
+
+  .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}
+  .mast h1{font-family:var(--mono);font-weight:800;letter-spacing:-.02em;font-size:clamp(26px,4.5vw,40px);margin:0;line-height:1}
+  .mast h1 .kick{color:var(--accent)}
+  .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+
+  .hero{background:linear-gradient(180deg,var(--bg-1),var(--bg-2));border:1px solid var(--line);border-radius:16px;padding:28px 24px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 19px,rgba(255,255,255,.02) 19px 20px),repeating-linear-gradient(0deg,transparent 0 19px,rgba(255,255,255,.02) 19px 20px);mask-image:radial-gradient(600px 400px at 60% 40%,#000,transparent 80%)}
+  .hero .score-num{font-family:var(--mono);font-weight:800;letter-spacing:-.04em;line-height:1;font-size:clamp(72px,14vw,140px);color:var(--ink)}
+  .hero .score-of{font-family:var(--mono);color:var(--ink-faint);font-size:13px;letter-spacing:.15em;text-transform:uppercase;margin-top:6px}
+  .hero .tier-name{font-family:var(--mono);font-weight:800;font-size:clamp(22px,4vw,36px);letter-spacing:.02em;margin-top:18px}
+  .hero .tier-blurb{color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:55ch;margin:14px auto 0}
+  .hero .meta-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .hero .meta-row .pill{padding:5px 12px;border-radius:999px;background:var(--bg-3);border:1px solid var(--line-2)}
+
+  .story{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
+  .story h2{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px}
+  .story p{margin:0 0 14px;line-height:1.7;font-size:15px;color:var(--ink)}
+  .story p:last-child{margin-bottom:0}
+  .story .lead{font-size:17px;line-height:1.65}
+  .story b{color:var(--accent)}
+
+  .sig-table{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+  .sig-table h2{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px}
+  .sig-list{display:flex;flex-direction:column;gap:8px}
+  .sig-row{display:grid;grid-template-columns:36px 1fr 80px 70px;gap:10px;align-items:center;padding:10px 12px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px}
+  .sig-row .icn{font-size:18px;text-align:center}
+  .sig-row .body{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .sig-row .body .nm{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sig-row .body .vl{font-family:var(--mono);font-size:11px;color:var(--ink-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sig-row .pts{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);text-align:right}
+  .sig-row .lv{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;text-align:right;color:var(--ink-faint)}
+  .sig-row .lv.live{color:var(--accent)}
+  @media (max-width:560px){
+    .sig-row{grid-template-columns:30px 1fr 60px 50px;gap:8px;padding:8px 10px}
+    .sig-row .body .nm{font-size:11px}
+  }
+
+  .verdict{background:linear-gradient(180deg,rgba(255,138,31,.06),rgba(0,0,0,0));border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:18px}
+  .verdict h2{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px}
+  .verdict p{font-size:18px;line-height:1.6;color:var(--ink);margin:0;font-style:italic}
+  .verdict p::before{content:"\""}
+  .verdict p::after{content:"\""}
+
+  .empty{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:32px;text-align:center;color:var(--ink-dim);line-height:1.6}
+  .empty a{color:var(--accent);text-decoration:none;font-weight:700}
+  .empty a:hover{text-decoration:underline}
+
+  footer.foot{margin-top:24px;color:var(--ink-faint);font-family:var(--mono);font-size:10px;text-align:center;letter-spacing:.08em;text-transform:uppercase;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top-nav" aria-label="Site sections">
+    <button class="nav-burger" aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+      <span class="nav-burger-icon" aria-hidden="true">☰</span>
+    </button>
+    <div class="nav-links">
+      <a href="./index.html">📊 Dashboard</a>
+      <a href="./snapshot.html" class="active">📸 Snapshot</a>
+      <a href="./news.html">📰 News</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+    </div>
+  </nav>
+
+  <header class="mast">
+    <div>
+      <h1>SNAPSHOT · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <div class="tag">UK Aggravation Threat Index · Right Now</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:22px">📸</div>
+  </header>
+
+  <main id="snap-root">
+    <div class="empty">
+      <p>No snapshot captured yet.</p>
+      <p><a href="./index.html">Open the Dashboard</a> to capture a reading, then come back here for the story.</p>
+    </div>
+  </main>
+
+  <footer class="foot">
+    Snapshots are read from sessionStorage on this device.<br/>
+    Open the Dashboard, let it load (a few seconds), then revisit this page.<br/>
+    <span style="display:inline-block;margin-top:8px">
+      <a href="./index.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Dashboard</a> ·
+      <a href="./news.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">News</a> ·
+      <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Privacy</a> ·
+      <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Terms</a> ·
+      <a href="./legal.html#disclaimer" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Disclaimer</a> ·
+      <a href="mailto:hello@inkbyte.co.uk" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Contact</a>
+    </span>
+  </footer>
+</div>
+
+<script>
+// Top-nav burger toggle (mobile)
+(function(){
+  const nav = document.querySelector('.top-nav');
+  const burger = nav && nav.querySelector('.nav-burger');
+  if (nav && burger){
+    burger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+})();
+(function(){
+  const raw = sessionStorage.getItem('iiko-snapshot');
+  if (!raw) return;
+  let s; try { s = JSON.parse(raw); } catch(_){ return; }
+  if (!s || typeof s.score !== 'number') return;
+
+  const $ = sel => document.querySelector(sel);
+  const root = document.getElementById('snap-root');
+  if (!root) return;
+
+  // ---- Helpers ----
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const time = new Date(s.ts);
+  const hour = time.getHours();
+  const dow  = time.getDay();
+  const fmtClock = d => d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const fmtDate  = d => `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+
+  // ---- Story generation ----
+  const tierLow  = s.score < 31;
+  const tierMid  = s.score >= 31 && s.score < 61;
+  const tierHigh = s.score >= 61 && s.score < 76;
+  const tierKick = s.score >= 76;
+
+  let intro;
+  if      (hour < 6)  intro = `It's the small hours of <b>${days[dow]}</b> morning, ${fmtClock(time)}.`;
+  else if (hour < 12) intro = `It's <b>${days[dow]}</b> morning, ${fmtClock(time)}. Kettles boiling across the nation.`;
+  else if (hour < 17) intro = `<b>${days[dow]}</b> afternoon, ${fmtClock(time)}.`;
+  else if (hour < 22) intro = `<b>${days[dow]}</b> evening, ${fmtClock(time)}. The day's settling in.`;
+  else                intro = `Late on <b>${days[dow]}</b> night, ${fmtClock(time)}. The witching hour approaches.`;
+
+  let verdictLine;
+  if (tierLow)  verdictLine = `The <b>Is It Kicking Off Index</b> for <b>${s.region.name}</b> reads <b>${s.score}/100 — ${s.tier}</b>. The nation is largely behaving itself; the kettle is doing more work than the bouncers.`;
+  else if (tierMid) verdictLine = `The <b>Is It Kicking Off Index</b> for <b>${s.region.name}</b> reads <b>${s.score}/100 — ${s.tier}</b>. Things are stirring. The pubs are filling, the air has changed.`;
+  else if (tierHigh) verdictLine = `The <b>Is It Kicking Off Index</b> for <b>${s.region.name}</b> reads <b>${s.score}/100 — ${s.tier}</b>. Conditions are properly tense. The doormen are paying attention.`;
+  else verdictLine = `The <b>Is It Kicking Off Index</b> for <b>${s.region.name}</b> reads <b>${s.score}/100 — ${s.tier}</b>. Britain is on the brink. Lock the fridge. Call your mum.`;
+
+  // Top contributing signals
+  const ranked = [...s.signals].filter(x => x.contribution > 0).sort((a,b) => b.contribution - a.contribution);
+  const topThree = ranked.slice(0, 3);
+  const top = topThree[0];
+  const second = topThree[1];
+
+  // Per-signal narrative snippets
+  const narrative = {
+    time:      sig => `the time of day is doing serious work — <b>${sig.subLabel.toLowerCase()}</b>`,
+    football:  sig => `football is contributing — ${sig.subLabel.toLowerCase()}`,
+    news:      sig => `the news cycle is firing — ${sig.subLabel.toLowerCase()}`,
+    weather:   sig => `the weather is doing its part: <b>${sig.valueLabel}</b> · ${sig.subLabel.toLowerCase()}`,
+    booze:     sig => `Wetherspoons is at <b>${sig.valueLabel}</b>`,
+    bh:        sig => `bank-holiday proximity is in play — ${sig.subLabel.toLowerCase()}`,
+    transport: sig => `the transport network is strained — ${sig.subLabel.toLowerCase()}`,
+    roadrage:  sig => `road-rage signals are elevated`,
+    search:    sig => `search-panic queries are spiking — the nation is googling its anxieties`,
+    daylight:  sig => `daylight at <b>${sig.valueLabel}</b>`,
+    england:   sig => `home-nation sport tension — ${sig.subLabel.toLowerCase()}`,
+    moon:      sig => `the moon is at <b>${sig.valueLabel}</b>`,
+    greggs:    sig => `Greggs sausage-roll demand is at <b>${sig.valueLabel}</b>`,
+    royal:     sig => `royal drama is rumbling — ${sig.subLabel.toLowerCase()}`,
+    kettle:    sig => `the kettle is running at <b>${sig.valueLabel}</b>`,
+    telly:     sig => `the telly is showing <b>${sig.valueLabel}</b>`,
+    checkout:  sig => `Tesco self-checkout fury is at <b>${sig.valueLabel}</b>`,
+    petrol:    sig => `forecourt mood is grim — ${sig.subLabel.toLowerCase()}`,
+    protests:  sig => `London protest activity flagged — ${sig.subLabel.toLowerCase()}`,
+    threat:    sig => `UK threat level: <b>${sig.valueLabel}</b>`,
+    aande:     sig => `A&E pressure at <b>${sig.valueLabel}</b>`,
+    social:    sig => `social media is humming at <b>${sig.valueLabel}</b>`,
+    icecream:  sig => `the McFlurry machine is, predictably, broken at <b>${sig.valueLabel}</b>`,
+  };
+  const sentenceFor = sig => (narrative[sig.key] || (s => `${s.title} (${s.valueLabel})`))(sig);
+
+  let body = `${intro} ${verdictLine}`;
+  if (top){
+    body += `<br/><br/>The biggest contributor right now is <b>${top.icon} ${top.title}</b> at +${top.contribution.toFixed(1)} pts: ${sentenceFor(top)}.`;
+  }
+  if (second){
+    body += ` Behind it, ${sentenceFor(second)} (+${second.contribution.toFixed(1)} pts).`;
+  }
+
+  // Conclusion / advice
+  let advice;
+  if (tierKick)      advice = "If you're heading out, watch your back. If you're at home, lock the fridge and let the night happen to others.";
+  else if (tierHigh) advice = "Choose your pubs carefully. Pick your route home. Avoid arguments about VAR.";
+  else if (tierMid)  advice = "Standard precautions. Keep your wits about you. Don't reply to that ex.";
+  else               advice = "Have a pint, share a chippy tea, the nation's got your back.";
+
+  // ---- Render ----
+  root.innerHTML = `
+    <section class="hero">
+      <div class="score-num" style="color:${s.tierColor}">${s.score}</div>
+      <div class="score-of">UK KICK-OFF INDEX · 0–100</div>
+      <div class="tier-name" style="color:${s.tierColor}">${s.tier}</div>
+      <div class="tier-blurb">${s.tierBlurb}</div>
+      <div class="meta-row">
+        <span class="pill">${s.region.flag} ${s.region.name}</span>
+        <span class="pill">${fmtDate(time)}</span>
+        <span class="pill">${fmtClock(time)} GMT</span>
+      </div>
+    </section>
+
+    <section class="story">
+      <h2>The story right now</h2>
+      <p class="lead">${body}</p>
+    </section>
+
+    <section class="sig-table">
+      <h2>Every signal · ranked by contribution</h2>
+      <div class="sig-list">
+        ${[...s.signals].sort((a,b)=>b.contribution-a.contribution).map(sig => `
+          <div class="sig-row">
+            <span class="icn">${sig.icon}</span>
+            <div class="body">
+              <span class="nm">${sig.title}</span>
+              <span class="vl">${sig.valueLabel} · ${sig.subLabel}</span>
+            </div>
+            <span class="pts">+${sig.contribution.toFixed(1)} pts</span>
+            <span class="lv ${sig.live?'live':''}">${sig.live?'live':'modelled'}</span>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="verdict">
+      <h2>What this means</h2>
+      <p>${advice}</p>
+    </section>
+  `;
+})();
+</script>
+</body>
+</html>
