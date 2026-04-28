@@ -135,7 +135,46 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.4.2 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.5 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 Finance bug fixes · 4 indices · multi-source · methodology consistency · Apr 2026</div>
+    </div>
+    <p class="intro">Four bug fixes against the v1.4.2 ship. The Finance &amp; Markets cards weren't loading data (Yahoo Finance via single proxy was being blocked), the methodology table looked inconsistent with new "ambient context" sub-headers and "display" weights that didn't match the rest of the table, and stock indices coverage was thin (FTSE + Dow only).</p>
+    <h3>📈 Stocks — expanded to 4 indices + multi-source fetching</h3>
+    <ul>
+      <li>Card now shows <b>FTSE 100, Dow Jones, NASDAQ Composite, S&amp;P 500</b> (was: just FTSE + Dow). Headline picks the index with the biggest absolute move.</li>
+      <li>Renamed card from "FTSE &amp; Dow · Today's Moves" → "<b>Stock Indices · Today's Moves</b>".</li>
+      <li>New fetch chain: <a href="https://stooq.com" target="_blank" rel="noopener noreferrer">Stooq</a> primary (free CSV, CORS-friendly, no key) → Yahoo Finance via <b>three</b> CORS proxies (allorigins, corsproxy, codetabs). If Stooq has the data, we use that — Yahoo only fires on Stooq miss.</li>
+      <li>Each index falls back independently to "—" placeholder if every source for that one symbol is blocked. The card layout stays intact even when some indices fail to load.</li>
+    </ul>
+    <h3>💱 Pound In Your Pocket — multi-source exchange rates</h3>
+    <ul>
+      <li>Replaced single-source Frankfurter call with a <b>3-source fallback chain</b>: Frankfurter (ECB-backed) → <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer">Open ER-API</a> (IMF-backed) → <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a> open access tier.</li>
+      <li>All three are free, no API key needed, and ship CORS headers correctly. If one is blocked or down, the next steps in seamlessly.</li>
+      <li>The third source is base-USD, so we convert to base-GBP on the fly using its own GBP rate.</li>
+    </ul>
+    <h3>💊 Tech &amp; Pharma — same multi-source upgrade</h3>
+    <ul>
+      <li>Same Stooq-primary, Yahoo-via-3-proxies fallback as the new Stocks card. Each of the 5 stocks (AAPL, NVDA, GOOGL, AZN.L, GSK.L) is fetched independently — one symbol failing won't blank the card.</li>
+    </ul>
+    <h3>📐 Methodology table consistency</h3>
+    <ul>
+      <li>Removed the orange-highlighted "<i>Environment &amp; Energy · ambient context (not scored, v1.3)</i>" and "<i>Finance &amp; Markets · ambient context (not scored, v1.4)</i>" colspan sub-header rows.</li>
+      <li>Changed weight column from <code>display</code> → <code>0%</code> for all 8 ambient context rows, matching the format used by every other row in the table.</li>
+      <li>Each row now reads exactly like every other entry — name, weight (0%), description — with "ambient context" mentioned in the description rather than as a separate row.</li>
+    </ul>
+    <h3>🔧 CSP additions</h3>
+    <ul>
+      <li><code>connect-src</code> extended for the new sources: <code>stooq.com</code>, <code>api.codetabs.com</code>, <code>open.er-api.com</code>, <code>open.exchangerate-api.com</code>.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced. None of the new sources require API keys, so no secrets to manage.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.4.2</div>
       <div class="release-tag">🪡 Repositioned · Env + Finance now nested in signals grid · Apr 2026</div>
     </div>
     <p class="intro">Two big architectural changes ship together: the <b>Environment &amp; Energy row</b> moves <i>up</i> the page to sit directly under the <b>Atmosphere &amp; Time</b> signal group, and the <b>Finance &amp; Markets row</b> (rolled back in v1.4.1) is reintroduced — repositioned directly under the <b>Daily Pulse</b> group. Both rows now render as <i>feature rows inside the signals grid itself</i> rather than as separate page sections, so they read as natural sub-sections of the signals storytelling rather than orphaned blocks at the bottom.</p>
