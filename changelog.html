@@ -130,7 +130,43 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v0.48 <span class="stamp">latest</span></div>
+      <div class="release-ver">v1.0 <span class="stamp">live</span></div>
+      <div class="release-tag">🚀 Public launch · Petrol live across 14 retailers · isitkickingoff.com · Apr 2026</div>
+    </div>
+    <p class="intro"><b>This is it.</b> First public version of the dashboard. The site is live at <a href="https://isitkickingoff.com" style="color:var(--accent)">isitkickingoff.com</a> (custom domain wired to Cloudflare). Built solo over six weeks across 48 incremental releases. <b>38 signals</b> spanning weather, news, football, booze, the moon, the price of petrol, what's on telly, the National Grid kettle spike, the cocaine in the Thames, and 30+ others. <b>Live where the data exists, modelled where it doesn't</b>, every card explicitly chip-tagged so you can tell which is which. Plus one big petrol upgrade this release — see below.</p>
+    <h3>⛽ Petrol Pump Rage — now genuinely live across 14 retailers</h3>
+    <ul>
+      <li>The <b>CMA Pump Watch open-data scheme</b> (mandated by the UK Energy Act 2023) requires every retailer with 4+ stations to publish a daily JSON feed of forecourt prices. We were already pulling 4 — Asda, Morrisons, Tesco, Sainsbury's. v1.0 expands to <b>14 retailers fetched in parallel</b>: + Applegreen, Ascona, JET, Esso, Shell, BP, Texaco, Rontec, M&amp;S, Co-op.</li>
+      <li><code>Promise.allSettled</code> runs all 14 fetches concurrently with a 6-second hard timeout per source. We aggregate every station from every retailer that responds and average across the lot — typically thousands of forecourts.</li>
+      <li>The card source line now reads "<i>CMA Pump Watch · N retailers · M stations</i>" so the user can see exactly how comprehensive today's reading is.</li>
+      <li>Falls back to a hardcoded recent UK national average if every live feed is blocked simultaneously (rare).</li>
+    </ul>
+    <h3>🚀 Public launch checklist (all done)</h3>
+    <ul>
+      <li>✅ Custom domain <code>isitkickingoff.com</code> wired via Cloudflare DNS</li>
+      <li>✅ HTTPS / HSTS / security headers via <code>_headers</code></li>
+      <li>✅ Cloudflare Web Analytics live (privacy-respecting, no cookies)</li>
+      <li>✅ Supabase snapshot logging running (every page load writes one row)</li>
+      <li>✅ Open Graph + Twitter Card meta tags for clean social previews</li>
+      <li>✅ Union Jack favicon + apple-touch-icon</li>
+      <li>✅ <a href="./legal.html">Privacy / Terms / Disclaimer / Cookies / Contact</a> all in place</li>
+      <li>✅ Yellow Buy us a brew CTA + footer link to <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer">buymeacoffee.com/isitkickingoff</a></li>
+      <li>✅ News section live with hero Rory Sutherland-style essay</li>
+      <li>✅ Permalink share URLs for the gauge + X share with attached PNG of current reading</li>
+    </ul>
+    <h3>🪵 Where we're going from here</h3>
+    <ul>
+      <li>Newsletter wiring (Buttondown or Google Sheet) so the form on News actually saves emails</li>
+      <li>More live data sources: Live Odds (the-odds-api.com free tier), more petrol retailers as they publish CMA-compliant feeds</li>
+      <li>Trend chart fed from Supabase history (currently sessionStorage-only on the device)</li>
+      <li>Twitter / X auto-poster as a Cloudflare Worker — daily snapshot tweet at peak hour</li>
+      <li>More essays in News — one a month, ish</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.48</div>
       <div class="release-tag">X share fix (round 3) · methodology copy refresh · News naming restored · Apr 2026</div>
     </div>
     <p class="intro">Three fixes. The <b>X share button</b> is properly fixed this time using a synthetic <code>&lt;a target="_blank"&gt;</code> click pattern — strictly more popup-blocker-resistant than <code>window.open()</code> — plus a mobile UA gate so desktop browsers never accidentally route to the system share sheet. The <b>"How is this calculated?"</b> methodology copy now reflects the real signal count (35+, was stuck at "seven") and explains the [Live] / [Modelled] chip system. And v0.47's "Blog" naming has been reverted to <b>News</b> at the user's request — same article content, restored title and masthead, plus inline signal-card visuals to break up the long-form text.</p>
