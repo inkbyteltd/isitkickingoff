@@ -135,7 +135,38 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.5.1 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.6 <span class="stamp">live</span></div>
+      <div class="release-tag">🕰️ Time-aware gauge blurbs · expanded pool · Apr 2026</div>
+    </div>
+    <p class="intro">User spotted "Sunday roast spotted with raised forks" appearing on a Tuesday afternoon. The 70 tier blurbs were rotating purely on date+hour without any awareness of <i>what day or time it actually is</i>. Now every blurb can carry an optional day-of-week and hour-of-day filter; the picker filters to eligible blurbs first then rotates within that filtered set. Pool also expanded from 70 → 134 blurbs total.</p>
+    <h3>🕰️ How it works now</h3>
+    <ul>
+      <li>Each blurb is either a plain string (always eligible) or an object: <code>{ text, d?, h? }</code> where <code>d</code> = days-of-week array (0=Sun, 6=Sat) and <code>h</code> = hours-of-day array (24h). Empty/absent = no constraint.</li>
+      <li><code>pickBlurb(tier)</code> filters to lines eligible for the current dow+hour, then deterministically rotates within that filtered set so all visitors at the same hour see the same line.</li>
+      <li>If everything got filtered out (shouldn't happen because every tier has 4-10 always-eligible generics), it falls back to a generic.</li>
+    </ul>
+    <h3>📈 Expanded pool — 134 blurbs total</h3>
+    <ul>
+      <li>HAVING A BREW: 23 blurbs (was 10)</li>
+      <li>A BIT TENSE: 20 (was 10)</li>
+      <li>GETTING LIPPY: 21 (was 10)</li>
+      <li>HANDBAGS: 17 (was 10)</li>
+      <li>PROPER SIMMERING: 19 (was 10)</li>
+      <li>IT'S KICKING OFF: 18 (was 10)</li>
+      <li>ALL OUT SCRAP: 16 (was 10)</li>
+      <li>Time-tagged categories: Sunday roast, Saturday park run / shopping, school run (weekday 8-9 + 15-16), office hours (Mon–Fri 9-17), commute (peak 7-9 + 17-19), Friday after-work, weekend pub late, match day (weekend afternoon), bank holiday, Wedding-reception, Christmas-do.</li>
+    </ul>
+    <h3>🧪 Verified</h3>
+    <ul>
+      <li>Spot-checked across all 7 days × 4 hours: no Sunday-tagged blurbs appear on non-Sundays, no late-night blurbs appear at breakfast, no school-run blurbs appear on weekends.</li>
+      <li>Tuesday 14:00 (the original bug case) now picks from 8-13 eligible blurbs depending on tier — none of them Sunday-themed.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.5.1</div>
       <div class="release-tag">🐛 Finance data still not loading · symbol fix + batch endpoint · Apr 2026</div>
     </div>
     <p class="intro">v1.5 added the multi-source plumbing but the cards were still showing empty. Two root causes: the Stooq Brent symbol was wrong (<code>cb.f</code> doesn't exist — Brent is <code>bz.f</code>), and the per-symbol Yahoo chart calls were running 10 times in parallel through the same proxies, getting rate-limited. v1.5.1 fixes both.</p>

@@ -1286,100 +1286,242 @@ function regionOfTeam(team){
 }
 
 /* ---------- Threat tiers ---------- */
+/* Blurbs are either plain strings (always eligible) or objects with optional
+   day/hour filters: { text, d:[0..6], h:[0..23] }. d=days-of-week (0=Sun, 6=Sat),
+   h=hours-of-day (24h clock). At pick time we filter to blurbs eligible RIGHT NOW
+   then deterministically rotate within that filtered set, so a "Sunday roast"
+   line never appears on Tuesday afternoon. */
 const TIERS = [
   { min:0,  max:15, label:"HAVING A BREW", color:'#3ecf8e', blurbs:[
+    // Always eligible
     "All quiet on the British front. Kettle's on, curtains twitching, nothing to report.",
     "Nan's on her third cuppa. Bin still standing. World order intact.",
-    "Bus drivers nodding politely. Postman whistling. Vibes immaculate.",
-    "Crisp packets unopened. Pubs serving cheery soup. No drama detected.",
-    "Lawnmowers humming. Children waving. The carpet undisturbed.",
-    "Library queues moving briskly. Buses on time. Suspiciously serene.",
     "Polite tutting at most. Even the seagulls are behaving.",
     "Kettle on, biscuits out, news ignored. Britain at rest.",
-    "Hedge trimmer purring. Tea brewing. The peace is holding.",
-    "Even the Wetherspoons jukebox is on its best behaviour."
+    "Crisp packets unopened. No drama detected.",
+    "Even the Wetherspoons jukebox is on its best behaviour.",
+    "Bin lorry on schedule. Hedge unbothered. World turning.",
+    "Reading the kettle leaves: nothing brewing.",
+    "Vibes immaculate. Carry on as you were.",
+    "The pavement remains undisputed. All is calm.",
+    // Daytime
+    { text:"Lawnmowers humming. Children waving. The carpet undisturbed.", h:[8,9,10,11,12,13,14,15,16,17] },
+    { text:"Hedge trimmer purring. Tea brewing. The peace is holding.", h:[8,9,10,11,12,13,14,15,16,17,18] },
+    // Morning
+    { text:"Bus drivers nodding politely. Postman whistling. Vibes immaculate.", h:[6,7,8,9,10,11] },
+    { text:"Breakfast TV on. Toast cooperating. World turning.", h:[6,7,8,9] },
+    // Weekday daytime
+    { text:"Library queues moving briskly. Buses on time. Suspiciously serene.", d:[1,2,3,4,5], h:[9,10,11,12,13,14,15,16] },
+    { text:"Office kettle queue orderly. Spreadsheets opening. All systems calm.", d:[1,2,3,4,5], h:[9,10,11] },
+    // Sunday-specific
+    { text:"Sunday papers rustling. Roast in the oven. The day is sacred.", d:[0], h:[10,11,12,13,14,15,16] },
+    { text:"Antiques Roadshow is on. The nation has settled.", d:[0], h:[18,19,20] },
+    // Saturday-specific
+    { text:"Football Focus playing in pubs. Pints unhurried. Vibe holding.", d:[6], h:[11,12,13] },
+    { text:"Saturday morning park run completed. Strangers said good morning.", d:[6], h:[8,9,10] },
+    // Evening wind-down
+    { text:"Evening tea brewed. Telly remote located. All systems calm.", h:[17,18,19,20] },
+    { text:"Curtains drawn. Slippers found. Day winding down.", h:[19,20,21,22] },
+    // Late night
+    { text:"Most of Britain asleep. Foxes patrolling responsibly.", h:[1,2,3,4,5] },
   ]},
+
   { min:16, max:30, label:"A BIT TENSE", color:'#78c96a', blurbs:[
+    // Always eligible
     "Low-level grumble. Someone's tutting on a bus somewhere, but we're fine.",
-    "Mildly raised eyebrows in the post office queue. Nothing structural.",
     "A few too many sighs in the Tesco self-checkout. Civilisation holding.",
-    "Office passive-aggressive emails being drafted. Send not yet pressed.",
     "Greggs queue feeling itself a tad. No casualties yet.",
     "Mild road rage at a roundabout in Slough. Otherwise composed.",
     "Someone called Karen has noted the manager's name. Stay alert.",
-    "Train delays sparking shared eye-rolls. Civility prevailing.",
     "Bus driver gave a curt 'cheers'. Could escalate. Watching.",
-    "Politeness layer thinning. Still recoverable. Order largely preserved."
+    "Politeness layer thinning. Still recoverable. Order largely preserved.",
+    "Petrol queue eyeballing each other. Restraint holding.",
+    "Receipt requested with feeling. Cashier unbothered.",
+    "Someone said 'right, fine' in a tone. Note made.",
+    // Weekday work hours
+    { text:"Office passive-aggressive emails being drafted. Send not yet pressed.", d:[1,2,3,4,5], h:[9,10,11,12,13,14,15,16,17] },
+    { text:"Mildly raised eyebrows in the post office queue. Nothing structural.", d:[1,2,3,4,5], h:[9,10,11,12,13,14,15,16] },
+    { text:"Slack DMs gathering momentum. Read receipts being weaponised.", d:[1,2,3,4,5], h:[10,11,12,13,14,15,16] },
+    // Commute
+    { text:"Train delays sparking shared eye-rolls. Civility prevailing.", d:[1,2,3,4,5], h:[7,8,9,17,18,19] },
+    { text:"Tube platform tutting reaching audible levels. Holding.", d:[1,2,3,4,5], h:[7,8,9,17,18,19] },
+    // School run
+    { text:"School-gate side-eye exchanged over a parking choice. Tension simmering.", d:[1,2,3,4,5], h:[8,9,15,16] },
+    // Saturday shopping
+    { text:"Trolley collision in Asda. Apologies issued through gritted teeth.", d:[6], h:[10,11,12,13,14,15] },
+    { text:"High street getting busy. Pram-vs-pram standoff developing.", d:[6], h:[11,12,13,14] },
+    // Sunday
+    { text:"Roast pub queue politely fuming. Reservation list under scrutiny.", d:[0], h:[12,13,14,15] },
+    // Pub time, weekend evenings
+    { text:"Pub jukebox earning side-eyes. Choices being judged.", d:[5,6], h:[19,20,21] },
   ]},
+
   { min:31, max:45, label:"GETTING LIPPY", color:'#f4c025', blurbs:[
-    "Verbals in the beer garden. Karen's spoken to the manager. Yet to escalate.",
-    "Voices raised in a chip shop. Arms folded. Things are happening.",
-    "Pub jukebox volume war declared. Choices suspect. Mood dipping.",
-    "Wetherspoons table audibly bickering. Bouncer monitoring from the bar.",
+    // Always eligible
     "Tut-volume reaching legal limits. Glaring intensifying.",
-    "Two blokes at the bar invoking 'mate' with concerning frequency.",
-    "Heated VAR debate overflowing into the street. Pints set down for emphasis.",
     "Someone's said 'I'm not being funny but…' Nothing funny is following.",
-    "Mum on the school run has shouted at someone's dad. Awkward.",
-    "Sunday roast spotted with raised forks. Situation developing."
+    "'With respect…' deployed without any. Mood dropping.",
+    "A 'mate' has been delivered through teeth. Drift detected.",
+    "Voice raised in a corner shop. Arms folded.",
+    "Council meeting going off-script. Speaker losing the room.",
+    "Whatsapp group has gone quiet. Drafts being typed.",
+    "Pavement standoff over a dropped chip. Pride at stake.",
+    // Pub hours
+    { text:"Verbals in the beer garden. Karen's spoken to the manager. Yet to escalate.", h:[17,18,19,20,21,22,23] },
+    { text:"Voices raised in a chip shop. Arms folded. Things are happening.", h:[17,18,19,20,21,22,23,0] },
+    { text:"Pub jukebox volume war declared. Choices suspect. Mood dipping.", h:[18,19,20,21,22,23] },
+    { text:"Wetherspoons table audibly bickering. Bouncer monitoring from the bar.", h:[18,19,20,21,22,23,0] },
+    { text:"Two blokes at the bar invoking 'mate' with concerning frequency.", h:[18,19,20,21,22,23] },
+    // Match day weekend
+    { text:"Heated VAR debate overflowing into the street. Pints set down for emphasis.", d:[6,0], h:[14,15,16,17,18,19,20] },
+    { text:"Stadium concourse muttering. Half-time tea queue not coping.", d:[6,0], h:[14,15,16,17] },
+    // School run
+    { text:"Mum on the school run has shouted at someone's dad. Awkward.", d:[1,2,3,4,5], h:[8,9,15,16] },
+    // Sunday lunch
+    { text:"Sunday roast spotted with raised forks. Situation developing.", d:[0], h:[12,13,14,15,16] },
+    { text:"In-laws at a Toby Carvery have started 'just saying'. Trouble.", d:[0], h:[12,13,14,15,16] },
+    // Friday-night escalation
+    { text:"Office Christmas-do energy in May. The bar is the problem.", d:[5], h:[19,20,21,22] },
+    // Monday morning
+    { text:"Monday-morning team meeting passive-aggression at fluorescent levels.", d:[1], h:[9,10,11] },
+    // Evening any
+    { text:"Pavement debate over a dog being off-lead. Voices raised.", h:[16,17,18,19,20] },
   ]},
+
   { min:46, max:60, label:"HANDBAGS", color:'#f0a020', blurbs:[
+    // Always eligible
     "Chests puffed, pints set down gently. It's all bark for now — but the air has changed.",
-    "Standing-up-from-the-table phase reached. Bouncer adjusting earpiece.",
     "Posturing in full swing. Mates restraining mates. Drinks half-drunk.",
     "Two blokes squaring up but neither fully committing. Holding pattern.",
     "Coats partially removed. Reasoning still being attempted by friends.",
     "The 'hold me back' voice deployed. Nobody is being held.",
     "Several 'come on then' offers exchanged. No takers. Yet.",
-    "Beer-garden tension at chair-pushed-back levels. All bark.",
-    "The pre-fight quiet has descended on a beer garden in Romford.",
-    "A glass has been put down with intent. The next 60 seconds matter."
+    "Posture inflated. Vocab abbreviated. Eyes locked.",
+    "Standing-up-from-the-table phase reached. Bouncer adjusting earpiece.",
+    // Pub hours
+    { text:"Beer-garden tension at chair-pushed-back levels. All bark.", h:[18,19,20,21,22,23,0] },
+    { text:"A glass has been put down with intent. The next 60 seconds matter.", h:[19,20,21,22,23,0] },
+    // Weekend night
+    { text:"The pre-fight quiet has descended on a beer garden in Romford.", d:[5,6], h:[20,21,22,23,0,1] },
+    { text:"Smoking-area faceoff. Vapes pocketed. Hands free.", d:[5,6], h:[20,21,22,23,0] },
+    { text:"Three girls have stepped between two lads. Nobody's backing down quickly.", d:[5,6], h:[21,22,23,0,1] },
+    // Saturday afternoon
+    { text:"Home-and-away supporters in the same bus stop. Coats off.", d:[6], h:[14,15,16,17,18] },
+    // Friday evening
+    { text:"Friday after-work drinks have crossed the Rubicon. Loosened ties, raised voices.", d:[5], h:[18,19,20,21,22] },
+    // Sunday afternoon
+    { text:"Sunday-roast table now silent except for cutlery being placed firmly.", d:[0], h:[13,14,15,16] },
+    // School run
+    { text:"School pick-up has become a parent-teacher disagreement. Heads turning.", d:[1,2,3,4,5], h:[15,16] },
   ]},
+
   { min:61, max:75, label:"PROPER SIMMERING", color:'#ff8a1f', blurbs:[
-    "Chairs scraping back. Bouncer eyeballing the table. Gentle advance toward the doorway.",
-    "Doorman radio chatter intensifying. Coats removed. Tension thick.",
-    "Beer-garden faceoff escalating. Mates trying to negotiate ceasefire.",
+    // Always eligible
     "Stares being held too long. Words being chosen carefully.",
-    "Pub bell rung early. Glasses being collected with urgency.",
-    "Last warning issued by management. Threats spilling onto the street.",
-    "Police been called by the karaoke bar. ETA four minutes.",
+    "Mate of mate getting involved. Numbers on each side increasing.",
+    "Doorman radio chatter intensifying. Coats removed. Tension thick.",
     "A taxi-rank disagreement is becoming a postcode disagreement.",
-    "The chip-shop door has been held open menacingly. This is bad.",
-    "Mate of mate getting involved. Numbers on each side increasing."
+    "Someone's pulled out a phone to film. Always the worst sign.",
+    "Bouncer earpiece working overtime. Backup en route.",
+    // Pub hours
+    { text:"Chairs scraping back. Bouncer eyeballing the table. Gentle advance toward the doorway.", h:[19,20,21,22,23,0,1] },
+    { text:"Beer-garden faceoff escalating. Mates trying to negotiate ceasefire.", h:[19,20,21,22,23,0] },
+    { text:"Pub bell rung early. Glasses being collected with urgency.", h:[20,21,22,23] },
+    { text:"Last warning issued by management. Threats spilling onto the street.", h:[21,22,23,0,1] },
+    { text:"The chip-shop door has been held open menacingly. This is bad.", h:[20,21,22,23,0,1,2] },
+    // Late weekend
+    { text:"Police been called by the karaoke bar. ETA four minutes.", d:[5,6], h:[22,23,0,1,2,3] },
+    { text:"Kebab-shop queue argument turning into kebab-shop queue brawl prelude.", d:[5,6], h:[23,0,1,2,3] },
+    { text:"Taxi rank has split into two camps. Both want the same Prius.", d:[5,6], h:[23,0,1,2,3] },
+    { text:"Strip-lit petrol station forecourt becoming a meeting place. Wrong kind.", d:[5,6], h:[22,23,0,1,2] },
+    // Sunday roast
+    { text:"Family Sunday lunch escalating into family group-chat warfare.", d:[0], h:[13,14,15,16,17] },
+    // Match day
+    { text:"Pub TV showing the wrong replay. Disagreement turning physical.", d:[6,0], h:[15,16,17,18,19] },
+    // Wedding/event Friday
+    { text:"Wedding reception has reached the speeches phase. Best man chose violence.", d:[5,6], h:[19,20,21] },
+    // Office party
+    { text:"Christmas-party-energy work do has escalated. HR will hear about this.", d:[4,5], h:[20,21,22,23] },
   ]},
+
   { min:76, max:90, label:"IT'S KICKING OFF", color:'#ef4b4b', blurbs:[
-    "It's off. Someone's glassed a pint of Stella, the kebab shop is taking cover.",
-    "Chairs flying. Stella casualties multiplying. Police inbound.",
+    // Always eligible
     "Tables flipped. Bouncer wading in. Bystanders filming for TikTok.",
-    "Full-blown beer-garden brawl in motion. Pre-roll on every phone.",
-    "Doorman down a man. Mate of mate has joined. Spillage extensive.",
-    "Stella foam everywhere. Chip-shop CCTV will tell the tale.",
     "Mass posturing converted to actual swinging. Carnage commencing.",
     "Glass casualties confirmed. Bouncers calling in reinforcements.",
-    "The pub is now a scene. Police on three corners. Witness lawyers on alert.",
-    "A&E switchboard ringing. Someone's lost a tooth. Friday delivered."
+    "Doorman down a man. Mate of mate has joined. Spillage extensive.",
+    // Pub hours
+    { text:"It's off. Someone's glassed a pint of Stella, the kebab shop is taking cover.", h:[19,20,21,22,23,0,1,2] },
+    { text:"Chairs flying. Stella casualties multiplying. Police inbound.", h:[20,21,22,23,0,1,2] },
+    { text:"Stella foam everywhere. Chip-shop CCTV will tell the tale.", h:[20,21,22,23,0,1,2] },
+    { text:"The pub is now a scene. Police on three corners. Witness lawyers on alert.", h:[21,22,23,0,1,2] },
+    { text:"Full-blown beer-garden brawl in motion. Pre-roll on every phone.", h:[19,20,21,22,23,0] },
+    // Friday/Saturday late night
+    { text:"A&E switchboard ringing. Someone's lost a tooth. Friday delivered.", d:[5,6], h:[22,23,0,1,2,3,4] },
+    { text:"Saturday-night high-street: it has fully kicked off outside the chippy.", d:[6], h:[22,23,0,1,2,3] },
+    { text:"Two postcodes meeting in the bus station. Riot vans dispatched.", d:[5,6], h:[22,23,0,1,2,3] },
+    { text:"Someone's gone through a window. Police helicopter overhead.", d:[5,6], h:[23,0,1,2,3] },
+    // Match day
+    { text:"Away end has invaded the home end. Stewards overrun.", d:[6,0], h:[15,16,17,18,19] },
+    { text:"Post-match high-street has crossed into actual riot. Shopfronts shuttering.", d:[6,0], h:[17,18,19,20,21] },
+    // Sunday lunch gone wrong
+    { text:"Sunday roast has ended in the carpark. The carvery will not recover.", d:[0], h:[14,15,16,17] },
+    // Wedding
+    { text:"Wedding reception has gone fully on. Bridesmaids weaponised.", d:[5,6], h:[20,21,22,23,0] },
+    // Bank holiday
+    { text:"Bank-holiday seafront. Beer cans, chairs, carnage. Sky News dispatching crew.", d:[1,5,6,0], h:[15,16,17,18,19,20,21] },
   ]},
+
   { min:91, max:100, label:"ALL OUT SCRAP", color:'#b41f1f', blurbs:[
-    "Full-on Wetherspoons Western. Call your mum. Lock the fridge.",
+    // Always eligible
     "Multiple riot vans deployed. The street is the pub now. Chaos absolute.",
     "Beer garden has become a battlefield. Stella crates pressed into service.",
     "Chairs, tables, kebab trays — all in flight. Sky News parking up.",
-    "Someone's broadcasting it on Insta Live. The footage is generational.",
-    "Phone calls home being made. 'Mam, come and get us.' True scenes.",
     "Riot vans, paddy wagons, a horse. Britain's finest in unison.",
     "The carpet won't recover. The chip shop is shuttering. Apocalyptic.",
     "Postcode war declared. Even the seagulls have retreated.",
-    "Domesday Spoons. Curry Club catastrophic. The kebab shop has fallen."
+    "Someone's broadcasting it on Insta Live. The footage is generational.",
+    // Pub-late-night
+    { text:"Full-on Wetherspoons Western. Call your mum. Lock the fridge.", h:[20,21,22,23,0,1,2,3] },
+    { text:"Phone calls home being made. 'Mam, come and get us.' True scenes.", h:[21,22,23,0,1,2,3] },
+    // Friday/Saturday peak
+    { text:"Domesday Spoons. Curry Club catastrophic. The kebab shop has fallen.", d:[5,6], h:[22,23,0,1,2,3,4] },
+    { text:"The high street has been re-carpeted in chips and broken glass.", d:[5,6], h:[23,0,1,2,3,4] },
+    { text:"Three different fights, one shared pavement. The bouncers have joined a union.", d:[5,6], h:[22,23,0,1,2,3] },
+    // Match day
+    { text:"Stadium evacuation in progress. Away coaches will not be moving.", d:[6,0], h:[15,16,17,18,19] },
+    { text:"Post-match chaos: derby day delivered. Town centre uninhabitable.", d:[6,0], h:[17,18,19,20,21,22] },
+    // Bank holiday
+    { text:"Bank holiday seaside has gone full Mad Max. Donkeys evacuated.", d:[1,5,6,0], h:[14,15,16,17,18,19,20] },
+    // Sunday afternoon (rare but spectacular)
+    { text:"Sunday afternoon and the carvery has fully fallen. Yorkshire puddings pressed into combat.", d:[0], h:[14,15,16,17] },
   ]}
 ];
 
-// Pick a tier blurb deterministically from the date+hour so it's stable for ~1 hour
-// then rotates as the day progresses. Same visitors on the same hour see the same line.
+// Pick a tier blurb for the CURRENT day & hour. Filter to blurbs eligible
+// right now (string blurbs always eligible; objects must satisfy any d/h
+// constraints), then deterministically rotate within the eligible set so
+// every visitor on the same hour sees the same line.
 function pickBlurb(tier){
   if (!tier?.blurbs?.length) return tier?.blurb || '';
-  const d = new Date();
-  const idx = (d.getDate() * 11 + d.getHours() * 7) % tier.blurbs.length;
-  return tier.blurbs[idx];
+  const now = new Date();
+  const dow = now.getDay();
+  const hour = now.getHours();
+  const eligible = tier.blurbs.filter(b => {
+    if (typeof b === 'string') return true;
+    if (b.d && !b.d.includes(dow)) return false;
+    if (b.h && !b.h.includes(hour)) return false;
+    return true;
+  });
+  if (!eligible.length){
+    // Fallback: any always-eligible string blurb (should never be empty)
+    const generic = tier.blurbs.filter(b => typeof b === 'string');
+    if (generic.length) return generic[(now.getDate() + hour) % generic.length];
+    return '';
+  }
+  const idx = (now.getDate() * 11 + hour * 7) % eligible.length;
+  const b = eligible[idx];
+  return typeof b === 'string' ? b : b.text;
 }
 
 const $ = sel => document.querySelector(sel);
