@@ -5539,7 +5539,8 @@ async function fetchOilPrices(){
     // Multi-source: try Stooq first (cb.f = Brent Crude futures, free CSV,
     // CORS-friendly), then Yahoo BZ=F via the 3-proxy chain. Same robust
     // pattern as the Stock Indices fetcher.
-    let q = await _fetchStooqQuote('cb.f');
+    // Stooq symbol for Brent Crude futures is bz.f (NOT cb.f — that's wrong).
+    let q = await _fetchStooqQuote('bz.f');
     if (!q || !q.live) q = await _fetchYahooQuote('BZ=F');
     if (q && q.live){
       out.live = true;
@@ -5569,20 +5570,19 @@ async function _fetchStooqQuote(stooqSym){
     // Daily history endpoint — gives last ~5 trading days of OHLCV as CSV
     const url = `https://stooq.com/q/d/l/?s=${encodeURIComponent(stooqSym)}&i=d`;
     const r = await fetch(url);
-    if (!r.ok) return out;
+    if (!r.ok){ console.warn('[stooq]', stooqSym, 'HTTP', r.status); return out; }
     const csv = await r.text();
-    if (!csv || csv.length < 30) return out;
+    if (!csv || csv.length < 30){ console.warn('[stooq]', stooqSym, 'short response:', csv.slice(0,80)); return out; }
     const lines = csv.trim().split('\n');
-    if (lines.length < 3) return out;
-    // CSV: Date,Open,High,Low,Close,Volume   (sometimes "Date,Open,..." or with trailing newline)
+    if (lines.length < 3){ console.warn('[stooq]', stooqSym, 'too few rows'); return out; }
     const header = lines[0].toLowerCase();
-    if (!header.includes('close')) return out;
+    if (!header.includes('close')){ console.warn('[stooq]', stooqSym, 'no Close column:', header); return out; }
     const idxClose = header.split(',').findIndex(h => h.trim() === 'close');
     if (idxClose < 0) return out;
     const closes = lines.slice(1)
       .map(l => parseFloat((l.split(',')[idxClose] || '').trim()))
       .filter(v => Number.isFinite(v));
-    if (closes.length < 2) return out;
+    if (closes.length < 2){ console.warn('[stooq]', stooqSym, 'too few closes:', closes.length); return out; }
     const last = closes[closes.length - 1];
     const prev = closes[closes.length - 2];
     out.live = true;
@@ -5592,12 +5592,74 @@ async function _fetchStooqQuote(stooqSym){
     out.dayChangePct = ((last - prev) / prev) * 100;
     out.spark = closes.slice(-5);
     out.source = 'Stooq';
-  } catch(_){}
+    console.log('[stooq] ✅', stooqSym, '=', last.toFixed(2), `(${out.dayChangePct >= 0 ? '+' : ''}${out.dayChangePct.toFixed(2)}%)`);
+  } catch(e){ console.warn('[stooq]', stooqSym, 'threw:', e.message); }
   return out;
 }
 
-// Yahoo Finance quote via expanded 3-proxy chain. Returns same shape as Stooq.
+// Yahoo Finance batch quote — single request for many symbols. Much more
+// efficient than per-symbol chart calls. Returns Map<symbol, quoteObject>.
+// Tries 5 proxies until one succeeds.
+const _YAHOO_BATCH_CACHE = { ts: 0, data: null };
+async function _fetchYahooBatch(symbols){
+  // 60-second in-memory cache so repeated calls within one render don't refetch
+  if (_YAHOO_BATCH_CACHE.data && (Date.now() - _YAHOO_BATCH_CACHE.ts) < 60_000){
+    return _YAHOO_BATCH_CACHE.data;
+  }
+  const out = new Map();
+  const symList = symbols.join(',');
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symList)}`;
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&disableCache=true`,
+    `https://corsproxy.io/${url}`,
+  ];
+  for (const u of proxies){
+    try {
+      const r = await fetch(u);
+      if (!r.ok){ console.warn('[yahoo-batch]', u.slice(0,60), 'HTTP', r.status); continue; }
+      let j = await r.json();
+      // allorigins.win/get wraps response in {contents:"..."}
+      if (j && typeof j.contents === 'string'){
+        try { j = JSON.parse(j.contents); } catch(_){ continue; }
+      }
+      const results = j && j.quoteResponse && j.quoteResponse.result;
+      if (!Array.isArray(results) || !results.length){ continue; }
+      for (const r of results){
+        if (!r || !r.symbol) continue;
+        const last = Number(r.regularMarketPrice);
+        const prev = Number(r.regularMarketPreviousClose);
+        if (!Number.isFinite(last) || !Number.isFinite(prev)) continue;
+        out.set(r.symbol, {
+          live: true,
+          last, prev,
+          dayChange: last - prev,
+          dayChangePct: ((last - prev) / prev) * 100,
+          spark: [prev, last],
+          source: 'Yahoo Finance v7',
+          name: r.shortName || r.longName || r.symbol,
+        });
+      }
+      if (out.size){
+        console.log('[yahoo-batch] ✅ got', out.size, 'symbols via', u.slice(0,40));
+        break;
+      }
+    } catch(e){ console.warn('[yahoo-batch] threw on', u.slice(0,40), ':', e.message); }
+  }
+  _YAHOO_BATCH_CACHE.ts = Date.now();
+  _YAHOO_BATCH_CACHE.data = out;
+  return out;
+}
+
+// Yahoo Finance quote — first checks the batch cache, falls back to per-symbol
+// chart endpoint via 3 proxies. With logging so DevTools shows what's happening.
 async function _fetchYahooQuote(symbol){
+  // Check the batch cache first — way more efficient
+  if (_YAHOO_BATCH_CACHE.data && _YAHOO_BATCH_CACHE.data.has(symbol)){
+    return _YAHOO_BATCH_CACHE.data.get(symbol);
+  }
   const out = { live:false, symbol };
   try {
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=5d&interval=1d`;
@@ -5609,14 +5671,14 @@ async function _fetchYahooQuote(symbol){
     for (const u of proxies){
       try {
         const r = await fetch(u);
-        if (!r.ok) continue;
+        if (!r.ok){ console.warn('[yahoo-chart]', symbol, 'HTTP', r.status, 'via', u.slice(0,40)); continue; }
         const j = await r.json();
         const result = j && j.chart && j.chart.result && j.chart.result[0];
-        if (!result) continue;
+        if (!result){ continue; }
         const meta = result.meta || {};
         const quote = result.indicators && result.indicators.quote && result.indicators.quote[0];
         const closes = ((quote && quote.close) || []).filter(v => Number.isFinite(v));
-        if (closes.length < 2) continue;
+        if (closes.length < 2){ continue; }
         const last = closes[closes.length - 1];
         const prev = closes[closes.length - 2];
         out.live = true;
@@ -5626,9 +5688,10 @@ async function _fetchYahooQuote(symbol){
         out.dayChangePct = ((last - prev) / prev) * 100;
         out.spark = closes.slice(-5);
         out.currency = meta.currency || 'USD';
-        out.source = 'Yahoo Finance';
+        out.source = 'Yahoo Finance v8';
+        console.log('[yahoo-chart] ✅', symbol, '=', last.toFixed(2));
         break;
-      } catch(_){ /* try next proxy */ }
+      } catch(e){ console.warn('[yahoo-chart]', symbol, 'threw:', e.message); }
     }
   } catch(_){ /* swallow all */ }
   return out;
@@ -5642,8 +5705,16 @@ async function _fetchQuote(stooqSym, yahooSym){
 }
 
 // 📈 Stock Indices — FTSE 100, Dow Jones, NASDAQ Composite, S&P 500.
+// Warms the Yahoo batch cache for ALL finance symbols (indices + oil + stocks)
+// in one request to minimise proxy load.
 async function fetchStockIndices(){
   try {
+    // One batch request for every finance symbol the page needs — much more
+    // proxy-friendly than 10 individual requests, and the result is cached.
+    await _fetchYahooBatch([
+      '^FTSE','^DJI','^IXIC','^GSPC','BZ=F',
+      'AAPL','NVDA','GOOGL','AZN.L','GSK.L'
+    ]);
     const SPECS = [
       { key:'ftse',   name:'FTSE 100',  stooq:'^ftm', yahoo:'^FTSE' },
       { key:'dow',    name:'Dow Jones', stooq:'^dji', yahoo:'^DJI'  },

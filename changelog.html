@@ -135,7 +135,34 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.5 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.5.1 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 Finance data still not loading · symbol fix + batch endpoint · Apr 2026</div>
+    </div>
+    <p class="intro">v1.5 added the multi-source plumbing but the cards were still showing empty. Two root causes: the Stooq Brent symbol was wrong (<code>cb.f</code> doesn't exist — Brent is <code>bz.f</code>), and the per-symbol Yahoo chart calls were running 10 times in parallel through the same proxies, getting rate-limited. v1.5.1 fixes both.</p>
+    <h3>🛢️ Stooq Brent symbol corrected</h3>
+    <ul>
+      <li><code>cb.f</code> → <code>bz.f</code> in <code>fetchOilPrices()</code>. <code>bz.f</code> is the actual Stooq ticker for Brent Crude futures.</li>
+    </ul>
+    <h3>📊 Yahoo v7 batch endpoint — one request for all 10 symbols</h3>
+    <ul>
+      <li>New <code>_fetchYahooBatch(symbols)</code> helper hits <code>query1.finance.yahoo.com/v7/finance/quote?symbols=^FTSE,^DJI,^IXIC,^GSPC,BZ=F,AAPL,NVDA,GOOGL,AZN.L,GSK.L</code> — one HTTP request returns every quote we need at once.</li>
+      <li>5-proxy chain: allorigins/raw → corsproxy.io → api.codetabs.com → allorigins/get (wrapped in <code>{contents}</code>) → corsproxy.io alt syntax. Whichever responds first wins.</li>
+      <li><b>60-second in-memory cache</b> in <code>_YAHOO_BATCH_CACHE</code>. <code>_fetchYahooQuote</code> now checks the batch cache first and returns instantly if the symbol is in there — no more parallel duplicate requests for the same data.</li>
+      <li><code>fetchStockIndices()</code> warms the batch cache up front, so <code>fetchOilPrices()</code> and <code>fetchTechPharma()</code> can all read from it without hitting the network again.</li>
+    </ul>
+    <h3>🔍 Console logging added for live debug</h3>
+    <ul>
+      <li>Every fetch attempt now logs to the browser console. Open DevTools and reload to see exactly which proxy is responding and which symbols come back. Tags: <code>[stooq]</code>, <code>[yahoo-batch]</code>, <code>[yahoo-chart]</code>. Successes get a ✅ prefix, failures explain the HTTP status or thrown error.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.5</div>
       <div class="release-tag">🐛 Finance bug fixes · 4 indices · multi-source · methodology consistency · Apr 2026</div>
     </div>
     <p class="intro">Four bug fixes against the v1.4.2 ship. The Finance &amp; Markets cards weren't loading data (Yahoo Finance via single proxy was being blocked), the methodology table looked inconsistent with new "ambient context" sub-headers and "display" weights that didn't match the rest of the table, and stock indices coverage was thin (FTSE + Dow only).</p>
