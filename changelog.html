@@ -158,6 +158,12 @@
       <li>Both <code>SIGNAL_EXPLAINERS</code> tooltip strings rewritten to explain the new sourcing. The explainer chip on each card now correctly describes the real data path.</li>
       <li>Methodology table rows updated for both modules — old "Live Odds" entries replaced with the new titles, sources, and methods.</li>
     </ul>
+    <h3>📊 Cloudflare Analytics — close the gaps</h3>
+    <ul>
+      <li>Added the Cloudflare Web Analytics beacon to <code>404.html</code> so dead-URL hits are also tracked. Useful for spotting broken inbound links and typo'd URLs from Substack/social.</li>
+      <li>All 7 deployed HTML pages now carry the beacon (<code>index</code>, <code>news</code>, <code>snapshot</code>, <code>shop</code>, <code>changelog</code>, <code>legal</code>, <code>404</code>).</li>
+      <li>Custom-domain hostnames added to the beacon site config in Cloudflare so traffic from <code>isitkickingoff.com</code> appears in the dashboard (was previously being received but filtered out — only the workers.dev hostname was on the allowlist).</li>
+    </ul>
     <h3>🔄 Project sync</h3>
     <ul>
       <li>Changes applied to main <code>index.html</code>. Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced with test-deploy patches (noindex, Shop greyed) re-applied.</li>
