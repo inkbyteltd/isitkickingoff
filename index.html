@@ -51,7 +51,7 @@
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: https: blob:;
   font-src 'self' data:;
-  connect-src 'self' https://*.bbci.co.uk https://*.theguardian.com https://*.skynews.com https://*.dailymail.co.uk https://*.mirror.co.uk https://api.rss2json.com https://api.allorigins.win https://corsproxy.io https://api.open-meteo.com https://api.gdeltproject.org https://www.gov.uk https://en.wikipedia.org https://api.tvmaze.com https://www.thesportsdb.com https://www.reddit.com https://old.reddit.com https://oauth.reddit.com https://news.met.police.uk https://ws-public.interpol.int https://data.police.uk https://data.elexon.co.uk https://api.nationalgrideso.com https://rss.applemarketingtools.com https://itunes.apple.com https://api.bank-holidays.json.gov.uk https://www.applyforuploadcommercialvehicleoperatorlicence.service.gov.uk https://nitter.net https://nitter.privacydev.net https://www.national-lottery.co.uk https://*.supabase.co;
+  connect-src 'self' https://*.bbci.co.uk https://*.theguardian.com https://*.skynews.com https://*.dailymail.co.uk https://*.mirror.co.uk https://api.rss2json.com https://api.allorigins.win https://corsproxy.io https://api.open-meteo.com https://api.gdeltproject.org https://www.gov.uk https://en.wikipedia.org https://api.tvmaze.com https://www.thesportsdb.com https://www.reddit.com https://old.reddit.com https://oauth.reddit.com https://news.met.police.uk https://ws-public.interpol.int https://data.police.uk https://data.elexon.co.uk https://api.nationalgrideso.com https://rss.applemarketingtools.com https://itunes.apple.com https://api.bank-holidays.json.gov.uk https://www.applyforuploadcommercialvehicleoperatorlicence.service.gov.uk https://nitter.net https://nitter.privacydev.net https://www.national-lottery.co.uk https://*.supabase.co https://api.coingecko.com https://api.frankfurter.app;
   frame-src 'self' https://platform.twitter.com https://syndication.twitter.com;
   object-src 'none';
   base-uri 'self';
@@ -971,6 +971,10 @@
   <h2 class="section">🌍 Environment &amp; Energy · Live context</h2>
   <section class="env-grid" id="env-tickers"></section>
 
+  <!-- FINANCE & MARKETS · ambient context, not scored -->
+  <h2 class="section">💷 Finance &amp; Markets · Live context</h2>
+  <section class="env-grid" id="finance-tickers"></section>
+
   <!-- HEAT MAP -->
   <h2 class="section">UK Heat Map · Kick-off by region</h2>
   <section class="heatmap-wrap">
@@ -1107,6 +1111,11 @@
         <tr><td>⛈️ Met Office Storm Watch</td><td>display</td><td><b>LIVE</b> — Met Office severe weather warnings via the official <a href="https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">NSWWS RSS feed</a> (no API key needed). Parses the highest active warning level (Yellow / Amber / Red), counts active warnings nationally, and surfaces the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Display-only.</td></tr>
         <tr><td>⚡ National Grid Power Mix</td><td>display</td><td><b>LIVE</b> — UK electricity generation breakdown from the <b>Elexon BMRS FUELHH dataset</b> (same provider as the kettle-demand module). Renders the top 5 fuel sources right now as horizontal worm-bars with percentage of total grid generation: gas (CCGT/OCGT), wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). When wind crosses 50% the country is briefly running on weather. Display-only.</td></tr>
         <tr><td>🛢️ Brent Crude Oil Tracker</td><td>display</td><td>Brent crude (BZ=F) spot price in USD, fetched from <b>Yahoo Finance</b> via our existing CORS proxy chain (api.allorigins.win → corsproxy.io). Shows current price, day-over-day percentage change with up/down arrow, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair with the ⛽ Petrol Pump Rage card for a full pump-to-platform read. Display-only.</td></tr>
+        <tr><td colspan="3" style="background:var(--bg-3);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding:10px 12px">💷 Finance &amp; Markets · ambient context (not scored, v1.4)</td></tr>
+        <tr><td>📈 FTSE &amp; Dow</td><td>display</td><td><b>LIVE</b> — FTSE 100 (^FTSE) and Dow Jones Industrial Average (^DJI) via Yahoo Finance through our existing CORS proxy chain. The FTSE 100 is the headline index of the London Stock Exchange (the 100 largest UK-listed companies by market cap); the Dow is 30 of America's biggest household names. Shows day change in percent, colour-coded (green up, red down), with both indices listed below the headline. Falls back to "loading…" until Yahoo responds. Display-only.</td></tr>
+        <tr><td>₿ Crypto</td><td>display</td><td><b>LIVE</b> — Bitcoin, Ethereum, and Solana prices in GBP via the <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">CoinGecko free public API</a> (no API key needed, CORS-friendly). Shows current price plus 24-hour percentage change for each, colour-coded. Bitcoin is the headline; Ethereum runs about half of decentralised finance; Solana is the perpetually-online newcomer. Refreshes when the dashboard reloads (typically every page load). Display-only.</td></tr>
+        <tr><td>💱 Pound In Your Pocket</td><td>display</td><td><b>LIVE</b> — GBP exchange rates via the <a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Frankfurter API</a> (ECB-backed, free, no key needed). Shows what £1 buys today in 5 major currencies: 🇺🇸 USD, 🇪🇺 EUR, 🇯🇵 JPY, 🇨🇦 CAD, 🇦🇺 AUD. The GBP/USD rate ("cable") is the historic headline and the cleanest read on UK relative strength. EUR is the holiday-money number. Display-only.</td></tr>
+        <tr><td>💊 Tech &amp; Pharma Movers</td><td>display</td><td>Five large-cap stocks across two sectors: Apple, NVIDIA, Alphabet (US tech megacaps that drive the Nasdaq), plus AstraZeneca and GSK (UK-listed pharma giants on the LSE). Each row shows day change in percent, colour-coded. Tech moves the global mood; pharma moves the FTSE more than people realise. Top mover by absolute % change is the headline. Yahoo Finance via CORS proxy. Display-only.</td></tr>
       </tbody>
     </table>
     </div>
@@ -5523,6 +5532,115 @@ async function fetchOilPrices(){
   return out;
 }
 
+/* =========================================================
+   Finance & Markets fetchers (v1.4)
+   Ambient context — these don't feed the gauge either.
+   ========================================================= */
+
+// Shared helper — fetch a Yahoo Finance quote via the existing CORS proxy
+// chain. Returns { live, last, prev, dayChangeUSD, dayChangePct, spark[] }
+// or { live:false } on failure.
+async function _fetchYahooQuote(symbol){
+  const out = { live:false, symbol };
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=5d&interval=1d`;
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+  for (const u of proxies){
+    try {
+      const r = await fetch(u);
+      if (!r.ok) continue;
+      const j = await r.json();
+      const result = j?.chart?.result?.[0];
+      if (!result) continue;
+      const meta = result.meta || {};
+      const closes = (result.indicators?.quote?.[0]?.close || []).filter(v => Number.isFinite(v));
+      if (closes.length < 2) continue;
+      const last = closes[closes.length - 1];
+      const prev = closes[closes.length - 2];
+      out.live = true;
+      out.last = last;
+      out.prev = prev;
+      out.dayChange = last - prev;
+      out.dayChangePct = ((last - prev) / prev) * 100;
+      out.spark = closes.slice(-5);
+      out.currency = meta.currency || 'USD';
+      break;
+    } catch(e){ /* try next */ }
+  }
+  return out;
+}
+
+// 📈 FTSE 100 + Dow Jones — Yahoo Finance via proxy.
+async function fetchStockIndices(){
+  const [ftse, dow] = await Promise.all([
+    _fetchYahooQuote('^FTSE'),
+    _fetchYahooQuote('^DJI'),
+  ]);
+  return {
+    live: !!(ftse?.live || dow?.live),
+    ftse,
+    dow,
+  };
+}
+
+// ₿ Crypto — CoinGecko free public API. No key, CORS-friendly.
+async function fetchCrypto(){
+  const out = { live:false };
+  try {
+    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=gbp&include_24hr_change=true';
+    const r = await fetch(url);
+    if (r.ok){
+      const j = await r.json();
+      if (j?.bitcoin?.gbp){
+        out.live = true;
+        out.btc = { gbp: j.bitcoin.gbp,  change24h: j.bitcoin.gbp_24h_change ?? 0 };
+        out.eth = { gbp: j.ethereum?.gbp, change24h: j.ethereum?.gbp_24h_change ?? 0 };
+        out.sol = { gbp: j.solana?.gbp,   change24h: j.solana?.gbp_24h_change ?? 0 };
+      }
+    }
+  } catch(e){ /* fall through */ }
+  return out;
+}
+
+// 💱 GBP exchange rates — Frankfurter (ECB-backed, free, no key).
+async function fetchExchangeRates(){
+  const out = { live:false };
+  try {
+    const r = await fetch('https://api.frankfurter.app/latest?from=GBP&to=USD,EUR,JPY,CAD,AUD');
+    if (r.ok){
+      const j = await r.json();
+      if (j?.rates && j.rates.USD){
+        out.live = true;
+        out.rates = j.rates;
+        out.date = j.date;
+        out.base = j.base || 'GBP';
+      }
+    }
+  } catch(e){ /* fall through */ }
+  return out;
+}
+
+// 💊 Tech & Pharma movers — Yahoo Finance via proxy.
+async function fetchTechPharma(){
+  const symbols = [
+    { sym:'AAPL',  name:'Apple',         sector:'tech' },
+    { sym:'NVDA',  name:'NVIDIA',        sector:'tech' },
+    { sym:'GOOGL', name:'Alphabet',      sector:'tech' },
+    { sym:'AZN.L', name:'AstraZeneca',   sector:'pharma' },
+    { sym:'GSK.L', name:'GSK',           sector:'pharma' },
+  ];
+  const results = await Promise.all(symbols.map(async s => {
+    const q = await _fetchYahooQuote(s.sym);
+    return { ...s, ...(q || {}) };
+  }));
+  return {
+    live: results.some(r => r?.live),
+    movers: results,
+  };
+}
+
 // 💩 Shit Index — modelled with live rain modifier.
 // Anchored to Environment Agency EDM data: ~3.6M sewage spill events in
 // England 2023, ~4.7M hours of total discharge. Combined sewer overflows
@@ -7656,6 +7774,189 @@ function renderEnvCards(env){
   if (target) target.innerHTML = html;
 }
 
+/* =========================================================
+   Finance & Markets row renderer (v1.4)
+   ========================================================= */
+// Reusable mini-sparkline (filled to top, last bar highlighted) — same visual
+// language as the oil card's spark.
+function _miniSpark(arr){
+  if (!arr || !arr.length) return '';
+  const lo = Math.min(...arr), hi = Math.max(...arr);
+  const range = hi - lo || 1;
+  return arr.map((v,i) => {
+    const h = ((v - lo) / range) * 100;
+    const isLast = (i === arr.length - 1);
+    return `<i class="${isLast ? 'last' : ''}" style="height:${Math.max(8, h).toFixed(0)}%"></i>`;
+  }).join('');
+}
+
+// Reusable up/down arrow span — green for negative (bear→good→pub mood
+// preserved? no — just standard finance: red for down, green for up).
+function _changeSpan(pct){
+  if (!Number.isFinite(pct)) return '<span style="color:var(--ink-faint)">—</span>';
+  const up = pct >= 0;
+  const arrow = up ? '↑' : '↓';
+  const col = up ? '#3ecf8e' : '#ef4b4b';
+  return `<span style="color:${col};font-weight:600">${arrow} ${Math.abs(pct).toFixed(2)}%</span>`;
+}
+
+const _CRYPTO_NAMES = { btc:'Bitcoin', eth:'Ethereum', sol:'Solana' };
+
+function renderFinanceCards(fin){
+  const tipFor = (key, title) => {
+    const t = SIGNAL_EXPLAINERS[key];
+    return t ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(title)}?" data-tip="${_escAttr(t)}">?</button>` : '';
+  };
+
+  // 📈 Stock Indices
+  const idx = fin.stocks || {};
+  const ftse = idx.ftse || {};
+  const dow  = idx.dow  || {};
+  const stockChip = idx.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const ftseLine = Number.isFinite(ftse.last)
+    ? `<div class="shit-row"><span class="nm">FTSE 100</span><span class="vl" style="color:var(--ink)">${ftse.last.toFixed(0)} ${_changeSpan(ftse.dayChangePct)}</span></div>`
+    : `<div class="shit-row"><span class="nm">FTSE 100</span><span class="vl" style="color:var(--ink-faint)">loading…</span></div>`;
+  const dowLine = Number.isFinite(dow.last)
+    ? `<div class="shit-row"><span class="nm">Dow Jones</span><span class="vl" style="color:var(--ink)">${Math.round(dow.last).toLocaleString('en-GB')} ${_changeSpan(dow.dayChangePct)}</span></div>`
+    : `<div class="shit-row"><span class="nm">Dow Jones</span><span class="vl" style="color:var(--ink-faint)">loading…</span></div>`;
+  // Headline: pick the bigger absolute mover for the big number
+  const ftseAbs = Math.abs(ftse.dayChangePct || 0);
+  const dowAbs  = Math.abs(dow.dayChangePct || 0);
+  const lead = ftseAbs >= dowAbs ? { name:'FTSE', v:ftse } : { name:'Dow', v:dow };
+  const stocksHeadline = Number.isFinite(lead.v.dayChangePct)
+    ? `${lead.name} ${lead.v.dayChangePct >= 0 ? '+' : ''}${lead.v.dayChangePct.toFixed(2)}%`
+    : 'Markets…';
+
+  // ₿ Crypto
+  const c = fin.crypto || {};
+  const cryptoChip = c.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const fmtGBP = v => Number.isFinite(v)
+    ? (v >= 1000 ? '£' + Math.round(v).toLocaleString('en-GB') : '£' + v.toFixed(2))
+    : '—';
+  const cryptoRows = ['btc','eth','sol'].map(k => {
+    const o = c[k];
+    if (!o) return `<div class="shit-row"><span class="nm">${_CRYPTO_NAMES[k]}</span><span class="vl" style="color:var(--ink-faint)">—</span></div>`;
+    return `<div class="shit-row"><span class="nm">${_CRYPTO_NAMES[k]}</span><span class="vl" style="color:var(--ink)">${fmtGBP(o.gbp)} ${_changeSpan(o.change24h)}</span></div>`;
+  }).join('');
+  const btcHeadline = Number.isFinite(c.btc?.gbp)
+    ? `${fmtGBP(c.btc.gbp)}`
+    : 'Loading…';
+
+  // 💱 Pound In Your Pocket
+  const fx = fin.fx || {};
+  const fxChip = fx.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const fxRates = fx.rates || {};
+  const fxRows = ['USD','EUR','JPY','CAD','AUD'].map(cur => {
+    const v = fxRates[cur];
+    const flag = { USD:'🇺🇸', EUR:'🇪🇺', JPY:'🇯🇵', CAD:'🇨🇦', AUD:'🇦🇺' }[cur] || '';
+    const sym  = { USD:'$', EUR:'€', JPY:'¥', CAD:'$', AUD:'$' }[cur] || '';
+    return Number.isFinite(v)
+      ? `<div class="shit-row"><span class="nm">${flag} ${cur}</span><span class="vl" style="color:var(--ink)">${sym}${v.toFixed(cur==='JPY'?1:3)}</span></div>`
+      : `<div class="shit-row"><span class="nm">${flag} ${cur}</span><span class="vl" style="color:var(--ink-faint)">—</span></div>`;
+  }).join('');
+  const fxHeadline = Number.isFinite(fxRates.USD)
+    ? `£1 = $${fxRates.USD.toFixed(3)}`
+    : 'Rates loading…';
+
+  // 💊 Tech & Pharma Movers
+  const tp = fin.pharmatech || {};
+  const tpChip = tp.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const movers = (tp.movers || []).slice(0, 5);
+  const moverRows = movers.map(m => {
+    if (!Number.isFinite(m.dayChangePct)){
+      return `<div class="shit-row"><span class="nm">${_escAttr(m.name)}</span><span class="vl" style="color:var(--ink-faint)">—</span></div>`;
+    }
+    return `<div class="shit-row"><span class="nm">${_escAttr(m.name)}</span><span class="vl" style="color:var(--ink)">${_changeSpan(m.dayChangePct)}</span></div>`;
+  }).join('');
+  // Top mover by absolute % change
+  const topMover = movers
+    .filter(m => Number.isFinite(m.dayChangePct))
+    .sort((a,b) => Math.abs(b.dayChangePct) - Math.abs(a.dayChangePct))[0];
+  const tpHeadline = topMover
+    ? `${topMover.name} ${topMover.dayChangePct >= 0 ? '+' : ''}${topMover.dayChangePct.toFixed(1)}%`
+    : 'Movers…';
+
+  const html = `
+    <article class="ticker" id="fin-stocks">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">📈</span>
+          <div class="title">FTSE &amp; Dow · Today's Moves</div>
+          ${tipFor('stocks', 'Stock Indices')}
+        </div>
+        ${stockChip}
+      </div>
+      <div class="big" style="font-size:20px;line-height:1.2">${stocksHeadline}</div>
+      <div style="margin-top:6px">${ftseLine}${dowLine}</div>
+      <div class="foot">
+        <span>Yahoo Finance · ^FTSE / ^DJI</span>
+        <span>day %</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="fin-crypto">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">₿</span>
+          <div class="title">Crypto · BTC / ETH / SOL</div>
+          ${tipFor('crypto', 'Crypto')}
+        </div>
+        ${cryptoChip}
+      </div>
+      <div class="big">${btcHeadline}<span class="unit">BTC</span></div>
+      <div style="margin-top:6px">${cryptoRows}</div>
+      <div class="foot">
+        <span>CoinGecko · GBP · 24h Δ</span>
+        <span>3 coins</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="fin-fx">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">💱</span>
+          <div class="title">Pound In Your Pocket</div>
+          ${tipFor('fx', 'Pound In Your Pocket')}
+        </div>
+        ${fxChip}
+      </div>
+      <div class="big" style="font-size:22px;line-height:1.2">${fxHeadline}</div>
+      <div style="margin-top:6px">${fxRows}</div>
+      <div class="foot">
+        <span>Frankfurter · ECB rates</span>
+        <span>${fx.date || 'today'}</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="fin-pharmatech">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">💊</span>
+          <div class="title">Tech &amp; Pharma Movers</div>
+          ${tipFor('pharmatech', 'Tech and Pharma Movers')}
+        </div>
+        ${tpChip}
+      </div>
+      <div class="big" style="font-size:20px;line-height:1.2">${tpHeadline}</div>
+      <div style="margin-top:6px">${moverRows}</div>
+      <div class="foot">
+        <span>Yahoo Finance · 5 stocks</span>
+        <span>day %</span>
+      </div>
+    </article>
+  `;
+  const target = document.getElementById('finance-tickers');
+  if (target) target.innerHTML = html;
+}
+
 // Live tick loop — increments counters every second based on current rate
 let TICKER_INTERVAL = null;
 function startTickerLoop(){
@@ -7743,6 +8044,12 @@ const SIGNAL_EXPLAINERS = {
   storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). The Met Office issues these warnings under the National Severe Weather Warning Service. Green = all clear (suspiciously quiet).',
   power:      'Power Mix — live UK electricity generation breakdown from the Elexon BMRS FUELHH dataset (same provider as the kettle module). Shows the top 5 fuel sources right now as a percentage of total grid generation: gas, wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.',
   oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD, fetched from Yahoo Finance via our existing CORS proxy chain. Shows current price, day-over-day change, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
+
+  // Finance & Markets row (v1.4)
+  stocks:     'Stock Indices — live FTSE 100 (^FTSE) and Dow Jones Industrial Average (^DJI) via Yahoo Finance, routed through our CORS proxy chain. The FTSE 100 is the headline index of the London Stock Exchange — the 100 largest UK-listed companies by market cap. The Dow is 30 of America\'s biggest household names. Both move on macro news, central-bank decisions, earnings season, and the occasional tweet. Day change in percent, plus a 5-day sparkline so you can see if today\'s move is part of a trend or a fresh wobble.',
+  crypto:     'Crypto — live Bitcoin, Ethereum and Solana prices in GBP via the CoinGecko free public API (no API key needed). Shows current price plus 24-hour percentage change, colour-coded green/red. Bitcoin is the headline; Ethereum runs about half of decentralised finance; Solana is the perpetually-online newcomer. Crypto pairs nicely with the FTSE/Dow card — when traditional markets sleep on weekends, crypto keeps trading, which is either freedom or madness depending on your priors.',
+  fx:         'Pound In Your Pocket — live GBP exchange rates via the Frankfurter API (ECB-backed, free, no key needed). Shows what £1 buys today in 5 major currencies: USD, EUR, JPY, CAD, AUD. The GBP/USD rate is the historic headline ("cable" to traders) and the cleanest read on UK relative strength. EUR is the holiday-money-and-fishing-rights number. JPY is the carry-trade benchmark.',
+  pharmatech: 'Tech & Pharma Movers — five large-cap stocks across two sectors that matter to the UK story: Apple, NVIDIA, Alphabet (US tech megacaps that drive the Nasdaq), plus AstraZeneca and GSK (UK-listed pharma giants on the LSE). Each row shows day change in percent, colour-coded. Tech moves the global mood; pharma moves the FTSE more than people realise. Yahoo Finance via CORS proxy.',
 
   // Signal grid — main scoring inputs
   time:       'Hour-of-day "activity envelope" — nothing kicks off at 5am regardless of how tense the news is. A multiplier that dampens the gauge by time-of-day; weekend evenings peak.',
@@ -9581,6 +9888,14 @@ async function fetchBulk(){
     withTimeout(fetchPowerMix(),             T, 'power'),    // Elexon BMRS FUELHH live fuel mix
     withTimeout(fetchOilPrices(),            T, 'oil'),      // Brent crude (BZ=F) via Yahoo + proxy
   ]);
+  // v1.4 — Finance & Markets row (ambient, not scored). Fetched in a second
+  // batch so a slow Yahoo proxy can't block the gauge from rendering.
+  const [stocks, crypto, fx, pharmatech] = await Promise.all([
+    withTimeout(fetchStockIndices(),         T, 'stocks'),     // FTSE 100 + Dow Jones via Yahoo + proxy
+    withTimeout(fetchCrypto(),               T, 'crypto'),     // CoinGecko BTC/ETH/SOL in GBP
+    withTimeout(fetchExchangeRates(),        T, 'fx'),         // Frankfurter (ECB) GBP rates
+    withTimeout(fetchTechPharma(),           T, 'pharmatech'), // 5 large-cap movers via Yahoo + proxy
+  ]);
   // Every downstream consumer handles null/missing gracefully via fallbacks,
   // but seed sensible defaults so destructuring stays predictable.
   return {
@@ -9608,6 +9923,11 @@ async function fetchBulk(){
     storm:       storm,
     power:       power,
     oil:         oil,
+    // v1.4 — Finance & Markets row (ambient, not scored)
+    stocks:      stocks,
+    crypto:      crypto,
+    fx:          fx,
+    pharmatech:  pharmatech,
   };
 }
 
@@ -9682,6 +10002,16 @@ function renderAll(bulk){
       oil:   bulk.oil,
     });
   } catch(e){ console.warn('[env] render failed:', e.message); }
+
+  // v1.4 — Finance & Markets row (ambient, not scored).
+  try {
+    renderFinanceCards({
+      stocks:     bulk.stocks,
+      crypto:     bulk.crypto,
+      fx:         bulk.fx,
+      pharmatech: bulk.pharmatech,
+    });
+  } catch(e){ console.warn('[finance] render failed:', e.message); }
 
   // Gauge
   setGauge(currentScore);

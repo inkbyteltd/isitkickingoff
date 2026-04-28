@@ -135,7 +135,50 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.3 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.4 <span class="stamp">live</span></div>
+      <div class="release-tag">💷 New row · Finance &amp; Markets · 4 ambient modules · Apr 2026</div>
+    </div>
+    <p class="intro">A second new row lands below the Environment &amp; Energy row from v1.3: <b>Finance &amp; Markets</b>. Four ambient context cards covering the markets the British wake up checking — the FTSE, the Dow, what's happening in crypto, what their pound is worth abroad today, and which big-cap names are moving in tech and pharma. Same architecture as v1.3 — these don't feed the kick-off index, they sit alongside as their own honest readout.</p>
+    <h3>📈 FTSE &amp; Dow · Today's Moves</h3>
+    <ul>
+      <li><b>LIVE</b> — FTSE 100 (^FTSE) and Dow Jones Industrial Average (^DJI) via Yahoo Finance through our existing CORS proxy chain (<code>api.allorigins.win</code> → <code>corsproxy.io</code>).</li>
+      <li>Headline picks the bigger absolute mover ("FTSE +0.42%" or "Dow -1.18%"). Both indices listed below with current value + day change colour-coded green up / red down.</li>
+      <li>The FTSE 100 is the headline index of the LSE — the 100 largest UK-listed companies by market cap. The Dow is 30 of America's biggest household names. Both move on macro news, central-bank decisions, earnings season, and the occasional tweet.</li>
+    </ul>
+    <h3>₿ Crypto · BTC / ETH / SOL</h3>
+    <ul>
+      <li><b>LIVE</b> — Bitcoin, Ethereum and Solana prices in GBP via the <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer">CoinGecko free public API</a>. No API key needed, CORS-friendly out of the box.</li>
+      <li>Headline shows current BTC price in GBP. Three rows below cover BTC + ETH + SOL with their 24-hour percentage change, colour-coded.</li>
+      <li>Crypto pairs nicely with the FTSE/Dow card — when traditional markets sleep on weekends, crypto keeps trading, which is either freedom or madness depending on your priors.</li>
+    </ul>
+    <h3>💱 Pound In Your Pocket</h3>
+    <ul>
+      <li><b>LIVE</b> — GBP exchange rates via <a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer">Frankfurter</a> (ECB-backed, free, no API key needed).</li>
+      <li>Headline reads "<i>£1 = $1.275</i>" (current GBP/USD). Five flagged currency rows below: 🇺🇸 USD, 🇪🇺 EUR, 🇯🇵 JPY, 🇨🇦 CAD, 🇦🇺 AUD.</li>
+      <li>The GBP/USD rate is "cable" to traders and the cleanest read on UK relative strength. EUR is the holiday-money number. JPY is the carry-trade benchmark.</li>
+    </ul>
+    <h3>💊 Tech &amp; Pharma Movers</h3>
+    <ul>
+      <li>Five large-cap stocks across two sectors: <b>Apple (AAPL), NVIDIA (NVDA), Alphabet (GOOGL)</b> on the Nasdaq side, plus <b>AstraZeneca (AZN.L) and GSK (GSK.L)</b> on the LSE.</li>
+      <li>Headline shows the top mover by absolute % change. Each row shows day change in percent, colour-coded.</li>
+      <li>Tech moves the global mood; pharma moves the FTSE more than people realise. Both Yahoo Finance via the same CORS proxy chain.</li>
+    </ul>
+    <h3>🛠️ Implementation notes</h3>
+    <ul>
+      <li>New section sits directly below the Environment &amp; Energy row (v1.3). Same <code>.env-grid</code> CSS (4 across desktop, 2 tablet, 1 mobile), same <code>.ticker</code> card styling.</li>
+      <li>4 new keys added to <code>SIGNAL_EXPLAINERS</code> (<code>stocks</code>, <code>crypto</code>, <code>fx</code>, <code>pharmatech</code>), so each card carries the same <b>?</b> hover-tooltip.</li>
+      <li>4 new fetch functions: <code>fetchStockIndices</code>, <code>fetchCrypto</code>, <code>fetchExchangeRates</code>, <code>fetchTechPharma</code>. They run in a <b>second Promise.all batch</b> after the main bulk fetch, so a slow Yahoo proxy can't block the main gauge from rendering.</li>
+      <li>Refactored a shared <code>_fetchYahooQuote(symbol)</code> helper used by Stock Indices and Tech & Pharma Movers — single proxy-chain implementation, fewer moving parts.</li>
+      <li>CSP <code>connect-src</code> extended to allow <code>api.coingecko.com</code> and <code>api.frankfurter.app</code> direct (no proxy needed for those — they ship CORS headers correctly).</li>
+      <li>4 new methodology table rows added under a new "<b>💷 Finance &amp; Markets · ambient context (not scored)</b>" sub-header.</li>
+      <li>None of the 4 modules contribute to the kick-off index score. Gauge integrity (38 signals at 100% weight) preserved. Total ambient cards on the page now: 8 (4 environment + 4 finance).</li>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced with test-deploy patches.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.3</div>
       <div class="release-tag">🌍 New row · Environment &amp; Energy · 4 ambient modules · Apr 2026</div>
     </div>
     <p class="intro">A whole new row of cards lands between the Signals grid and the Heat Map: <b>Environment &amp; Energy</b> — four ambient context modules that sit alongside the kick-off index without feeding it. The reason: these signals (sewage, storms, the live grid mix, oil) tell their own UK story without needing to be folded into the gauge maths. Adding them as scored signals would have meant rebalancing 38 weights and shifting the calibrated tier thresholds. This way the integrity of the gauge is preserved and the four new cards tell their own honest stories.</p>
