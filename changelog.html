@@ -105,7 +105,7 @@
     <div class="nav-links">
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
-      <a href="./news.html">📰 Blog</a>
+      <a href="./news.html">📰 News</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
@@ -130,7 +130,38 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v0.47 <span class="stamp">latest</span></div>
+      <div class="release-ver">v0.48 <span class="stamp">latest</span></div>
+      <div class="release-tag">X share fix (round 3) · methodology copy refresh · News naming restored · Apr 2026</div>
+    </div>
+    <p class="intro">Three fixes. The <b>X share button</b> is properly fixed this time using a synthetic <code>&lt;a target="_blank"&gt;</code> click pattern — strictly more popup-blocker-resistant than <code>window.open()</code> — plus a mobile UA gate so desktop browsers never accidentally route to the system share sheet. The <b>"How is this calculated?"</b> methodology copy now reflects the real signal count (35+, was stuck at "seven") and explains the [Live] / [Modelled] chip system. And v0.47's "Blog" naming has been reverted to <b>News</b> at the user's request — same article content, restored title and masthead, plus inline signal-card visuals to break up the long-form text.</p>
+    <h3>🐦 X share — round 3 fix</h3>
+    <ul>
+      <li>Replaced <code>window.open(url, '_blank', '...')</code> with a <code>_openInNewTab(url)</code> helper that creates a hidden <code>&lt;a target="_blank"&gt;</code>, attaches it, calls <code>.click()</code>, then removes it. Browsers treat synthetic anchor clicks as user-initiated almost universally — popup blockers leave them alone.</li>
+      <li><code>_supportsFileShare()</code> now also gates on mobile user-agent (<code>/Mobi|Android|iPhone|iPad|iPod/i</code>). Desktop Safari Mac sometimes claims file-share support but routes to a macOS share sheet — clicking 🐦 X on a laptop should open X.com, not a system menu. This fixes that ambiguity.</li>
+      <li>PNG download still fires in the background on desktop X share — fire-and-forget Promise after the new tab opens, so the order is now: <i>tab opens → file downloads → toast appears</i>.</li>
+    </ul>
+    <h3>📐 "How is this calculated?" — methodology copy refresh</h3>
+    <ul>
+      <li>Fixed the long-stale "seven signals" claim — now reads <b>"over 35 signals"</b> (current count: 38 in the WEIGHTS map).</li>
+      <li>Added a new paragraph explaining the <b>Live / Modelled chip</b> system: every card carries either a green Live tag (real upstream data — BBC RSS, gov.uk, data.police.uk, etc.) or an orange Modelled tag (calibrated heuristic where no free public live API exists). Modules try the live source first and fall back to modelled when fetches fail.</li>
+      <li>Mentions the new <b>?</b> tooltip on each card for per-signal explainers.</li>
+    </ul>
+    <h3>📰 News restored (was Blog)</h3>
+    <ul>
+      <li>Page title and masthead reverted from "BLOG" → "NEWS" across all pages. Top-nav already updated to read "📰 News".</li>
+      <li>Same Rory Sutherland-style article body kept — but with three new visual elements added inline:</li>
+      <li><b>Two inline signal-card grids</b> (4 cards each, mocked-up with realistic-looking values — News tension 7/30 tense, Spoons 62%, UK Threat SUBSTANTIAL, Lunacy 82%, Cocaine in UK Waters 14.2 ng/L, Civil Unrest 5 stories, Phone Snatch 0.31 phones/min, Kettle 38.4 GW). Each carries the same Live/Modelled chip system as the real dashboard.</li>
+      <li><b>One pull-quote</b> in section II in serif italic with orange-bracket quote marks, breaking up the long-form text.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 6 HTML pages updated in main project AND <code>deploy-test/</code>. Test-deploy patches re-applied (noindex, Shop greyed). Sandbox parse check: ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.47</div>
       <div class="release-tag">News → Blog · Changelog separated · contact email change · tooltips · CSV download · Apr 2026</div>
     </div>
     <p class="intro">Big content + UX overhaul. The old build-log section has been split into two: <b>news.html is now a long-form blog</b> with a Rory Sutherland-style hero essay on why this dashboard exists, and <b>changelog.html</b> is its own page carrying every release block (this file). The top nav now shows both. Plus: the Buy Me a Coffee button is now consistently <b>"🍵 Buy us a brew"</b> with the teacup emoji across nav and footer; signal cards now show a <b>?</b> tooltip that pops methodology copy on hover/tap; a small <b>"📥 Download history (CSV)"</b> button under the disclaimer pulls every Supabase snapshot row as a clean CSV; and the <b>contact email</b> is now <code>commiepinko1968@gmail.com</code> across every page (private inkbyte address removed).</p>

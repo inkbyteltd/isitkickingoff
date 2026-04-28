@@ -775,7 +775,7 @@
     <div class="nav-links">
       <a href="./" class="active">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
-      <a href="./news.html">📰 Blog</a>
+      <a href="./news.html">📰 News</a>
       <a href="./changelog.html">🪵 Changelog</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
@@ -994,10 +994,26 @@
   <section class="meth">
     <h3>How is this calculated?</h3>
     <p>
-      <b>Is It Kicking Off?</b> is a tongue-in-cheek data dashboard that aggregates seven signals the British
-      would recognise as precursors to an argy-bargy. Each signal is normalised to a 0–1 score, multiplied by a weight,
-      and summed into a single 0–100 index. No punters are harmed, no policing decisions should be based on this,
-      and if you've ended up here looking for actual crime data: please try again sober.
+      <b>Is It Kicking Off?</b> is a tongue-in-cheek data dashboard that aggregates <b>over 35 signals</b>
+      the British would recognise as precursors to an argy-bargy — weather, football fixtures, news tension,
+      Wetherspoons capacity, the moon, the price of petrol, what's on telly tonight, and 30+ others.
+      Each signal is normalised to a 0–1 score, multiplied by a weight, and summed into a single 0–100 index.
+    </p>
+    <p>
+      <b>How to read the chips on each signal card:</b>
+      every card carries either a <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span>
+      or a <span class="chip model" style="display:inline-block;vertical-align:middle">Modelled</span>
+      tag. <b>Live</b> means the data is being fetched from a real upstream source right now (BBC RSS, gov.uk APIs,
+      data.police.uk, National Grid, Met Office, etc.). <b>Modelled</b> means we're using a calibrated heuristic
+      grounded in published UK figures — typically because no free public live API exists for that signal
+      (Wetherspoons capacity, Stella pints poured, Uber surge). Modules try the live source first and only fall
+      back to modelled when the fetch fails or the source is unavailable. Each card also carries a small
+      <b>?</b> pip in the header — hover (desktop) or tap (mobile) for a one-line explainer of what the signal
+      measures and where the data comes from.
+    </p>
+    <p>
+      No punters are harmed, no policing decisions should be based on this, and if you've ended up here
+      looking for actual crime data: please try again sober.
     </p>
     <div class="meth-scroll">
     <table>
@@ -8378,13 +8394,31 @@ function _showToast(message, ms){
   toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, ms || 3500);
 }
 
-/* Probe (synchronous) whether the browser supports Web Share API file attachments.
-   We check this WITHOUT awaiting the PNG generation — if we awaited first the
-   click would lose its user-gesture context and any subsequent window.open would
-   be silently blocked by popup blockers.  Mobile Safari/Chrome return true here;
-   desktop browsers almost always return false. */
+/* Open a URL in a new tab via a synthetic <a> click — strictly more reliable
+   than window.open() when we have to compose URLs in a click handler that may
+   chain off other work. Browsers almost always treat <a target="_blank"> clicks
+   as user-initiated, so popup blockers leave them alone. */
+function _openInNewTab(url){
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { try { document.body.removeChild(a); } catch(_){} }, 50);
+}
+
+/* Detect if we should attempt Web Share API with file attachment.
+   Mobile-only path. We require BOTH navigator.share and navigator.canShare
+   AND a mobile-class user agent — desktop browsers (Mac Safari, Chrome OS)
+   sometimes claim file-share support but route to a system share sheet that
+   isn't what the user clicking the X icon is expecting. */
 function _supportsFileShare(){
   if (!navigator.share || !navigator.canShare) return false;
+  // Mobile UA gate — Safari iOS, Chrome Android, Samsung Internet, etc.
+  const ua = navigator.userAgent || '';
+  if (!/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) return false;
   try {
     const probe = new File([new Uint8Array([0])], 'probe.png', { type: 'image/png' });
     return navigator.canShare({ files: [probe] });
@@ -8428,54 +8462,53 @@ async function openShare(platform, btn){
     return;
   }
 
-  // ---- Twitter / X share with PNG ----
-  // Two paths:
-  //   1. Mobile (Web Share API supports files): single native share sheet with
-  //      the gauge PNG already attached.  navigator.share is gesture-aware so
-  //      the await before it is allowed.
-  //   2. Desktop (no file-share support): open X compose IMMEDIATELY (synchronous,
-  //      preserves the click's user-gesture context, popup blocker stays happy),
-  //      then download the PNG in the background so the user can drag it onto
-  //      their tweet.
-  if (platform === 'twitter'){
-    if (_supportsFileShare()){
-      // Mobile path
-      try {
-        const pngBlob = await generateGaugePNGBlob();
-        if (pngBlob){
-          const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
-          if (navigator.canShare({ files: [file] })){
-            try {
-              await navigator.share({
-                title: 'Is It Kicking Off?',
-                text:  `${text}\n${url}`,
-                files: [file],
-              });
-              return;
-            } catch(e){
-              if (e && e.name === 'AbortError') return;
-              // Non-abort failure — fall through to URL-open path below
-            }
+  // ---- All social platforms — SAME RELIABLE PATTERN ----
+  // 1. Open the platform's compose URL via synthetic <a> click. This is the
+  //    most reliable cross-browser way to trigger a new tab/window — popup
+  //    blockers treat it as a real user click, not a programmatic popup.
+  // 2. For Twitter/X specifically: ALSO fire a background PNG download so
+  //    the user has the gauge image saved to drag onto their tweet. The
+  //    download is non-blocking and runs after the tab opens.
+  // 3. Mobile path (Web Share API with file): only fires on actual mobile
+  //    UAs. On desktop we never go down that branch — clicking the X icon
+  //    on a laptop should always open X.com, not a system share sheet.
+  if (platform === 'twitter' && _supportsFileShare()){
+    // Mobile native share sheet with PNG attached
+    try {
+      const pngBlob = await generateGaugePNGBlob();
+      if (pngBlob){
+        const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })){
+          try {
+            await navigator.share({
+              title: 'Is It Kicking Off?',
+              text:  `${text}\n${url}`,
+              files: [file],
+            });
+            return;
+          } catch(e){
+            if (e && e.name === 'AbortError') return;
+            // Fall through to URL-open path
           }
         }
-      } catch(_){ /* fall through */ }
-    }
-    // Desktop path — OPEN URL FIRST (synchronous), then async PNG download.
-    // This is critical: any await before window.open kills the popup gesture.
-    window.open(targets.twitter, '_blank', 'noopener,noreferrer,width=600,height=520');
-    // Fire-and-forget PNG download
+      }
+    } catch(_){ /* fall through */ }
+  }
+
+  // ALL other paths (desktop X, every non-X platform) — open via <a> click
+  const u = targets[platform];
+  if (u) _openInNewTab(u);
+
+  // Twitter desktop bonus: fire-and-forget PNG download so the user has the
+  // gauge image to drag onto the tweet they're about to compose.
+  if (platform === 'twitter'){
     generateGaugePNGBlob().then(pngBlob => {
       if (pngBlob){
         _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
         _showToast('📸 Gauge image also saved — drag it onto your tweet', 4500);
       }
     }).catch(e => console.warn('PNG bg download failed:', e));
-    return;
   }
-
-  // All other platforms — synchronous URL open, no file attachment attempted
-  const u = targets[platform]; if (!u) return;
-  window.open(u, '_blank', 'noopener,noreferrer,width=600,height=520');
 }
 
 function wireShareButtons(){

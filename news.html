@@ -5,13 +5,13 @@
 <!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
 <meta name="robots" content="noindex,nofollow,noarchive" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Blog · Is It Kicking Off?</title>
-<meta name="description" content="The blog of Is It Kicking Off? — essays on Britishness, signal-tracking, sociological satire, and what the dashboard is actually trying to do." />
+<title>News · Is It Kicking Off?</title>
+<meta name="description" content="News and essays from Is It Kicking Off? — on Britishness, signal-tracking, sociological satire, and what the dashboard is actually trying to do." />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="IIKO Blog" />
+<meta name="apple-mobile-web-app-title" content="IIKO News" />
 <style>
   :root {
     --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
@@ -96,6 +96,54 @@
     color:var(--ink-faint);
   }
 
+  /* Inline mini signal-module cards inside the article body — gives the
+     long-form essay some visual rhythm without breaking reading flow. */
+  article.post .sig-illust{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0;
+    font-family:var(--mono);
+  }
+  @media (max-width:560px){ article.post .sig-illust{grid-template-columns:1fr} }
+  article.post .sig-illust .sig{
+    background:var(--bg-2);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;display:flex;flex-direction:column;gap:6px;
+  }
+  article.post .sig-illust .sig .row1{
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+  }
+  article.post .sig-illust .sig .label{
+    font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);
+    display:flex;align-items:center;gap:6px;flex:1;min-width:0;
+  }
+  article.post .sig-illust .sig .icn{font-size:14px;line-height:1}
+  article.post .sig-illust .sig .chip{
+    font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    padding:2px 8px;border-radius:999px;flex-shrink:0;
+  }
+  article.post .sig-illust .sig .chip.live{background:rgba(62,207,142,.18);color:#3ecf8e;border:1px solid rgba(62,207,142,.3)}
+  article.post .sig-illust .sig .chip.model{background:rgba(255,138,31,.15);color:#ff8a1f;border:1px solid rgba(255,138,31,.3)}
+  article.post .sig-illust .sig .val{
+    font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.01em;
+  }
+  article.post .sig-illust .sig .sub{
+    font-family:var(--sans);font-size:11px;line-height:1.45;color:var(--ink-dim);
+  }
+  article.post .sig-illust .sig .bar{
+    height:4px;border-radius:999px;background:var(--bg-3);overflow:hidden;margin-top:2px;
+  }
+  article.post .sig-illust .sig .bar i{
+    display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,#3ecf8e,#f4c025 45%,#ff8a1f 70%,#ef4b4b);
+  }
+  article.post .pull-quote{
+    margin:24px -8px;padding:18px 22px;
+    background:linear-gradient(180deg,rgba(255,138,31,.08),var(--bg-1));
+    border:1px solid var(--line-2);border-radius:12px;
+    font-family:var(--serif);font-size:20px;line-height:1.4;color:var(--ink);
+    font-style:italic;text-align:center;
+  }
+  article.post .pull-quote::before{content:"\201C";color:var(--accent);margin-right:4px;font-size:24px}
+  article.post .pull-quote::after{content:"\201D";color:var(--accent);margin-left:4px;font-size:24px}
+
   /* "More posts" placeholder for the next entries */
   .more-posts{
     background:var(--bg-1);border:1px dashed var(--line-2);border-radius:14px;
@@ -148,7 +196,7 @@
     <div class="nav-links">
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
-      <a href="./news.html" class="active">📰 Blog</a>
+      <a href="./news.html" class="active">📰 News</a>
       <a href="./changelog.html">🪵 Changelog</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
@@ -157,7 +205,7 @@
 
   <header class="mast">
     <div>
-      <h1>BLOG · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <h1>NEWS · IS IT <span class="kick">KICKING OFF</span>?</h1>
       <div class="tag">Essays on Britishness · signal-tracking · why we built this</div>
     </div>
     <div style="font-family:var(--mono);font-size:22px">📰</div>
@@ -189,17 +237,99 @@
 
     <p>Some of the signals are entirely live: the BBC headlines, the gov.uk threat level, the police data feed for Central London phone snatches, the Met Office wind. Some are <i>modelled</i> — meaning we have made a careful, calibrated guess based on real published numbers. The Stella Artois Index, for example, is calibrated to roughly 2.5 million pints poured on a peak Saturday across the UK, with hour-of-day, day-of-week, and bank-holiday modifiers. Is this number "true"? No. Is it more true than not knowing? Almost certainly. The actual brewery does not publish its hourly UK throughput, and even if it did, the version on this site would still be funnier.</p>
 
+    <div class="sig-illust" aria-label="Examples of signal cards">
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">📰</span><span>News tension</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">7/30 tense</div>
+        <div class="sub">political ×4 · immigration ×2 · crime ×1</div>
+        <div class="bar"><i style="width:54%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🍺</span><span>Wetherspoons Live</span></div>
+          <span class="chip model">Modelled</span>
+        </div>
+        <div class="val">62% capacity</div>
+        <div class="sub">steady Spoons trade · Curry Club night</div>
+        <div class="bar"><i style="width:62%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🛡️</span><span>UK Threat Level</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">SUBSTANTIAL</div>
+        <div class="sub">an attack is likely · gov.uk</div>
+        <div class="bar"><i style="width:40%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🌙</span><span>Lunacy Factor</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">waxing gibbous</div>
+        <div class="sub">82% illuminated · 3 days from full</div>
+        <div class="bar"><i style="width:82%"></i></div>
+      </div>
+    </div>
+
     <h3>II. Why a Brit Was Always Going to Build This</h3>
 
     <p>You could not, I think, build a serious version of this dashboard in another country. The Americans would put a flag on it and pretend it was a homeland-security tool. The French would put a Gauloise on it and add an ennui meter. The Germans would build it correctly, document it exhaustively in a 400-page PDF, and be terribly disappointed when nobody clicked through. The British genius, such as it is, is in noticing that the threshold between a Tuesday and a <i>kick-off</i> is partly a matter of how much rain has fallen since lunch, and that this is not just a joke — it is, quite literally, the operating model of the country.</p>
 
     <p>We are a nation made anxious by the wrong things and not at all by the right ones. We are exquisitely sensitive to whether the postman has been but blissfully unbothered by the long-term solvency of the state pension. We will form a queue to register a complaint about the queue. We have a national broadcaster that, between 6 pm and 8 pm on most evenings, carries forty minutes of weather forecasts inside thirty minutes of news. The national mood is not really up or down. It is calibrated to something in between, and that something is approximately the average ambient temperature of a Wetherspoons in Doncaster on a Wednesday — a value somewhere around <b>"could be worse"</b>, with bank-holiday-driven excursions into the genuinely interesting in either direction.</p>
 
+    <div class="pull-quote">
+      The British register of impending disorder is a permanent low hum, almost beneath conscious perception, and every English person carries a small and very accurate detector for it that they do not know they are carrying.
+    </div>
+
     <p>There is a real argument, which I will only briefly sketch, that being able to <i>name</i> this national feeling is a small civic kindness. The American sociologist Erving Goffman wrote that the deepest secrets of a society are not in what it talks about, but in what it doesn't bother to. We do not bother to talk about the Stella Index. We do not need to. Everyone already knows. So — borderline indecently — we put it on a dashboard. Out loud. With an emoji. With a needle that swings slowly from <b>BREW</b> at the bottom, through <b>NICKED</b> and <b>ROWDY</b>, all the way up to <b>ALL OUT SCRAP</b> at the top. It is, I think, the first time in British history a 0–100 number has been painted onto the national mood, and the mood has visibly approved.</p>
 
     <h3>III. Cocaine in the Thames, and Other Modern Truths</h3>
 
     <p>Nothing on the dashboard cheers me up quite like the <b>Cocaine in UK Waters</b> module. It is modelled — there is no live wastewater feed, alas — but the model is calibrated to a real 2019 King's College London study that found cocaine in 100% of Thames shrimp, and to the established weekend-Monday wastewater-purge cycle that European drug-monitoring agencies report year on year. It is, in short, both a joke and absolutely true. The Thames carries, on a Sunday morning, a measurable concentration of the previous night's national misadventure. That fact — that one of the great rivers of Europe is provably cokey — should, by rights, be in every Year Six geography textbook. It is not. So we put it on a dashboard.</p>
+
+    <div class="sig-illust" aria-label="More signal card examples">
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🐟</span><span>Cocaine in UK Waters</span></div>
+          <span class="chip model">Modelled</span>
+        </div>
+        <div class="val">14.2 ng/L</div>
+        <div class="sub">Thames · Monday-morning purge peak</div>
+        <div class="bar"><i style="width:71%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🪧</span><span>Civil Unrest</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">5 unrest stories</div>
+        <div class="sub">3 GDELT + 2 UK newsroom · 1 escalated</div>
+        <div class="bar"><i style="width:48%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">📱</span><span>London Phone Snatch</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">0.31 phones/min</div>
+        <div class="sub">weekend-night peak · phone every 3m</div>
+        <div class="bar"><i style="width:65%"></i></div>
+      </div>
+      <div class="sig">
+        <div class="row1">
+          <div class="label"><span class="icn">🫖</span><span>Nation On Kettle</span></div>
+          <span class="chip live">Live</span>
+        </div>
+        <div class="val">38.4 GW grid demand</div>
+        <div class="sub">post-EastEnders kettle spike · National Grid</div>
+        <div class="bar"><i style="width:58%"></i></div>
+      </div>
+    </div>
 
     <p>I am increasingly of the view that almost everything important about a country is in this register: it is provably true, mildly comic, slightly depressing, faintly inspiring, and the official channels will never tell you about it. The official channels will tell you about quarterly inflation prints and ONS housing starts. They will not tell you that the McFlurry machine at Bristol Temple Meads McDonald's has been broken for nine days. They will not tell you that on a hot Friday in July the kebab shops of Manchester collectively process more meat-by-volume than the average Premier League ground processes burgers across an entire season. They will not tell you that on Bonfire Night the National Grid reports a measurable but small dip in domestic demand at the moment local fireworks displays peak — because everyone is briefly outside, in the cold, watching a wet rocket fail to clear a tree.</p>
 
