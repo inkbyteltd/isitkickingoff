@@ -5,13 +5,13 @@
 <!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
 <meta name="robots" content="noindex,nofollow,noarchive" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>News · Is It Kicking Off?</title>
-<meta name="description" content="News and essays from Is It Kicking Off? — on Britishness, signal-tracking, sociological satire, and what the dashboard is actually trying to do." />
+<title>Essays · Is It Kicking Off?</title>
+<meta name="description" content="Essays from Is It Kicking Off? — on Britishness, signal-tracking, sociological satire, and what the dashboard is actually trying to do." />
 <meta name="theme-color" content="#07090c" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📝%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="IIKO News" />
+<meta name="apple-mobile-web-app-title" content="IIKO Essays" />
 <style>
   :root {
     --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
@@ -25,11 +25,11 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
   body{background:radial-gradient(1200px 600px at 80% -10%,rgba(255,138,31,.08),transparent 60%),var(--bg-0);min-height:100vh}
-  /* Outer wrap is wider so the 6-item top nav (incl. yellow Buy us a brew)
-     never wraps or clips on desktop. The inner article still uses a narrower
-     reading column via .reading-col so long-form prose stays comfortable. */
+  /* Outer wrap holds the 6-item nav. Article column matches the same width
+     so the page reads as one consistent block from header through to footer.
+     Body prose lines are constrained inside article.post for readability. */
   .wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
-  .reading-col{max-width:760px;margin:0 auto}
+  .reading-col{max-width:1100px;margin:0 auto}
   .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
   .top-nav .nav-links{display:contents}
   .top-nav .nav-burger{display:none}
@@ -54,11 +54,18 @@
   .mast h1 .kick{color:var(--accent)}
   .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
 
-  /* Blog post styling — long-form, readable */
+  /* Essay styling — long-form, readable. The card stretches to the full
+     1100px wrap, but inner prose stays at ~70ch for comfortable reading
+     (the body, deck, signature, and pull-quote all use this measure).
+     Wide elements like signal-card grids and the title fill the box. */
   article.post{
     background:var(--bg-1);border:1px solid var(--line);border-radius:14px;
-    padding:32px 28px;margin-bottom:22px;
+    padding:40px 56px;margin-bottom:22px;
   }
+  @media (max-width:680px){ article.post{padding:28px 22px} }
+  article.post p,
+  article.post .deck,
+  article.post .signature{max-width:68ch;margin-left:auto;margin-right:auto}
   article.post .meta{
     display:flex;flex-wrap:wrap;gap:10px;align-items:center;
     font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
@@ -200,7 +207,7 @@
     <div class="nav-links">
       <a href="./index.html">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
-      <a href="./news.html" class="active">📰 News</a>
+      <a href="./news.html" class="active">📝 Essays</a>
       <a href="./changelog.html">🪵 Changelog</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
@@ -209,10 +216,10 @@
 
   <header class="mast">
     <div>
-      <h1>NEWS · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <h1>ESSAYS · IS IT <span class="kick">KICKING OFF</span>?</h1>
       <div class="tag">Essays on Britishness · signal-tracking · why we built this</div>
     </div>
-    <div style="font-family:var(--mono);font-size:22px">📰</div>
+    <div style="font-family:var(--mono);font-size:22px">📝</div>
   </header>
 
   <div class="reading-col">
