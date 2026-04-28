@@ -4376,14 +4376,54 @@ function signalSpotify(spotifyData){
    ========================================================= */
 const REDDIT_UK_SUBS = ['unitedkingdom', 'CasualUK', 'AskUK', 'britishproblems', 'london'];
 
-// Single-sub fetcher with multi-URL fallback chain — Reddit started rejecting
-// many browser requests in late 2024, so we try www/old/proxies in order.
+// Single-sub fetcher with multi-URL fallback chain.
+//
+// Reddit started rejecting most direct browser JSON requests in 2024 (anti-
+// scraping policy after the API drama). The reliable path that still works
+// is their RSS endpoint via our existing rss2json/allorigins/corsproxy chain
+// — same one used for BBC/Guardian/Sky elsewhere. RSS gives us titles and
+// links but no upvote scores; the JSON path is still attempted as a bonus
+// for the score/comments data when it does come through.
 async function _fetchRedditSubJson(sub){
+  const subPrefixed = 'r/' + sub;
+
+  // ----- PRIMARY: Reddit RSS via proxy chain (most reliable) -----
+  try {
+    const rssUrl = `https://www.reddit.com/r/${sub}/hot.rss?limit=15`;
+    const items = await fetchRssItems(rssUrl);
+    if (items && items.length){
+      // Reshape RSS items into the Reddit JSON envelope the caller expects
+      const children = items
+        .filter(it => it.title)
+        .slice(0, 15)
+        .map(it => {
+          let permalink = '';
+          try { if (it.link) permalink = new URL(it.link).pathname; } catch(_){}
+          return {
+            data: {
+              subreddit_name_prefixed: subPrefixed,
+              title: it.title,
+              permalink,
+              url: it.link || '',
+              score: 0,                        // RSS doesn't surface upvote count
+              num_comments: 0,
+              created_utc: Date.now() / 1000,
+              author: '',
+              stickied: false, pinned: false,
+              _fromRss: true,                  // flag so caller can present without engagement nums
+            },
+          };
+        });
+      if (children.length) return { data: { children } };
+    }
+  } catch(_){ /* fall through to JSON path */ }
+
+  // ----- SECONDARY: Reddit JSON (still attempted — sometimes works) -----
   const path = `r/${sub}/hot.json?limit=15&raw_json=1`;
   const candidates = [
     `https://www.reddit.com/${path}`,
     `https://old.reddit.com/${path}`,
-    `https://corsproxy.io/?https://www.reddit.com/${path}`,
+    `https://corsproxy.io/?${encodeURIComponent('https://www.reddit.com/' + path)}`,
     `https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.reddit.com/' + path)}`,
   ];
   for (const url of candidates){
@@ -4465,12 +4505,22 @@ function signalRedditTrending(redditData){
   }
   const top = redditData.posts[0];
   const trim = s => s && s.length > 60 ? s.slice(0,57) + '…' : s;
-  const pph = redditData.postsPerHour;
-  const pphLabel = pph >= 10 ? `${Math.round(pph)}/hr` : `${pph.toFixed(1)}/hr`;
+  // When the live data came from the RSS path (no score/comment counts),
+  // skip the engagement bit of the sub-label so we don't show "0 ↑".
+  const hasScores = redditData.posts.some(p => p.score > 0 || p.comments > 0);
+  const subBits = [top.subreddit];
+  if (hasScores) subBits.push(`${top.score.toLocaleString()} ↑`);
+  subBits.push(`${redditData.posts.length} posts`);
+  if (hasScores && redditData.postsPerHour > 0){
+    const pph = redditData.postsPerHour;
+    subBits.push(`~${pph >= 10 ? Math.round(pph) : pph.toFixed(1)}/hr hot posts`);
+  } else {
+    subBits.push('hot now');
+  }
   return { ...base,
     live: true, modelled: false,
     valueLabel: `#1 ${trim(top.title)}`,
-    subLabel: `${top.subreddit} · ${top.score.toLocaleString()} ↑ · ${redditData.posts.length} posts · ~${pphLabel} hot posts`,
+    subLabel: subBits.join(' · '),
     score: 0.35,
     redditPosts: redditData.posts,
   };

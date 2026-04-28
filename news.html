@@ -102,6 +102,32 @@
     color:var(--ink-faint);
   }
 
+  /* Share row at the bottom of each essay — same icon set as the gauge
+     share, so users have a consistent "share this" affordance everywhere. */
+  article.post .essay-share{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin:24px 0 18px;padding:16px 18px;
+    background:var(--bg-2);border:1px solid var(--line);border-radius:12px;
+  }
+  article.post .essay-share .label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);margin-right:6px;
+  }
+  article.post .essay-share a{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:999px;
+    background:var(--bg-3);border:1px solid var(--line-2);
+    color:var(--ink-dim);text-decoration:none;
+    transition:all .15s;
+  }
+  article.post .essay-share a:hover{
+    background:var(--accent);color:#0a0d12;border-color:var(--accent);
+    transform:translateY(-1px);
+  }
+  article.post .essay-share a svg{width:16px;height:16px;fill:currentColor}
+  article.post .essay-share .copied{color:var(--green);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-left:6px;opacity:0;transition:opacity .15s}
+  article.post .essay-share .copied.show{opacity:1}
+
   /* Inline mini signal-module cards inside the article body — gives the
      long-form essay some visual rhythm without breaking reading flow. */
   article.post .sig-illust{
@@ -345,6 +371,31 @@
 
     <p>You weren't, by the way. It really is a bit kicking off. Have a brew. Mind how you go.</p>
 
+    <div class="essay-share" data-essay-share
+         data-title="The Stella Index, the Cocaine in the Thames, and Why I Built a Dashboard for the Vibe"
+         data-url="https://isitkickingoff.com/news.html#post-001">
+      <span class="label">Share this essay</span>
+      <a href="#" data-share="twitter" aria-label="Share on X" title="Share on X">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" data-share="facebook" aria-label="Share on Facebook" title="Share on Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+      </a>
+      <a href="#" data-share="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="#" data-share="whatsapp" aria-label="Share on WhatsApp" title="Share on WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </a>
+      <a href="#" data-share="email" aria-label="Share via Email" title="Email this">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/></svg>
+      </a>
+      <a href="#" data-share="copy" aria-label="Copy link" title="Copy link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+      </a>
+      <span class="copied" data-copied>Copied ✓</span>
+    </div>
+
     <div class="signature">
       RAW · April 2026 · written from a kitchen table in the UK<br/>
       <span style="margin-top:6px;display:inline-block">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
@@ -405,6 +456,58 @@
 
 // Newsletter signup removed — long-form essays now syndicate to
 // substack.com/@rorywilmer instead. The Substack callout is a simple link.
+
+// Per-essay share buttons. Each .essay-share row carries data-title and
+// data-url for that article; we build the platform URL on click and open
+// it in a new tab via a synthetic anchor (popup-blocker-resistant).
+(function _wireEssayShare(){
+  document.querySelectorAll('[data-essay-share]').forEach(row => {
+    const title = row.getAttribute('data-title') || document.title;
+    const url   = row.getAttribute('data-url')   || location.href;
+    const enc   = encodeURIComponent;
+    const text  = `${title} — read on isitkickingoff.com`;
+    const targets = {
+      twitter:  `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
+      whatsapp: `https://api.whatsapp.com/send?text=${enc(text + ' ' + url)}`,
+      email:    `mailto:?subject=${enc(title)}&body=${enc(text + '\n\n' + url)}`,
+    };
+    row.querySelectorAll('a[data-share]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const platform = a.getAttribute('data-share');
+        if (platform === 'copy'){
+          const payload = `${text} ${url}`;
+          const flash = () => {
+            const el = row.querySelector('[data-copied]');
+            if (el){ el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1600); }
+          };
+          if (navigator.clipboard?.writeText){
+            navigator.clipboard.writeText(payload).then(flash);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = payload; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); flash(); } catch(_){}
+            document.body.removeChild(ta);
+          }
+          return;
+        }
+        const u = targets[platform];
+        if (!u) return;
+        // Synthetic <a> click — preserves user-gesture, popup-blocker-friendly
+        const opener = document.createElement('a');
+        opener.href = u;
+        opener.target = '_blank';
+        opener.rel = 'noopener noreferrer';
+        opener.style.display = 'none';
+        document.body.appendChild(opener);
+        opener.click();
+        setTimeout(() => { try { document.body.removeChild(opener); } catch(_){} }, 50);
+      });
+    });
+  });
+})();
 </script>
 </body>
 </html>
