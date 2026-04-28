@@ -1,14 +1,22 @@
-# Cloudflare Workers Static Assets + Function config.
+# Cloudflare config for isitkickingoff.
 #
 # - Static files in this directory are served as the dashboard / news / etc.
-# - worker.js is loaded as the Worker entry point. It handles /api/* routes
-#   server-side (no CORS limits), and delegates everything else to the static
-#   asset bundle via env.ASSETS.fetch().
+# - _worker.js is auto-detected by Cloudflare Pages as the project Worker
+#   (the leading underscore is the Pages convention — Pages serves it as the
+#   request handler, not as a static asset).
+# - For Workers Static Assets deploys, main = "_worker.js" is also explicit
+#   so wrangler picks it up the same way.
 #
-# Deploy with:  npx wrangler deploy
+# Either way, _worker.js handles /api/* routes server-side (no CORS limits)
+# and delegates everything else to the static asset bundle.
+#
+# Deploy:
+#   - Cloudflare Pages with GitHub integration: just push, Pages picks up
+#     _worker.js automatically.
+#   - Workers via wrangler: npx wrangler deploy
 
 name = "isitkickingoff"
-main = "worker.js"
+main = "_worker.js"
 compatibility_date = "2026-04-27"
 
 [assets]
