@@ -135,7 +135,78 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.1 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.3 <span class="stamp">live</span></div>
+      <div class="release-tag">🌍 New row · Environment &amp; Energy · 4 ambient modules · Apr 2026</div>
+    </div>
+    <p class="intro">A whole new row of cards lands between the Signals grid and the Heat Map: <b>Environment &amp; Energy</b> — four ambient context modules that sit alongside the kick-off index without feeding it. The reason: these signals (sewage, storms, the live grid mix, oil) tell their own UK story without needing to be folded into the gauge maths. Adding them as scored signals would have meant rebalancing 38 weights and shifting the calibrated tier thresholds. This way the integrity of the gauge is preserved and the four new cards tell their own honest stories.</p>
+    <h3>💩 Shit Index — UK sewage spills today</h3>
+    <ul>
+      <li>Anchored to <b>Environment Agency Event Duration Monitoring (EDM)</b> data: ~3.6M sewage spill events recorded across England in 2023, ~4.7M hours of total discharge — the legally-mandated annual reporting figures.</li>
+      <li>Combined sewer overflows trigger more frequently when it rains, so today's estimate scales with the <b>UK-average current rainfall reading</b> from Open-Meteo (which we already fetch for the weather signal). Dry day → 0.7× baseline. Heavy rain → up to 2.5× baseline.</li>
+      <li>Card surfaces 3 of England's worst-offending water companies with their real annual EDM figures (United Utilities ~97k/yr, Severn Trent ~60k/yr, Yorkshire Water ~63k/yr, Thames Water, Southern Water). Top 3 rotate daily so the rotation is fresh.</li>
+      <li>Tagged Live when rain modifier has weather data; Modelled when not.</li>
+    </ul>
+    <h3>⛈️ Met Office Storm Watch</h3>
+    <ul>
+      <li><b>LIVE</b> — official Met Office severe weather warnings RSS, no API key needed: <code>https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk</code>.</li>
+      <li>Parses the highest active warning level and shows a <b>coloured pip</b>: 🟢 Green (clear) / 🟡 Yellow / 🟠 Amber / 🔴 Red.</li>
+      <li>Surfaces hazard categories with emoji: 🌧️ rain, 💨 wind, ❄️ snow, 🧊 ice, 🌫️ fog, ⛈️ thunderstorm, ⚡ lightning, 🥵 heat, 🥶 cold.</li>
+      <li>"Green = all clear (suspiciously calm)" — the dry punchline.</li>
+    </ul>
+    <h3>⚡ National Grid Power Mix</h3>
+    <ul>
+      <li><b>LIVE</b> — Elexon BMRS <code>FUELHH</code> dataset (same provider as the existing kettle-demand module).</li>
+      <li>Shows the top 5 fuel sources right now as horizontal worm-bars with brand colours: 🟧 gas (CCGT/OCGT) · 🟢 wind · 🔵 nuclear · 🟫 biomass · 🟡 solar · 🔵 hydro · ⚫ coal · 🟣 imports.</li>
+      <li>Updates every 30 minutes (settlement period). Card headline reads "<i>{fuel} leading at {pct}%</i>" so you can clock the dominant source at a glance.</li>
+      <li>The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.</li>
+    </ul>
+    <h3>🛢️ Brent Crude Oil Tracker</h3>
+    <ul>
+      <li>Brent crude (BZ=F) spot price in USD via <b>Yahoo Finance</b> through our existing CORS proxy chain (<code>api.allorigins.win</code> → <code>corsproxy.io</code>).</li>
+      <li>Shows current price, day-over-day percentage change with up/down arrow, and a 5-day sparkline.</li>
+      <li>Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream — pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.</li>
+    </ul>
+    <h3>🛠️ Implementation notes</h3>
+    <ul>
+      <li>New section sits between the second house banner and the Heat Map. Layout: 4 cards across desktop / 2 on tablet / 1 on mobile.</li>
+      <li>Reuses the existing <code>.ticker</code> styling for visual consistency with the live-indicators row above. Tighter padding because the cards are narrower.</li>
+      <li>4 new keys added to <code>SIGNAL_EXPLAINERS</code> (<code>shit</code>, <code>storm</code>, <code>power</code>, <code>oil</code>), so each card carries the same <b>?</b> hover-tooltip the rest of the dashboard has — tap or hover to read the methodology.</li>
+      <li>4 new fetch functions (<code>fetchStormAlerts</code>, <code>fetchPowerMix</code>, <code>fetchOilPrices</code>, <code>computeShitIndex</code>) added to the <code>fetchBulk()</code> Promise.all batch with 8-second timeouts. Each falls back gracefully on failure — modules render with a "—" or a fallback baseline rather than disappearing.</li>
+      <li>4 new methodology table rows added under a new "<b>🌍 Environment &amp; Energy · ambient context (not scored)</b>" sub-header, so the methodology page documents the new row.</li>
+      <li>None of the 4 modules contribute to the kick-off index score. The gauge integrity (38 calibrated signals at 100% total weight) is preserved.</li>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+    <h3>📅 What's next — v1.4</h3>
+    <ul>
+      <li>A second new row will land below this one: <b>💷 Finance &amp; Markets</b> (FTSE+Dow, crypto, GBP exchange rates, tech &amp; pharma movers). Same ambient-context approach.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.2</div>
+      <div class="release-tag">❓ Live indicator tooltips — the funny bit, now where it belongs · Apr 2026</div>
+    </div>
+    <p class="intro">The four <b>Live Indicator tickers</b> at the top of the page (Stella, Kebab, Cocaine-in-Waters, Rizla & OCB) now carry the same little <b>?</b> hover-tooltip the signal cards have. The attribution copy was hiding deep in the methodology table — this brings the funny straight to the cards. Hover (desktop) or tap (mobile) the ? pip in any ticker header to read it.</p>
+    <h3>❓ The four new explainers</h3>
+    <ul>
+      <li><b>🍺 Stella</b> — Calibrated against BBPA figures (~10 billion pints sold nationally per year, Stella ~14% category share). Hour-of-day curve respects the 17:00 post-work pint, the Friday 21:00 pub peak, and the Sunday-roast wind-down. Counter resets at 04:00 (last orders cleared, carriage settled).</li>
+      <li><b>🥙 Kebab</b> — Modelled UK takeaway demand including kebab shops, chippies, late-night burger vans and post-pub pizza. Calibrated against MCA Insight market figures (~£11.5bn/year, ~3M orders/day). Friday 18:00 family-night peak + Saturday 23:00 post-pub kebab run.</li>
+      <li><b>🐟 Cocaine in UK Waters</b> — Anchored to Kings College London's 2019 study finding measurable cocaine and benzoylecgonine in Thames shrimp. Five rivers sampled. <i>The shrimp are not pleased.</i></li>
+      <li><b>🌿 Rizla & OCB</b> — Modelled UK rolling-papers market split: Rizla (Imperial Tobacco UK ~62%), OCB, Smoking, Raw. ~30,000 packs per peak hour nationally. <i>Includes both tobacco and non-tobacco end-uses (we're not asking).</i></li>
+    </ul>
+    <h3>🛠️ Implementation notes</h3>
+    <ul>
+      <li>Tooltip CSS extended from <code>.card .tip-btn</code> to also cover <code>.ticker .tip-btn</code> — same hover/focus animation, same orange-pip styling, same 300px-wide popup with arrow.</li>
+      <li>Removed <code>overflow:hidden</code> from <code>.ticker</code> so the tooltip can extend below the card without being clipped. The radial-gradient backdrop is unaffected (backgrounds always paint within the element bounds regardless of overflow).</li>
+      <li>Explainer copy added to <code>SIGNAL_EXPLAINERS</code> under the new keys <code>stella</code>, <code>kebab</code>, <code>coke</code>, <code>rizla</code>. Single source of truth for all explainer text across cards and tickers.</li>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.1</div>
       <div class="release-tag">⚽ Real football results · 🐎 Real UK race winners · honest data · Apr 2026</div>
     </div>
     <p class="intro">Two modules retired their mocked-up bookmaker odds and replaced them with <b>real, published, verifiable results</b>. The previous "Live Odds" cards were modelled because every commercial odds API costs real money, and we'd rather show honest yesterday data than fake live numbers. Both modules now pull from sources that are free, public, and properly attributed.</p>

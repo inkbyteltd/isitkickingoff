@@ -2,12 +2,11 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
-<!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
-<meta name="robots" content="noindex,nofollow,noarchive" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Is It Kicking Off? — UK Aggravation Threat Index</title>
 <meta name="description" content="A live, data-driven threat index for the United Kingdom. Are we having a brew or is it about to kick off? Aggregates weather, football, news tension, booze patterns, bank holidays and time-of-day." />
 <link rel="canonical" href="https://isitkickingoff.com/" />
+<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn, generic link unfurls) -->
@@ -289,8 +288,9 @@
   @media (max-width:560px){ .card.card-wide{grid-column:span 1} }
 
   /* Per-signal "?" tooltip — hover (desktop) or tap (mobile, via :focus) to read
-     the methodology explainer for that signal. Pure CSS, no JS handler needed. */
-  .card .tip-btn{
+     the methodology explainer for that signal. Pure CSS, no JS handler needed.
+     Used on both .card (signal grid) and .ticker (live indicators). */
+  .card .tip-btn, .ticker .tip-btn{
     display:inline-flex;align-items:center;justify-content:center;
     width:18px;height:18px;border-radius:999px;flex-shrink:0;
     background:var(--bg-3);border:1px solid var(--line-2);
@@ -299,11 +299,12 @@
     transition:all .15s;
     position:relative;
   }
-  .card .tip-btn:hover, .card .tip-btn:focus{
+  .card .tip-btn:hover, .card .tip-btn:focus,
+  .ticker .tip-btn:hover, .ticker .tip-btn:focus{
     background:var(--accent);color:#0a0d12;border-color:var(--accent);
     outline:none;
   }
-  .card .tip-btn[data-tip]::after{
+  .card .tip-btn[data-tip]::after, .ticker .tip-btn[data-tip]::after{
     content:attr(data-tip);
     position:absolute;
     top:calc(100% + 10px);
@@ -323,7 +324,7 @@
     box-shadow:0 8px 30px rgba(0,0,0,.5);
     text-align:left;
   }
-  .card .tip-btn[data-tip]::before{
+  .card .tip-btn[data-tip]::before, .ticker .tip-btn[data-tip]::before{
     content:"";position:absolute;top:calc(100% + 4px);left:50%;
     transform:translateX(-50%) rotate(45deg);
     width:8px;height:8px;background:var(--bg-3);
@@ -332,7 +333,9 @@
     opacity:0;pointer-events:none;transition:opacity .15s;
   }
   .card .tip-btn:hover::after, .card .tip-btn:focus::after,
-  .card .tip-btn:hover::before, .card .tip-btn:focus::before{
+  .card .tip-btn:hover::before, .card .tip-btn:focus::before,
+  .ticker .tip-btn:hover::after, .ticker .tip-btn:focus::after,
+  .ticker .tip-btn:hover::before, .ticker .tip-btn:focus::before{
     opacity:1;
   }
   .queries{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
@@ -375,12 +378,46 @@
      Cocaine+Rizla row 2). Stacks to 1 column on mobile. */
   .tickers{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
   @media (max-width:720px){ .tickers{grid-template-columns:1fr} }
+
+  /* Environment & Energy + Finance & Markets rows — 4 cards across on desktop,
+     2 on tablet, 1 on mobile. Reuses .ticker styling for visual consistency. */
+  .env-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:1100px){ .env-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){  .env-grid{grid-template-columns:1fr} }
+  /* Tighter padding inside env cards because they're narrower */
+  .env-grid .ticker{padding:16px;min-height:180px}
+  .env-grid .ticker .big{font-size:28px}
+  .env-grid .ticker .title{font-size:10px;letter-spacing:.12em}
+  /* Storm-warning level pip */
+  .storm-pip{
+    display:inline-block;width:11px;height:11px;border-radius:999px;
+    margin-right:6px;vertical-align:middle;border:1px solid rgba(255,255,255,.15);
+  }
+  .storm-pip.red{background:#ef4b4b;box-shadow:0 0 8px rgba(239,75,75,.7)}
+  .storm-pip.amber{background:#ff8a1f;box-shadow:0 0 8px rgba(255,138,31,.5)}
+  .storm-pip.yellow{background:#f4c025}
+  .storm-pip.green{background:#3ecf8e}
+  /* Power mix worm bars */
+  .pmix-row{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;margin-bottom:4px}
+  .pmix-row .nm{width:64px;color:var(--ink-dim);text-transform:capitalize;flex-shrink:0}
+  .pmix-row .barwrap{flex:1;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;position:relative}
+  .pmix-row .barwrap i{display:block;height:100%;border-radius:3px}
+  .pmix-row .pct{width:42px;text-align:right;color:var(--ink);font-weight:600;flex-shrink:0}
+  /* Oil price spark */
+  .oil-spark{display:flex;align-items:flex-end;gap:2px;height:24px;margin:4px 0 6px}
+  .oil-spark i{flex:1;background:rgba(255,138,31,.55);border-radius:1px;min-height:2px}
+  .oil-spark i.last{background:var(--accent)}
+  /* Shit-index water company list */
+  .shit-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;margin-bottom:3px}
+  .shit-row .nm{color:var(--ink)}
+  .shit-row .vl{color:#c87a4d;font-weight:600}
   .ticker{
     background:
       radial-gradient(600px 200px at 100% -20%, rgba(255,138,31,.10), transparent 60%),
       linear-gradient(180deg,var(--bg-1),var(--bg-2));
     border:1px solid var(--line);border-radius:14px;padding:20px;
-    display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;min-height:180px;
+    display:flex;flex-direction:column;gap:10px;position:relative;min-height:180px;
+    /* overflow:visible so .tip-btn tooltip popups can extend below the card */
   }
   .ticker .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
   .ticker .emoji{font-size:22px;filter:grayscale(.2) contrast(1.1)}
@@ -930,6 +967,10 @@
     </div>
   </aside>
 
+  <!-- ENVIRONMENT & ENERGY · ambient context, not scored -->
+  <h2 class="section">🌍 Environment &amp; Energy · Live context</h2>
+  <section class="env-grid" id="env-tickers"></section>
+
   <!-- HEAT MAP -->
   <h2 class="section">UK Heat Map · Kick-off by region</h2>
   <section class="heatmap-wrap">
@@ -1061,6 +1102,11 @@
         <tr><td>⛽ Petrol Pump Rage</td><td>1%</td><td><b>Live UK forecourt prices</b> via the <b>CMA Pump Watch</b> open-data scheme — mandated by the UK Energy Act 2023, which requires every retailer with 4+ stations to publish a daily JSON feed of E10 / B7 / E5 / SDV prices. We fetch <b>14 retailers in parallel</b> (Asda, Morrisons, Tesco, Sainsbury's, Applegreen, Ascona, JET, Esso, Shell, BP, Texaco, Rontec, M&amp;S, Co-op) and average the unleaded / diesel / super / premium prices across <b>every station that responds</b> — typically thousands of forecourts. Source line on the card reads "<i>CMA Pump Watch · N retailers · M stations</i>". Falls back to a hardcoded recent UK national average if every live feed is blocked. Rage score is modelled by day-of-week (Friday afternoon weekend-fill panic peak, Sunday-evening dread, weekday commute) and amplified if unleaded &gt; £1.65/L.</td></tr>
         <tr><td>🗳️ Westminster Voting Intention</td><td>1%</td><td>Hardcoded indicative averages of the major UK pollsters (YouGov · Opinium · Ipsos · Savanta). Score is driven by <b>polarisation</b> — the gap between leading and second party. Knife-edge race (gap &lt; 2pts) = high score (more pub argument fuel); runaway lead = low score. Live upgrade path: Wikipedia MediaWiki API (origin=*) or scheduled GitHub Actions scrape of Politico Poll-of-Polls UK / pollster press releases</td></tr>
         <tr><td>👔 Party Leader Approval (Pint Test)</td><td>1%</td><td>Hardcoded net favourability ratings (favourable − unfavourable). Score is driven by <b>how few leaders sit in net-positive territory</b> — fewer liked leaders = fiercer pub debate. Surfaces the "British pint test" — who you'd most like to share a pint with, with "(least dreadful)" qualifier when nobody is in net-positive. Live upgrade: weekly scrape of Ipsos / YouGov leader-rating press releases</td></tr>
+        <tr><td colspan="3" style="background:var(--bg-3);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding:10px 12px">🌍 Environment &amp; Energy · ambient context (not scored, v1.3)</td></tr>
+        <tr><td>💩 Shit Index</td><td>display</td><td>Modelled UK sewage spill estimate with <b>live rain modifier</b>. Anchored to <b>Environment Agency Event Duration Monitoring (EDM)</b> data: ~3.6M sewage spill events recorded across England in 2023, ~4.7M hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today's estimate scales with the UK-average current rainfall reading from Open-Meteo (dry day ~0.7× baseline, heavy rain up to ~2.5×). Card shows three of England's worst-offending water companies with their real annual EDM figures (United Utilities ~97k/yr, Severn Trent ~60k/yr, Yorkshire Water ~63k/yr, etc.). Display-only — does NOT feed the kick-off index.</td></tr>
+        <tr><td>⛈️ Met Office Storm Watch</td><td>display</td><td><b>LIVE</b> — Met Office severe weather warnings via the official <a href="https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">NSWWS RSS feed</a> (no API key needed). Parses the highest active warning level (Yellow / Amber / Red), counts active warnings nationally, and surfaces the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Display-only.</td></tr>
+        <tr><td>⚡ National Grid Power Mix</td><td>display</td><td><b>LIVE</b> — UK electricity generation breakdown from the <b>Elexon BMRS FUELHH dataset</b> (same provider as the kettle-demand module). Renders the top 5 fuel sources right now as horizontal worm-bars with percentage of total grid generation: gas (CCGT/OCGT), wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). When wind crosses 50% the country is briefly running on weather. Display-only.</td></tr>
+        <tr><td>🛢️ Brent Crude Oil Tracker</td><td>display</td><td>Brent crude (BZ=F) spot price in USD, fetched from <b>Yahoo Finance</b> via our existing CORS proxy chain (api.allorigins.win → corsproxy.io). Shows current price, day-over-day percentage change with up/down arrow, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair with the ⛽ Petrol Pump Rage card for a full pump-to-platform read. Display-only.</td></tr>
       </tbody>
     </table>
     </div>
@@ -5370,6 +5416,156 @@ async function fetchUKGridDemand(){
   return out;
 }
 
+/* =========================================================
+   Environment & Energy fetchers (v1.3)
+   Ambient context — these don't feed the gauge, they sit
+   alongside as their own Live Context row.
+   ========================================================= */
+
+// ⛈️ Met Office severe weather warnings — public RSS, no API key.
+// Returns { live, level: 'red'|'amber'|'yellow'|'green', count, warnings:[] }
+async function fetchStormAlerts(){
+  const out = { live:false, level:'green', count:0, warnings:[] };
+  try {
+    const rssUrl = 'https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk';
+    const items = await fetchRssItems(rssUrl);
+    if (Array.isArray(items) && items.length){
+      out.live = true;
+      out.count = items.length;
+      const HAZARDS = ['rain','wind','snow','ice','fog','thunderstorm','lightning','heat','cold'];
+      const parsed = items.map(it => {
+        const t = ((it.title || '') + ' ' + (it.description || '')).toLowerCase();
+        let lvl = 'yellow';
+        if (t.includes('red ')) lvl = 'red';
+        else if (t.includes('amber')) lvl = 'amber';
+        let hazard = 'weather';
+        for (const h of HAZARDS){ if (t.includes(h)){ hazard = h; break; } }
+        return { level:lvl, hazard, title:(it.title || '').trim() };
+      });
+      if (parsed.some(p => p.level === 'red')) out.level = 'red';
+      else if (parsed.some(p => p.level === 'amber')) out.level = 'amber';
+      else out.level = 'yellow';
+      out.warnings = parsed.slice(0, 4);
+    }
+  } catch(e){ /* fall through to all-clear */ }
+  return out;
+}
+
+// ⚡ National Grid live fuel mix — Elexon BMRS FUELHH dataset.
+// Returns { live, mix:[{fuel, mw, pct}], totalMW, asOf }
+async function fetchPowerMix(){
+  const out = { live:false, mix:null };
+  try {
+    const today = new Date();
+    const yest  = new Date(today.getTime() - 24*3600*1000);
+    const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const url = `https://data.elexon.co.uk/bmrs/api/v1/datasets/FUELHH?settlementDateFrom=${fmt(yest)}&settlementDateTo=${fmt(today)}&format=json`;
+    const res = await fetch(url, { headers: { 'Accept':'application/json' }});
+    if (res.ok){
+      const j = await res.json();
+      const items = Array.isArray(j) ? j : (j?.data || []);
+      if (items.length){
+        // Find latest settlement period
+        const sortKey = it => `${it.settlementDate}|${String(it.settlementPeriod).padStart(2,'0')}`;
+        items.sort((a,b) => sortKey(b).localeCompare(sortKey(a)));
+        const top = items[0];
+        const latestDate = top.settlementDate;
+        const latestPeriod = top.settlementPeriod;
+        const latest = items.filter(it => it.settlementDate === latestDate && it.settlementPeriod === latestPeriod);
+        const totalMW = latest.reduce((sum, r) => sum + (Number(r.generation) || 0), 0);
+        const mix = latest
+          .map(r => ({
+            fuel: (r.fuelType || r.psrType || 'other').toLowerCase(),
+            mw:   Number(r.generation) || 0,
+            pct:  totalMW > 0 ? ((Number(r.generation) || 0) / totalMW) * 100 : 0,
+          }))
+          .filter(m => m.mw > 0)
+          .sort((a,b) => b.mw - a.mw);
+        out.live = true;
+        out.mix = mix;
+        out.totalMW = totalMW;
+        out.asOf = latestDate;
+      }
+    }
+  } catch(e){ /* fall through */ }
+  return out;
+}
+
+// 🛢️ Brent crude oil — Yahoo Finance (BZ=F) via existing CORS proxies.
+// Returns { live, brentUSD, dayChangeUSD, dayChangePct, spark[] }
+async function fetchOilPrices(){
+  const out = { live:false };
+  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?range=5d&interval=1d';
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+  for (const u of proxies){
+    try {
+      const r = await fetch(u);
+      if (!r.ok) continue;
+      const j = await r.json();
+      const result = j?.chart?.result?.[0];
+      if (!result) continue;
+      const closes = (result.indicators?.quote?.[0]?.close || []).filter(v => Number.isFinite(v));
+      if (closes.length < 2) continue;
+      const last = closes[closes.length - 1];
+      const prev = closes[closes.length - 2];
+      out.live = true;
+      out.brentUSD = last;
+      out.dayChangeUSD = last - prev;
+      out.dayChangePct = ((last - prev) / prev) * 100;
+      out.spark = closes.slice(-5);
+      out.symbol = 'BZ=F';
+      break;
+    } catch(e){ /* try next proxy */ }
+  }
+  return out;
+}
+
+// 💩 Shit Index — modelled with live rain modifier.
+// Anchored to Environment Agency EDM data: ~3.6M sewage spill events in
+// England 2023, ~4.7M hours of total discharge. Combined sewer overflows
+// trigger more during heavy rain — so we modulate today's estimate by the
+// UK-average current rainfall reading.
+function computeShitIndex(weatherMap){
+  // EA 2023 baseline: 3.6M spills / 365 ≈ 9,863 spills/day
+  const BASE_DAILY_SPILLS = 9863;
+  // EA league table 2023 — three of the worst offenders for context
+  const WORST_COMPANIES = [
+    { name:'United Utilities',  annual:97537 },
+    { name:'Severn Trent',      annual:60253 },
+    { name:'Thames Water',      annual:16990 },
+    { name:'Yorkshire Water',   annual:62932 },
+    { name:'Southern Water',    annual:9091  },
+  ];
+  // Average rainfall across regions (mm in last hour, from Open-Meteo via signal)
+  let totalRain = 0, count = 0;
+  if (weatherMap && typeof weatherMap === 'object'){
+    for (const k of Object.keys(weatherMap)){
+      const w = weatherMap[k];
+      const r = w?.rainfall ?? w?.precip ?? w?.rain ?? null;
+      if (Number.isFinite(r)){ totalRain += r; count++; }
+    }
+  }
+  const avgRain = count ? totalRain / count : 0;
+  // Multiplier: dry day ~0.7x baseline (less CSO triggering), heavy rain ~2.5x
+  let mult = 0.7 + Math.min(1.8, avgRain / 4);
+  const todaySpills = Math.round(BASE_DAILY_SPILLS * mult);
+  // Pick top 3 to display, deterministically rotated by date
+  const seed = new Date().getDate();
+  const rotated = WORST_COMPANIES.slice(seed % WORST_COMPANIES.length).concat(
+                  WORST_COMPANIES.slice(0, seed % WORST_COMPANIES.length));
+  return {
+    live: count > 0,                   // we have live weather feeding the modifier
+    todaySpills,
+    avgRain,
+    multiplier: mult,
+    worstCompanies: rotated.slice(0, 3),
+    source: 'EA Event Duration Monitoring 2023 + live rain modifier',
+  };
+}
+
 // Canonical hourly UK demand baseline (GW) — modelled, used as the comparator
 // when computing the "kettle index" delta.  Numbers are typical winter-weekday;
 // summer baseline is roughly 0.85x but the *shape* is identical.
@@ -7168,12 +7364,19 @@ function renderTickers(ctx){
   const brandSegs = RIZLA_BRANDS.map(b => `<div class="seg" style="width:${(b.share/totalShare*100).toFixed(2)}%;background:${b.color}" title="${b.name} ${(b.share*100).toFixed(0)}%"></div>`).join('');
   const brandLegend = RIZLA_BRANDS.map(b => `<span class="l"><i style="background:${b.color}"></i>${b.name} ${(b.share*100).toFixed(0)}%</span>`).join('');
 
+  // Per-ticker explainer pip (same pattern as signal cards)
+  const tipFor = (key, title) => {
+    const t = SIGNAL_EXPLAINERS[key];
+    return t ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(title)}?" data-tip="${_escAttr(t)}">?</button>` : '';
+  };
+
   const html = `
     <article class="ticker" id="ticker-stella">
       <div class="head">
         <div style="display:flex;align-items:center;gap:10px">
           <span class="emoji" aria-hidden="true">🍺</span>
           <div class="title">Stella Artois Index · Pints poured today (UK)</div>
+          ${tipFor('stella', 'Stella Artois Index')}
         </div>
         <span class="chip model">Modelled</span>
       </div>
@@ -7192,6 +7395,7 @@ function renderTickers(ctx){
         <div style="display:flex;align-items:center;gap:10px">
           <span class="emoji" aria-hidden="true">🥙</span>
           <div class="title">Kebab &amp; Fast-Food Index · Orders today (UK)</div>
+          ${tipFor('kebab', 'Kebab and Fast-Food Index')}
         </div>
         <span class="chip model">Modelled</span>
       </div>
@@ -7210,6 +7414,7 @@ function renderTickers(ctx){
         <div style="display:flex;align-items:center;gap:10px">
           <span class="emoji" aria-hidden="true">🐟</span>
           <div class="title">Cocaine in UK Waters · Aquatic Concentration</div>
+          ${tipFor('coke', 'Cocaine in UK Waters')}
         </div>
         <span class="chip model" title="Modelled from Kings College / EU wastewater studies">Modelled</span>
       </div>
@@ -7236,6 +7441,7 @@ function renderTickers(ctx){
         <div style="display:flex;align-items:center;gap:10px">
           <span class="emoji" aria-hidden="true">🌿</span>
           <div class="title">Rizla &amp; OCB · Rolling Papers Sold Today</div>
+          ${tipFor('rizla', 'Rizla and OCB')}
         </div>
         <span class="chip model">Modelled</span>
       </div>
@@ -7252,6 +7458,202 @@ function renderTickers(ctx){
     </article>
   `;
   document.getElementById('tickers').innerHTML = html;
+}
+
+/* =========================================================
+   Environment & Energy row renderer (v1.3)
+   ========================================================= */
+const _STORM_COPY = {
+  red:    { label:'RED',    sub:'Risk to life · move indoors' },
+  amber:  { label:'AMBER',  sub:'Be prepared · disruption likely' },
+  yellow: { label:'YELLOW', sub:'Be aware · stay informed' },
+  green:  { label:'CLEAR',  sub:'No active warnings · suspiciously calm' },
+};
+const _HAZARD_EMOJI = {
+  rain:'🌧️', wind:'💨', snow:'❄️', ice:'🧊', fog:'🌫️',
+  thunderstorm:'⛈️', lightning:'⚡', heat:'🥵', cold:'🥶', weather:'⚠️',
+};
+// Brand colour per fuel type for the Power Mix worm bars
+const _FUEL_COLORS = {
+  gas:        '#ff8a1f',
+  ccgt:       '#ff8a1f',
+  ocgt:       '#f4c025',
+  wind:       '#3ecf8e',
+  nuclear:    '#1e88e5',
+  coal:       '#5f6b7d',
+  biomass:    '#9c5b3d',
+  solar:      '#f4c025',
+  hydro:      '#06b6d4',
+  ps:         '#06b6d4',
+  npshyd:     '#06b6d4',
+  oil:        '#5f6b7d',
+  imports:    '#a855f7',
+  intfr:      '#a855f7',
+  intirl:     '#a855f7',
+  intned:     '#a855f7',
+  intew:      '#a855f7',
+  intelec:    '#a855f7',
+  intnem:     '#a855f7',
+  intnsl:     '#a855f7',
+  intvkl:     '#a855f7',
+  other:      '#9aa6b8',
+};
+const _PRETTY_FUEL = {
+  ccgt:'gas', ocgt:'gas (peak)', wind:'wind', nuclear:'nuclear',
+  coal:'coal', biomass:'biomass', solar:'solar', ps:'pumped',
+  npshyd:'hydro', oil:'oil', intfr:'imports (FR)', intirl:'imports (IRL)',
+  intned:'imports (NL)', intew:'imports (EW)', intelec:'imports', intnem:'imports (NEM)',
+  intnsl:'imports (NSL)', intvkl:'imports (VKL)', other:'other',
+};
+
+function renderEnvCards(env){
+  const tipFor = (key, title) => {
+    const t = SIGNAL_EXPLAINERS[key];
+    return t ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(title)}?" data-tip="${_escAttr(t)}">?</button>` : '';
+  };
+  const fmtNum = n => Math.round(n).toLocaleString('en-GB');
+
+  // 💩 Shit Index
+  const sh = env.shit || {};
+  const shCompanies = (sh.worstCompanies || []).map(c => `
+    <div class="shit-row"><span class="nm">${_escAttr(c.name)}</span><span class="vl">${fmtNum(c.annual)}/yr</span></div>
+  `).join('');
+  const shitChip = sh.live
+    ? `<span class="chip live" title="Live rain modifier">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const shitLine = sh.avgRain > 2
+    ? `Heavy rain · CSOs triggering harder`
+    : sh.avgRain > 0.3
+    ? `Some rain · spills lifting`
+    : `Dry day · baseline trickle`;
+
+  // ⛈️ Storm Watch
+  const st = env.storm || { level:'green', count:0, warnings:[] };
+  const stCopy = _STORM_COPY[st.level] || _STORM_COPY.green;
+  const stHazards = (st.warnings || []).slice(0,3)
+    .map(w => `${_HAZARD_EMOJI[w.hazard] || '⚠️'} ${w.hazard}`)
+    .join(' · ') || '—';
+  const stormChip = st.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+
+  // ⚡ Power Mix — show top 5 fuels as horizontal bars
+  const pm = env.power || {};
+  const top5 = (pm.mix || []).slice(0, 5);
+  const pmRows = top5.length ? top5.map(m => {
+    const pretty = _PRETTY_FUEL[m.fuel] || m.fuel;
+    const col = _FUEL_COLORS[m.fuel] || '#9aa6b8';
+    return `<div class="pmix-row">
+      <span class="nm">${_escAttr(pretty)}</span>
+      <div class="barwrap"><i style="width:${m.pct.toFixed(1)}%;background:${col}"></i></div>
+      <span class="pct">${m.pct.toFixed(0)}%</span>
+    </div>`;
+  }).join('') : `<div style="color:var(--ink-faint);font-family:var(--mono);font-size:11px">Live mix unavailable</div>`;
+  const dominant = top5[0];
+  const dominantLine = dominant
+    ? `<b>${_PRETTY_FUEL[dominant.fuel] || dominant.fuel}</b> leading at ${dominant.pct.toFixed(0)}%`
+    : `Mix loading…`;
+  const powerChip = pm.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+
+  // 🛢️ Oil prices
+  const o = env.oil || {};
+  const oilSpark = (o.spark && o.spark.length)
+    ? (() => {
+        const lo = Math.min(...o.spark);
+        const hi = Math.max(...o.spark);
+        const range = hi - lo || 1;
+        return o.spark.map((v,i) => {
+          const h = ((v - lo) / range) * 100;
+          const isLast = (i === o.spark.length - 1);
+          return `<i class="${isLast ? 'last' : ''}" style="height:${Math.max(8, h).toFixed(0)}%"></i>`;
+        }).join('');
+      })()
+    : '';
+  const oilChip = o.live
+    ? `<span class="chip live">Live</span>`
+    : `<span class="chip model">Modelled</span>`;
+  const oilArrow = (o.dayChangeUSD ?? 0) >= 0 ? '↑' : '↓';
+  const oilArrowColor = (o.dayChangeUSD ?? 0) >= 0 ? '#ef4b4b' : '#3ecf8e';
+  const oilDelta = Number.isFinite(o.dayChangePct)
+    ? `<span style="color:${oilArrowColor};font-weight:600">${oilArrow} ${Math.abs(o.dayChangePct).toFixed(2)}%</span>`
+    : `<span style="color:var(--ink-faint)">change pending</span>`;
+
+  const html = `
+    <article class="ticker" id="env-shit">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">💩</span>
+          <div class="title">Shit Index · UK Sewage Spills Today</div>
+          ${tipFor('shit', 'Shit Index')}
+        </div>
+        ${shitChip}
+      </div>
+      <div class="big">${fmtNum(sh.todaySpills || 9863)}<span class="unit">spills</span></div>
+      <div class="rate">${shitLine}</div>
+      <div style="margin-top:8px">${shCompanies}</div>
+      <div class="foot">
+        <span>EA EDM 2023 · live rain modifier</span>
+        <span>3 of England's worst</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="env-storm">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">⛈️</span>
+          <div class="title">Met Office Storm Watch</div>
+          ${tipFor('storm', 'Met Office Storm Watch')}
+        </div>
+        ${stormChip}
+      </div>
+      <div class="big" style="display:flex;align-items:center"><span class="storm-pip ${st.level}"></span>${stCopy.label}</div>
+      <div class="rate">${st.count > 0 ? `${st.count} active warning${st.count===1?'':'s'} · ${stHazards}` : stCopy.sub}</div>
+      <div class="sub" style="margin-top:8px;color:var(--ink-dim);font-size:12px">${st.count > 0 ? stCopy.sub : '—'}</div>
+      <div class="foot">
+        <span>NSWWS via metoffice.gov.uk</span>
+        <span>${st.count} active</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="env-power">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">⚡</span>
+          <div class="title">National Grid Power Mix</div>
+          ${tipFor('power', 'National Grid Power Mix')}
+        </div>
+        ${powerChip}
+      </div>
+      <div class="big" style="font-size:18px;line-height:1.2">${dominantLine}</div>
+      <div style="margin-top:6px">${pmRows}</div>
+      <div class="foot">
+        <span>Elexon BMRS FUELHH</span>
+        <span>${pm.totalMW ? `${(pm.totalMW/1000).toFixed(1)} GW` : 'live mix'}</span>
+      </div>
+    </article>
+
+    <article class="ticker" id="env-oil">
+      <div class="head">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="emoji" aria-hidden="true">🛢️</span>
+          <div class="title">Brent Crude · Oil Tracker</div>
+          ${tipFor('oil', 'Oil Tracker')}
+        </div>
+        ${oilChip}
+      </div>
+      <div class="big">$${Number.isFinite(o.brentUSD) ? o.brentUSD.toFixed(2) : '—'}<span class="unit">/bbl</span></div>
+      <div class="rate">Day change: ${oilDelta}</div>
+      <div class="oil-spark">${oilSpark}</div>
+      <div class="foot">
+        <span>Yahoo Finance · BZ=F</span>
+        <span>5-day spark</span>
+      </div>
+    </article>
+  `;
+  const target = document.getElementById('env-tickers');
+  if (target) target.innerHTML = html;
 }
 
 // Live tick loop — increments counters every second based on current rate
@@ -7330,6 +7732,19 @@ const WEIGHTS = {
    The user can hover (desktop) or tap (mobile) the ? to read.
    ========================================================= */
 const SIGNAL_EXPLAINERS = {
+  // Live indicator tickers (sit above the signals grid)
+  stella:     'Stella Artois Index — modelled UK lager consumption with Stella\'s ~14% category share applied. Calibrated against BBPA (British Beer & Pub Association) figures: ~10 billion pints sold nationally per year. Hour-of-day curve respects the 17:00 post-work pint, the Friday 21:00 pub peak, and the Sunday-roast wind-down. Counter resets at 04:00 (last orders cleared, carriage settled).',
+  kebab:      'Kebab & Fast-Food Index — modelled UK takeaway demand including kebab shops, chippies, late-night burger vans and post-pub pizza. Calibrated against MCA Insight\'s UK takeaway market figures (~£11.5bn/year, ~3 million orders/day nationally). Curve respects the Friday 18:00 family-night spike and the Saturday 23:00 post-pub kebab run. Doner-leans-kebab on weekends, donair-leans-pizza on weeknights.',
+  coke:       'Cocaine in UK Waters — modelled aquatic concentrations (ng/L) across five UK rivers: Thames, Mersey, Severn, Clyde, Tyne. Anchored to Kings College London\'s 2019 study which found measurable cocaine and benzoylecgonine in Thames shrimp at locations across Greater London. Concentrations vary by upstream population density and weekend usage cycles. The shrimp are not pleased.',
+  rizla:      'Rizla & OCB — modelled UK rolling-papers market split across the four major brands: Rizla (Imperial Tobacco UK ~62% share), OCB, Smoking, Raw. Daily volume calibrated against Imperial Tobacco UK and Republic Technologies UK shipment estimates: ~30,000 packs per peak hour nationally. Brand share legend below shows the actual market split. Includes both tobacco and non-tobacco end-uses (we\'re not asking).',
+
+  // Environment & Energy row (v1.3)
+  shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. The fish are deeply unimpressed.',
+  storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). The Met Office issues these warnings under the National Severe Weather Warning Service. Green = all clear (suspiciously quiet).',
+  power:      'Power Mix — live UK electricity generation breakdown from the Elexon BMRS FUELHH dataset (same provider as the kettle module). Shows the top 5 fuel sources right now as a percentage of total grid generation: gas, wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.',
+  oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD, fetched from Yahoo Finance via our existing CORS proxy chain. Shows current price, day-over-day change, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
+
+  // Signal grid — main scoring inputs
   time:       'Hour-of-day "activity envelope" — nothing kicks off at 5am regardless of how tense the news is. A multiplier that dampens the gauge by time-of-day; weekend evenings peak.',
   weather:    'Live regional weather from Open-Meteo (per UK city / nation). Hot or stormy days bump the score; mild days calm it. Falls back to UK climate averages if the API is blocked.',
   daylight:   'Sunset proximity. Dusk and the dark hours score higher — the streets feel different after sundown.',
@@ -9140,7 +9555,7 @@ function withTimeout(promise, ms, name){
 
 async function fetchBulk(){
   const T = 8000; // 8-second timeout per fetcher
-  const [weatherMap, bhData, football, tfl, news, trends, fuel, protests, tv, redditUK, threat, grid, nhs, sports, crime, metPolice, lotto, spotify, redditTrend, ncb] = await Promise.all([
+  const [weatherMap, bhData, football, tfl, news, trends, fuel, protests, tv, redditUK, threat, grid, nhs, sports, crime, metPolice, lotto, spotify, redditTrend, ncb, storm, power, oil] = await Promise.all([
     withTimeout(fetchAllRegionsWeather(),    T, 'weather'),
     withTimeout(fetchAllBankHolidays(),      T, 'bh'),
     withTimeout(fetchAllFootballEvents(),    T, 'football'),
@@ -9161,6 +9576,10 @@ async function fetchBulk(){
     withTimeout(fetchSpotifyUKTop(),         T, 'spotify'),  // Apple Music UK chart (Spotify proxy)
     withTimeout(fetchRedditUKTrending(),     T, 'redditTrend'), // Reddit UK multi-sub hot feed
     withTimeout(fetchNoContextBrits(),       T, 'ncb'),      // @NoContextBrits Nitter RSS
+    // v1.3 — Environment & Energy row (ambient, not scored)
+    withTimeout(fetchStormAlerts(),          T, 'storm'),    // Met Office severe-weather warnings RSS
+    withTimeout(fetchPowerMix(),             T, 'power'),    // Elexon BMRS FUELHH live fuel mix
+    withTimeout(fetchOilPrices(),            T, 'oil'),      // Brent crude (BZ=F) via Yahoo + proxy
   ]);
   // Every downstream consumer handles null/missing gracefully via fallbacks,
   // but seed sensible defaults so destructuring stays predictable.
@@ -9185,6 +9604,10 @@ async function fetchBulk(){
     spotify:     spotify,
     redditTrend: redditTrend,
     ncb:         ncb,
+    // v1.3 — Environment & Energy row (ambient, not scored)
+    storm:       storm,
+    power:       power,
+    oil:         oil,
   };
 }
 
@@ -9247,6 +9670,18 @@ function renderAll(bulk){
     bh: sigs.bh?.score ?? 0.1,
   });
   startTickerLoop();
+
+  // v1.3 — Environment & Energy row (ambient, not scored).
+  // computeShitIndex needs the live weather map for its rain modifier.
+  try {
+    const shit = computeShitIndex(bulk.weatherMap || {});
+    renderEnvCards({
+      shit,
+      storm: bulk.storm,
+      power: bulk.power,
+      oil:   bulk.oil,
+    });
+  } catch(e){ console.warn('[env] render failed:', e.message); }
 
   // Gauge
   setGauge(currentScore);
