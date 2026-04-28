@@ -135,8 +135,37 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.4 <span class="stamp">live</span></div>
-      <div class="release-tag">💷 New row · Finance &amp; Markets · 4 ambient modules · Apr 2026</div>
+      <div class="release-ver">v1.4.1 <span class="stamp">live</span></div>
+      <div class="release-tag">⚠️ ROLLBACK · v1.4 broke the live site · reverted to v1.3 · Apr 2026</div>
+    </div>
+    <p class="intro"><b>Hotfix.</b> The v1.4 push (Finance &amp; Markets row) broke the live site after deployment — symptoms TBC, debugging in progress. This release surgically reverts every v1.4 change so the site comes back up on the v1.3 codebase. Nothing from v1.0/v1.1/v1.2/v1.3 is affected — the rollback only touches the v1.4 additions.</p>
+    <h3>🧹 What was removed</h3>
+    <ul>
+      <li>Finance &amp; Markets HTML section (4 cards: 📈 FTSE/Dow, ₿ Crypto, 💱 GBP, 💊 Tech &amp; Pharma)</li>
+      <li>4 fetch functions: <code>fetchStockIndices</code>, <code>fetchCrypto</code>, <code>fetchExchangeRates</code>, <code>fetchTechPharma</code></li>
+      <li>Shared helper <code>_fetchYahooQuote()</code></li>
+      <li>Render function <code>renderFinanceCards()</code> and helpers (<code>_miniSpark</code>, <code>_changeSpan</code>, <code>_CRYPTO_NAMES</code>)</li>
+      <li>4 explainer keys (<code>stocks</code>, <code>crypto</code>, <code>fx</code>, <code>pharmatech</code>) from <code>SIGNAL_EXPLAINERS</code></li>
+      <li>Second <code>Promise.all</code> batch in <code>fetchBulk()</code> + 4 keys from the return object</li>
+      <li>4 methodology table rows + their sub-header</li>
+      <li>CSP additions: <code>api.coingecko.com</code> and <code>api.frankfurter.app</code> removed from <code>connect-src</code></li>
+    </ul>
+    <h3>🔍 Next steps for v1.4 retry</h3>
+    <ul>
+      <li>Investigate the actual failure mode in browser DevTools (probably a JS runtime error blocking the gauge)</li>
+      <li>Build v1.4 again with each module behind a feature flag, ship one at a time</li>
+      <li>Test against the live workers.dev preview URL <i>before</i> pushing to the apex domain</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse check post-rollback: ✅ clean. <code>deploy-test/</code> bundle synced. v1.3 is the live release; v1.4 is shelved pending a clean retry.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.4 <span style="color:var(--red);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-left:6px;font-weight:700">rolled back</span></div>
+      <div class="release-tag">💷 Finance &amp; Markets · attempted · reverted in v1.4.1 · Apr 2026</div>
     </div>
     <p class="intro">A second new row lands below the Environment &amp; Energy row from v1.3: <b>Finance &amp; Markets</b>. Four ambient context cards covering the markets the British wake up checking — the FTSE, the Dow, what's happening in crypto, what their pound is worth abroad today, and which big-cap names are moving in tech and pharma. Same architecture as v1.3 — these don't feed the kick-off index, they sit alongside as their own honest readout.</p>
     <h3>📈 FTSE &amp; Dow · Today's Moves</h3>
