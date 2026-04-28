@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Changelog · Is It Kicking Off?</title>
 <meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
-<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -110,7 +109,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
-      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="./shop.html">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -135,7 +134,39 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.6 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.7 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 NCB X-timeline · 🛢️ Brent baseline · 📐 methodology overflow · Apr 2026</div>
+    </div>
+    <p class="intro">Three bug fixes. NCB module was showing "sample post · Nitter feed unavailable" because public Nitter mirrors are mostly defunct in 2026; switched the fallback to X's official Timeline widget which fetches live tweets straight from x.com. Brent Crude card was reading blank when proxies failed — now falls back to a recent baseline price ($78.50) tagged "Baseline" so the card never reads dead. Methodology table was triggering a horizontal scrollbar — added <code>overflow-wrap:anywhere</code> on cell content.</p>
+    <h3>🎭 NCB · X Timeline embed widget</h3>
+    <ul>
+      <li>If the Nitter RSS chain returns a specific recent tweet, we still embed that exact tweet (best UX).</li>
+      <li>If Nitter is down (which it now is, most public mirrors retired), we render X's official <b>Timeline widget</b>: <code>&lt;a class="twitter-timeline" data-tweet-limit="1" href="…/NoContextBrits"&gt;</code>. The <code>widgets.js</code> we already load in <code>&lt;head&gt;</code> turns this into a live render of NCB's most recent tweet, straight from x.com — no Nitter, no API key, no scraping.</li>
+      <li>Tier-3 fallback (rotating styled quote) only kicks in if widgets.js itself can't load — extremely rare.</li>
+    </ul>
+    <h3>🛢️ Brent Crude · last-known baseline</h3>
+    <ul>
+      <li>When the Stooq + Yahoo chain returns nothing, the card now shows <b>$78.50/bbl</b> with a <code>Baseline</code> chip (was: blank "—" reading). Footnote reads "<i>Recent baseline · ~$70-90 range</i>" so the user knows it's not live.</li>
+      <li>As soon as live data lands on a future fetch, the card seamlessly switches back to the live reading and the chip flips to green Live.</li>
+    </ul>
+    <h3>📐 Methodology table · overflow fix</h3>
+    <ul>
+      <li>Added <code>overflow-wrap:anywhere; word-break:break-word</code> to <code>&lt;code&gt;</code> and <code>&lt;a&gt;</code> elements inside <code>.meth td</code>. Long URLs and code-fenced API endpoints in the third column will now wrap to multiple lines instead of forcing the table wider.</li>
+      <li>Also caught: the existing Zeitgeist · NCB row still had <code>display</code> in the weight column — changed to <code>0%</code> for consistency with v1.5's table cleanup.</li>
+    </ul>
+    <h3>ℹ️ A note on X subscriptions</h3>
+    <ul>
+      <li>An X Premium <i>subscription</i> (the user-facing blue tick + features) does <b>not</b> grant API access — that's a separate paid <i>Developer</i> account (Basic tier $100/mo, Pro $5000/mo). The Timeline widget approach we're using here doesn't need any X account or key — it just uses the public widget many sites embed.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.6</div>
       <div class="release-tag">🕰️ Time-aware gauge blurbs · expanded pool · Apr 2026</div>
     </div>
     <p class="intro">User spotted "Sunday roast spotted with raised forks" appearing on a Tuesday afternoon. The 70 tier blurbs were rotating purely on date+hour without any awareness of <i>what day or time it actually is</i>. Now every blurb can carry an optional day-of-week and hour-of-day filter; the picker filters to eligible blurbs first then rotates within that filtered set. Pool also expanded from 70 → 134 blurbs total.</p>

@@ -1,0 +1,15 @@
+{
+  "name": "isitkickingoff-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tweet": "node tweet.mjs",
+    "tweet:dry": "node tweet.mjs --dry-run"
+  },
+  "dependencies": {
+    "twitter-api-v2": "^1.18.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

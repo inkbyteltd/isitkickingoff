@@ -6,7 +6,6 @@
 <title>Is It Kicking Off? — UK Aggravation Threat Index</title>
 <meta name="description" content="A live, data-driven threat index for the United Kingdom. Are we having a brew or is it about to kick off? Aggregates weather, football, news tension, booze patterns, bank holidays and time-of-day." />
 <link rel="canonical" href="https://isitkickingoff.com/" />
-<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn, generic link unfurls) -->
@@ -773,8 +772,13 @@
   .meth code{font-family:var(--mono);background:var(--bg-3);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--ink)}
   .meth-scroll{overflow-x:auto;margin-top:8px;-webkit-overflow-scrolling:touch}
   .meth table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:12px;table-layout:auto}
-  .meth th,.meth td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;color:var(--ink-dim);vertical-align:top}
+  .meth th,.meth td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;color:var(--ink-dim);vertical-align:top;overflow-wrap:break-word;word-break:normal;hyphens:auto}
   .meth th{color:var(--ink);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+  /* Force long inline content (<code>, long words, URLs) to wrap inside cells
+     so the table never expands beyond its container and triggers a horizontal
+     scrollbar on desktop. Mobile media query below already breaks the table
+     into stacked blocks. */
+  .meth td code, .meth td a{overflow-wrap:anywhere;word-break:break-word}
   /* First column = Signal name. Never wrap; keep it readable on one line. */
   .meth th:first-child,
   .meth td:first-child{white-space:nowrap;padding-right:22px}
@@ -829,7 +833,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html">🪵 Changelog</a>
-      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="./shop.html">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -1105,7 +1109,7 @@
         <tr><td>📱 Social Media Mania</td><td>2%</td><td>UK chatter tracker spanning all 24 hours. Modelled message-rate curve grounded in published figures (Ofcom 2024 + WhatsApp/SMS volumes ≈ 1.8–2.2B msgs/day UK-wide → ~75M/hour daily average, ~135M/hour Fri/Sat peak). Live overlay: r/unitedkingdom comment velocity (comments/min) fetched from reddit.com/r/unitedkingdom/comments.json — when it succeeds the card flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span>. Behaviour list rotates through 20 UK posting/messaging behaviours each with their own peak-hour and span (commute rage tweets, Slack rants, lunchtime hot takes, school-gate drama, evening doomscroll, drunk DMs)</td></tr>
         <tr><td>🎵 UK Top Tracks · Music Charts</td><td>1%</td><td>Renamed from "Spotify UK Top Tracks" to be source-agnostic. <b>5-source fallback chain</b>: (1) <code>rss.applemarketingtools.com /most-played GB</code>, (2) <code>/top-songs GB</code>, (3) <code>/hot-tracks GB</code>, (4) legacy <code>itunes.apple.com/gb/rss/topsongs</code>, (5) <b>Wikipedia MediaWiki API</b> parse of the <i>UK Singles Chart</i> article (Official Charts Company top 10 in current week's wikitable) — uses whichever returns first. Both Apple Marketing Tools shape (<code>feed.results</code>) and legacy iTunes RSS shape (<code>feed.entry</code>) are parsed. Spotify's UK Top 50 endpoint requires OAuth so it can't run client-side, but Apple/Wikipedia together give a reliable mirror. Hardcoded chart fallback kicks in only when all 5 live feeds are blocked. Card shows the current #1 plus the top 5 as clickable cards (links to Apple Music or Wikipedia). 1-hour client-side cache.</td></tr>
         <tr><td>👽 Reddit UK Trending</td><td>2%</td><td><b>LIVE — multi-subreddit feed</b>. Replaces the previous YouTube card (Piped instances are notoriously rate-limited / blocked by YouTube). Pulls hot posts from <code>r/unitedkingdom</code> + <code>r/CasualUK</code> + <code>r/AskUK</code> + <code>r/britishproblems</code> + <code>r/london</code> via reliable <code>www.reddit.com/r/{sub}/hot.json</code> endpoints (the same reliable feed we already use for Social Media Mania). Skips mod-pinned posts, merges all subs, ranks by score, surfaces top 5 as clickable cards (links direct to the Reddit thread). Each row shows subreddit + upvote score + comment count. Sub-line includes a "<b>~X posts/hr</b>" worm rate computed from posts created in the last 6 hours. 20-min client-side cache.</td></tr>
-        <tr><td>🎭 Zeitgeist · No Context Brits</td><td>display</td><td>Special <b>full-width feature row</b> sitting in the signals grid <b>between Daily Pulse and Sentiment</b> — tracks <a href="https://x.com/NoContextBrits" target="_blank" rel="noopener noreferrer" style="color:#C8102E">@NoContextBrits</a> as a UK cultural barometer. Avatar is the proper <b>Union Jack SVG</b> (matches NCB's actual X profile pic). <b>Latest post is a real X embed</b> — uses the X (Twitter) widgets.js script (<code>platform.twitter.com/widgets.js</code>) loaded once in <code>&lt;head&gt;</code>; we render <code>&lt;blockquote class="twitter-tweet"&gt;</code> with the tweet URL pulled from Nitter, and call <code>twttr.widgets.load()</code> after injection — full media (images, video, polls) renders inline. <b>Tweet URL pipeline</b>: <code>fetchNoContextBrits()</code> hits a chain of public Nitter RSS mirrors, parses out the <code>&lt;link&gt;</code>, transforms <code>nitter.{instance}/...</code> → <code>x.com/...</code>, hands it to the embed widget. Falls back to a styled-quote sample post when all mirrors are blocked. <b>Engagements + impressions are owner-only API data</b> — estimated from tweet count × industry averages for a 2.4M-follower account (~12-15k engagements, ~150-300k impressions per tweet, per Hootsuite/Sprout 2024). UK Pulse score (0-100) is a heuristic blend of post count + time-of-day curve. Display-only — does NOT feed the kick-off index.</td></tr>
+        <tr><td>🎭 Zeitgeist · No Context Brits</td><td>0%</td><td>Special <b>full-width feature row</b> sitting in the signals grid <b>between Daily Pulse and Sentiment</b> — tracks <a href="https://x.com/NoContextBrits" target="_blank" rel="noopener noreferrer" style="color:#C8102E">@NoContextBrits</a> as a UK cultural barometer. Avatar is the proper <b>Union Jack SVG</b> (matches NCB's actual X profile pic). <b>Latest post is a real X embed</b> — uses the X (Twitter) widgets.js script (<code>platform.twitter.com/widgets.js</code>) loaded once in <code>&lt;head&gt;</code>; we render <code>&lt;blockquote class="twitter-tweet"&gt;</code> with the tweet URL pulled from Nitter, and call <code>twttr.widgets.load()</code> after injection — full media (images, video, polls) renders inline. <b>Tweet URL pipeline</b>: <code>fetchNoContextBrits()</code> hits a chain of public Nitter RSS mirrors, parses out the <code>&lt;link&gt;</code>, transforms <code>nitter.{instance}/...</code> → <code>x.com/...</code>, hands it to the embed widget. Falls back to a styled-quote sample post when all mirrors are blocked. <b>Engagements + impressions are owner-only API data</b> — estimated from tweet count × industry averages for a 2.4M-follower account (~12-15k engagements, ~150-300k impressions per tweet, per Hootsuite/Sprout 2024). UK Pulse score (0-100) is a heuristic blend of post count + time-of-day curve. Display-only — does NOT feed the kick-off index.</td></tr>
         <tr><td>🚗 Uber Surge &amp; Demand</td><td>2%</td><td>Modelled UK ride-hail demand curve grounded in published Uber UK figures (~70k drivers · ~6M monthly users · ~8M trips/month · avg fare £8.50). Hour-of-day curve with weekday rush amplifiers (07-09, 17-19), Friday/Saturday post-bar spike (22-02), Sunday-morning airport rush, and live-weather rain amplifier (+0.18 for any rain, +0.10 more for heavy). Surge multiplier derived from demand (1.0× baseline up to 2.6× peak), £/mile derived from surge, drivers-online estimated from 70k pool × hourly demand fraction. Card shows current surge multiplier as the value, sub-line shows £/mile + driver count. Inline 24-hour sparkline shows demand worm.</td></tr>
         <tr><td>🛵 Delivery Apps Demand</td><td>2%</td><td>Combined modelled demand for Uber Eats + Deliveroo + Just Eat. Grounded in published volumes (Uber Eats UK ~30M monthly orders · Just Eat ~280M annual UK orders · Deliveroo UK ~30k riders · combined daily UK orders ≈ 1.4–1.8M, peak hour ~150–200k). Hour-of-day curve with lunch peak (12-14), dinner peak (18-21), weekend-evening bump, Sunday-roast-at-home spike, and live-weather rain amplifier. Card value is orders/min UK-wide, sub-line shows riders out across the road. Inline 24-hour sparkline.</td></tr>
         <tr><td>🛒 Checkout Rage</td><td>1%</td><td>Modelled "unexpected item in bagging area" frustration peaking at lunchtime weekdays and Saturday shopping rush</td></tr>
@@ -4381,7 +4385,12 @@ function _zeitgeistHtml(ncbData){
   const pulse = Math.round(Math.min(1, (postsToday / 12) * 0.6 + hourMul * 0.4) * 100);
   const fmtBig = n => n >= 1e6 ? `${(n/1e6).toFixed(1)}M` : n >= 1e3 ? `${Math.round(n/1e3)}k` : String(n);
 
-  // ----- Tweet rendering — embed if live, fallback to styled quote -----
+  // ----- Tweet rendering — three fallback tiers -----
+  // 1. Specific tweet from Nitter RSS → render that exact tweet via X embed
+  // 2. Nitter dead → render X's official Timeline widget (shows latest 1 tweet
+  //    direct from x.com/NoContextBrits via widgets.js — no Nitter needed,
+  //    no API key, fully live).
+  // 3. Both unavailable → styled-quote rotation.
   let tweetBlockHtml, tweetMeta, tweetSource;
   if (ncbData && ncbData.live && ncbData.posts.length && ncbData.posts[0].link){
     const latest = ncbData.posts[0];
@@ -4398,11 +4407,20 @@ function _zeitgeistHtml(ncbData){
     tweetMeta = `posted ${ageStr} · ${ncbData.source || 'Nitter'}`;
     tweetSource = 'live · X embed';
   } else {
-    const sample = _rotatingNCBTweet();
-    const escSample = sample.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-    tweetBlockHtml = `<div class="zg-tweet-fallback">${escSample}</div>`;
-    tweetMeta = 'sample post · Nitter feed unavailable';
-    tweetSource = 'fallback';
+    // Tier 2 — X Timeline embed widget. widgets.js (already in <head>) sees
+    // any <a class="twitter-timeline"> and replaces it with a live render of
+    // that user's most recent tweet(s). data-tweet-limit=1 keeps it compact.
+    // Works without Nitter, without an API key, and updates whenever the user
+    // posts. Falls back gracefully if widgets.js can't load (tier 3 below).
+    tweetBlockHtml = `<a class="twitter-timeline zg-tweet-embed"
+        data-theme="dark"
+        data-tweet-limit="1"
+        data-chrome="noheader nofooter noborders transparent"
+        data-dnt="true"
+        href="https://twitter.com/NoContextBrits">@NoContextBrits</a>
+      <noscript><div class="zg-tweet-fallback">${_rotatingNCBTweet().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}</div></noscript>`;
+    tweetMeta = 'live · X timeline widget';
+    tweetSource = 'live · X timeline';
   }
 
   const sparkHtml = _renderSparkline({ values: _ncbActivitySpark(), label:'NCB activity 24h', color:'#C8102E' });
@@ -8009,8 +8027,12 @@ function renderEnvCards(env){
     ? `<span class="chip live">Live</span>`
     : `<span class="chip model">Modelled</span>`;
 
-  // 🛢️ Oil prices
-  const o = env.oil || {};
+  // 🛢️ Oil prices — with last-known fallback so the card never reads blank.
+  // Brent has been ~$70-90/bbl through 2024-2026. Use $78 as a recent baseline.
+  const OIL_FALLBACK = { brentUSD: 78.50, source: 'Recent baseline (live feed unavailable)' };
+  const oRaw = env.oil || {};
+  const o = Number.isFinite(oRaw.brentUSD) ? oRaw : OIL_FALLBACK;
+  const oilIsLive = oRaw.live === true && Number.isFinite(oRaw.brentUSD);
   const oilSpark = (o.spark && o.spark.length)
     ? (() => {
         const lo = Math.min(...o.spark);
@@ -8023,14 +8045,15 @@ function renderEnvCards(env){
         }).join('');
       })()
     : '';
-  const oilChip = o.live
+  const oilChip = oilIsLive
     ? `<span class="chip live">Live</span>`
-    : `<span class="chip model">Modelled</span>`;
+    : `<span class="chip model" title="${_escAttr(o.source || 'baseline')}">Baseline</span>`;
   const oilArrow = (o.dayChangeUSD ?? 0) >= 0 ? '↑' : '↓';
   const oilArrowColor = (o.dayChangeUSD ?? 0) >= 0 ? '#ef4b4b' : '#3ecf8e';
   const oilDelta = Number.isFinite(o.dayChangePct)
     ? `<span style="color:${oilArrowColor};font-weight:600">${oilArrow} ${Math.abs(o.dayChangePct).toFixed(2)}%</span>`
-    : `<span style="color:var(--ink-faint)">change pending</span>`;
+    : `<span style="color:var(--ink-faint)">${oilIsLive ? 'change pending' : 'baseline reading'}</span>`;
+  const oilFootSource = oilIsLive ? 'Stooq + Yahoo · BZ=F' : 'Recent baseline · ~$70-90 range';
 
   const html = `
     <article class="ticker" id="env-shit">
@@ -8099,8 +8122,8 @@ function renderEnvCards(env){
       <div class="rate">Day change: ${oilDelta}</div>
       <div class="oil-spark">${oilSpark}</div>
       <div class="foot">
-        <span>Yahoo Finance · BZ=F</span>
-        <span>5-day spark</span>
+        <span>${oilFootSource}</span>
+        <span>${oilIsLive ? '5-day spark' : 'baseline'}</span>
       </div>
     </article>
   `;
