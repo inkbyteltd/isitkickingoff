@@ -139,6 +139,11 @@
       <div class="release-tag">🐛 Finance bug fixes · 4 indices · multi-source · methodology consistency · Apr 2026</div>
     </div>
     <p class="intro">Four bug fixes against the v1.4.2 ship. The Finance &amp; Markets cards weren't loading data (Yahoo Finance via single proxy was being blocked), the methodology table looked inconsistent with new "ambient context" sub-headers and "display" weights that didn't match the rest of the table, and stock indices coverage was thin (FTSE + Dow only).</p>
+    <h3>🛢️ Brent Crude — same multi-source upgrade</h3>
+    <ul>
+      <li>Refactored <code>fetchOilPrices()</code> to use the new shared <code>_fetchStooqQuote</code> + <code>_fetchYahooQuote</code> helpers. Stooq's <code>cb.f</code> (Brent Crude futures) is the primary source; Yahoo <code>BZ=F</code> via 3 proxies is the fallback.</li>
+      <li>Same defensive top-level try/catch pattern as the other Finance fetchers — never throws, always returns a benign object.</li>
+    </ul>
     <h3>📈 Stocks — expanded to 4 indices + multi-source fetching</h3>
     <ul>
       <li>Card now shows <b>FTSE 100, Dow Jones, NASDAQ Composite, S&amp;P 500</b> (was: just FTSE + Dow). Headline picks the index with the biggest absolute move.</li>

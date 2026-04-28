@@ -1116,7 +1116,7 @@
         <tr><td>💩 Shit Index</td><td>0%</td><td>Modelled UK sewage spill estimate with <b>live rain modifier</b>. Anchored to <b>Environment Agency Event Duration Monitoring (EDM)</b> data: ~3.6M sewage spill events recorded across England in 2023, ~4.7M hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today's estimate scales with the UK-average current rainfall reading from Open-Meteo (dry day ~0.7× baseline, heavy rain up to ~2.5×). Card shows three of England's worst-offending water companies with their real annual EDM figures (United Utilities ~97k/yr, Severn Trent ~60k/yr, Yorkshire Water ~63k/yr, etc.). Ambient context — does NOT feed the kick-off index.</td></tr>
         <tr><td>⛈️ Met Office Storm Watch</td><td>0%</td><td><b>LIVE</b> — Met Office severe weather warnings via the official <a href="https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">NSWWS RSS feed</a> (no API key needed). Parses the highest active warning level (Yellow / Amber / Red), counts active warnings nationally, and surfaces the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Ambient context.</td></tr>
         <tr><td>⚡ National Grid Power Mix</td><td>0%</td><td><b>LIVE</b> — UK electricity generation breakdown from the <b>Elexon BMRS FUELHH dataset</b> (same provider as the kettle-demand module). Renders the top 5 fuel sources right now as horizontal worm-bars with percentage of total grid generation: gas (CCGT/OCGT), wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). When wind crosses 50% the country is briefly running on weather. Ambient context.</td></tr>
-        <tr><td>🛢️ Brent Crude Oil Tracker</td><td>0%</td><td>Brent crude (BZ=F) spot price in USD, fetched from <b>Yahoo Finance</b> via our existing CORS proxy chain (api.allorigins.win → corsproxy.io). Shows current price, day-over-day percentage change with up/down arrow, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair with the ⛽ Petrol Pump Rage card for a full pump-to-platform read. Ambient context.</td></tr>
+        <tr><td>🛢️ Brent Crude Oil Tracker</td><td>0%</td><td><b>LIVE</b> — Brent crude (BZ=F) spot price in USD via a multi-source chain: <a href="https://stooq.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Stooq</a> (<code>cb.f</code> Brent Crude futures) primary, Yahoo Finance via three CORS proxies (allorigins, corsproxy, codetabs) as fallback. Shows current price in USD/barrel, day-over-day percentage change colour-coded, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair with the ⛽ Petrol Pump Rage card for a full pump-to-platform read. Ambient context.</td></tr>
         <tr><td>📈 Stock Indices</td><td>0%</td><td><b>LIVE</b> — Four major indices via a multi-source fetch chain: FTSE 100 (LSE), Dow Jones Industrial Average, NASDAQ Composite, S&amp;P 500. Tries <a href="https://stooq.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Stooq</a> first (free CSV, CORS-friendly), then Yahoo Finance via three CORS proxies (api.allorigins.win, corsproxy.io, api.codetabs.com). Day change colour-coded green up / red down. Falls back to "—" placeholders if every source is blocked. Ambient context.</td></tr>
         <tr><td>₿ Crypto</td><td>0%</td><td><b>LIVE</b> — Bitcoin, Ethereum, and Solana prices in GBP via the <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">CoinGecko free public API</a> (no key needed, CORS-friendly). 24-hour percentage change colour-coded. Ambient context.</td></tr>
         <tr><td>💱 Pound In Your Pocket</td><td>0%</td><td><b>LIVE</b> — GBP exchange rates via a multi-source chain: <a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Frankfurter</a> (ECB-backed) → <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Open ER-API</a> → <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">ExchangeRate-API</a>. All three are free, no key, CORS-friendly. Five flagged currency rows: 🇺🇸 USD, 🇪🇺 EUR, 🇯🇵 JPY, 🇨🇦 CAD, 🇦🇺 AUD. Ambient context.</td></tr>
@@ -5535,31 +5535,22 @@ async function fetchPowerMix(){
 // Returns { live, brentUSD, dayChangeUSD, dayChangePct, spark[] }
 async function fetchOilPrices(){
   const out = { live:false };
-  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?range=5d&interval=1d';
-  const proxies = [
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  ];
-  for (const u of proxies){
-    try {
-      const r = await fetch(u);
-      if (!r.ok) continue;
-      const j = await r.json();
-      const result = j?.chart?.result?.[0];
-      if (!result) continue;
-      const closes = (result.indicators?.quote?.[0]?.close || []).filter(v => Number.isFinite(v));
-      if (closes.length < 2) continue;
-      const last = closes[closes.length - 1];
-      const prev = closes[closes.length - 2];
+  try {
+    // Multi-source: try Stooq first (cb.f = Brent Crude futures, free CSV,
+    // CORS-friendly), then Yahoo BZ=F via the 3-proxy chain. Same robust
+    // pattern as the Stock Indices fetcher.
+    let q = await _fetchStooqQuote('cb.f');
+    if (!q || !q.live) q = await _fetchYahooQuote('BZ=F');
+    if (q && q.live){
       out.live = true;
-      out.brentUSD = last;
-      out.dayChangeUSD = last - prev;
-      out.dayChangePct = ((last - prev) / prev) * 100;
-      out.spark = closes.slice(-5);
-      out.symbol = 'BZ=F';
-      break;
-    } catch(e){ /* try next proxy */ }
-  }
+      out.brentUSD = q.last;
+      out.dayChangeUSD = q.dayChange;
+      out.dayChangePct = q.dayChangePct;
+      out.spark = q.spark || [];
+      out.symbol = 'BZ=F (Brent)';
+      out.source = q.source || 'multi-source';
+    }
+  } catch(_){ /* swallow all */ }
   return out;
 }
 
@@ -8139,7 +8130,7 @@ const SIGNAL_EXPLAINERS = {
   shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. The fish are deeply unimpressed.',
   storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). The Met Office issues these warnings under the National Severe Weather Warning Service. Green = all clear (suspiciously quiet).',
   power:      'Power Mix — live UK electricity generation breakdown from the Elexon BMRS FUELHH dataset (same provider as the kettle module). Shows the top 5 fuel sources right now as a percentage of total grid generation: gas, wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.',
-  oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD, fetched from Yahoo Finance via our existing CORS proxy chain. Shows current price, day-over-day change, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
+  oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD via a multi-source chain: Stooq (cb.f, free CSV, CORS-friendly) primary, Yahoo Finance via three CORS proxies as fallback. Shows current price, day-over-day change colour-coded, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
 
   // Finance & Markets row (v1.4)
   stocks:     'Stock Indices — four major indices: FTSE 100 (LSE), Dow Jones Industrial Average, NASDAQ Composite, and S&P 500. Multi-source fetch chain: Stooq (free CSV, CORS-friendly) primary, Yahoo Finance via three CORS proxies (allorigins, corsproxy, codetabs) as fallback. Day change in percent, colour-coded green up / red down. Headline is whichever index moved the most in absolute terms.',
