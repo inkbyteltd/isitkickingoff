@@ -135,7 +135,38 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.4.1 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.4.2 <span class="stamp">live</span></div>
+      <div class="release-tag">🪡 Repositioned · Env + Finance now nested in signals grid · Apr 2026</div>
+    </div>
+    <p class="intro">Two big architectural changes ship together: the <b>Environment &amp; Energy row</b> moves <i>up</i> the page to sit directly under the <b>Atmosphere &amp; Time</b> signal group, and the <b>Finance &amp; Markets row</b> (rolled back in v1.4.1) is reintroduced — repositioned directly under the <b>Daily Pulse</b> group. Both rows now render as <i>feature rows inside the signals grid itself</i> rather than as separate page sections, so they read as natural sub-sections of the signals storytelling rather than orphaned blocks at the bottom.</p>
+    <h3>🪡 New placement</h3>
+    <ul>
+      <li>Page reading order is now: <b>Gauge → Live Indicators → Signals (Atmosphere → 🌍 Env row → Consumption → Calendar → Mobility → Daily Pulse → 💷 Finance row → Zeitgeist → Sentiment → Rage → Street → Streaming) → Heat Map → Trend → Polling → Methodology</b>.</li>
+      <li>Both new rows use the <code>grid-feature</code> wrapper pattern: <code>grid-column: 1 / -1</code> spans the full width inside the signals grid, with a delicate horizontal-rule treatment around the section title so it reads as a natural sub-divider rather than a hard break.</li>
+      <li>Same 4-cards-across responsive layout as before (4 desktop / 2 tablet / 1 mobile).</li>
+    </ul>
+    <h3>🛠️ How the v1.4 retry differs from the original</h3>
+    <ul>
+      <li><b>Defensive throughout</b> — every value access in the render functions is null-safe (<code>fin = fin || {}</code>, <code>const ftse = idx.ftse || {}</code>, etc), and every fetch has a top-level try/catch that returns a benign <code>{ live:false }</code> object on any failure. No code path can throw uncaught.</li>
+      <li><b>Finance fetch batch wrapped in its own try/catch</b> in <code>fetchBulk()</code> — if the whole second batch fails or hangs past the timeout, the four finance variables stay <code>null</code> and the renderer falls through to "loading…" placeholders. The gauge cannot be blocked.</li>
+      <li><b>Module-scoped helpers moved inside renderFinanceCards</b> (no top-level <code>const</code> like <code>_CRYPTO_NAMES</code> sitting between functions — local consts only).</li>
+    </ul>
+    <h3>📈 / ₿ / 💱 / 💊 The four Finance modules (same as the original v1.4 spec)</h3>
+    <ul>
+      <li><b>📈 FTSE &amp; Dow</b> — Yahoo Finance (^FTSE, ^DJI) via CORS proxy. Day change colour-coded.</li>
+      <li><b>₿ Crypto</b> — CoinGecko free API. BTC/ETH/SOL prices in GBP + 24h change.</li>
+      <li><b>💱 Pound In Your Pocket</b> — Frankfurter (ECB rates). £1 vs USD/EUR/JPY/CAD/AUD with flag emojis.</li>
+      <li><b>💊 Tech &amp; Pharma Movers</b> — Yahoo: Apple, NVIDIA, Alphabet, AstraZeneca, GSK.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse check: ✅ clean. <code>deploy-test/</code> synced. CSP extended for CoinGecko + Frankfurter. 4 methodology rows added under "Finance &amp; Markets" sub-header. None of the new modules contribute to the kick-off index score.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.4.1</div>
       <div class="release-tag">⚠️ ROLLBACK · v1.4 broke the live site · reverted to v1.3 · Apr 2026</div>
     </div>
     <p class="intro"><b>Hotfix.</b> The v1.4 push (Finance &amp; Markets row) broke the live site after deployment — symptoms TBC, debugging in progress. This release surgically reverts every v1.4 change so the site comes back up on the v1.3 codebase. Nothing from v1.0/v1.1/v1.2/v1.3 is affected — the rollback only touches the v1.4 additions.</p>
