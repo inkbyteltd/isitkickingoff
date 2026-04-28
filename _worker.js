@@ -19,18 +19,16 @@ const YAHOO_QUOTE = 'https://query1.finance.yahoo.com/v7/finance/quote';
 const STOOQ_BASE  = 'https://stooq.com/q/d/l';
 
 const CACHE_TTL_SECONDS = 300; // 5 minutes
-const ALLOWED_SYMBOLS = /^[A-Za-z0-9.,=^_-]+$/; // basic sanity check
+const ALLOWED_SYMBOLS = /^[A-Za-z0-9.,=^_-]+$/;
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Block direct requests to the worker source itself
-    if (url.pathname === '/worker.js') {
+    if (url.pathname === '/_worker.js' || url.pathname === '/worker.js') {
       return new Response('Not found', { status: 404 });
     }
 
-    // Handle CORS preflight for any /api/ route
     if (url.pathname.startsWith('/api/') && request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
@@ -43,33 +41,22 @@ export default {
       });
     }
 
-    // Yahoo Finance batch quote
     if (url.pathname === '/api/quote') {
       return handleYahooQuote(url, ctx);
     }
 
-    // Stooq daily-history CSV (Brent, FTSE etc — fallback path)
     if (url.pathname === '/api/stooq') {
       return handleStooq(url, ctx);
     }
 
-    // Health check
     if (url.pathname === '/api/health') {
       return jsonResponse({ ok: true, ts: Date.now() });
     }
 
-    // Default: static assets (dashboard, news, etc.)
     return env.ASSETS.fetch(request);
   },
 };
 
-/**
- * Yahoo Finance v7 quote endpoint — accepts a comma-separated list of symbols
- * and returns the upstream JSON unchanged. Edge-cached 5 minutes per
- * unique symbol set.
- *
- *   /api/quote?symbols=^FTSE,^DJI,^IXIC,^GSPC,BZ=F,AAPL,NVDA,GOOGL,AZN.L,GSK.L
- */
 async function handleYahooQuote(url, ctx) {
   const symbols = (url.searchParams.get('symbols') || '').trim();
   if (!symbols) return jsonError('Missing ?symbols= param', 400);
@@ -115,11 +102,6 @@ async function handleYahooQuote(url, ctx) {
   return response;
 }
 
-/**
- * Stooq CSV daily-history endpoint — fallback for symbols Yahoo blocks.
- *
- *   /api/stooq?s=bz.f&i=d
- */
 async function handleStooq(url, ctx) {
   const sym = (url.searchParams.get('s') || '').trim();
   const interval = (url.searchParams.get('i') || 'd').trim();

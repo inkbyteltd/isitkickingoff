@@ -7,9 +7,6 @@
 # - For Workers Static Assets deploys, main = "_worker.js" is also explicit
 #   so wrangler picks it up the same way.
 #
-# Either way, _worker.js handles /api/* routes server-side (no CORS limits)
-# and delegates everything else to the static asset bundle.
-#
 # Deploy:
 #   - Cloudflare Pages with GitHub integration: just push, Pages picks up
 #     _worker.js automatically.
