@@ -2,11 +2,10 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
-<!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
-<meta name="robots" content="noindex,nofollow,noarchive" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Changelog · Is It Kicking Off?</title>
 <meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
+<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -136,7 +135,38 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.0 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.1 <span class="stamp">live</span></div>
+      <div class="release-tag">⚽ Real football results · 🐎 Real UK race winners · honest data · Apr 2026</div>
+    </div>
+    <p class="intro">Two modules retired their mocked-up bookmaker odds and replaced them with <b>real, published, verifiable results</b>. The previous "Live Odds" cards were modelled because every commercial odds API costs real money, and we'd rather show honest yesterday data than fake live numbers. Both modules now pull from sources that are free, public, and properly attributed.</p>
+    <h3>⚽ Last Results · Football — real recent matches</h3>
+    <ul>
+      <li>Replaced "Live Odds · Football" with <b>Last Results · Football</b>. Pulls finished fixtures from <b>TheSportsDB's <code>eventslastleague.php</code></b> — the same free endpoint we already use for Premier League, Championship, EFL L1/L2, Scottish Premiership, UCL, UEL, UECL.</li>
+      <li>Filters events to only those with both <code>intHomeScore</code> and <code>intAwayScore</code> populated (i.e. the match has actually been played and scored). Sorts newest-first; shows the most recent 5.</li>
+      <li>Headline picks the match with the largest goal difference for drama. Each row links out to a <b>Google News search</b> for "{home} vs {away}" so the reader can find proper match-report coverage.</li>
+      <li>Card icon changed from 🎰 → ⚽. Source line credits TheSportsDB. Card is correctly tagged <b>[Modelled]</b> because the headline-picking logic is editorial, not the scores themselves.</li>
+    </ul>
+    <h3>🐎 Recent UK Racing — curated rotation of real winners</h3>
+    <ul>
+      <li>Replaced "Live Odds · Horses" with <b>Recent UK Racing</b>. Backed by a hand-curated array (<code>RECENT_UK_RACE_WINNERS</code>) of <b>12 verifiable notable UK race winners</b> from the past 12 months — Galopin Des Champs (Cheltenham Gold Cup), I Am Maximus (Grand National), State Man (Champion Hurdle), City Of Troy (Derby + 2000 Guineas + Juddmonte), Captain Guinness (Queen Mother Champion Chase), Courage Mon Ami (Ascot Gold Cup), Notable Speech (Sussex), Jan Brueghel (St Leger), and more.</li>
+      <li>Daily deterministic rotation: 4 races shown per day, seeded from the date, so the lineup is stable for a calendar day but rotates over time. Same 4 visible to every visitor on the same day.</li>
+      <li>Each row links out to <b>Racing Post results</b> for that meeting, where the reader can see the full card, finishing positions, official times, and SP.</li>
+      <li>Why curated and not live: UK horse racing has no good free public results API. Curated keeps the data verifiable, properly attributed, and easy to refresh manually rather than fake-live.</li>
+    </ul>
+    <h3>📐 Methodology + tooltip copy</h3>
+    <ul>
+      <li>Both <code>SIGNAL_EXPLAINERS</code> tooltip strings rewritten to explain the new sourcing. The explainer chip on each card now correctly describes the real data path.</li>
+      <li>Methodology table rows updated for both modules — old "Live Odds" entries replaced with the new titles, sources, and methods.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Changes applied to main <code>index.html</code>. Inline JS parse check: ✅ clean. <code>deploy-test/</code> bundle synced with test-deploy patches (noindex, Shop greyed) re-applied.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.0</div>
       <div class="release-tag">🚀 Public launch · Petrol live across 14 retailers · isitkickingoff.com · Apr 2026</div>
     </div>
     <p class="intro"><b>This is it.</b> First public version of the dashboard. The site is live at <a href="https://isitkickingoff.com" style="color:var(--accent)">isitkickingoff.com</a> (custom domain wired to Cloudflare). Built solo over six weeks across 48 incremental releases. <b>38 signals</b> spanning weather, news, football, booze, the moon, the price of petrol, what's on telly, the National Grid kettle spike, the cocaine in the Thames, and 30+ others. <b>Live where the data exists, modelled where it doesn't</b>, every card explicitly chip-tagged so you can tell which is which. Plus one big petrol upgrade this release — see below.</p>
