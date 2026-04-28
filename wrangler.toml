@@ -1,9 +1,17 @@
-# Cloudflare Workers Static Assets config.
-# Tells `npx wrangler deploy` to serve every file in this folder as a static site.
+# Cloudflare Workers Static Assets + Function config.
+#
+# - Static files in this directory are served as the dashboard / news / etc.
+# - worker.js is loaded as the Worker entry point. It handles /api/* routes
+#   server-side (no CORS limits), and delegates everything else to the static
+#   asset bundle via env.ASSETS.fetch().
+#
+# Deploy with:  npx wrangler deploy
 
 name = "isitkickingoff"
+main = "worker.js"
 compatibility_date = "2026-04-27"
 
 [assets]
 directory = "./"
+binding = "ASSETS"
 not_found_handling = "404-page"

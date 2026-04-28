@@ -135,7 +135,44 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.8 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.9 <span class="stamp">live</span></div>
+      <div class="release-tag">⚙️ Cloudflare Worker proxy · server-side finance fetch · Apr 2026</div>
+    </div>
+    <p class="intro">The proper fix for finance data. Public CORS proxies are unreliable in 2026 — Yahoo rate-limits them, Stooq's CORS is patchy. Since the site already runs on Cloudflare, we now ship a tiny <b>Worker function</b> alongside the static site that fetches Yahoo and Stooq <i>server-side</i> (no CORS friction) and returns clean JSON to the browser. Edge-cached for 5 minutes so Yahoo isn't hammered.</p>
+    <h3>⚙️ What's new in the bundle</h3>
+    <ul>
+      <li><b><code>worker.js</code></b> — single-file Cloudflare Worker. Routes <code>/api/quote?symbols=…</code> to Yahoo Finance v7 quote, <code>/api/stooq?s=…</code> to Stooq's CSV history, <code>/api/health</code> for monitoring. Everything else delegates to the static asset bundle via <code>env.ASSETS.fetch()</code> — the dashboard / news / changelog continue to be served exactly as before.</li>
+      <li><b><code>wrangler.toml</code></b> — adds <code>main = "worker.js"</code> and <code>binding = "ASSETS"</code> so Cloudflare wires the Worker as the entry point and gives it access to the static bundle.</li>
+      <li>Worker uses Cloudflare's edge cache (<code>cf: { cacheTtl: 300, cacheEverything: true }</code>) plus its own <code>caches.default</code> layer — same symbol set returned from cache for 5 minutes, so a busy day doesn't blow Yahoo's rate limit.</li>
+      <li>Input validated: symbol pattern <code>/^[A-Za-z0-9.,=^_-]+$/</code> and length cap, so the Worker can't be turned into an open URL proxy.</li>
+    </ul>
+    <h3>🔌 What's new in <code>index.html</code></h3>
+    <ul>
+      <li><code>_fetchYahooBatch()</code> now tries <code>/api/quote?symbols=…</code> <b>first</b>, then falls back to the existing 5 public CORS proxies if the Worker isn't deployed yet (or returns 404). Same-origin, no CORS friction, no proxy rate-limit issues.</li>
+      <li><code>_fetchStooqQuote()</code> tries <code>/api/stooq?s=…</code> first, falls back to direct Stooq.</li>
+      <li>Console logging (<code>[stooq] ✅ ^ftm = 8245 via /api/stooq…</code>) shows which source actually responded, so DevTools tells the story.</li>
+    </ul>
+    <h3>🚀 What you need to do</h3>
+    <ul>
+      <li>Push the updated <code>deploy-test/</code> bundle (which now includes <code>worker.js</code> + the updated <code>wrangler.toml</code>) to GitHub as usual.</li>
+      <li>Cloudflare's GitHub integration auto-detects the <code>main = "worker.js"</code> change and redeploys the project as a Worker (with static assets) instead of pure static. First deploy after the change may take ~30 seconds longer than usual.</li>
+      <li>Confirm by visiting <code>https://isitkickingoff.com/api/health</code> after deploy — should return <code>{"ok":true,"ts":…}</code>.</li>
+      <li>Open DevTools Console and reload — should see <code>[stooq] ✅ … via /api/stooq…</code> and <code>[yahoo-batch] ✅ got 10 symbols via /api/quote?…</code> log lines.</li>
+    </ul>
+    <h3>🛡️ A note on quotas</h3>
+    <ul>
+      <li>Cloudflare Workers free tier: <b>100,000 requests/day</b>. Even at high traffic, the Worker only fires when a visitor lands on the dashboard, plus the result is edge-cached 5 minutes — well within free-tier limits for the foreseeable future.</li>
+      <li>No API keys required. No upstream auth. No secrets in the bundle.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. Worker JS parse: ✅ clean. <code>deploy-test/</code> bundle now includes <code>worker.js</code> + updated <code>wrangler.toml</code>.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.8</div>
       <div class="release-tag">🔥🧊 Agitator / Pacifier chips on Live Indicators · Apr 2026</div>
     </div>
     <p class="intro">A small touch with a lot of story. The four Live Indicators each carry a new effect chip next to the existing Modelled tag: <span class="chip agitator" style="display:inline-block;vertical-align:middle">🔥 Agitator</span> for the cards that <i>fuel</i> the country's argy-bargy curve, <span class="chip pacifier" style="display:inline-block;vertical-align:middle">🧊 Pacifier</span> for the cards that <i>calm it down</i>. Booze and stimulants on the agitator side; food and the green leaf on the pacifier side. Two simple chips, but they make the dashboard tell a story you couldn't tell without them.</p>

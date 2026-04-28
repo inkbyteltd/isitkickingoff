@@ -5731,44 +5731,59 @@ async function fetchOilPrices(){
    single network failure can never propagate up.
    ========================================================= */
 
-// Stooq CSV quote — primary source. CORS-friendly, no key needed.
+// Stooq CSV quote — primary source. Tries our own Worker proxy first
+// (server-side fetch, no CORS), falls back to direct Stooq if the Worker
+// isn't deployed yet.
 // Returns { live, last, prev, dayChange, dayChangePct, spark[] } or {live:false}.
 async function _fetchStooqQuote(stooqSym){
   const out = { live:false };
-  try {
-    // Daily history endpoint — gives last ~5 trading days of OHLCV as CSV
-    const url = `https://stooq.com/q/d/l/?s=${encodeURIComponent(stooqSym)}&i=d`;
-    const r = await fetch(url);
-    if (!r.ok){ console.warn('[stooq]', stooqSym, 'HTTP', r.status); return out; }
-    const csv = await r.text();
-    if (!csv || csv.length < 30){ console.warn('[stooq]', stooqSym, 'short response:', csv.slice(0,80)); return out; }
-    const lines = csv.trim().split('\n');
-    if (lines.length < 3){ console.warn('[stooq]', stooqSym, 'too few rows'); return out; }
-    const header = lines[0].toLowerCase();
-    if (!header.includes('close')){ console.warn('[stooq]', stooqSym, 'no Close column:', header); return out; }
-    const idxClose = header.split(',').findIndex(h => h.trim() === 'close');
-    if (idxClose < 0) return out;
-    const closes = lines.slice(1)
-      .map(l => parseFloat((l.split(',')[idxClose] || '').trim()))
-      .filter(v => Number.isFinite(v));
-    if (closes.length < 2){ console.warn('[stooq]', stooqSym, 'too few closes:', closes.length); return out; }
-    const last = closes[closes.length - 1];
-    const prev = closes[closes.length - 2];
-    out.live = true;
-    out.last = last;
-    out.prev = prev;
-    out.dayChange = last - prev;
-    out.dayChangePct = ((last - prev) / prev) * 100;
-    out.spark = closes.slice(-5);
-    out.source = 'Stooq';
-    console.log('[stooq] ✅', stooqSym, '=', last.toFixed(2), `(${out.dayChangePct >= 0 ? '+' : ''}${out.dayChangePct.toFixed(2)}%)`);
-  } catch(e){ console.warn('[stooq]', stooqSym, 'threw:', e.message); }
+  // Try our Worker proxy first (same-origin, no CORS friction), fall back to
+  // Stooq direct if the Worker isn't deployed yet.
+  const sources = [
+    `/api/stooq?s=${encodeURIComponent(stooqSym)}&i=d`,
+    `https://stooq.com/q/d/l/?s=${encodeURIComponent(stooqSym)}&i=d`,
+  ];
+  for (const url of sources){
+    try {
+      const r = await fetch(url);
+      if (!r.ok){ console.warn('[stooq]', stooqSym, 'HTTP', r.status, 'via', url.slice(0,40)); continue; }
+      const csv = await r.text();
+      if (!csv || csv.length < 30){ console.warn('[stooq]', stooqSym, 'short response:', csv.slice(0,80)); continue; }
+      const lines = csv.trim().split('\n');
+      if (lines.length < 3){ console.warn('[stooq]', stooqSym, 'too few rows'); continue; }
+      const header = lines[0].toLowerCase();
+      if (!header.includes('close')){ console.warn('[stooq]', stooqSym, 'no Close column:', header); continue; }
+      const idxClose = header.split(',').findIndex(h => h.trim() === 'close');
+      if (idxClose < 0) continue;
+      const closes = lines.slice(1)
+        .map(l => parseFloat((l.split(',')[idxClose] || '').trim()))
+        .filter(v => Number.isFinite(v));
+      if (closes.length < 2){ console.warn('[stooq]', stooqSym, 'too few closes:', closes.length); continue; }
+      const last = closes[closes.length - 1];
+      const prev = closes[closes.length - 2];
+      out.live = true;
+      out.last = last;
+      out.prev = prev;
+      out.dayChange = last - prev;
+      out.dayChangePct = ((last - prev) / prev) * 100;
+      out.spark = closes.slice(-5);
+      out.source = url.startsWith('/api/') ? 'Stooq via Worker' : 'Stooq';
+      console.log('[stooq] ✅', stooqSym, '=', last.toFixed(2), `(${out.dayChangePct >= 0 ? '+' : ''}${out.dayChangePct.toFixed(2)}%) via`, url.slice(0,40));
+      return out;
+    } catch(e){ console.warn('[stooq]', stooqSym, 'threw:', e.message); }
+  }
   return out;
 }
 
 // Yahoo Finance batch quote — single request for many symbols. Much more
 // efficient than per-symbol chart calls. Returns Map<symbol, quoteObject>.
-// Tries 5 proxies until one succeeds.
+//
+// Source priority:
+//   1. Our own Cloudflare Worker proxy at /api/quote (no CORS, edge-cached)
+//   2. Public CORS proxies (allorigins, corsproxy, codetabs) — flaky fallbacks
+//
+// The Worker is deployed alongside the static site (worker.js + wrangler.toml).
+// If it isn't deployed yet, /api/quote will 404 and we'll skip to the proxies.
 const _YAHOO_BATCH_CACHE = { ts: 0, data: null };
 async function _fetchYahooBatch(symbols){
   // 60-second in-memory cache so repeated calls within one render don't refetch
@@ -5779,6 +5794,9 @@ async function _fetchYahooBatch(symbols){
   const symList = symbols.join(',');
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symList)}`;
   const proxies = [
+    // Our own Cloudflare Worker — preferred. Same-origin, no CORS friction.
+    `/api/quote?symbols=${encodeURIComponent(symList)}`,
+    // Public CORS proxies — fallback if the Worker isn't deployed yet
     `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
     `https://corsproxy.io/?${encodeURIComponent(url)}`,
     `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
