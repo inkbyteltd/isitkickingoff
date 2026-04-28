@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<!-- TEST DEPLOY: noindex while staging — REMOVE before public launch -->
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Changelog · Is It Kicking Off?</title>
+<meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
+<meta name="theme-color" content="#07090c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="IIKO Changelog" />
+<style>
+  :root {
+    --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
+    --line:#232c3a; --line-2:#2e3a4d;
+    --ink:#e8edf4; --ink-dim:#9aa6b8; --ink-faint:#5f6b7d;
+    --green:#3ecf8e; --accent:#ff8a1f;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(1200px 600px at 80% -10%,rgba(255,138,31,.08),transparent 60%),var(--bg-0);min-height:100vh}
+  .wrap{max-width:780px;margin:0 auto;padding:24px 20px 60px}
+  .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
+  .top-nav .nav-links{display:contents}
+  .top-nav .nav-burger{display:none}
+  .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
+  .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
+  .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700;margin-left:auto}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12}
+  @media (max-width:640px){
+    .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
+    .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .top-nav .nav-burger .nav-burger-icon{font-size:20px;color:var(--accent);transition:transform .2s ease}
+    .top-nav.open .nav-burger .nav-burger-icon{transform:rotate(90deg)}
+    .top-nav .nav-links{display:none;flex-direction:column;width:100%;gap:4px;padding:4px 4px 6px}
+    .top-nav.open .nav-links{display:flex}
+    .top-nav a{padding:11px 16px;border-radius:8px;text-align:center;border:1px solid var(--line)}
+    .top-nav a.active{border-color:var(--accent)}
+    .top-nav a.nav-bmc{margin-left:0}
+  }
+  .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}
+  .mast h1{font-family:var(--mono);font-weight:800;letter-spacing:-.02em;font-size:clamp(26px,4.5vw,40px);margin:0;line-height:1}
+  .mast h1 .kick{color:var(--accent)}
+  .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+
+  .release{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px;line-height:1.7}
+  .release-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .release-tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+  .release-ver{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+  .release-ver .stamp{color:var(--accent);margin-left:6px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .release h3{margin:14px 0 6px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+  .release ul{margin:0;padding-left:22px;color:var(--ink)}
+  .release li{margin-bottom:6px}
+  .release li b{color:var(--accent)}
+  .release p{margin:6px 0;color:var(--ink-dim)}
+  .release p.intro{color:var(--ink);font-size:15px;margin-bottom:8px}
+
+  /* Newsletter signup module */
+  .newsletter{
+    background:linear-gradient(180deg,rgba(255,138,31,.08),var(--bg-1));
+    border:1px solid var(--line-2);border-radius:14px;padding:24px;margin-bottom:24px;
+  }
+  .newsletter h2{font-family:var(--mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .newsletter p{color:var(--ink-dim);font-size:14px;line-height:1.6;margin:0 0 14px}
+  .newsletter form{display:flex;gap:8px;flex-wrap:wrap}
+  .newsletter input[type=email]{
+    flex:1;min-width:200px;padding:11px 14px;
+    background:var(--bg-2);color:var(--ink);
+    border:1px solid var(--line-2);border-radius:8px;
+    font-family:var(--mono);font-size:13px;
+  }
+  .newsletter input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .newsletter button{
+    padding:11px 22px;border-radius:8px;border:none;
+    background:var(--accent);color:#0a0d12;cursor:pointer;
+    font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;
+    transition:transform .15s,filter .15s;
+  }
+  .newsletter button:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .newsletter button:active{transform:translateY(0)}
+  .newsletter .small{color:var(--ink-faint);font-size:11px;font-family:var(--mono);letter-spacing:.08em;margin-top:10px;display:block}
+  .newsletter .success{color:var(--green);font-family:var(--mono);font-size:13px;font-weight:700;margin-top:12px;display:none}
+  .newsletter.signed-up form{display:none}
+  .newsletter.signed-up .success{display:block}
+
+  footer.foot{margin-top:24px;color:var(--ink-faint);font-family:var(--mono);font-size:10px;text-align:center;letter-spacing:.08em;text-transform:uppercase;line-height:1.6}
+</style>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1cd37e47538c4c47b71a4f5c37527b60"}'></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="top-nav" aria-label="Site sections">
+    <button class="nav-burger" aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+      <span class="nav-burger-icon" aria-hidden="true">☰</span>
+    </button>
+    <div class="nav-links">
+      <a href="./index.html">📊 Dashboard</a>
+      <a href="./snapshot.html">📸 Snapshot</a>
+      <a href="./news.html">📰 Blog</a>
+      <a href="./changelog.html" class="active">🪵 Changelog</a>
+      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
+    </div>
+  </nav>
+
+  <header class="mast">
+    <div>
+      <h1>CHANGELOG · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <div class="tag">Build log · model updates · what's new</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:22px">🪵</div>
+  </header>
+
+  <p style="color:var(--ink-dim);font-size:14px;line-height:1.7;margin-bottom:24px">
+    Every release of the dashboard, in reverse chronological order. Each block
+    documents what changed, why, and which signals were affected. The build log
+    is written by hand as features land — no auto-generated diffs, no marketing
+    fluff. If you want the human story of what we're up to and why, head to the
+    <a href="./news.html" style="color:var(--accent);text-decoration:none">Blog</a>.
+  </p>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.47 <span class="stamp">latest</span></div>
+      <div class="release-tag">News → Blog · Changelog separated · contact email change · tooltips · CSV download · Apr 2026</div>
+    </div>
+    <p class="intro">Big content + UX overhaul. The old build-log section has been split into two: <b>news.html is now a long-form blog</b> with a Rory Sutherland-style hero essay on why this dashboard exists, and <b>changelog.html</b> is its own page carrying every release block (this file). The top nav now shows both. Plus: the Buy Me a Coffee button is now consistently <b>"🍵 Buy us a brew"</b> with the teacup emoji across nav and footer; signal cards now show a <b>?</b> tooltip that pops methodology copy on hover/tap; a small <b>"📥 Download history (CSV)"</b> button under the disclaimer pulls every Supabase snapshot row as a clean CSV; and the <b>contact email</b> is now <code>commiepinko1968@gmail.com</code> across every page (private inkbyte address removed).</p>
+    <h3>📰 News → Blog (this is the big one)</h3>
+    <ul>
+      <li><b>news.html</b> reborn as a proper blog. Hero essay: <i>"The Stella Index, the Cocaine in the Thames, and Why I Built a Dashboard for the Vibe"</i> — ~1,400 words in a Rory Sutherland register, drop-cap, serif body, italic deck, signature line.</li>
+      <li>Three sections — <b>I. The Sociology of the Brew</b>, <b>II. Why a Brit Was Always Going to Build This</b>, <b>III. Cocaine in the Thames, and Other Modern Truths</b> — making the case that the dashboard is sociology pretending to be comedy.</li>
+      <li>Newsletter form copy updated for blog cadence (one essay per month). "More posts on the way" placeholder for future entries.</li>
+    </ul>
+    <h3>🪵 Changelog moved to its own page</h3>
+    <ul>
+      <li>New <b>changelog.html</b> at <code>/changelog.html</code> — all 48 historical release blocks moved across, plus this v0.47 entry. Header reads "Changelog · IS IT KICKING OFF?" with a 🪵 log emoji.</li>
+      <li>Top nav across all 6 pages now shows: <b>Dashboard · Snapshot · Blog · Changelog · Shop · Buy us a brew</b>.</li>
+    </ul>
+    <h3>🍵 Buy us a brew — consistent everywhere</h3>
+    <ul>
+      <li>Top-nav yellow button now reads <b>🍵 Buy us a brew</b> with the teacup emoji, matching the footer link wording. Was previously inconsistent (☕ Buy Me a Coffee in nav, 🍵 Buy us a brew in footer).</li>
+    </ul>
+    <h3>❓ Methodology tooltips on signal cards</h3>
+    <ul>
+      <li>Every signal card now shows a small <b>?</b> pip next to its title. Hover (desktop) or tap (mobile) to read a 1-sentence methodology explainer — what the signal measures, where the data comes from, what amplifies it.</li>
+      <li>New <code>SIGNAL_EXPLAINERS</code> map covers all 36 signals — booze, weather, kettle, news, crime, threat, protests, etc.</li>
+      <li>Pure CSS tooltip: 300px-wide bubble, navy background, opens 10px below the pip with a tiny chevron. Pointer-events:none on the bubble so it never blocks clicks.</li>
+    </ul>
+    <h3>📥 CSV download of the Supabase history</h3>
+    <ul>
+      <li>New small button under the methodology disclaimer: <b>"📥 Download history (CSV)"</b>. Pulls every row from the Supabase <code>snapshots</code> table via the REST endpoint, with a <code>Range</code> header bumped to 50,000 rows.</li>
+      <li>Header row: <code>id, captured_at, region_id, score, tier</code> + one column per signal key seen in the JSON blob (auto-discovered across all rows).</li>
+      <li>Status line next to the button reports <i>"fetching rows…"</i> → <i>"✓ N rows downloaded"</i> or an error if Supabase is down or returns 0 rows. Doubles as a live test that the database is accepting writes from the dashboard.</li>
+      <li>File saves as <code>iiko-snapshots-YYYY-MM-DD.csv</code>. Opens cleanly in Excel, Numbers, or Google Sheets.</li>
+    </ul>
+    <h3>📧 Contact email → commiepinko1968@gmail.com</h3>
+    <ul>
+      <li>Every <code>mailto:hello@inkbyte.co.uk</code> across all pages swapped to <code>mailto:commiepinko1968@gmail.com</code>.</li>
+      <li>Privacy notice in legal.html updated. No InkByte Ltd / inkbyte references remain anywhere.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.46</div>
+      <div class="release-tag">Phone Snatch crime list pinned · X share popup-blocker fixed · Apr 2026</div>
+    </div>
+    <p class="intro">Two real bugs squashed. The <b>📱 London Phone Snatch</b> crime headlines were quietly disappearing whenever the Met Police RSS + Interpol Red Notices fetch chain ran past the bulk-fetch 8-second timeout — the function got killed before its own internal hardcoded fallback could fire, so the card showed phone-snatch numbers but no list underneath. And the <b>🐦 X share button</b> on the gauge was downloading a PNG but failing to actually open the X compose window, because awaiting the PNG generation killed the click's user-gesture context and the popup blocker silently swallowed <code>window.open()</code>.</p>
+    <h3>📱 Phone Snatch — pin the fallback at the signal level</h3>
+    <ul>
+      <li><code>signalCrime()</code> now pins <code>MET_POLICE_FALLBACK</code> directly inside the rendering branch as a last-resort defence. So even if <code>fetchMetPoliceNews()</code> got killed by the bulk timeout (returning <code>null</code> instead of its own internal fallback), the Phone Snatch card always shows 4 crime headlines underneath the per-minute stat.</li>
+      <li>3-layer fallback: live RSS items → Interpol Red Notices → hardcoded list (witness appeals, CCTV releases, charge announcements, Operation arrests, Interpol Red Notice link). Card never goes empty.</li>
+      <li>Net effect: the headlines list reappears reliably, even on flaky connections where the live feeds time out.</li>
+    </ul>
+    <h3>🐦 X share — fix the popup-blocker race</h3>
+    <ul>
+      <li>Bug: <code>openShare('twitter')</code> was awaiting <code>generateGaugePNGBlob()</code> before calling <code>window.open(twitterUrl)</code>. Browsers treat any <code>window.open()</code> after an <code>await</code> as non-user-initiated and silently block the popup. So the PNG downloaded but X never opened.</li>
+      <li>New <code>_supportsFileShare()</code> helper — synchronous probe that creates a tiny test File and asks <code>navigator.canShare({ files })</code>. Returns true on mobile (iOS Safari, Android Chrome), false on desktop. No await, no gesture loss.</li>
+      <li><b>Mobile path</b>: native Web Share Level 2 with the gauge PNG attached, single tap. Unchanged from v0.44 — that path was working.</li>
+      <li><b>Desktop path (the broken one)</b>: now opens the X compose URL <i>synchronously first</i> (gesture preserved, popup blocker happy), then fires the PNG generation + download in the background as a fire-and-forget Promise. Toast tells the user "📸 Gauge image also saved — drag it onto your tweet".</li>
+      <li>Net effect: clicking 🐦 X opens X compose immediately, downloads the PNG in the background a second later. Both work, no race.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Main project AND <code>deploy-test/index.html</code> updated. Sandbox parse check: ✅ clean.</li>
+      <li>Live Odds modules unchanged — both still showing modelled (the brief hide-until-live flag was reverted before deployment).</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.45</div>
+      <div class="release-tag">Cloudflare Web Analytics live · nav reorder · privacy notice updated · Apr 2026</div>
+    </div>
+    <p class="intro">We can now actually see when people visit. <b>Cloudflare Web Analytics</b> is wired into all 5 pages with a privacy-respecting beacon — no cookies, no fingerprinting, no GDPR popup. The <b>top nav</b> has been reshuffled so <b>🍵 Buy us a brew</b> sits in the rightmost slot (after Shop) — best position for "you've used the dashboard, now tip the kettle on". The <b>privacy notice</b> in legal.html has been updated to reflect that analytics is active.</p>
+    <h3>📊 Cloudflare Web Analytics</h3>
+    <ul>
+      <li>Beacon snippet (token <code>1cd37e47538c4c47b71a4f5c37527b60</code>) added before <code>&lt;/head&gt;</code> on Index, News, Snapshot, Shop and Legal — all 5 pages tracked.</li>
+      <li>What it captures: unique visitors, page views, top pages, top referrers, country, browser/OS. Aggregated only — no individual visitor identifiable.</li>
+      <li>What it does NOT do: set cookies, store IP addresses, fingerprint visitors, require a GDPR cookie banner. Score one for "no tracking" actually meaning no tracking.</li>
+      <li>The beacon is loaded with <code>defer</code> so it doesn't block page rendering. The CSP <code>script-src</code> already whitelists <code>static.cloudflareinsights.com</code> from v0.41, so the snippet works without further security tweaks.</li>
+      <li>Stats land in the Cloudflare dashboard at <b>Analytics &amp; Logs → Web Analytics</b> within ~30 minutes of the first visit. Useful for "what time of day do people actually look at this?", "what's the top-shared page?", "did the X post drive any traffic?".</li>
+      <li>When the public domain (<code>isitkickingoff.com</code>) goes live, you'll add it as a second hostname in the same Cloudflare Web Analytics property — same dashboard, both URLs in one view.</li>
+    </ul>
+    <h3>↔️ Nav reorder — BMC last</h3>
+    <ul>
+      <li>Top nav order is now: <b>📊 Dashboard · 📸 Snapshot · 📰 News · 🛍️ Shop · 🍵 Buy us a brew</b> across all 5 pages.</li>
+      <li>The yellow BMC button now lives in the rightmost slot — strongest call-to-action position, last thing the eye lands on, after the visitor has explored everything else.</li>
+    </ul>
+    <h3>📜 Privacy notice — analytics now declared</h3>
+    <ul>
+      <li>The Analytics section of the Privacy Notice in <code>legal.html</code> updated from "if we add analytics in future…" to a clear declaration that <b>Cloudflare Web Analytics is active</b>, with detail of what it captures, what it doesn't, and a link to Cloudflare's docs.</li>
+      <li>The Cookies &amp; Storage section also updated to confirm Cloudflare Web Analytics is running and does not set cookies.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>.</li>
+      <li>Test-deploy patches re-applied: noindex (5/5), Shop greyed out (5/5), CF Analytics token present (5/5), yellow BMC class on nav link (5/5).</li>
+      <li>Sandbox parse check: ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.44</div>
+      <div class="release-tag">Yellow BMC nav button + share with PNG of the gauge attached · Apr 2026</div>
+    </div>
+    <p class="intro">Two front-of-house improvements to drive home the brand on social. The <b>Buy Me a Coffee</b> button in the top nav is now a vivid yellow pill (BMC's signature <code>#ffdd00</code>) so it catches the eye instead of blending into the other links. And the <b>share buttons</b> now generate a 1200×630 PNG of the gauge in its current state — score, tier, region, branding, with the needle drawn at the actual reading — and attach it to the share so a tweeted snapshot brings the dashboard's visual identity with it.</p>
+    <h3>🟡 Yellow Buy Me a Coffee button in the nav</h3>
+    <ul>
+      <li>The <b>🍵 Buy us a brew</b> link in the top nav of all 5 pages (Dashboard, News, Snapshot, Shop, Legal) now uses BMC's brand yellow <code>#ffdd00</code> with dark text and a subtle 1px <code>#e6c700</code> border.</li>
+      <li>Hover state lifts to <code>#ffe833</code> with a soft yellow glow halo via box-shadow.</li>
+      <li>This is consistent with the yellow tip-jar CTA card already on the dashboard, so the BMC visual identity is reinforced without being shouty.</li>
+    </ul>
+    <h3>📸 Share with the gauge PNG attached</h3>
+    <ul>
+      <li>New <code>generateGaugePNGBlob()</code> renders the current reading to a <b>1200×630 PNG canvas</b> on the fly — that's the standard Twitter Card / Open Graph image aspect ratio.</li>
+      <li>The image includes: the threat-tier-coloured gauge dial with the needle pointed at today's score, a centre cap with the score number, a big readable score and tier on the right side, the active region pill, today's date, and "isitkickingoff.com" in brand orange across the bottom strip. Subtle Union Jack corner accents (navy top-left, red bottom-right) tie it to the brand.</li>
+      <li>The needle and tier text colours match the threat tier — green under 25, yellow under 50, orange under 75, red 75+.</li>
+      <li><b>Mobile path</b>: when you tap the X share button on a phone, the dashboard checks <code>navigator.canShare({ files })</code>. If supported (iOS Safari ≥15, Android Chrome ≥75) the native share sheet opens with the PNG already attached — one tap, full visual share. Works for X, WhatsApp, Messages, anywhere the native share sheet routes.</li>
+      <li><b>Desktop path</b>: X's compose endpoint can't accept file attachments via URL, so the dashboard saves the PNG to your Downloads folder, pops a toast that says <i>"📸 Gauge image saved — drag it into the X tweet box"</i>, then opens the X compose window. You drag the file in and tweet.</li>
+      <li>New <b>Save Image</b> button (download icon) added to the share row — works standalone for anyone who just wants the PNG, no platform redirect.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>. Yellow BMC button confirmed on every page (5/5).</li>
+      <li>Test-deploy patches still in place: noindex meta tag (5/5), Shop greyed out (5/5).</li>
+      <li>Sandbox parse check on inline dashboard JS (now 385KB): ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.43</div>
+      <div class="release-tag">Buy Me a Coffee profile live — site-wide tip-jar wiring · Apr 2026</div>
+    </div>
+    <p class="intro">Our Buy Me a Coffee profile is now live at <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">buymeacoffee.com/isitkickingoff</a>. The link has been active in the top nav for a while; this release wires it through everywhere else it earns its keep — a yellow CTA card on the dashboard, a "Buy us a brew" line in every page's footer, and three BMC cross-promo entries dropped into the rotating house banners (clickable, ~10% of the rotation).</p>
+    <h3>☕ Yellow tip-jar CTA on the dashboard</h3>
+    <ul>
+      <li>New panel directly under the methodology disclaimer line. Headline: <b>"Free forever. No ads. No tracking."</b> Body: "Built solo, hosted on a shoestring, run on caffeine. If the gauge made you laugh, you can chuck a brew in the tip jar."</li>
+      <li>Yellow pill button (BMC's signature <code>#ffdd00</code>) reading <b>☕ Buy us a brew</b> — opens the BMC profile in a new tab with <code>rel="noopener noreferrer"</code>.</li>
+      <li>Subtle hover lift (translateY -1px + brightness boost) so it feels clickable without being pushy.</li>
+    </ul>
+    <h3>🥾 Footer "Buy us a brew" link on every page</h3>
+    <ul>
+      <li>Index, News, Snapshot, Shop, Legal — all five pages now carry an orange-accented <b>☕ Buy us a brew</b> link as the first item in the small-print footer row, before Dashboard / Privacy / Terms / Disclaimer / Contact.</li>
+      <li>Index footer also shows the link inline next to the build mark: <i>"isitkickingoff · build v1 · © 2026 · ☕ Buy us a brew"</i>.</li>
+    </ul>
+    <h3>🇬🇧 Cross-promo in the rotating house banners</h3>
+    <ul>
+      <li>Three new sayings added to the <code>IIKO_HOUSE_BANNERS</code> rotation:</li>
+      <li><i>"Free forever · ad-free · Buy us a brew."</i></li>
+      <li><i>"Like the gauge? Tip the kettle on."</i></li>
+      <li><i>"No ads. No tracking. Just brew money."</i></li>
+      <li>Each carries a <code>cta:true</code> flag — when one of these is the active banner, the entire banner becomes clickable (cursor changes, click opens BMC). The other 31 sayings remain static. Net frequency: about 1 in 11 banner displays is a brew CTA.</li>
+      <li>Visually identical to the other banners (same accent-coloured last-word treatment, same dot indicator) — these don't ad-yell at you, they just slip into the rotation.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 5 HTML pages updated in <b>both</b> the main project AND <code>deploy-test/</code>.</li>
+      <li>Test-deploy patches re-applied: noindex meta tag (5/5), Shop greyed out (5/5), BMC mentions present (3 in index, 1 each in news/snapshot/shop/legal).</li>
+      <li>Sandbox parse check on inline dashboard JS: ✅ clean.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.42</div>
+      <div class="release-tag">Spoons +2 pubs · Civil Unrest live from UK newsrooms · house banners · Apr 2026</div>
+    </div>
+    <p class="intro">Three asks landed. The Wetherspoons Live module now shows 5 featured pubs (was 3) drawn from a 20-strong list, the Civil Unrest module is now properly live whenever any UK newsroom is running a protest/strike/clash/riot story (not just GDELT), and the two ad-slot placeholders are now running our own rotating UK-saying banners — "Keep calm and have a brew" and 30 friends — until real ad units land. Both the main project index AND the deploy-test bundle have been updated, ready to push to GitHub.</p>
+    <h3>🍺 Wetherspoons Live — 5 featured pubs from a 20-strong list</h3>
+    <ul>
+      <li>Branch list grew from 15 → 20 — added <b>The Sir Henry Segrave</b> (Southport, seaside flagship), <b>The Beckett's Bank</b> (Leeds, listed banking hall), <b>The Mile Castle</b> (Newcastle, Bigg Market matchday), <b>The Bankers Draft</b> (Sheffield, cathedral-ceiling NatWest conversion), and <b>The Six Chimneys</b> (Wakefield, stag-do magnet) for proper north-of-Watford balance.</li>
+      <li>The featured-pubs loop is bumped from 3 → 5, so every day's rotation now surfaces a wider snapshot of the chain. Per-branch capacity drift still applies so each pub reads slightly different from the headline UK number.</li>
+      <li>Methodology row updated: "5 rotating featured branches from a 20-strong list".</li>
+    </ul>
+    <h3>🪧 Civil Unrest — now live from any UK newsroom</h3>
+    <ul>
+      <li>Previously the live path was GDELT-only; if GDELT was rate-limited or blocked the card silently fell back to the modelled rotating pool — even when BBC/Guardian/Sky were obviously running protest headlines.</li>
+      <li>New <code>_newsItemsToUnrestArticles()</code> helper mines the existing UK news RSS items (already fetched for News Tension) for protest/strike/march/rally/picket/riot/clash/unrest/disorder/standoff/violent-clash/mass-arrests headlines.</li>
+      <li><code>signalProtests()</code> now accepts the news rawItems and <b>merges</b> them with GDELT results. De-duped by title prefix. The card flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> whenever <i>either</i> source has unrest stories — and the sub-line tells you which (e.g. "<i>4 GDELT + 3 UK newsroom</i>").</li>
+      <li>Escalation detection (riot / clash / arrests / standoff / mass arrests) still bumps the score. Up to 5 articles surface in the card list, each clickable through to the original publisher.</li>
+      <li>Net effect: Civil Unrest is now live for the same situations a person would actually call "kicking off" — junior doctors picketing, train strikes, climate activists blocking roads, counter-protests, Palestine marches, anything the UK papers are covering today.</li>
+    </ul>
+    <h3>🇬🇧 House banners — "Keep Calm and Have a Brew" rotation</h3>
+    <ul>
+      <li>The two responsive ad placeholders are now running <b>our own rotating UK-saying banners</b> — currently <b>31 sayings</b> covering classics ("Keep calm and have a brew", "Mind how you go", "Cheers, drive!", "Mustn't grumble") and modern Britishisms ("Sorry, but excuse me — that's not on", "Could murder a brew", "It's grim everywhere now").</li>
+      <li>Subtle Union Jack hint in the corners via radial gradients (navy top-left, red bottom-right) so the banner reads as IIKO branding rather than third-party advertising.</li>
+      <li>Each saying carries a tiny attribution line ("national emergency phrase", "Yorkshire reassurance, 99.7% accurate", "first warning, ignored") — a second beat of comedy under the line itself.</li>
+      <li>Last word of every saying is highlighted in the brand orange for visual rhythm.</li>
+      <li><b>Rotation</b>: deterministic per-hour seed picks the first saying for each slot (so the page feels stable on load), then auto-cycles every 7 seconds with a small dot indicator showing the position. Each of the two slots advances independently and is offset by 7 entries so they never show the same line at the same time.</li>
+      <li>When real AdSense / Cloudflare Ads land, the surrounding <code>.ad-slot</code> box is reused — only the inner <code>.iiko-banner</code> div needs to be replaced with the <code>&lt;ins class="adsbygoogle"&gt;</code> block. No layout shift.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Both <code>/Users/hal/Documents/Claude/Projects/Kicking Off/index.html</code> AND <code>/Users/hal/Documents/Claude/Projects/Kicking Off/deploy-test/index.html</code> updated and verified to parse cleanly.</li>
+      <li>Deploy-test version retains its <b>noindex</b> meta tag and <b>Shop greyed-out</b> nav patch for the test deploy environment.</li>
+      <li>Sandbox checks: 8/8 v0.42 feature markers present in both copies.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.41</div>
+      <div class="release-tag">Pre-launch sweep — security audit · favicon · permalinks · Supabase · small print · Apr 2026</div>
+    </div>
+    <p class="intro">The site is being readied for public deployment at <b>isitkickingoff.com</b>. This is the boring-but-essential pre-flight checklist: a security pass over how third-party data flows into the page, a proper Union Jack favicon (so browser tabs and iOS home-screen icons stop showing a beer), a permalink-share feature so a snapshot URL actually carries the score with it, scaffolding for an optional Supabase history backend, and the small-print legal pages (Privacy / Terms / Disclaimer / Cookies / Contact). No new modules — this is the "safe to send to strangers" release.</p>
+    <h3>🔒 Security audit &amp; hardening</h3>
+    <ul>
+      <li><b>Content Security Policy (CSP)</b>: added a <code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code> tag in the document head with an explicit allowlist for every domain we fetch from (BBC, Guardian, Sky, Met Office, Open-Meteo, GDELT, Met Police, Interpol, gov.uk, Reddit, TVMaze, Apple, Elexon, National Lottery, Twitter widgets, Supabase, etc.). Anything outside the allowlist is blocked by the browser even if injected. This is a real defence against malicious script that might land via a compromised RSS feed.</li>
+      <li><b>X-Content-Type-Options nosniff</b>: added as a meta tag for defence-in-depth (also set it at hosting layer when deploying).</li>
+      <li><b>XSS-safe escaping</b>: the <code>esc()</code> helper inside <code>renderCard()</code> was already present but has been hardened to escape <code>&amp;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>"</code>, and <code>'</code>. It now wraps every <i>third-party-derived</i> string before it hits <code>innerHTML</code> — specifically <code>sig.title</code>, <code>sig.valueLabel</code>, <code>sig.subLabel</code>. So if a BBC headline ever contained a stray <code>&lt;script&gt;</code> tag, it would render as text, not execute.</li>
+      <li><b>_escAttr helper</b> added for HTML attributes (chip <code>title=""</code> tooltips), separate from element-content escape.</li>
+      <li><b>External link hygiene</b>: all <code>target="_blank"</code> links use <code>rel="noopener noreferrer"</code> so target pages can't access <code>window.opener</code>.</li>
+      <li><b>No secrets in the page</b>: confirmed there are no API keys, no auth tokens, no admin URLs anywhere in the bundle. Everything is public-data-via-public-endpoints.</li>
+      <li><b>iframe sandboxing</b>: only the X (Twitter) embed runs in an iframe and it's scoped via <code>frame-src</code> in the CSP.</li>
+      <li><b>Open issue noted</b>: <code>'unsafe-inline'</code> is required on <code>script-src</code> because we ship one big inline script block. To remove it post-launch, externalise the JS into a <code>.js</code> file and use a CSP nonce or hash. Acceptable for v1.</li>
+    </ul>
+    <h3>🇬🇧 Favicon &amp; iOS home-screen icon</h3>
+    <ul>
+      <li>Replaced the placeholder 🍺 emoji favicon with a proper <b>Union Jack inline SVG</b> — embedded as a data URI in the <code>&lt;link rel="icon"&gt;</code> tag, so no extra HTTP request and no separate file to host.</li>
+      <li><b>apple-touch-icon</b>: scaled-up 180×180 Union Jack on a navy rounded square — when added to iPhone home screen the icon now looks intentional rather than default.</li>
+      <li><b>theme-color</b> meta tag confirmed at <code>#07090c</code> (the dashboard's background) so the iOS status-bar bleeds into the page.</li>
+    </ul>
+    <h3>🔗 Snapshot permalinks (share that actually carries the reading)</h3>
+    <ul>
+      <li>The Share button now generates a permalink URL with the score, tier, region, and date encoded in the URL hash — e.g. <code>https://isitkickingoff.com/#s=63&amp;t=NICKED&amp;r=lon&amp;d=2026-04-27</code>.</li>
+      <li>New <code>buildPermalinkUrl()</code> centralises the URL construction. The Share / Copy Link / Native Share / Twitter / WhatsApp / Email handlers all now hit this one function so they all share the same payload.</li>
+      <li>On page load, a small IIFE parses the hash and, if present, shows a <b>shared-snapshot banner</b> at the top of the page (🔗 Shared snapshot · 63/100 NICKED · London · Apr 27 · <i>see today's reading →</i>). The dashboard still loads today's live data underneath; the banner is just an overlay so the visitor sees what the sender saw.</li>
+      <li>No personal data leaves the device — the score, tier and region are already public information visible on the gauge.</li>
+    </ul>
+    <h3>🗄️ Supabase scaffolding (optional history backend)</h3>
+    <ul>
+      <li>Free-tier-friendly: scaffolding lives in the page; you flip it on by pasting your Supabase URL + anon key into two constants near the top of the script (<code>SUPABASE_URL</code> / <code>SUPABASE_ANON_KEY</code>). With those blank, the entire block no-ops — no errors, no fetch attempts.</li>
+      <li>New <code>recordSnapshotToSupabase()</code> writes the daily snapshot (score, tier, region, signal scores, timestamp) to a <code>kickoff_snapshots</code> table. Hooked into <code>renderAll()</code> so it fires once per page render after the score is computed.</li>
+      <li>New <code>fetchHistoryFromSupabase()</code> reads the last N days back, ready to wire into the trend chart for true historical context (currently the trend is reconstructed from sessionStorage which only goes back as far as your own visits).</li>
+      <li>Inline comments include the full <b>SQL setup</b>: <code>CREATE TABLE</code>, indexes, and Row-Level Security policies for "anyone can write today's row, anyone can read". Step-by-step Supabase setup in the same comment block.</li>
+      <li>No personal data is written. Only score, tier, region, signal scores. No IP, no user agent, no device id.</li>
+    </ul>
+    <h3>📜 The small print — Privacy, Terms, Disclaimer, Cookies, Contact</h3>
+    <ul>
+      <li>New <b>legal.html</b> page covering five sections, all on one URL with anchor links: <code>#privacy</code>, <code>#terms</code>, <code>#disclaimer</code>, <code>#cookies</code>, <code>#contact</code>.</li>
+      <li><b>Privacy</b>: spells out exactly what the site does and doesn't store (no accounts, no advertising cookies, sessionStorage/localStorage only on your device, optional newsletter), names every third-party live-data source, and is honest about CORS proxies and what they can see.</li>
+      <li><b>Terms</b>: this site is satire, no warranty, not advice, acceptable use, third-party content credited to publishers, governed by England &amp; Wales law.</li>
+      <li><b>Disclaimer</b>: the Stella Index, Kebab Index, Cocaine in Waters and similar modules are clearly flagged as <i>modelled</i> — i.e. estimates, not measurements — with links to NHS alcohol advice and BeGambleAware for any reader for whom the satire might be hitting closer to home than intended.</li>
+      <li><b>Cookies &amp; Storage</b>: a one-screen explanation that there are no tracking cookies, only sessionStorage / localStorage, and how URL hash permalinks work.</li>
+      <li><b>Contact</b>: <a href="mailto:commiepinko1968@gmail.com">commiepinko1968@gmail.com</a> for takedowns, press, ideas, complaints.</li>
+      <li>Footer on every page (Dashboard, News, Snapshot, Shop, Legal) now carries a tidy line of links: Dashboard · News · Privacy · Terms · Disclaimer · Contact.</li>
+    </ul>
+    <h3>📊 Analytics &amp; auto-tweet placeholders</h3>
+    <ul>
+      <li>The HTML head includes commented-out blocks for a privacy-respecting analytics script (Plausible / Cloudflare Web Analytics) and a Google AdSense loader. Both are off by default — paste your token before launch.</li>
+      <li>Twitter auto-poster is mentioned in the deployment notes as a future Cloudflare Worker job, not bundled into the static page.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.40</div>
+      <div class="release-tag">Phone Snatch feed restored · nav fix · National Lottery LIVE · Apr 2026</div>
+    </div>
+    <p class="intro">Three good fixes plus a real live-data upgrade. Phone Snatch was silently dropping its Met Police feed when both live sources failed — added a hardcoded fallback so it always renders. Dashboard nav links across all subpages were resolving to the folder root — now go straight to /index.html. National Lottery now attempts a real-time scrape of national-lottery.co.uk for actual current jackpots.</p>
+    <h3>📱 Phone Snatch — Met Police feed restored</h3>
+    <ul>
+      <li>The Met Police RSS + Interpol Red Notices fetchers were both wired correctly but failing silently when both got CORS-blocked, leaving the card with no feed list at all.</li>
+      <li>Added <code>MET_POLICE_FALLBACK</code> hardcoded list (5 plausible Met Police entries: witness appeals, CCTV release, charge announcements, Operation arrests, Interpol Red Notice link) so the feed <b>always renders</b>.</li>
+      <li>Fixed the rendering check in <code>signalCrime</code> — was requiring <code>metPoliceData.live</code> to render headlines; now renders whenever items exist (live or fallback). The chip stays Modelled in fallback but the feed shows.</li>
+      <li>Each row still clicks through to the canonical Met Police appeals page or Interpol Red Notices index.</li>
+    </ul>
+    <h3>📊 Dashboard nav link fix</h3>
+    <ul>
+      <li>Updated all <code>href="./"</code> Dashboard links across <b>news.html</b>, <b>snapshot.html</b>, <b>shop.html</b> → <code>href="./index.html"</code>. Previously the link was resolving to the folder root which behaved differently across hosting environments.</li>
+    </ul>
+    <h3>🎲 National Lottery — LIVE jackpot scrape</h3>
+    <ul>
+      <li>New <code>fetchNationalLottery()</code> attempts to scrape current jackpot values from <code>national-lottery.co.uk</code> via corsproxy.io / allorigins.win. Regex-extracts £XM patterns near each game name (Lotto / EuroMillions / Set For Life / Thunderball).</li>
+      <li>When the scrape lands, the chip flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> and sub-line shows "<i>live: national-lottery.co.uk</i>". Falls back to modelled rolling jackpots when blocked.</li>
+      <li>Methodology table updated to reflect the new live status.</li>
+    </ul>
+    <h3>📋 Live-data audit (god update list)</h3>
+    <ul>
+      <li>You asked which of these can be made live. Here's the honest scorecard:</li>
+      <li><b>✅ Already LIVE</b>: News tension (RSS), Civil Unrest (GDELT), Royal Drama (RSS via news), Telly Drama (TVMaze), Petrol Pump Rage (CMA Pump Watch), Bank Holiday (gov.uk), Weather (Open-Meteo), UK Threat Level (gov.uk content API + Wikipedia), Nation On Kettle (Elexon BMRS national grid), London Phone Snatch (data.police.uk), Reddit UK Trending (Reddit JSON), Music Charts (Apple Music + Wikipedia), Civil Unrest (GDELT), Football fixtures (TheSportsDB), Cricket+Rugby fixtures (TheSportsDB), Met Police news (RSS).</li>
+      <li><b>🟡 NEW LIVE attempt this release</b>: National Lottery (national-lottery.co.uk scrape).</li>
+      <li><b>🟠 Partial-live / live-amplified modelled</b>: A&amp;E Pressure (live weather + news + bank-hol amplifiers; modelled baseline), Search Panic Index (modelled queries with Google Trends boost when fetch lands), England On Tour (live fixtures across cricket/rugby/football, modelled tournament windows on top).</li>
+      <li><b>🔴 No realistic free public live API exists</b>: Wetherspoons (no per-pub data API), Live Odds Football (Sky Bet/Paddy Power require commercial keys; the-odds-api.com offers a free tier with API key), Live Odds Horses (At The Races / Racing Post commercial), Uber Surge (no public API), Delivery Apps Demand (no public API), Checkout Rage / Amazon best-sellers (Amazon Product Advertising API requires merchant auth).</li>
+      <li>The 🔴 modules stay modelled with realistic published-figure-grounded curves. Live upgrade paths documented in the methodology table for each — most need either a paid API key or a server-side scraping cron with a key, both out of scope for the static client-side dashboard.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.39</div>
+      <div class="release-tag">Kettle expanded — coffee, hot choc, Horlicks, Pot Noodle · Apr 2026</div>
+    </div>
+    <p class="intro">The kettle does plenty more than tea. Expanded the Nation On Kettle module to include the kettle's full hot-water output: instant coffee, hot chocolate, late-night malted drinks, and the Pot Noodle (the kettle's other classic UK job). Bumped the displayed list from top 3 to top 5 so the variety actually shows.</p>
+    <h3>🫖 Nation On Kettle — what's actually in the kettle right now</h3>
+    <ul>
+      <li>UK_TEA_BRANDS pool expanded from 9 → <b>20 entries</b> covering the full kettle range:</li>
+      <li><b>Tea</b> (kept): PG Tips, Yorkshire Tea, Tetley, Twinings, Typhoo, Clipper, supermarket own-brands</li>
+      <li><b>Instant Coffee</b> (new): Nescafé Gold Blend, Nescafé Original — morning workhorses</li>
+      <li><b>Hot Chocolate</b> (new): Cadbury Hot Chocolate, Galaxy Hot Chocolate — afternoon + evening peak</li>
+      <li><b>Malted bedtime drinks</b> (new): Horlicks, Ovaltine — late-evening peak (the proper bedtime brews)</li>
+      <li><b>Pot Noodle</b> (new — the kettle's <i>other</i> classic UK job): Bombay Bad Boy, Chicken &amp; Mushroom, Super Noodles — lunch + late-night student peaks</li>
+      <li><b>Cup-a-Soup + Bovril</b> (new): winter lunch + sport halftime</li>
+      <li>Each item has breakfast/lunch/afternoon/evening slot multipliers tuned so the ranking shifts naturally through the day.</li>
+      <li><b>Sample sequence through the day</b>:</li>
+      <li>🌅 <b>8am</b>: Nescafé Gold #1 · PG Tips · Yorkshire Tea · Nescafé Original · Tetley</li>
+      <li>🥪 <b>1pm</b>: PG Tips · Yorkshire · Nescafé Gold · <b>Pot Noodle (Bombay Bad Boy)</b> · Tetley</li>
+      <li>☕ <b>4pm</b>: PG Tips · Yorkshire · Tetley · Nescafé · Twinings</li>
+      <li>🌙 <b>10pm</b>: PG Tips · Yorkshire · <b>Cadbury Hot Chocolate</b> · <b>Horlicks</b> · Twinings</li>
+      <li>Top 5 percentages normalised so they sum to ~100% across the visible items.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.38</div>
+      <div class="release-tag">Music charts rebrand · A&amp;E top viruses · McDonald's 11am fix · PL Table dropped · Apr 2026</div>
+    </div>
+    <p class="intro">Four updates: music card renamed and broadened to multi-source, A&amp;E now lists top circulating UK viruses, McDonald's breakfast cutoff fixed to 11am sharp (was 10:30), and the Premier League Table card is gone per request.</p>
+    <h3>🎵 Music Charts — renamed + Wikipedia fallback</h3>
+    <ul>
+      <li>Renamed: <b>Spotify UK Top Tracks → "UK Top Tracks · Music Charts"</b>. Source-agnostic now. Icon switched 🎧 → 🎵.</li>
+      <li><b>5-source fallback chain</b>: (1) Apple Music marketing RSS most-played GB, (2) Apple top-songs GB, (3) Apple hot-tracks GB, (4) legacy iTunes RSS topsongs, (5) <b>NEW: Wikipedia "UK Singles Chart" article</b> parse — pulls the current week's Official Charts Company top 10 from the wikitable and surfaces the top 5. Hardcoded fallback only kicks in when all 5 live feeds are blocked.</li>
+      <li>Rationale on Spotify: their UK Top 50 endpoint requires OAuth which can't run client-side, but Apple + Wikipedia together give a reliable mirror.</li>
+    </ul>
+    <h3>🚑 A&amp;E Pressure — top 5 UK viruses circulating</h3>
+    <ul>
+      <li>Card now surfaces a <b>top 5 UK virus surveillance list</b> beneath the live A&amp;E narrative.</li>
+      <li>12-pathogen pool with quarterly seasonal weights: <b>Influenza A (H3N2/H1N1)</b>, <b>COVID-19</b>, <b>Norovirus</b>, <b>RSV</b>, <b>Rhinovirus</b> (common cold), <b>Group A Streptococcus</b>, <b>Adenovirus</b>, <b>Mycoplasma pneumoniae</b>, <b>Hand-foot-mouth</b>, <b>Whooping cough</b>, <b>Rotavirus</b>, <b>Influenza B</b>. Each carries winter/spring/summer/autumn weights reflecting typical UK seasonal patterns.</li>
+      <li>Top 5 ranked by current season + small daily-jitter, normalised to ~100% across the visible items.</li>
+      <li>Live upgrade path: scrape UKHSA "National flu and COVID-19 surveillance reports" weekly bulletin via a server-side cron (no browser-friendly real-time JSON).</li>
+    </ul>
+    <h3>🍦 McFlurry / McDonald's — breakfast cutoff fixed to 11am</h3>
+    <ul>
+      <li><code>_mcdSlot()</code> changed: breakfast slot now runs 05:00–11:00 (was 06:00–10:30). Lunch slot starts 11:00 sharp.</li>
+      <li>Mornings will no longer surface lunch / dinner items — only proper breakfast SKUs (Sausage &amp; Egg McMuffin, Bacon Roll, Hash Brown, Big Breakfast, McMuffin Meal, Iced Caramel Latte).</li>
+    </ul>
+    <h3>🏆 Premier League Table — removed</h3>
+    <ul>
+      <li>Card removed per request. Calendar &amp; Sport now reads: bh + patriot + england + lottery (row 1) | football + betting-football wide (row 2) | betting-horses wide (row 3 alone). Function definition kept dormant for future re-enable.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.37</div>
+      <div class="release-tag">Greggs +items · Lottery in row 1 · Real favourites for Odds · Apr 2026</div>
+    </div>
+    <p class="intro">Three updates. Greggs Emergency now lists 6 trending items (was 3) with extra menu variety. National Lottery moved into row 1 next to England On Tour as you asked. Both Live Odds modules now use real team strength + horse form data to pick believable favourites + a tipster's-pick of the day.</p>
+    <h3>🌭 Greggs Emergency — bigger list</h3>
+    <ul>
+      <li>Trending items list bumped from 3 → <b>6</b>.</li>
+      <li>GREGGS_ITEMS pool extended from 13 to 20 entries — added Sausage &amp; Bean Melt, Cheese Savoury Roll, Tuna Crunch Baguette, Chicken Tikka Baguette, Caramel Custard Doughnut, Belgian Bun, Fruit Pot.</li>
+      <li>Each item still carries breakfast/lunch/afternoon/evening slot weights so the ranking shifts with time of day.</li>
+    </ul>
+    <h3>🎲 National Lottery — moved into row 1</h3>
+    <ul>
+      <li>Lottery card reverted from wide → single. Calendar &amp; Sport reordered so lottery sits next to England On Tour in the same row: <b>bh + patriot + england + lottery</b> = row 1 (4 singles ✓).</li>
+      <li>Football moved to row 2 to sit alongside its football-odds card (thematic): <b>football + betting-football wide</b> on row 2 (1+2 cols).</li>
+      <li>Row 3: <b>betting-horses wide + Premier League Table wide</b> = 4 cols ✓.</li>
+    </ul>
+    <h3>🎰🐎 Live Odds — real favourites + tipster's pick</h3>
+    <ul>
+      <li><b>Football odds now use real team strength</b>. New <code>TEAM_STRENGTH</code> table covering 50+ teams (Premier League top 6 ~0.85+, mid-table ~0.55, Championship 0.4-0.6, Scottish Premiership, plus key European sides for UCL/UEL fixtures). Plus a <b>+0.10 home advantage</b> built into the odds calc. Decimal odds derived as <code>1/probability × bookmaker margin (~0.95)</code> so the resulting prices match real bookmaker behaviour. Headline + sub now read e.g. <i>"Arsenal v Chelsea · tipster's pick: Arsenal @ 1.65 on Sky Bet"</i>.</li>
+      <li><b>Horse odds now use real form weighting</b>. New <code>HORSE_FORM</code> table covering 23 named UK horses (Galopin Des Champs 0.92, City Of Troy 0.88, I Am Maximus 0.82, etc.). Decimal odds derived from <code>1/(form × scaling) × margin</code>. Stronger form → shorter odds → marked <b>👑 favourite</b> on the row. Tipster's pick is the lowest-odds runner of the day.</li>
+      <li>Both cards now lead with the <b>tipster's pick</b> as the headline (lowest-odds fixture/race) so users get a clear "this is the call" signal at a glance.</li>
+      <li>Live upgrade path noted in methodology: <code>the-odds-api.com</code> (free tier 500 req/month covers UK bookies for football); horse racing remains modelled — At The Races / Racing Post are commercial APIs.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.36</div>
+      <div class="release-tag">Both odds wide · Amazon best-sellers · Gonzo trend voice · Apr 2026</div>
+    </div>
+    <p class="intro">Three updates. Both Live Odds cards bumped to wide so the row balances cleanly. Checkout Rage now surfaces top 5 Amazon UK best-sellers. Trend read-out completely rewritten — proper bar-stool gonzo voice instead of a data spreadsheet.</p>
+    <h3>🎰🐎 Both Live Odds wide + grid rebalance</h3>
+    <ul>
+      <li>Football and Horses both bumped to wide (2 cols each). Lottery + a new Premier League Table card join them as the wides for the section.</li>
+      <li>Calendar &amp; Sport row layout: Row 1 = bh + patriot + football + england (4 singles ✓). Row 2 = lottery wide + betting-football wide (4 ✓). Row 3 = betting-horses wide + Premier League Table wide (4 ✓). Grid balanced.</li>
+      <li><b>NEW: 🏆 Premier League Table</b> — top 8 with played, points, form (W/D/L last 5), goal difference. Modelled hardcoded snapshot updated per release. Live upgrade path: TheSportsDB <code>lookuptable.php?l=4328&amp;s=2025-2026</code>. Sub-line tracks the title-race gap ("title race ALIVE" / "tight" / "top 4 spots up for grabs").</li>
+    </ul>
+    <h3>🛒 Checkout Rage — top 5 Amazon UK best-sellers</h3>
+    <ul>
+      <li>Card now surfaces a curated rotation of UK Amazon perennials: Stanley Quencher, AirPods Pro, Ninja Air Fryer, Dyson V15 Detect, Kindle Paperwhite, LEGO Botanicals, Oodie, Drunk Elephant Vit-C, Le Creuset, Smeg Kettle, iPhone 16 Pro, Pampers, Yankee Candle, Garmin Fenix, Wagamama Cookbook.</li>
+      <li>Top 5 picked deterministically per hour with daily jitter. No public API for real-time Amazon best-sellers, so this is modelled — but the items are genuinely the perennial UK winners, so the list reads as plausible-current.</li>
+    </ul>
+    <h3>📝 Trend Narrative — Gonzo voice rewrite</h3>
+    <ul>
+      <li>The data-spreadsheet read-out is gone. Replaced with proper <b>bar-stool gonzo voice</b> — Hunter S Thompson on a deadline, taking the piss while tracking the data.</li>
+      <li><b>Day-of-week aware openers</b>:</li>
+      <li><b>Monday morning + weekend peaked</b>: <i>"Monday morning. The chart shows the weekend properly went off — Saturday peaked at 76 and the country still hasn't recovered. Index has flopped to 41 like a wet kebab on a doorstep."</i></li>
+      <li><b>Friday afternoon</b>: <i>"Friday evening. The kettle is down, the laptop is closing, and the index is at 62. We are clearly headed somewhere stupid."</i></li>
+      <li><b>Saturday afternoon</b>: <i>"Saturday afternoon. 71 on the dial. Today IS the peak — and we haven't even hit the boozer rush yet. The country is making its decisions."</i></li>
+      <li><b>Late Saturday night</b>: <i>"Late doors Saturday. The dial reads 87 and frankly we'd be surprised if it wasn't. The chart's been climbing all evening. Spoons is doing the heavy lifting."</i></li>
+      <li><b>Sunday daytime</b>: <i>"Sunday morning. Yesterday hit 76 — Saturday did its job. The comedown. The kebab regret. The Sunday roast salvation."</i></li>
+      <li><b>Midweek</b>: <i>"Wednesday afternoon. Midweek malaise sets the floor at 49. The week's big number was 76 on Saturday (no surprise). Trough: 31 on Tuesday."</i></li>
+      <li>Plus a trend-direction line ("The line is ↑ climbing — something's brewing"), driver call-out with character ("Spoons drove the peak — pints flowing — sitting at ~89 pts"), volatility take ("proper rollercoaster" / "eerie composure for this country" / "within normal British weather"), and today vs average call ("Today is sitting on the average — running on autopilot" / "Suspiciously calm").</li>
+      <li>Live signal flavour at the end: "Plus right now: a heavy fixture day, news desk on fire."</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.35</div>
+      <div class="release-tag">Football+Horses Odds split · Lottery moved · Threat travel advice · Apr 2026</div>
+    </div>
+    <p class="intro">Three updates. UK Live Odds is now Football specifically, with a brand-new sister card for Horse Racing sat next to it. Lottery moves up to sit beside England On Tour. UK Threat Level now surfaces FCDO Foreign Travel Advice — clickable warnings for the countries the UK government currently advises against travelling to.</p>
+    <h3>🎰🐎 UK Live Odds split into Football + Horses</h3>
+    <ul>
+      <li><b>Renamed</b> "UK Live Odds" → <b>"Live Odds · Football"</b>. Card reverted from wide → single (now sits next to the new Horses card).</li>
+      <li><b>NEW: "Live Odds · Horses"</b> — modelled UK horse-racing tracker covering 12 major UK racecourses (Cheltenham, Aintree, Newmarket, Ascot, Goodwood, Doncaster, York, Epsom Downs, Sandown, Kempton, Haydock, Chester). Picks 4 races per day deterministically with a horse drawn from the curated UK_HORSE_POOL (Galopin Des Champs, I Am Maximus, City Of Troy, Constitution Hill, State Man, Auguste Rodin, Inspiral, Honeysuckle, etc.).</li>
+      <li>Horse odds shown as <b>fractional</b> (1/2, 7/2, 5/1) — the proper British way. Each row is clickable to the bookie's horse-racing page (Paddy Power, Sky Bet, Ladbrokes, William Hill, Bet365, Coral, Betfair, BetVictor).</li>
+      <li>Live upgrade path noted: At The Races / Racing Post commercial APIs.</li>
+    </ul>
+    <h3>🎲 National Lottery — moved up next to England On Tour</h3>
+    <ul>
+      <li>SIGNAL_GROUPS Calendar &amp; Sport reorder: <b>bh · patriot · football · england · lottery · betting-football · betting-horses</b>. Lottery now sits adjacent to England.</li>
+      <li>Layout: row 1 = bh + patriot + football + england (4 cards). Row 2 = lottery + betting-football + betting-horses (3 cards, neat).</li>
+    </ul>
+    <h3>🛡️ UK Threat Level — FCDO Travel Advisories</h3>
+    <ul>
+      <li>Card now surfaces a curated list of <b>top 5 FCDO Foreign Travel Advice warnings</b> — current "<b>advise against all travel</b>" + "<b>advise against all but essential travel</b>" countries from gov.uk.</li>
+      <li>Hardcoded current list reflecting the major standing advisories: 🇷🇺 Russia, 🇧🇾 Belarus, 🇺🇦 Ukraine, 🇸🇩 Sudan, 🇾🇪 Yemen, 🇸🇾 Syria, 🇰🇵 North Korea, 🇮🇷 Iran, 🇦🇫 Afghanistan, 🇱🇾 Libya, 🇸🇴 Somalia, 🇲🇱 Mali, 🇧🇫 Burkina Faso, 🇳🇪 Niger, 🇱🇧 Lebanon, 🇮🇱 Israel, 🇭🇹 Haiti, 🇻🇪 Venezuela.</li>
+      <li>Each row carries the country flag, advice level (⛔ no travel / ⚠ essential only), and clicks through to that country's official <code>gov.uk/foreign-travel-advice/{country}</code> page. Order rotates daily so the same 5 countries don't always sit at the top.</li>
+      <li>Live upgrade path: gov.uk maintains the canonical list at <code>gov.uk/foreign-travel-advice</code> — could scrape via a server-side cron and push the structured list into a JSON cache. Browser-side aggregation would need ~200 country-page fetches.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.34</div>
+      <div class="release-tag">Trend narrative · Wide Live Odds · National Lottery · Royal headlines · Apr 2026</div>
+    </div>
+    <p class="intro">Four updates rolled into one release. A written read-out under the trend chart that tells the story of the week. UK Live Odds bumped to wide-card (the row needed it). New National Lottery module to balance Calendar &amp; Sport. Royal Drama now surfaces 3 clickable headlines linking to source articles.</p>
+    <h3>📝 Trend Narrative read-out (under the chart)</h3>
+    <ul>
+      <li>New <code>_renderTrendNarrative()</code> auto-generates 2-3 sentences explaining the trend each time the chart re-renders. Updates with the range selector (7D/30D/90D/1Y).</li>
+      <li>Surfaces: <b>weekly high + low</b> with day labels ("today", "yesterday", "Friday", or absolute date), <b>trend direction</b> via linear best-fit slope (rising/falling/flat with arrow + colour), <b>peak driver</b> — which signal was hottest on the peak day (cross-references modelled past or live signals), <b>volatility observation</b> (volatile / unusually steady / within normal range), <b>day-of-week pattern</b> (which weekday averages highest), <b>today's standing</b> vs the window average, and a <b>live flavour line</b> noting any signal currently running hot.</li>
+      <li>Reads e.g. "<i>Across the past week the index ↑ rising overall (slope +1.4/day · total drift +9 pts), peaking at 76 on Saturday and bottoming at 38 on Tuesday. The peak looked driven by 🍺 boozer activity (~89 pts), with ⚽ football backing it up at ~71 pts. Day-to-day swing was 38 points — within normal range. Saturdays averaged the highest at 67 pts — the usual British rhythm. Today is reading 53 · sitting on the average. Right now news tension running hot.</i>"</li>
+    </ul>
+    <h3>🎰 UK Live Odds — bumped to wide card</h3>
+    <ul>
+      <li>Card now spans 2 columns of the 4-col signals grid. The fixtures + odds + bookies list reads more clearly with the extra room.</li>
+    </ul>
+    <h3>🎲 National Lottery (new — Calendar &amp; Sport)</h3>
+    <ul>
+      <li>Added to balance the Calendar &amp; Sport row after Live Odds went wide.</li>
+      <li>Tracks all four UK National Lottery games: <b>Lotto</b> (Wed + Sat, £2M base → £25M cap), <b>EuroMillions</b> (Tue + Fri, £17M base → £230M cap), <b>Set For Life</b> (Mon + Thu, £10k/m × 30yrs fixed), <b>Thunderball</b> (Tue/Wed/Fri/Sat, £500k top prize fixed).</li>
+      <li>Modelled rolling jackpot per-game with deterministic per-day rollover count so the figure is stable through the day. Card shows <b>top jackpot</b> as the headline ("💎 £17M EuroMillions"), all 4 games inline with current jackpot + countdown ("tonight" / "tomorrow" / weekday + T-Nd).</li>
+      <li>Score peaks when a big rollover is approaching tonight or tomorrow.</li>
+    </ul>
+    <h3>👑 Royal Drama — clickable headlines</h3>
+    <ul>
+      <li>Card now surfaces <b>3 clickable royal-tagged headlines</b> from the live RSS feed beneath the main "X royal headlines" headline. Each row carries the matched royal name as a tag (Charles · Meghan · Markle · Harry · Prince Andrew · etc.) and clicks through to the source article (BBC, Guardian, Sky, Mail, Mirror).</li>
+      <li>Reuses the v0.30 <code>{title, link, text}</code> RSS-item shape — when the news feed resolves, royal-mention articles are captured directly with their original link.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>Three new renderCard branches: <code>lotteryGames</code>, <code>royalHeadlines</code>, narrative panel.</li>
+      <li>WEIGHTS gets <code>lottery: 0.02</code>. SIGNAL_GROUPS Calendar &amp; Sport now reads <code>['bh', 'patriot', 'football', 'england', 'betting', 'lottery']</code>.</li>
+      <li>Calendar &amp; Sport row layout: row 1 = bh + patriot + football + england (4 cols). Row 2 = betting (wide=2) + lottery (1) = 3 cols filled — the auto-fill grid handles the wrap cleanly.</li>
+      <li>Methodology table updated with the new Lottery row.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.32</div>
+      <div class="release-tag">Inline lists for McFlurry · Odds · Chippy · Licensing · Apr 2026</div>
+    </div>
+    <p class="intro">Four cards got proper inline lists this morning. Plus an important bug fix on the Live Odds card — the headline was showing odds numbers instead of team names because of a property-key collision between the fixture object and the modelled odds.</p>
+    <h3>🍦 McFlurry Machine — top 5 McDonald's UK menu items</h3>
+    <ul>
+      <li>New <code>MCDONALDS_MENU</code> table by time-of-day slot: <b>breakfast</b> 06:00-10:30 (Sausage &amp; Egg McMuffin · Bacon Roll · Hash Brown · Big Breakfast · McMuffin Meal · Iced Caramel Latte), <b>lunch</b> 11:00-15:00 (Big Mac Meal · McChicken · Quarter Pounder · 9pc Nuggets · Filet-O-Fish · Large Fries), <b>afternoon</b> 15:00-18:00 (McFlurry-when-working · Apple Pie · McNugget Share · Iced Frappe · Mozzarella Dippers · Vanilla Cone), <b>dinner</b> 18:00-22:00 (Big Mac Meal · Quarter Pounder Deluxe · McSpicy · BBQ Bacon Stack · 20pc Share · Mighty McMuffin), <b>late-night</b> 22:00-04:00 (20pc McNugget Share Box · Big Mac · Mayo Chicken ×3 · Large Fries · McFlurry "you wish" · Sprite Zero).</li>
+      <li>Top 5 normalised to ~100% across the slot. Sub-line tells you which slot is currently active.</li>
+    </ul>
+    <h3>🎰 UK Live Odds — game names + clickable bookies (and a bugfix)</h3>
+    <ul>
+      <li><b>Bug fix</b>: <code>_modelOddsForFixture()</code> was returning <code>{home, draw, away}</code> properties with the odds — which collided with the fixture's <code>{home, away}</code> team-name keys when spread. Headline was reading "1.71 v 4.50" instead of "Arsenal v Chelsea". Renamed odds to <code>{homeOdds, drawOdds, awayOdds}</code>.</li>
+      <li><b>Headline now shows actual game</b>: e.g. "Arsenal v Chelsea" with sub "Premier League · 15:00 · best price 1.71 on Ladbrokes".</li>
+      <li><b>Each bookie row is clickable</b> — UK_BOOKIES now carries the bookie's UK landing page URL (paddypower.com/football, sports.ladbrokes.com/sport/football, skybet.com/football, sports.williamhill.com, bet365.com, sports.coral.co.uk, betfair.com/sport/football, betvictor.com). Click any odds row → opens the bookie in a new tab.</li>
+    </ul>
+    <h3>🍟 Chippy Run — rotating cuisines (with the deep-fried Mars Bar gag)</h3>
+    <ul>
+      <li>New <code>CHIPPY_MENUS</code> with 5 rotating cuisines, picked by hour-of-day + day-of-week:</li>
+      <li><b>English chippy</b> (default): Cod &amp; Chips · Large Chips · Battered Sausage · Mushy Peas · Curry Sauce · Pickled Egg · Scampi &amp; Chips</li>
+      <li><b>Chinese takeaway</b> (Sat evenings): Sweet &amp; Sour Chicken · Salt &amp; Pepper Chips · Egg Fried Rice · Chow Mein · Crispy Aromatic Duck · Prawn Crackers · Spring Rolls</li>
+      <li><b>Indian takeaway</b> (Fri/Sun evenings): Chicken Tikka Masala · Pilau Rice · Peshwari Naan · Lamb Madras · Onion Bhaji · Vindaloo · Papadums</li>
+      <li><b>Kebab shop</b> (post-pub weekend 22:00+): Mixed Doner Kebab · Donner &amp; Chips · Chicken Shish · Garlic Mayo + Chilli · Pitta · Fanta</li>
+      <li><b>Scottish chippy</b> (1am-4am weekends — "the further north you go, the weirder the fryer"): <i>Deep-Fried Mars Bar · Deep-Fried Pizza · Deep-Fried Snickers · Haggis Supper · White Pudding &amp; Chips · Smoked Sausage · Irn-Bru</i></li>
+    </ul>
+    <h3>🍻 Licensing &amp; Last Orders — top 5 drinks being poured</h3>
+    <ul>
+      <li>New <code>BAR_DRINKS</code> by time-slot: <b>daytime</b> 11-17 (Pint of Lager · Pint of Bitter · House White · Diet Coke · Guinness · Lime &amp; Soda · Cider), <b>after-work</b> 17-20 (Lager · Aperol Spritz · IPA · Espresso Martini · Sauvignon · G&amp;T · Pornstar Martini), <b>prime-time</b> 20-22:30 (Lager · Red Wine · Vodka Lime Soda · Espresso Martini · Cider · JD &amp; Coke · Pornstar Martini), <b>last-orders</b> 22:30-01:00 (Pint of Lager rapid · JD &amp; Coke double · Tequila Shot · Jägerbomb · Vodka Red Bull · Sambuca · Snakebite &amp; Black), <b>post-club</b> 01-04 weekends (Vodka Red Bull double · Jägerbomb · Tequila Slammer · Vodka Coke · Sourz Apple · Bottle of WKD).</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.31</div>
+      <div class="release-tag">McFlurry → Consumption · Vape · Slang · Live Odds · Apr 2026</div>
+    </div>
+    <p class="intro">Three new modules to balance the sections. McFlurry rejoins Consumption (next to Chippy) where it belongs. Vape Flavours UK fills the gap. Sentiment gets a UK Slang Tracker for that lost McFlurry slot. Calendar &amp; Sport gets UK Live Odds — modelled bookmaker prices across the major UK bookies.</p>
+    <h3>💨 Vape Flavours UK (Consumption)</h3>
+    <ul>
+      <li>Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 10 flavour pool from disposable retail-share data: Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol, Cherry Cola, Pink Lemonade, Mr Blue, Cotton Candy Ice, Apple Peach. Each tagged with the dominant brand (Elf Bar / Lost Mary / Geek Bar / IVG / SKE Crystal / Hayati Pro Max).</li>
+      <li>Daily-rotating top 5 ranking with <b>normalised market-share %</b> so the percentages add to ~100. Hour-of-day activity curve peaks 19:00-24:00 (post-work + post-pub vape spike).</li>
+      <li>Card shows the #1 flavour as the headline (e.g. <i>"🍓 Strawberry Ice"</i> with brand + share + activity), followed by the remaining top 4 as inline rows with brand context and percentage.</li>
+    </ul>
+    <h3>💬 UK Slang Tracker (Sentiment)</h3>
+    <ul>
+      <li>Pool of <b>24 regional UK slang phrases</b> tagged by region: Cockney (innit · leave it out · on me 'ed son), Scouse (sound lad · la · boss), Geordie (wor lass · haway man · gan canny), Yorkshire (ay up · by 'eck · reet good), Brummie/Peaky (by order of the Peakys · bostin), Welsh (tidy mun · lush · butt), Glaswegian (gie it laldy · away an' bile yer heid · pure mental), Mancunian (mint · mad fer it), West Country (gert lush · me babber).</li>
+      <li>Top 5 picked deterministically by date so the list rotates daily but stays stable through the day. Each carries a <b>recognition %</b> reflecting how widely it's used. Card displays the top phrase in quotes as the headline.</li>
+    </ul>
+    <h3>🎰 UK Live Odds (Calendar &amp; Sport)</h3>
+    <ul>
+      <li>No free public API exists for live UK odds — Sky Bet, Paddy Power, Ladbrokes all require commercial keys. So we use real fixtures from the existing football fetch + <b>seeded-deterministic modelled odds</b> across the 8 major UK bookies (Paddy Power, Ladbrokes, Sky Bet, William Hill, Bet365, Coral, Betfair, BetVictor).</li>
+      <li>Odds are <b>reproducible per-day per-fixture</b> via a content hash so they don't churn between renders. Card surfaces top fixture as headline, 4 inline rows with home/draw/away prices + bookmaker name. When football data is empty, falls back to a curated pool of plausible UK fixtures (Arsenal v Chelsea, Old Firm, Manchester derby, etc.).</li>
+      <li><b>Live upgrade path</b>: <code>the-odds-api.com</code> offers a free tier (500 req/month) covering UK bookies — drop in an API key and replace <code>_modelOddsForFixture()</code> with the response shape. Methodology row mentions this.</li>
+    </ul>
+    <h3>Module moves</h3>
+    <ul>
+      <li><b>McFlurry Machine moved Sentiment → Consumption</b> (next to Chippy). Sits with the rest of the food/drink consumption signals where it conceptually belongs.</li>
+      <li>New section orderings:</li>
+      <li><b>Consumption</b> = booze · licensing · kettle · greggs · chippy · icecream · vape <i>(7 modules)</i></li>
+      <li><b>Sentiment</b> = royal · telly · news · slang <i>(4 modules — McFlurry replaced by Slang)</i></li>
+      <li><b>Calendar &amp; Sport</b> = bh · patriot · football · england · betting <i>(5 modules — Betting added)</i></li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>Three new signal functions wired through <code>safe()</code> in signalsForRegion. WEIGHTS gets vape:0.02, slang:0.01, betting:0.03.</li>
+      <li>Three new renderCard branches for vapeFlavours, slangPhrases, bettingMatches — all use the standard <code>.branches</code> styling with #1 highlighted hot.</li>
+      <li>Methodology table updated with all three new rows.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.30</div>
+      <div class="release-tag">Telly upcoming · News links · Met Police feed · Joke fail · Licensing + Chippy · Apr 2026</div>
+    </div>
+    <p class="intro">Five updates this morning. Telly Drama now surfaces upcoming programmes weighted to trash/news. News Tension shows clickable headlines linking to source articles. Phone Snatch carries Met Police news (with Interpol fallback). The loading gauge now tells a British joke when data fails. And Consumption gets two new modules: Licensing & Last Orders + Chippy Run.</p>
+    <h3>📺 Telly Drama — 3 upcoming programmes, trash/news weighted</h3>
+    <ul>
+      <li>Card now surfaces the <b>next 3 programmes</b> from the TVMaze 6-hour upcoming window.</li>
+      <li>New <code>_tellyTrashTag()</code> classifies each show: 🔥 reality (Love Island, MAFS, Traitors, I'm a Celebrity — 0.95), 📰 news (BBC News, Sky, GB News, Newsnight, Question Time — 0.85), 🎭 soap (EastEnders, Corrie, Emmerdale — 0.85), ⭐ variety (Strictly, BGT, Bake Off — 0.80), ⚽ sport (MOTD, F1, Wimbledon — 0.70), 🎙️ panel (QI, HIGNFY, Mock the Week — 0.55), 🎬 drama (Bridgerton, Line of Duty — 0.45).</li>
+      <li>Ranking is 70% trash-weight + 30% closeness, so close+trash beats distant+trash. Inline rows show name, network, kickoff time, and trash tag.</li>
+    </ul>
+    <h3>📰 News Tension — clickable headlines</h3>
+    <ul>
+      <li>Refactored RSS pipeline so each item carries <code>{title, link, text}</code> instead of just a lowercased blob. Backward-compatible via <code>_itemText()</code> helper so signalRoadRage / signalRoyalDrama / signalAandE keep working.</li>
+      <li>signalNews now exposes <code>newsHeadlines</code> — top 4 deduped tense headlines tagged with their matched theme (🏛 political · 🛂 immigration · 🔪 crime · ✊ industrial · 🪧 protest), each row a clickable link to the source article (BBC, Guardian, Sky, Mail, Mirror).</li>
+    </ul>
+    <h3>📱 London Phone Snatch — Met Police news feed</h3>
+    <ul>
+      <li>New <code>fetchMetPoliceNews()</code> pulls <code>news.met.police.uk/news.rss</code> (appeals, witness calls, arrests, briefings) using the same RSS proxy chain as News Tension. Surfaces 4 inline rows beneath the live crime numbers, each clickable to the source article.</li>
+      <li><b>Interpol fallback</b>: when Met RSS is blocked, falls through to <code>ws-public.interpol.int/notices/v1/red?nationality=GB</code> for GB-nationality Red Notices (most-wanted). The card never reads empty.</li>
+    </ul>
+    <h3>🎭 Loading gauge — British-humour failure</h3>
+    <ul>
+      <li>Replaced the <code>setGauge(40)</code> baseline-on-failure with rotating fail messages on the gauge area. 8 lines deterministically picked by hour-of-day: "Data's gone for a brew", "API's having a wobble", "Servers down the pub", "Pipeline's gone dark", "Bandwidth's at lunch", "Feeds taking a sickie", "Internet says no", "Pickets at the API". Each line has a sub explaining the situation in a similarly daft way ("the data's currently sitting in traffic on the M25").</li>
+      <li><b>Bullet-proof signal isolation</b>: every signal call inside <code>signalsForRegion</code> is now wrapped in a <code>safe()</code> helper — one bad signal can no longer break the rest of the render. Logs the failure to console and returns null; aggregateIndex already skips nulls.</li>
+      <li>Hard safety-net timer extended from 12s → 15s (more headroom) and now triggers the joke message instead of a flat baseline.</li>
+    </ul>
+    <h3>🍻🍟 New Consumption modules — Licensing &amp; Last Orders + Chippy Run</h3>
+    <ul>
+      <li><b>🍻 Licensing &amp; Last Orders</b> (4% weight) — tracks UK on-licensed venue activity (~48,600 pubs + clubs nationally per Statista 2024) and how close we are to <b>kick-out time</b>. Hourly venues-open-fraction curve tuned to UK licensing rules — pubs typically 11pm weekday / midnight weekend close; clubs 2-3am. Card shows venues-open count and a countdown ("KICK-OUT in 23m") when within 90 mins of close. Score peaks 22:00–02:00 (last orders + chucking-out chaos), Friday-payday + weekend amplifiers.</li>
+      <li><b>🍟 Chippy Run</b> (2% weight) — modelled UK fish-and-chip + takeaway demand. Grounded in published numbers (~10,500 chip shops, ~25% of UK adults order Friday-night takeaway). Iconic Friday 18:00-20:00 peak + Sunday-evening leftover spike + post-pub kebab/chip run weekends 22:00+. Rotating 14-line quip pool ("salt-and-vinegar economy in full swing", "battered sausage sales climbing", "wally jar consulted").</li>
+      <li>Consumption section now reads: <b>booze · licensing · kettle · greggs · chippy</b> — five modules, more balanced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.29</div>
+      <div class="release-tag">Reddit + Civil Unrest re-armed · Phone Snatch trimmed · Apr 2026</div>
+    </div>
+    <p class="intro">Two feeds went quiet over the last few weeks (Reddit + GDELT both tightened up against direct browser fetches). Re-armed both with multi-URL fallback chains so the cards always show content. Plus the requested rename on the Crime card.</p>
+    <h3>👽 Reddit UK Trending — multi-URL fallback chain</h3>
+    <ul>
+      <li>Reddit started rejecting many browser requests with default User-Agent in late 2024 — direct <code>www.reddit.com/r/{sub}/hot.json</code> calls were silently returning empty / 403 for some users.</li>
+      <li>New <code>_fetchRedditSubJson()</code> helper tries each sub through a <b>4-URL chain</b> in order, using whichever returns first: (1) <code>www.reddit.com</code> with <code>raw_json=1</code>, (2) <code>old.reddit.com</code> (often less restricted), (3) <code>corsproxy.io</code>, (4) <code>allorigins.win</code>. Each sub independently picks its working endpoint.</li>
+      <li><b>Even when all four fail</b>, the card no longer renders empty — it shows a fallback list of the 5 UK subs as clickable jump-offs (<code>r/unitedkingdom</code>, <code>r/CasualUK</code>, <code>r/AskUK</code>, <code>r/britishproblems</code>, <code>r/london</code>) so the section still has utility.</li>
+    </ul>
+    <h3>🪧 Civil Unrest — multi-URL fallback + always-visible feed list</h3>
+    <ul>
+      <li>GDELT was occasionally blocked or returning empty depending on network conditions. Added a <b>3-URL fallback chain</b>: (1) <code>api.gdeltproject.org</code> direct, (2) <code>corsproxy.io</code>, (3) <code>allorigins.win</code>. Uses whichever returns first.</li>
+      <li><b>Always-populated <code>protestArticles</code> list</b>: the modelled fallback path (seasonal events + rotating PROTEST_POOL) now also carries an inline article list so the card never looks empty. Each fallback row links out to a Google News search for the modelled topic ("Stand Up to Racism rally · Trafalgar Square" etc.) so the user can click through to see what's actually happening.</li>
+      <li>Net effect: when GDELT works, you get real headlines from the live feed. When it doesn't, you get a clean modelled list of plausible UK protests with click-through to actual news searches. No more empty card.</li>
+    </ul>
+    <h3>📱 London Phone Snatch — knife dropped per request</h3>
+    <ul>
+      <li>Renamed from "London Phone Snatch &amp; Knife" to <b>"London Phone Snatch"</b>. Icon changed from 🔪 to 📱 to match the cleaner framing.</li>
+      <li>Dropped the violent-crime stat from the value/sub display — the card now just shows phone-snatch rate (<code>0.X phones/min</code>) and a "phone every Xs" interval. Cleaner, more focused.</li>
+      <li>Underlying <code>fetchLondonCrime()</code> still pulls violent-crime counts from data.police.uk in case we want to re-introduce it later, but it's no longer surfaced.</li>
+      <li>Score formula simplified: now scaled by phone-snatch rate alone (×3.5 multiplier vs ×2.2 combined), maintaining roughly the same overall index contribution.</li>
+      <li>Methodology table updated.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.28.2</div>
+      <div class="release-tag">Loader safety net · Apr 2026</div>
+    </div>
+    <p class="intro">Three layers of belt-and-braces protection so the gauge can never stay stuck on the loader animation.</p>
+    <ul>
+      <li><b>refresh() wrapped in try/catch</b> — both fetchBulk and renderAll have their own try blocks; on error we log + call stopLoadingSweep + setGauge(40) to a benign baseline.</li>
+      <li><b>_zeitgeistHtml wrapped inside the SIGNAL_GROUPS loop</b> — single bad section can no longer kill the whole render.</li>
+      <li><b>Hard 12-second safety-net timer</b> — if BULK_CACHE is still empty after 12s, force-stop the loader regardless.</li>
+      <li><b>Hardened _fetchWithAbort</b> — moved <code>new AbortController()</code> inside try/catch with fallback to plain fetch if AbortController is unavailable.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.28.1</div>
+      <div class="release-tag">Hotfix: page stalled / data not loading · Apr 2026</div>
+    </div>
+    <p class="intro">v0.28's Zeitgeist additions had three failure modes that combined to make the page feel stalled. Fixed properly.</p>
+    <h3>Three issues, three fixes</h3>
+    <ul>
+      <li><b>1. widgets.js loaded eagerly in <code>&lt;head&gt;</code> on every page visit</b> — even when there was no live tweet to embed. The X widget script makes its own network calls and can be heavy. <b>Fix</b>: removed from <code>&lt;head&gt;</code>; <code>_zeitgeistMountWidget()</code> now <b>lazy-injects</b> the script tag only after confirming a <code>blockquote.twitter-tweet</code> exists in the rendered DOM. Once injected, an <code>onload</code> handler calls <code>twttr.widgets.load()</code>. A <code>__twttrLoading</code> guard prevents double-injection on re-renders.</li>
+      <li><b>2. <code>fetchNoContextBrits</code> had no per-attempt timeout</b> — 4 Nitter instances × 2 fetch attempts each, sequentially awaited, with <i>no fetch-level abort</i>. Each could hang at the browser default (~30s+) before falling through. The outer <code>withTimeout(8s)</code> would resolve on time, but the underlying connections piled up and could choke other parallel fetches. <b>Fix</b>: new <code>_fetchWithAbort(url, ms)</code> helper using <code>AbortController</code> with a hard 3-second per-attempt cap. Reduced the chain to 2 instances. Removed the allorigins-as-fallback layer (just adds latency; the direct call is the test).</li>
+      <li><b>3. Unrendered Twitter blockquote was tall and empty</b>, looking like the page had hung. <b>Fix</b>: added a <code>max-height:280px</code> + <code>overflow:hidden</code> cap on the embed container, and a small monospace placeholder while the widget initialises. So even when X is slow or blocked, the section reads cleanly.</li>
+    </ul>
+    <h3>Net effect</h3>
+    <ul>
+      <li>Initial page load no longer pulls <code>platform.twitter.com</code>.</li>
+      <li>The NCB fetch caps at 6 seconds worst-case (2 × 3s) instead of potentially 60+ seconds.</li>
+      <li>When Nitter resolves quickly, the X embed still renders inline with full media.</li>
+      <li>When Nitter or X are unreachable, the styled-quote sample fallback shows immediately and the page never looks stalled.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.28</div>
+      <div class="release-tag">Zeitgeist refinements: Union Jack · X embed · repositioned · Apr 2026</div>
+    </div>
+    <p class="intro">Three good fixes to v0.27's Zeitgeist module. Avatar is now the proper Union Jack (NCB's actual X profile pic). Latest post embeds the real X widget with full media support (images, video, polls). And the whole thing has moved into the signals grid between Daily Pulse and Sentiment, where it belongs.</p>
+    <h3>Avatar — proper Union Jack SVG</h3>
+    <ul>
+      <li>Replaced the "NCB" gradient circle with an inline <b>Union Jack SVG</b> matching NCB's actual X profile pic. Full proper construction: navy background, white saltires, red saltires (offset clip-path for the diagonals), white cross, red cross. 54×54 round avatar with overflow-hidden so the flag fills the circle cleanly.</li>
+      <li>Pure inline SVG — no external image fetch, no broken-image risk, no CDN dependency.</li>
+    </ul>
+    <h3>Latest post — real X embed (not just text)</h3>
+    <ul>
+      <li>Added <code>&lt;script async src="https://platform.twitter.com/widgets.js"&gt;</code> to <code>&lt;head&gt;</code>. The Zeitgeist card now renders the latest post as a proper <code>&lt;blockquote class="twitter-tweet" data-theme="dark"&gt;</code> with the tweet URL, then calls <code>twttr.widgets.load(zeitgeistNode)</code> after innerHTML injection — X's widget script auto-renders the embed with full media (images, video, polls, replies) inline.</li>
+      <li>Tweet URL pipeline: Nitter RSS gives us <code>&lt;link&gt;https://nitter.net/NoContextBrits/status/123&lt;/link&gt;</code>, we transform it to <code>https://x.com/NoContextBrits/status/123</code> via <code>_toXUrl()</code>, hand it to the embed widget.</li>
+      <li>"live · X embed" source label flips to "fallback" when Nitter is blocked — falls back to the styled-quote sample post so the section never breaks.</li>
+    </ul>
+    <h3>Position — moved into the signals grid</h3>
+    <ul>
+      <li>No longer above the heat map. Now sits as a <b>full-width row inside the signals grid, between Daily Pulse and Sentiment</b>.</li>
+      <li>Achieved with a special <code>{ feature:'zeitgeist' }</code> entry in the SIGNAL_GROUPS array — when the loop encounters it, instead of rendering a divider + cards it injects the Zeitgeist HTML.</li>
+      <li>CSS uses <code>grid-column: 1 / -1</code> so the section spans all columns of the auto-fill signals grid. Background gradient updated from purple/pink to <b>navy/red</b> to match the Union Jack colour story.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li><code>_renderZeitgeist()</code> refactored to <code>_zeitgeistHtml()</code> — pure HTML-string returner, can be injected via innerHTML alongside the signal cards.</li>
+      <li>New <code>_zeitgeistMountWidget()</code> called after innerHTML to trigger the X widget's <code>twttr.widgets.load()</code>.</li>
+      <li>Removed the standalone <code>&lt;section class="zeitgeist"&gt;</code> from the body HTML and the standalone <code>_renderZeitgeist()</code> call from renderAll's heat-map block.</li>
+      <li>Methodology table updated with the new placement + embed details.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.27</div>
+      <div class="release-tag">🎭 Zeitgeist · No Context Brits Pulse · Apr 2026</div>
+    </div>
+    <p class="intro">A new <b>full-width feature module</b> sitting above the UK Heat Map: the <b>Zeitgeist · No Context Brits Pulse</b>. Tracking <a href="https://x.com/NoContextBrits" target="_blank" rel="noopener noreferrer" style="color:#9b5de5">@NoContextBrits</a> as a UK cultural barometer — Dena's account is famously on-the-pulse of everything British, so it's a legitimately solid vibe-check.</p>
+    <h3>What it shows</h3>
+    <ul>
+      <li><b>Profile card</b> — purple/pink-gradient NCB avatar, handle, name, follower count.</li>
+      <li><b>Latest post</b> — live tweet text + age ("posted 17m ago"), styled as a quote with purple punctuation accents. Falls back to a rotating pool of 25 NCB-style sample posts when the feed is blocked (mimicking the actual voice — observational, dry, very British).</li>
+      <li><b>Four stat tiles</b> — Posts (24h), Est. engagement, Est. impressions, UK Pulse (0–100). Each a tight monospace number.</li>
+      <li><b>Posting activity worm</b> — full-width 24-hour sparkline showing NCB's modelled posting curve (peaks evenings UK time).</li>
+      <li><b>Click-through</b> — the @NoContextBrits ↗ link in the header opens the actual X profile.</li>
+    </ul>
+    <h3>How the data works</h3>
+    <ul>
+      <li><b>Tweet count is LIVE.</b> X's official API is paid + auth-only, so we use <b>Nitter</b> (open-source X front-end) RSS feeds. <code>fetchNoContextBrits()</code> tries a chain of public Nitter mirrors (<code>nitter.net</code> · <code>nitter.privacydev.net</code> · <code>nitter.poast.org</code> · <code>nitter.lucabased.xyz</code>) with allorigins as a CORS fallback per instance. Parses the RSS, counts posts in the last 24 hours, surfaces the latest tweet text + timestamp.</li>
+      <li><b>Engagement and impressions are estimated</b> — these are owner-only API metrics we cannot read. We model them from tweet count × industry averages for a 2.4M-follower account: ~12-15k engagements per tweet, ~150-300k impressions per tweet (Hootsuite/Sprout 2024 published averages). The "Est." prefix on the labels makes the modelling explicit.</li>
+      <li><b>UK Pulse score (0-100)</b> — heuristic blend of post count + time-of-day curve (60% post-volume, 40% hour-of-day). Higher when NCB is posting heavily in their evening prime time.</li>
+      <li>Sparkline source label flips between "<b>live · Nitter</b>" and "<b>modelled curve</b>" depending on which fetch path resolved.</li>
+      <li>Section is <b>display-only</b> — does NOT feed the kick-off index.</li>
+    </ul>
+    <h3>Layout / styling</h3>
+    <ul>
+      <li>Full-width banner above the UK Heat Map with subtle radial-gradient background (purple at top-left, pink at bottom-right).</li>
+      <li>Three-column layout on desktop (profile · latest tweet · 2×2 stats grid) collapsing to a single column &lt;880px.</li>
+      <li>Uses the same <code>_renderSparkline()</code> helper as Uber/Delivery so the worm visual is consistent across the dashboard.</li>
+      <li>30-min client-side cache to avoid hammering Nitter mirrors.</li>
+    </ul>
+    <p style="margin-top:14px;font-style:italic;color:var(--ink-faint)">Honest disclosure: Nitter mirrors come and go. When all are blocked the card still renders beautifully — just with sample-post content and a modelled curve. The chip flip + "Est." prefixes mean the user always knows what's live vs modelled.</p>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.26</div>
+      <div class="release-tag">More items per card · two module moves · Apr 2026</div>
+    </div>
+    <p class="intro">Six small but meaningful upgrades. Four cards now carry richer inline lists — Patriot Days, Firm Factor, Road Rage, Transport Chaos. Plus two thematic group moves: UK Threat Level joins Rage &amp; Disorder where it belongs, and McFlurry Machine moves to Sentiment (it's a vibe signal, not a disorder one).</p>
+    <h3>More inline content</h3>
+    <ul>
+      <li><b>🎌 Patriot &amp; Notable Days</b> — card now surfaces the next 3 upcoming notable days as inline branches alongside the headline pick. So today doesn't just show "<i>2 days since: St George's Day</i>" — you also see <i>"📅 May Day · T-6d"</i>, <i>"📅 Tony Blair's birthday · T-11d"</i>, <i>"📅 VE Day · T-13d"</i> below it. Dedupes against the headline so nothing duplicates.</li>
+      <li><b>⚽ Firm Factor</b> — bumped inline flashpoints from 2 → <b>4</b>. Same compact rendering, just more fixtures visible at a glance.</li>
+      <li><b>🚗 Road Rage</b> — new inline list. Live RSS-news matches first (any headline matching motorway/M25/M1/M6 etc., crash/pile-up/gridlock keywords) tagged "<b>⚠ live</b>"; then filled out with a rotating UK_ROAD_BACKDROP pool of 15 plausible regional events (M25 J9–J10 contraflow · Snake Pass closure · Dartford Crossing 30-min wait · M62 westbound delays · A55 Conwy Tunnel · etc.) with deterministic per-date picks so the two events stay stable through the day.</li>
+      <li><b>🚇 Transport Chaos</b> — same pattern. Live TfL line statuses surface first when London is selected; then filled out with a rotating UK_TRANSPORT_BACKDROP pool of 15 plausible regional rail events covering the full network: Avanti West Coast delays, ScotRail signal failure, CrossCountry strike, Eurostar queues, GWR Reading signal, Southeastern speed restriction, TPE cancellations, LNER East Coast power problem, Merseyrail engineering closure, Tyne &amp; Wear Metro, Manchester Metrolink, TfW Cardiff Valleys, etc.</li>
+    </ul>
+    <h3>Module moves</h3>
+    <ul>
+      <li><b>🛡️ UK Threat Level</b> moved from <b>Sentiment</b> → <b>Rage &amp; Disorder</b>. Conceptually it belongs there — terrorism threat is a disorder signal, not a vibe one.</li>
+      <li><b>🍦 McFlurry Machine</b> moved from <b>Rage &amp; Disorder</b> → <b>Sentiment</b>. The McFlurry being broken is a national mood signal, not a disorder one. The disappointment is the vibe.</li>
+      <li>New group orderings: <b>Sentiment</b> = royal · telly · news · icecream · <b>Rage &amp; Disorder</b> = crime · threat · checkout · aande.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>signalPatriot now projects every UK_NOTABLE_DAYS entry into both this-year and next-year, sorts ascending, dedupes by name, returns top 3 future events as <code>patriotUpcoming</code>.</li>
+      <li>signalRoadRage extracts the snippet from matching news headlines AND falls through to <code>UK_ROAD_BACKDROP</code> with deterministic <code>(date×11 + month×7) mod len</code> seeding.</li>
+      <li>signalTransportFor adds <code>transportEvents</code> to all return paths (London live, UK aggregate, regional).</li>
+      <li>Three new renderCard branches reusing the standard <code>.branches</code> styling.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.25</div>
+      <div class="release-tag">Spotify hardened · YouTube swapped for Reddit UK worm · Apr 2026</div>
+    </div>
+    <p class="intro">Spotify and YouTube weren't returning data reliably (YouTube via Piped is broken across most public mirrors; Apple Music's RSS occasionally moves). Fixed properly. Spotify now has a robust four-URL fallback chain plus a hardcoded current-chart safety net so the card always shows tracks. YouTube is gone — replaced by a new <b>Reddit UK Trending</b> module pulling from five UK subreddits via the same reliable Reddit JSON we already use elsewhere.</p>
+    <h3>🎧 Spotify — multi-URL fallback chain</h3>
+    <ul>
+      <li>The card now tries <b>four endpoints</b> in order, using whichever returns first: (1) <code>rss.applemarketingtools.com</code> /most-played/ (current); (2) /top-songs/ (older naming); (3) /hot-tracks/ (alt feed type); (4) legacy <code>itunes.apple.com/gb/rss/topsongs</code> (deprecated but sometimes still up).</li>
+      <li>Both response shapes parsed — Apple Marketing Tools (<code>feed.results</code> with <code>name</code>/<code>artistName</code>) AND legacy iTunes RSS (<code>feed.entry</code> with <code>im:name</code>/<code>im:artist</code>).</li>
+      <li><b>Hardcoded chart fallback</b> kicks in when all live feeds are blocked — top 5 recent UK staples (Greedy, Espresso, Stick Season, A Bar Song, Birds of a Feather) so the card always renders something useful. Chip flips to <span class="chip model" style="display:inline-block;vertical-align:middle">Modelled</span> in that case.</li>
+    </ul>
+    <h3>👽 Reddit UK Trending — replaces YouTube</h3>
+    <ul>
+      <li>Piped public instances (kavin.rocks, adminforge.de, smnz.de, r4fo.com, libre) have all been hitting rate-limit / IP-block errors for trending content because YouTube has cracked down on third-party scrapers. The YouTube card was failing silently for most users.</li>
+      <li>Replaced with a <b>Reddit UK Trending</b> module pulling from <b>five UK subreddits</b>: r/unitedkingdom + r/CasualUK + r/AskUK + r/britishproblems + r/london. Uses the same Reddit JSON we already use for Social Media Mania (rock-solid CORS + no auth).</li>
+      <li>Five subs hit in parallel, mod-pinned posts skipped, all merged + ranked by score. Card shows the top 5 as clickable cards (links direct to the Reddit thread), each row tagged with subreddit + upvote score + comment count.</li>
+      <li>Sub-line shows a <b>worm rate</b>: "~X posts/hr" computed from how many posts in the sample were created in the last 6 hours. 2% weight (informational + reflects current UK discourse intensity).</li>
+      <li>Section renamed from "Streaming &amp; YouTube" to "<b>Streaming &amp; Reddit</b>".</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>Removed <code>fetchYouTubeUKTrending()</code> and <code>signalYouTube()</code>. Added <code>fetchRedditUKTrending()</code> + <code>signalRedditTrending()</code>.</li>
+      <li>Bulk fetch list updated. WEIGHTS map gets <code>reddit: 0.02</code> in place of youtube.</li>
+      <li>Methodology table updated with both new descriptions.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.24</div>
+      <div class="release-tag">Calendar extras · Greggs items · Tea brands · Apr 2026</div>
+    </div>
+    <p class="intro">Three small but satisfying additions. Bank Holiday card is no longer a one-line wonder — it now surfaces upcoming sport, cultural, and school events alongside the next BH. Greggs Emergency tells you what's actually trending at the counter. Nation On Kettle calls out which tea brand is dominating the brews right now.</p>
+    <h3>🏖️ Bank Holiday — calendar extras</h3>
+    <ul>
+      <li>Card looked sparse with just one BH line. Added a curated <code>CALENDAR_EXTRAS</code> table — <b>27 non-bank-holiday UK calendar moments</b> across 2026-2027: school half-terms + summer break, Wimbledon fortnight, Glastonbury, Royal Ascot, FA Cup Final, Eurovision Final, Mother's/Father's Day, Pancake Day, Trooping the Colour, Diwali, Black Friday, Halloween, Bonfire Night, Christmas Eve, Mariah Day (last Sunday before Christmas — the meme is real).</li>
+      <li>Card now shows the <b>next bank holiday + top 3 upcoming non-bank moments</b> as inline branches. Each tagged with its emoji + T-N days countdown (or "today" highlighted hot).</li>
+      <li>Distinct from the <b>Patriot &amp; Notable Days</b> module added in v0.21 — that one covers political/royal/comedy birthdays (Boris, Truss, Savile-on-Halloween). This one covers the cultural/sporting/seasonal calendar.</li>
+    </ul>
+    <h3>🌭 Greggs Emergency — top 3 trending items</h3>
+    <ul>
+      <li>Modelled <code>GREGGS_ITEMS</code> pool of 13 items, each with slot-weights for breakfast (06-11) / lunch (11-15) / afternoon (15-18) / evening: Sausage Roll · Vegan Sausage Roll · Bacon Roll · Steak Bake · Chicken Bake · Cheese &amp; Onion Bake · Pizza Slice · Yum Yum · Iced Ring Doughnut · Sausage Bean &amp; Cheese Melt · Coffee · Festive Bake (winter only) · Mince Pie (December only).</li>
+      <li>Top 3 ranked by current slot weight × small daily-jitter (so Tuesday lunchtime doesn't look identical to Wednesday lunchtime). Card now reads e.g. <i>"95% demand · pasty queues visible from space"</i> with an inline list: <b>🌭 Sausage Roll 96% · 🥩 Steak Bake 89% · 🍗 Chicken Bake 84%</b>.</li>
+    </ul>
+    <h3>🫖 Nation On Kettle — top 3 tea brands</h3>
+    <ul>
+      <li>Modelled <code>UK_TEA_BRANDS</code> using <b>real Kantar/Statista 2024 retail market share</b>: PG Tips ~22%, Yorkshire Tea ~18%, Tetley ~14%, Twinings ~12%, Typhoo ~7%, plus Clipper and the supermarket own-brands (Sainsbury's Red Label, Tesco, Asda Smart Price).</li>
+      <li>Each brand has slot modifiers — PG/Yorkshire dominate breakfast and after-work, Twinings/Clipper skew evening (Earl Grey + herbal), Typhoo holds the working-class afternoon. Card now shows top 3 with normalised % (so they sum visibly to 100%) right under the existing live grid GW spike line.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>No new fetchers — these are modelled additions to existing live signals.</li>
+      <li>Three new renderCard list branches (<code>calendarMoments</code>, <code>greggsItems</code>, <code>teaBrands</code>) reusing the standard <code>.branches</code> styling.</li>
+      <li>Methodology table updated for all three modules.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.23</div>
+      <div class="release-tag">New Streaming &amp; YouTube strip · Apr 2026</div>
+    </div>
+    <p class="intro">New section under the dashboard: <b>Streaming &amp; YouTube</b>. Two card-wide modules sitting side-by-side filling the row — one for the live UK music chart (real Apple Music data as a Spotify proxy), one for live YouTube UK trending video list (via the open-source Piped API). Both fully clickable.</p>
+    <h3>🎧 Spotify UK Top Tracks</h3>
+    <ul>
+      <li>Spotify's official UK Top 50 endpoint requires OAuth and can't run client-side, so we use <b>Apple Music's free marketing RSS</b> as a proxy: <code>rss.applemarketingtools.com/api/v2/gb/music/most-played/10/songs.json</code>. Apple's "Most Played GB" feed is <i>highly correlated</i> with overall UK streaming and updates daily.</li>
+      <li>CORS-enabled, no auth, free. Card shows the current <b>#1 track + artist</b> as the value, with the full top 5 listed below as clickable cards (links open the track's Apple Music page).</li>
+      <li>1-hour client-side cache to avoid hammering the endpoint.</li>
+    </ul>
+    <h3>▶ YouTube UK Trending</h3>
+    <ul>
+      <li>YouTube's official Data API needs an API key and isn't browser-friendly, so we use <b>Piped</b> — an open-source privacy front-end for YouTube. Endpoint: <code>/trending?region=GB</code>. CORS-enabled, no auth.</li>
+      <li><b>Multi-instance fallback chain</b> — public Piped mirrors come and go, so we try kavin.rocks, adminforge.de, smnz.de, r4fo.com, and pipedapi-libre in order, using the first one that returns data.</li>
+      <li>Card shows the current #1 trending video (truncated to fit), with the full top 5 listed below — each row is a clickable link to the actual YouTube watch page, with uploader name + view count formatted as 1.2M / 340k / etc.</li>
+      <li>30-min client-side cache.</li>
+    </ul>
+    <h3>Layout</h3>
+    <ul>
+      <li>Both cards are <b>card-wide</b> (each spans 2 columns of the 4-column signals grid). Together they fill one full row, sitting right after Street &amp; Chatter.</li>
+      <li>1% weight each — informational signals, not heavy contributors to the kick-off index. Score sits flat at 0.30 when live (i.e. a small but consistent contribution that the dashboard "knows what's culturally on right now"), drops to 0.20 when the chart fetch is blocked.</li>
+      <li>Methodology table updated with the full source detail for both.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.22</div>
+      <div class="release-tag">England multi-sport · London Crime live · Apr 2026</div>
+    </div>
+    <p class="intro">Two big additions. England On Tour is no longer football-only — cricket and rugby fixtures and tournaments are now first-class. And there's a brand-new module wired to <b>real Met Police crime data</b> via the open data.police.uk API, computing per-minute phone-snatch and violent-crime rates for Central London with a time-of-day amplifier.</p>
+    <h3>🏴 England On Tour — now multi-sport</h3>
+    <ul>
+      <li><b>UK_TOURNAMENTS expanded from 6 → 16 entries</b> covering football <i>plus cricket plus rugby</i> through 2026-2028: T20 World Cup 2026, Six Nations 2026/27/28, England Cricket Test summers, FIFA World Cup 2026, Premiership Rugby Final, The Hundred, Autumn Nations Series, Rugby World Cup 2027, Cricket World Cup 2027, Euro 2028, The Ashes 2028/29. Each tagged with sport icon (⚽🏉🏏) and tournament weight.</li>
+      <li><b>New <code>fetchEnglandSports()</code></b> pulls live cricket + rugby fixtures from TheSportsDB league IDs (Six Nations 4446, Premiership Rugby, URC, Champions Cup, Rugby World Cup; cricket Tests, T20, ODI, IPL, The Hundred). Filters to home-nation teams (England · Scotland · Wales · NI · Republic of Ireland) within a ±24/60h window. Deduped on idEvent.</li>
+      <li><b>Card now shows up to 3 events inline</b> — today's matches first (with sport icons + KO time), or top 3 upcoming tournaments when calendar is quiet. Headline reads "MATCHDAY ⚽🏉" when home nation is playing across multiple sports.</li>
+      <li>"Next: FIFA World Cup 2026 (in 46 days)" is no longer the lonely fallback line — now joined by Premiership Rugby Final, The Hundred, Autumn Internationals, and the rest of the calendar.</li>
+    </ul>
+    <h3>🔪 New module — London Phone Snatch &amp; Knife (LIVE Met Police data)</h3>
+    <ul>
+      <li><b>Real data from <code>data.police.uk</code></b>. Open API, no auth, CORS-friendly. <code>fetchLondonCrime()</code> hits <code>/api/crimes-street/all-crime?poly=...&amp;date=YYYY-MM</code> for a Central London polygon (Zone 1: Camden / City / Westminster / Southwark) and the most recent published month. data.police.uk publishes ~6 weeks behind, so we cycle months back-1 through back-4 and use the first that returns data.</li>
+      <li><b>Categorisation</b>: <code>theft-from-the-person + robbery</code> → "phone snatch" rate (95%+ of central-London theft-from-person is phone snatching), <code>violent-crime</code> → knife/violent rate. Converts the monthly count into <b>per-minute rates</b> (days-in-month × 1440 mins).</li>
+      <li><b>Time-of-day amplifier</b> on top: weekend night 22:00+ ×2.30 (peak), weekend evening ×1.85, post-pub Sat/Sun morning ×2.10, weekday evening ×1.50, daytime ×1.20, dawn ×0.40. So the live number reflects actual current pressure, not a flat monthly average.</li>
+      <li>Card value: "<i>0.14 phones/min · 0.09 violent/min</i>" with sub-line "<i>weekend-night peak · phone every 7s · violent every 11s · Met data 2026-02 (8,420 total crimes)</i>".</li>
+      <li><b>Placement</b>: first in the <b>Rage &amp; Disorder</b> section (per request). 3% weight.</li>
+      <li>Falls back to modelled MOPAC averages (London-wide ~50,000 phone thefts/year ≈ 0.10/min) when the police.uk fetch is blocked.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>Two new fetchers added to the bulk Promise.all (now 15 parallel calls). Both have try/catch + withTimeout + 6h client-side cache for the police data.</li>
+      <li>WEIGHTS gets <code>crime: 0.03</code>. SIGNAL_GROUPS gets crime as the first card in Rage &amp; Disorder.</li>
+      <li>Methodology table updated for both modules with full source detail.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.21.1</div>
+      <div class="release-tag">Hotfix: dashboard wasn't rendering · Apr 2026</div>
+    </div>
+    <p class="intro">Latent bug surfaced after v0.21 added more concurrent fetchers (NHS Pressure, UK Threat, Grid Demand, Reddit). With 13 parallel API calls competing, any one of them failing meant the corresponding entry in the bulk object was <code>null</code>. The downstream <code>aggregateIndex()</code> function iterated <code>Object.values(signals)</code> and read <code>s.score</code> — which threw <i>"Cannot read properties of null (reading 'score')"</i> the moment the news fetch (the only one that gets passed straight through) returned null. That one throw broke <code>renderAll()</code>, which meant the gauge never updated, no cards rendered, and the loading sweep stayed spinning.</p>
+    <h3>Fix</h3>
+    <ul>
+      <li>Added a <code>if (!s) continue</code> guard inside <code>aggregateIndex()</code> before reading <code>.score</code> / <code>.key</code>. Null signals are now skipped cleanly instead of throwing — they just contribute zero to the index, which is the correct fallback.</li>
+      <li>Verified by sandboxed-node simulation: <code>renderAll(bulk)</code> now completes with every API returning null. Index drops to a baseline (only the modelled signals contribute) but the dashboard renders. Once any live API resolves, its contribution lands and the chip flips to Live as expected.</li>
+      <li>No other changes — this is purely a defensive hotfix against the v0.21 fetch-fan-out.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.21</div>
+      <div class="release-tag">M&amp;D reshuffle · A&amp;E now reactive · Patriot Days · Apr 2026</div>
+    </div>
+    <p class="intro">Three jobs. Mobility &amp; Delivery is now a proper four-card block (transport + road rage joined Uber + delivery). A&amp;E Pressure is no longer stuck on "Manchester MRI pile-up post-derby" — the narrative now reacts to live weather, news mentions, calendar pressure, and time-of-day. And there's a brand-new Patriot &amp; Notable Days module catching everything from St George's Day to Bonfire Night to the genuinely cursed Halloween + Jimmy Savile birthday coincidence.</p>
+    <h3>Mobility &amp; Delivery — now a proper section</h3>
+    <ul>
+      <li>🚆 <b>Transport Chaos</b> moved out of "Calendar &amp; Sport" into Mobility &amp; Delivery.</li>
+      <li>🚗 <b>Road Rage</b> moved out of "Rage &amp; Disorder" into Mobility &amp; Delivery.</li>
+      <li>The block now reads as one coherent strip: <b>Transport · Road Rage · Uber Surge · Delivery Apps Demand</b>. The dashboard tells a clearer story now — everything that's about getting around or having things brought to you sits in one place.</li>
+    </ul>
+    <h3>🚑 A&amp;E Pressure — driven by live signals, no more static rotation</h3>
+    <ul>
+      <li><b>Headline is now dynamically generated</b> from current context, not picked from a fixed array. The "Manchester MRI pile-up post-derby" line is gone — replaced by an intelligent narrative generator that prioritises drivers in this order: severe weather → time-of-day/day-of-week → calendar pressure → news cycle → seasonal default.</li>
+      <li><b>Live weather amplifiers</b> from Open-Meteo (already in the dashboard): cold snap &lt;3°C → "elderly falls + hypothermia admissions climbing" + score amp +0.08 to +0.18; heatwave &gt;28°C → "heatstroke + dehydration filling beds" + amp +0.08 to +0.15; heavy rain &gt;6mm/h → "RTC spike on motorways · motorbike calls multiplying" + amp +0.10; snow proxy (cold + precip) triggers a triple-slip line.</li>
+      <li><b>News-mention amplifier</b> — counts headlines from the live RSS feed mentioning NHS/A&amp;E/ambulance/paramedic/hospital/winter-pressure/bed-block/junior-doctor (+0.025 each, capped at +0.10). When NHS hits the news cycle, the card surfaces "<i>NHS top of the news · winter-pressures coverage feeding public concern</i>".</li>
+      <li><b>Bank-holiday amplifier</b> — when the live gov.uk bank-holidays feed shows we're in a BH window, score gets +0.05 (electives off + A&amp;E saturation up).</li>
+      <li><b>Estimated 4-hour wait performance %</b> shown in sub-line — modelled by season (winter floor 65%, summer floor 78%, target 95%) and inversely scaled with current saturation. Tries to upgrade to LIVE via gov.uk content API + Wikipedia parse of "NHS England" article — falls back to modelled when blocked.</li>
+    </ul>
+    <h3>🎌 New module — Patriot &amp; Notable Days</h3>
+    <ul>
+      <li><b>32-entry curated UK calendar</b>: patron-saint days (St George 23 Apr · St David 1 Mar · St Andrew 30 Nov · St Patrick 17 Mar), war-remembrance (VE Day 8 May · Remembrance Day 11 Nov · Bonfire Night 5 Nov), royal milestones (Queen Elizabeth II birthday 21 Apr + death anniversary 8 Sep · Diana birthday 1 Jul + death anniversary 31 Aug), political anniversaries (Brexit Day 31 Jan · Thatcher death 8 Apr), seasonal beats (May Day · Burns Night · Glorious Twelfth · Summer Solstice).</li>
+      <li><b>Notable-figure birthdays — the genuinely silly ones included.</b> Boris Johnson (19 Jun · Partygate redux · Wine Time Friday), Liz Truss (26 Jul · the lettuce remembers · political comedy peaks), Nigel Farage (3 Apr · a pint and a smug face), Tony Blair (6 May · Iraq think-pieces resurface), Piers Morgan, Russell Brand, Prince Andrew, Margaret Thatcher's birthday, plus the truly cursed <b>Halloween + Jimmy Savile birthday</b> coincidence on 31 Oct (genuinely the most cursed coincidence in the calendar).</li>
+      <li><b>Smart fall-forward.</b> When the calendar's quiet, the module finds the nearest notable day within ±10 days and shows e.g. "<i>tomorrow: St George's Day · England on tour · flags everywhere</i>" or "<i>2 days since: St George's Day · the comedown</i>". Score scales with proximity (10% dampener per day from the actual date).</li>
+      <li>Sits in the <b>Calendar &amp; Sport</b> group, alongside Bank Holiday Proximity and the football modules. 3% weight — modest, but it amplifies the other Calendar signals when the date stacks (e.g. if Bonfire Night falls on a Saturday the cumulative pressure is real).</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.20</div>
+      <div class="release-tag">Real fixtures · Mobility &amp; Delivery worms · Live grid kettle · Apr 2026</div>
+    </div>
+    <p class="intro">v0.19 broadened the leagues but Firm Factor was still falling back to the rotating Millwall-on-manoeuvres line because TheSportsDB's <code>eventsday.php</code> returns empty for many league/date combinations. Fixed properly. Plus a brand-new Mobility &amp; Delivery strip with two real-data-modelled cards and live UK grid demand wired into the Kettle module.</p>
+    <h3>Firm Factor — actually live now</h3>
+    <ul>
+      <li><b>Switched data source</b> — replaced <code>eventsday.php</code> queries with <code>eventsnextleague.php</code> + <code>eventslastleague.php</code> per stable league ID (4328 EPL, 4329 Championship, 4396 EFL L1, 4397 EFL L2, 4330 Scottish Premiership, 4480 UCL, 4481 UEL, 5071 UECL). These endpoints are reliable and always populated. Results filtered to a ±36/60-hour window around now.</li>
+      <li><b>No more Millwall loop.</b> When fixtures exist but no firm flashpoint matches, the headline now shows the actual fixture (e.g. "<i>Bournemouth on the pitch · Bournemouth v Brighton · 4 fixtures on</i>") instead of a rotating fallback line that made it look modelled.</li>
+      <li><b>Card no longer wide</b> — reverted to the standard width to fix the grid-design shift, with up to 2 compact flashpoint rows inside each card.</li>
+      <li>Added <code>_parseFixtureTs()</code> helper using <code>strTimestamp</code> when available, falling back to <code>dateEvent + strTime</code>, so the time-window filter works correctly across timezone edge cases.</li>
+    </ul>
+    <h3>New module strip — Mobility &amp; Delivery</h3>
+    <ul>
+      <li><b>🚗 Uber Surge &amp; Demand</b> — current surge multiplier (1.0–2.6×), drivers online estimate, £/mile, plus a 24-hour demand sparkline ("worm"). Modelled on published UK Uber figures (~70k drivers, ~6M monthly users, ~8M trips/month, avg fare £8.50). Hour-of-day curve with weekday rush amplifiers, Fri/Sat post-bar spike, Sunday airport rush, and live-weather rain amplifier (+0.18 any rain, +0.10 more for heavy).</li>
+      <li><b>🛵 Delivery Apps Demand</b> — combined Uber Eats + Deliveroo + Just Eat orders/min UK-wide, riders-out estimate, plus a 24-hour demand sparkline. Grounded in published volumes (Uber Eats UK ~30M monthly orders, Just Eat ~280M annual UK orders, ~combined 1.4–1.8M daily UK orders, peak hour ~150–200k). Lunch + dinner peaks, weekend-evening bump, Sunday-roast-at-home spike, rain amplifier.</li>
+      <li>New <code>_renderSparkline()</code> SVG helper draws a tight 220×38 area-fill worm with end-point dot. Used by both new cards and reusable for any future signal that wants a 24-hour shape.</li>
+      <li>Both modules added at 2% weight each. Live-data caveat: Uber and the delivery majors don't publish live driver/order counts to the public, so these are <i>modelled</i> on industry-published numbers — chip flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> the moment any of them open a real-time API. Mentioned that path in the methodology table.</li>
+    </ul>
+    <h3>Nation On Kettle — now LIVE via UK grid demand</h3>
+    <ul>
+      <li>New <code>fetchUKGridDemand()</code> tries authoritative real-time sources in order: (1) <b>Elexon BMRS</b> outturn API (<code>data.elexon.co.uk/bmrs/api/v1/demand/outturn</code>) — half-hourly INDO settlement readings; (2) <b>National Grid ESO CKAN</b> (<code>api.nationalgrideso.com</code>) — Demand Data Update resource; (3) modelled fallback.</li>
+      <li>The classic UK physics: ~5–10 million kettles going on at half-time of a popular show shows up as a measurable demand spike (this is literally what the National Grid <i>TV pickup desk</i> exists for). We compare current GW against an hour-of-week baseline curve and amplify the kettle score: <b>+1.0 GW above baseline → +0.15</b>, +0.4 → +0.08, &gt;0 → +0.03. Big negative delta (everyone's out) dampens it slightly.</li>
+      <li>Card sub-line now reads e.g. "<i>millions reaching for the kettle · grid spike: 38.4 GW (+1.6 GW vs hourly baseline) · likely kettle/TV pickup</i>" when the spike fires. Chip flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span>.</li>
+      <li>Added <code>UK_DEMAND_BASELINE_GW</code> (24-hour canonical curve, 24 GW overnight low → 42 GW evening peak) plus a <code>_expectedGridGW()</code> helper that applies weekend dampening and a summer multiplier.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>WEIGHTS map updated — added uber:0.02 and delivery:0.02. SIGNAL_GROUPS gets a new "Mobility &amp; Delivery" section with its own divider on the dashboard.</li>
+      <li>Methodology table updated with full source detail for all three modules.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.19</div>
+      <div class="release-tag">Firm Factor properly armed · UK Threat now LIVE · Apr 2026</div>
+    </div>
+    <p class="intro">Two modules levelled up. Firm Factor is now actually doing the job — full English pyramid plus Scotland plus all three European competitions, with a dedicated map of European ultras for travelling-fan flashpoints. UK Threat Level no longer needs a code change to update.</p>
+    <h3>What's new — Firm Factor (⚽)</h3>
+    <ul>
+      <li><b>Eight leagues, two-day rolling window.</b> Up from four. Now pulling Premier League, Championship, League One, League Two, Scottish Premiership, UEFA Champions League, Europa League, and the Conference League — across today + tomorrow, so a Sunday-morning Wales/Scotland fixture catalogued under tomorrow's date still surfaces today. 16 league/date queries deduped on idEvent.</li>
+      <li><b>European Ultras map (50+ clubs).</b> New <code>EUROPEAN_FIRM_CLUBS</code> reputation list covering the actual UEFA-flagged travelling sets: Galatasaray UltrAslan, Beşiktaş Çarşı, Fenerbahçe GFB, Marseille South Winners, Roma Curva Sud, Lazio Irriducibili, Feyenoord Vak S, Eintracht Frankfurt Ultras, Hamburg Chosen Few, Red Star Delije, Partizan Grobari, Legia Legionisci, Lech Poznań, PAOK Gate 4, Olympiacos Gate 7, Panathinaikos Gate 13, Spartak Fratria, Hajduk Torcida, Dinamo Zagreb BBB, plus more.</li>
+      <li><b>Travelling-ultras detector.</b> When a notorious European club (rep ≥ 0.65) is the AWAY side at a UK ground, the fixture gets a <b>+0.20 amplifier</b> and the headline reads e.g. "<b>⚠ Galatasaray away at Old Trafford · travelling ultras · UK ground hosting · police priority</b>". The reverse direction (UK club travelling to a notorious European ground) gets a smaller +0.05 nudge.</li>
+      <li><b>Police-mandated kickoff-time signal.</b> Saturday/Sunday 12:30–13:30 KO is itself a high-risk flag (police usually request the early slot for fixtures they're worried about). Adds +0.08 to score and the card shows "KO 12:30 ⚠". Late midweek UEFA (20:00+) gets +0.05.</li>
+      <li><b>Card now wide</b> with up to 3 flashpoint fixtures listed inline — each row shows match, kickoff time, competition, and a tag like 🥊 <i>derby name</i> / ✈ <i>club</i> away / 🌍 <i>foreign firm</i> / ⚽ <i>UK firm</i>.</li>
+      <li>Each side is now looked up independently so we know whether the firm is travelling (away) or at home — which materially changes the policing/disorder picture and is reflected in the headline.</li>
+    </ul>
+    <h3>What's new — UK Threat Level (🛡️)</h3>
+    <ul>
+      <li><b>No longer hardcoded.</b> New <code>fetchUKThreatLevel()</code> tries authoritative sources in priority order: (1) <b>gov.uk content API</b> — <code>api.gov.uk/content/terrorism-and-national-emergencies/terrorism-threat-levels</code> (official JSON, supports CORS, includes a <code>public_updated_at</code> date), then (2) <b>Wikipedia MediaWiki API</b> parse of the <i>UK Threat Levels</i> article — scans for "current threat level" prose, falls back to the most recent row of the historical wikitable, then (3) Modelled SUBSTANTIAL fallback.</li>
+      <li>Card chip flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> when either source resolves. Sub-line shows source + as-of date e.g. "an attack is likely · per JTAC / MI5 · source: gov.uk · as of 2024-09-14".</li>
+      <li>Score mapping unchanged: LOW 0.10 · MODERATE 0.20 · SUBSTANTIAL 0.40 · SEVERE 0.65 · CRITICAL 0.95.</li>
+    </ul>
+    <h3>Plumbing</h3>
+    <ul>
+      <li>Methodology table updated for both modules with the full source description.</li>
+      <li>Added <code>_firmLookup()</code> helper that does a single name resolve across both UK and European maps and returns the best hit + foreign flag.</li>
+      <li>Added <code>_kickoffRiskAmp()</code> helper for the kickoff-time signal.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.18</div>
+      <div class="release-tag">Social Media reworked + polling now scores · Apr 2026</div>
+    </div>
+    <p class="intro">Three good asks from the post-v0.17 review. Social Media Mania was incorrectly reading "asleep" all day; the volume figure had a hand-wave behind it; and the two polling modules were carrying "display" in the methodology table because they didn't actually feed the index. All three fixed.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>📱 Social Media Mania — broadened to all 24 hours</b>. The pool of behaviours used to be 10 entries all clustered between 22:00–03:00, which is why daytime always read "asleep". The new pool has <b>20 UK posting/messaging behaviours</b> spread across the full day — morning train-delay rage tweets, school-gate WhatsApp drama, lunchtime hot takes, Slack rants from the café, Tesco self-checkout meltdowns, evening doomscroll, drunk DMs, voice notes longer than a song. Each behaviour now has an explicit <code>peakHour</code> + <code>span</code>, and the cross-midnight wrap maths is fixed.</li>
+      <li><b>Real volume figures with citations.</b> The "124M msgs/hour" headline used to come from a hand-tuned curve. Now it's grounded in published UK figures: Ofcom 2024 (~93% of UK adults use messaging apps daily) + WhatsApp/SMS combined volumes (~1.8–2.2 billion msgs/day UK-wide → ~75M/hour daily average, ~135M/hour Fri/Sat 21–23 peak). Citation in the methodology table.</li>
+      <li><b>Live data overlay on Social Media.</b> Added <code>fetchRedditUKActivity()</code> which pulls the most recent comments from <b>r/unitedkingdom/comments.json</b>, measures comments-per-minute across the sample, and folds it into the card. When it succeeds, the chip flips from <span class="chip model" style="display:inline-block;vertical-align:middle">Modelled</span> to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> and the value reads e.g. "<b>110M msgs/hr · 18/min on r/UK</b>". Falls back gracefully when CORS blocks.</li>
+      <li><b>Headline copy is time-aware.</b> No more "phones largely silent" at 2pm. Daytime headlines now read e.g. "afternoon hot takes · the discourse continues", "post-work venting · group chats lit up". The "drunk-text territory · ex's getting voicemails" line is now properly gated to weekend late hours only.</li>
+      <li><b>🗳️ Westminster Voting Intention now scores (1%).</b> Used to read "display" in the methodology Weight column. Now contributes via a <b>polarisation score</b>: knife-edge race (gap &lt; 2pts) → 0.90; runaway lead → 0.28. Tighter race = more pub argument fuel = higher kick-off contribution.</li>
+      <li><b>👔 Party Leader Approval (Pint Test) now scores (1%).</b> Same fix. Score driven by how few leaders sit in net-positive territory — fewer liked leaders = fiercer pub debate. With nobody in net-positive, contribution maxes at 0.95.</li>
+      <li><b>Weight rebalance.</b> Time-of-day shaved 13% → 12%, News tension shaved 8% → 7% to make room for the two new 1% slots. Aggregate weight envelope stays the same.</li>
+      <li><b>Top nav cleanup</b> — removed the <s>💬 Discord</s> button across all 4 pages. The Discord wasn't getting traffic and the link in the Shop "pitch a design" copy now just lives as plain text until we have a real community channel to point at.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.16</div>
+      <div class="release-tag">Nav cleanup + mobile burger menu · Apr 2026</div>
+    </div>
+    <p class="intro">The 6-button top nav was overflowing into a horizontal scrollbar inside the rounded frame on the narrower Snapshot and News pages — looked like "a frame within itself". Fixed.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>Nav now wraps cleanly</b> — switched <code>overflow-x:auto</code> for <code>flex-wrap:wrap</code>. On widths where 6 buttons don't fit, they wrap to a second row instead of showing a scrollbar inside the nav frame.</li>
+      <li><b>Mobile burger menu</b> — below 640px the nav collapses to a single "☰ Menu" button. Tap to expand, all 6 links list vertically with proper touch targets. Burger icon rotates 90° when open. ARIA-expanded toggled correctly.</li>
+      <li><b>Active-page indicator on mobile</b> — the active link gets an orange border on mobile so it's still obvious which page you're on once expanded.</li>
+      <li>Applied across all 4 pages (Dashboard, Snapshot, News, Shop) with the same CSS + JS pattern.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.15</div>
+      <div class="release-tag">Nav clarity · Apr 2026</div>
+    </div>
+    <p class="intro">Tiny but useful: the donation link in the top nav now says <b>"Buy Me a Coffee"</b> in full, making the donation context obvious. Just <i>"Coffee"</i> alone was ambiguous.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li>Renamed top-nav link <b>☕ Coffee → 🍵 Buy us a brew</b> across all 4 pages (Dashboard, Snapshot, News, Shop)</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.14</div>
+      <div class="release-tag">Shop polish · t-shirts redesigned · Apr 2026</div>
+    </div>
+    <p class="intro">Quick polish pass on the Shop page. T-shirt graphics redrawn with text rendered properly inside the shirt body, plus 2 more designs added for a clean 8-tee grid.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>T-shirt SVG mockups rebuilt</b> — design text now renders as proper SVG <code>&lt;text&gt;</code> elements positioned within the t-shirt body, not as overlay divs floating outside the shape. Each tee now actually looks like a printed garment.</li>
+      <li><b>8 t-shirts (was 6)</b> — added <b>Getting Lippy Tee</b> (Tier 03 · yellow) and <b>It's Kicking Off Tee</b> (Tier 06 · red) for fuller tier coverage. Grid fills cleanly as 2 rows × 4 columns on desktop, no empty cells.</li>
+      <li><b>Improved t-shirt outline path</b> — proper neckline curve, more realistic sleeve shape, consistent across all 8 designs.</li>
+      <li><b>Per-tier subtitle convention</b> — each tier tee now has a small mono "TIER NN · DESCRIPTOR" line beneath the main copy.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.13</div>
+      <div class="release-tag">Nav expansion + Shop · Apr 2026</div>
+    </div>
+    <p class="intro">Site grew from 3 pages to 4, plus external community/support links. Polling moved up to sit closer to the trend chart. Newsletter signup added.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>Top nav expanded</b> — added <b>🍵 Buy us a brew</b> (Buy Me A Coffee), <b>💬 Discord</b>, and <b>🛍️ Shop</b> after the existing internal pages</li>
+      <li><b>🛍️ Shop page</b> launched — t-shirt range built around the gauge design + joke survival kits (Stella keg ration packs, McFlurry memorial hoodie, kettle-themed mugs, threat-tier pin sets, "Don't Reply To Your Ex" stickers, etc.)</li>
+      <li><b>Polling reorder</b> — Westminster Voting Intention and Party Leader Approval moved up to sit between the Kick-Off Trend chart and the UK Heat Map. Better narrative flow: see the index trending → understand what's polling → see geographic spread</li>
+      <li><b>📬 Newsletter signup</b> on this page — captures email locally for now (sessionStorage) until a proper email service is wired up</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.12</div>
+      <div class="release-tag">Loading sweep + Stella recalibration · Apr 2026</div>
+    </div>
+    <p class="intro">Polish pass. Stella numbers were too conservative — bumped to feel right on a sunny Saturday afternoon. Plus a satisfying loading animation on the gauge.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>Stella ticker recalibrated</b> — base rate bumped 20k → 45k pints/hour, afternoon hour-multiplier nudged up (13:00–16:00 was 1.2, now 1.4 reflecting beer-garden territory). Sat 4pm at 22°C now hits ~50 pints/sec instead of ~21.</li>
+      <li><b>Sunshine bonus widened</b> — temperature multiplier now goes 1.45× at 26°C+, 1.30× at 22°C+, 1.15× at 18°C+ (was a flat 1.10/1.25 cliff). A proper UK heatwave actually shows in the numbers now.</li>
+      <li><b>Loading-sweep animation</b> — when the page first loads, before the data resolves, the gauge needle, arc fill and index number now sweep up and down the 0–100 scale via a sine oscillation. Stops the moment the first real reading lands. Makes the "Analysing the nation…" state feel alive instead of frozen.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.11</div>
+      <div class="release-tag">Worms chart + signal-group dividers · Apr 2026</div>
+    </div>
+    <p class="intro">Trend chart redesigned again — now a multi-line "worms" view tracking the index alongside its key signals. Plus subtle thematic dividers in the signal grid for legibility, and a small SVG-text fix.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>Multi-line trend chart</b> — main thick orange line is the Kick-Off Index, with 4 thinner overlay lines tracking ⚽ Football (green), 🍺 Spoons (blue), 📰 News (red), 🌤️ Weather (teal). All on the same 0–100 axis. You can now see <i>which</i> signals are driving the index up or down.</li>
+      <li><b>Signal-group dividers</b> — small orange-bullet headers spanning the full grid width, breaking the 23 modules into named clusters: Atmosphere &amp; Time · Consumption · Calendar &amp; Sport · Daily Pulse · Sentiment · Rage &amp; Disorder · Street &amp; Chatter. No empty cells; grid stays perfect.</li>
+      <li><b>Trend axis font fix</b> — switched off <code>preserveAspectRatio="none"</code> on the SVG (which was stretching text horizontally on wide screens). Axis labels now use the system sans-serif font matching the rest of the UI.</li>
+      <li>Today's score on the main line gets a hollow orange-bordered dot; peak day gets a small white triangle marker.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.10</div>
+      <div class="release-tag">Multi-page expansion · Apr 2026</div>
+    </div>
+    <p class="intro">Three-page site. Dashboard remains the main view; new Snapshot page generates a narrative summary of the current moment; News page (this one) tracks model + module changes.</p>
+    <h3>What's new</h3>
+    <ul>
+      <li><b>Top navigation</b> linking Dashboard / Snapshot / News across all pages</li>
+      <li><b>📸 Snapshot page</b> — interpretive view of the current gauge state with a generated story, ranked signal table, and contextual advice</li>
+      <li><b>📰 News page</b> — version history (you're reading it)</li>
+      <li>Dashboard now persists its latest reading to <code>sessionStorage</code> so the Snapshot page can read it</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.9</div>
+      <div class="release-tag">Trend redesign + 2nd ad slot</div>
+    </div>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>Bar-chart trend</b> replaced the sparkline. Each bar coloured by its tier, today's bar gets a white outline + score label, peak day marked with a small triangle</li>
+      <li><b>Range selector</b> — switch between 7D / 30D / 90D / 1Y. Stats line above shows Avg, Peak (with date), Today</li>
+      <li><b>Tier legend</b> beneath the chart shows every threat colour</li>
+      <li>Second ad placeholder above the trend section</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.8</div>
+      <div class="release-tag">Wides + new modules</div>
+    </div>
+    <h3>New modules</h3>
+    <ul>
+      <li><b>📱 Social Media Mania</b> — late-night drunk-posting tracker with rotating behaviour list (WhatsApp rants, ex DMs, cryptic tweets, drunk-dialling). Wide module.</li>
+      <li><b>🍦 McFlurry Machine</b> — McDonald's UK ice cream / milkshake machine status. Always-broken meme module with rotating quips ("no McFlurry tonight, sorry", "engineer 'on the way' since Tuesday")</li>
+    </ul>
+    <h3>Layout</h3>
+    <ul>
+      <li><b>🪧 London Marches</b> went wide so the live GDELT article list has room to breathe</li>
+      <li>Grid expanded to 7 rows × 4 columns (28 visual slots, 23 modules)</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.7</div>
+      <div class="release-tag">Live data wiring</div>
+    </div>
+    <h3>Real data sources hooked up</h3>
+    <ul>
+      <li><b>🪧 London Marches</b> now fetches live UK protest articles from <b>GDELT Project Doc 2.0 API</b> — top headlines clickable as links</li>
+      <li><b>⛽ Petrol Pump Rage</b> pulls live UK pump prices via the <b>CMA Pump Watch</b> open-data scheme (Asda / Morrisons / Tesco / Sainsbury's daily JSON, averaged across stations)</li>
+      <li><b>🍺 Stella + 🥙 Kebab + 🐟 Cocaine + 🌿 Rizla</b> live-ticker section — UK consumption indicators, tickers update once per second with Poisson jitter</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.6</div>
+      <div class="release-tag">Polling + heat map</div>
+    </div>
+    <h3>What's new</h3>
+    <ul>
+      <li><b>UK Heat Map</b> — 12-region grid cartogram (ITL1 regions). Each tile coloured by its score, click to filter. Hot list on the right ranks regions.</li>
+      <li><b>🗳️ Westminster Voting Intention</b> — horizontal bar chart of UK parties with change arrows</li>
+      <li><b>👔 Party Leader Approval</b> — diverging net-favourability bar chart with the British "pint test" framing</li>
+      <li><b>Region filter</b> — pill bar / native dropdown (always shown) with flag emojis per region</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.5</div>
+      <div class="release-tag">Firm Factor + signal expansion</div>
+    </div>
+    <h3>Football refactor</h3>
+    <p>Football module rebuilt as <b>Firm Factor</b> — scoring based on historical hooligan-firm reputation (Millwall, West Ham ICF, Leeds Service Crew, Cardiff Soul Crew, etc.) and classic flashpoint derbies (Old Firm, Millwall v West Ham, Leeds v Man Utd, etc.).</p>
+    <h3>New modules</h3>
+    <ul>
+      <li><b>🪧 London Marches</b>, <b>🛡️ UK Threat Level</b>, <b>🚑 A&E Pressure</b>, <b>🌭 Greggs Emergency</b>, <b>📺 Telly Drama</b>, <b>🛒 Checkout Rage</b>, <b>👑 Royal Drama</b>, <b>🫖 Nation On Kettle</b>, <b>🌕 Lunacy Factor</b></li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.4</div>
+      <div class="release-tag">Search Panic + tickers</div>
+    </div>
+    <ul>
+      <li><b>🔍 Search Panic Index</b> — ~35 curated British panic-search queries surfaced based on current conditions (e.g. "stella 20 pack" on Saturday night, "what did I say last night" on Sunday morning)</li>
+      <li><b>🍺 Stella Artois Index</b> + <b>🥙 Kebab &amp; Fast-Food Index</b> live tickers — running totals tick up live with Poisson jitter</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.3</div>
+      <div class="release-tag">Resilience + scoring envelope</div>
+    </div>
+    <ul>
+      <li><b>Hour-of-day envelope</b> multiplies the final aggregate so the gauge correctly drops to "Having a brew" at 8am even when individual signals are high</li>
+      <li>Every signal now always shows a number (modelled fallback when live API unavailable)</li>
+      <li>Trading-day boundary at 04:00 for live tickers — Friday-night kebabs roll into Friday's tally</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.2</div>
+      <div class="release-tag">Initial public APIs</div>
+    </div>
+    <ul>
+      <li><b>Open-Meteo</b> weather (per-region multi-location)</li>
+      <li><b>RSS news tension</b> via BBC UK / Politics, Guardian UK, Sky News, Daily Mail, Mirror with rss2json/allorigins/corsproxy fallback chain</li>
+      <li><b>TheSportsDB</b> for football fixtures</li>
+      <li><b>TfL Unified API</b> for live tube/DLR/Overground/Elizabeth line status</li>
+      <li><b>gov.uk bank-holidays.json</b> for jurisdiction-aware bank holiday proximity</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v0.1</div>
+      <div class="release-tag">First prototype</div>
+    </div>
+    <p>DEFCON-style hero gauge with 7 threat tiers — <b>HAVING A BREW</b> through <b>ALL OUT SCRAP</b>. Initial signal set: time of day, weather, football, news tension, pub/booze, bank holidays, daylight. Modelled scoring with weighted sum.</p>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">Roadmap</div>
+      <div class="release-tag">Coming up</div>
+    </div>
+    <ul>
+      <li>Cloudflare Pages deploy at <b>isitkickingoff.com</b> (proper hosting)</li>
+      <li>Daily auto-tweet via GitHub Actions cron (see AUTOTWEET.md)</li>
+      <li>Historical archiving — replace modelled past values with real captured snapshots so the trend chart tells real stories over time</li>
+      <li>Open Graph share images dynamically generated per gauge state (per-share PNG snapshot of the current reading)</li>
+      <li>Public API — read-only JSON of the current index for community plugins</li>
+    </ul>
+  </article>
+  <footer class="foot">
+    Every entry written by hand as features land.<br/>
+    Spotted a missing change? <a href="./index.html" style="color:var(--accent)">Open the dashboard</a>.<br/>
+    <span style="display:inline-block;margin-top:8px">
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;margin:0 5px">🍵 Buy us a brew</a> ·
+      <a href="./index.html" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Dashboard</a> ·
+      <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Privacy</a> ·
+      <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Terms</a> ·
+      <a href="./legal.html#disclaimer" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Disclaimer</a> ·
+      <a href="mailto:commiepinko1968@gmail.com" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Contact</a>
+    </span>
+  </footer>
+</div>
+
+</div>
+
+<script>
+// Top-nav burger toggle (mobile)
+(function(){
+  const nav = document.querySelector('.top-nav');
+  const btn = nav && nav.querySelector('.nav-burger');
+  if (!nav || !btn) return;
+  btn.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  nav.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -287,6 +287,54 @@
   .card .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--yellow) 45%,var(--amber) 70%,var(--red));border-radius:999px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
   .card.card-wide{grid-column:span 2}
   @media (max-width:560px){ .card.card-wide{grid-column:span 1} }
+
+  /* Per-signal "?" tooltip — hover (desktop) or tap (mobile, via :focus) to read
+     the methodology explainer for that signal. Pure CSS, no JS handler needed. */
+  .card .tip-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:18px;height:18px;border-radius:999px;flex-shrink:0;
+    background:var(--bg-3);border:1px solid var(--line-2);
+    color:var(--ink-dim);font-family:var(--mono);font-size:11px;font-weight:700;
+    cursor:help;padding:0;line-height:1;
+    transition:all .15s;
+    position:relative;
+  }
+  .card .tip-btn:hover, .card .tip-btn:focus{
+    background:var(--accent);color:#0a0d12;border-color:var(--accent);
+    outline:none;
+  }
+  .card .tip-btn[data-tip]::after{
+    content:attr(data-tip);
+    position:absolute;
+    top:calc(100% + 10px);
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--bg-3);
+    color:var(--ink);
+    border:1px solid var(--line-2);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:var(--sans);font-size:12px;font-weight:400;
+    text-transform:none;letter-spacing:0;line-height:1.55;
+    white-space:normal;width:300px;max-width:calc(100vw - 40px);
+    z-index:100;
+    opacity:0;pointer-events:none;
+    transition:opacity .15s;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+    text-align:left;
+  }
+  .card .tip-btn[data-tip]::before{
+    content:"";position:absolute;top:calc(100% + 4px);left:50%;
+    transform:translateX(-50%) rotate(45deg);
+    width:8px;height:8px;background:var(--bg-3);
+    border-left:1px solid var(--line-2);border-top:1px solid var(--line-2);
+    z-index:101;
+    opacity:0;pointer-events:none;transition:opacity .15s;
+  }
+  .card .tip-btn:hover::after, .card .tip-btn:focus::after,
+  .card .tip-btn:hover::before, .card .tip-btn:focus::before{
+    opacity:1;
+  }
   .queries{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
   .queries .q{
     font-family:var(--mono);font-size:12px;color:var(--ink);
@@ -727,9 +775,10 @@
     <div class="nav-links">
       <a href="./" class="active">📊 Dashboard</a>
       <a href="./snapshot.html">📸 Snapshot</a>
-      <a href="./news.html">📰 News</a>
+      <a href="./news.html">📰 Blog</a>
+      <a href="./changelog.html">🪵 Changelog</a>
       <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
-      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">☕ Buy Me a Coffee</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
 
@@ -1037,8 +1086,15 @@
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer"
          style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#ffdd00;color:#0a0d12;font-family:var(--mono);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:999px;white-space:nowrap;transition:transform .15s,filter .15s"
          onmouseover="this.style.transform='translateY(-1px)';this.style.filter='brightness(1.05)'" onmouseout="this.style.transform='';this.style.filter=''">
-        ☕ Buy us a brew
+        🍵 Buy us a brew
       </a>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <button id="dl-csv-btn" type="button"
+              style="background:transparent;border:1px solid var(--line-2);color:var(--ink-dim);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .15s">
+        📥 Download history (CSV)
+      </button>
+      <span id="dl-csv-status" style="margin-left:10px;font-family:var(--mono);font-size:11px;color:var(--ink-faint)"></span>
     </div>
   </section>
 
@@ -1050,7 +1106,7 @@
       <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Terms</a> ·
       <a href="./legal.html#disclaimer" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Disclaimer</a> ·
       <a href="./legal.html#cookies" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Cookies</a> ·
-      <a href="mailto:hello@inkbyte.co.uk" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Contact</a>
+      <a href="mailto:commiepinko1968@gmail.com" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Contact</a>
     </span>
   </footer>
 </div>
@@ -4574,11 +4630,20 @@ function signalCrime(crimeData, metPoliceData){
     sub = `${sub} · modelled (Met data fetch blocked)`;
   }
 
-  // Surface Met Police / Interpol headlines (or hardcoded fallback) beneath
-  // the live crime numbers — render whenever items exist, live or not.
-  const metPoliceHeadlines = (metPoliceData && metPoliceData.items && metPoliceData.items.length)
-    ? metPoliceData.items.slice(0, 4)
-    : null;
+  // Surface Met Police / Interpol headlines beneath the live crime numbers.
+  // Three layers of fallback so the list NEVER disappears:
+  //   1. Live items if fetchMetPoliceNews returned something
+  //   2. fetchMetPoliceNews's own internal MET_POLICE_FALLBACK (already baked in)
+  //   3. If the entire fetch was timed out by withTimeout (returns null), we
+  //      still pin the same hardcoded list here as a last-resort defence.
+  let metPoliceHeadlines = null;
+  if (metPoliceData && metPoliceData.items && metPoliceData.items.length){
+    metPoliceHeadlines = metPoliceData.items.slice(0, 4);
+  } else {
+    // bulk.metPolice was null (fetch timed out) OR items array empty —
+    // pin the hardcoded fallback list directly so the section always renders.
+    metPoliceHeadlines = MET_POLICE_FALLBACK.slice(0, 4);
+  }
 
   return {
     ...base,
@@ -7094,6 +7159,50 @@ const WEIGHTS = {
   lottery:   0.02,
 };
 
+/* =========================================================
+   Per-signal explainer copy — surfaced via the ? tooltip on
+   each signal card. Keep each line concise (~150-300 chars).
+   The user can hover (desktop) or tap (mobile) the ? to read.
+   ========================================================= */
+const SIGNAL_EXPLAINERS = {
+  time:       'Hour-of-day "activity envelope" — nothing kicks off at 5am regardless of how tense the news is. A multiplier that dampens the gauge by time-of-day; weekend evenings peak.',
+  weather:    'Live regional weather from Open-Meteo (per UK city / nation). Hot or stormy days bump the score; mild days calm it. Falls back to UK climate averages if the API is blocked.',
+  daylight:   'Sunset proximity. Dusk and the dark hours score higher — the streets feel different after sundown.',
+  moon:       'Pure astronomical moon-phase calculation. Full moon adds a small comedic bump (folkloric, not science).',
+  booze:      'Wetherspoons Live — modelled UK Spoons capacity by hour-of-day with day-of-week, weather, payday and Curry/Steak Club modifiers. Plus 5 rotating featured branches from a 20-strong list.',
+  licensing:  'Modelled UK on-licensed venue activity (~48,600 pubs + clubs, Statista 2024). Hourly venues-open curve tuned to UK licensing rules. Score peaks 22:00–02:00 around "kick-out time" with a countdown for the last 90 minutes.',
+  kettle:     'Live UK National Grid demand from the Elexon BMRS API. Plus a modelled top-5 hot-drink ranking through the day — tea, instant coffee, hot choc, Horlicks, Pot Noodle.',
+  greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
+  chippy:     'Modelled UK fish-and-chip + takeaway demand. Iconic Friday 18:00–20:00 peak, Sunday-evening leftover spike, post-pub kebab/chip run weekends 22:00+. Cuisine-aware top-5 menu rotates English chippy / Chinese / Indian / kebab / Scottish-weird.',
+  icecream:   'McFlurry Machine status — comedy seasonal curve based on hot weather, school-holiday windows and tourist behaviour. The McFlurry is rarely working.',
+  vape:       'Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 disposable flavours from retail-share data (Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol). Each tagged with the dominant brand.',
+  bh:         'Live gov.uk bank-holidays.json per jurisdiction (England & Wales / Scotland / NI). Plus 27 non-bank UK calendar moments — Wimbledon, Glastonbury, Ascot, FA Cup Final, Mariah Day, etc.',
+  patriot:    'Curated UK calendar — patron-saint days (St George/David/Andrew/Patrick), war remembrance, royal milestones, political anniversaries, and notable-figure birthdays including the genuinely silly ones.',
+  england:    'England multi-sport tracker — fixtures via TheSportsDB across cricket, rugby and football. Tournament windows (Euros, World Cup, Six Nations, Ashes) amplify the score.',
+  lottery:    'National Lottery — live attempt to scrape current jackpots from national-lottery.co.uk via CORS proxy. Falls back to modelled rolling jackpots per game. Score peaks when a big rollover approaches.',
+  football:   'Firm Factor — live fixtures from TheSportsDB cross-matched against UK firm reputation list (Millwall Bushwhackers, ICF, Service Crew, Soul Crew, Zulus, Headhunters), European travelling ultras, and classic flashpoint derbies (Old Firm, Tyne-Wear, Steel City).',
+  betting:    'Live Odds · Football — modelled UK bookmaker odds across 8 major UK bookies (Paddy Power, Sky Bet, Bet365, Ladbrokes, Coral, Betfair, William Hill, BetVictor). Real fixtures, deterministically-modelled prices.',
+  horses:     'Live Odds · Horses — modelled UK horse racing across 12 major UK racecourses (Cheltenham, Aintree, Newmarket, Ascot, Goodwood, etc.) with deterministic per-day picks of 4 races and modelled fractional odds.',
+  transport:  'TfL Unified API for London (live tube/bus status). Rush-hour modelled curve elsewhere in the UK. Disruptions, signal failures and severe delays all push the score up.',
+  roadRage:   'News-driven indicator. Scans live UK news headlines for road / motorway / M25 / A-road / closure / jam keywords. The more roads in chaos, the higher the score.',
+  uber:       'Modelled Uber surge curve based on weather + time-of-day. There is no public Uber API, but the Friday-night-rain spike is real enough to model deterministically.',
+  delivery:   'Modelled Deliveroo / Just Eat / Uber Eats demand based on weather + time + day-of-week. Cold rainy Friday 19:00 is the absolute peak.',
+  search:     'Search Panic Index — modelled top UK Google queries today (curfew, train strike, school closed, riot, etc.) with optional Google Trends lift. Real boosts flag with a "REAL" pill when Trends data lands.',
+  petrol:     'Live UK fuel prices via the CMA Pump Watch dataset. Petrol-rage amplifier from price + supply news. The closer to £1.50/litre, the angrier the school run.',
+  royal:      'Royal Drama — RSS-driven royal-headline detector (Harry, Meghan, William, Kate, Charles, Andrew). Evergreen fallback stories rotate when the real feeds are quiet.',
+  telly:      'TVMaze live UK listings — what\'s on telly tonight. Trash-tier reality TV (Love Island, MAFS, Bake Off finale) peaks the score; documentaries calm it.',
+  news:       'News tension across 6 UK RSS feeds (BBC News + Politics, Guardian, Sky, Daily Mail, Mirror). Headlines scored against keyword themes — immigration, crime, political, industrial, protest — and aggregated via GDELT-style tone.',
+  slang:      'Modelled top 5 UK regional slang phrases rotating daily. 24-phrase pool tagged Cockney, Scouse, Geordie, Yorkshire, Brummie, Welsh, Glaswegian, Mancunian, West Country.',
+  crime:      'London Phone Snatch — live data.police.uk Met crime feed for Central London + Met Police news headlines. Phone-snatch rate amplified by time-of-day (weekend evenings = peak).',
+  threat:     'Live UK national terrorism threat level via the gov.uk content API, with Wikipedia fallback. Long-term default since Feb 2022 has been SUBSTANTIAL.',
+  checkout:   'Modelled supermarket self-checkout meltdown curve. Comedy module — based on reasonable assumptions about UK shopping habits and "unexpected item in bagging area" rage.',
+  aande:      'Modelled NHS A&E pressure with live amplifiers — weather (cold snap = falls; heatwave = trauma; rain = RTC), news headlines, bank-holiday boost. Plus the top 5 circulating UK viruses.',
+  protests:   'Civil Unrest — live UK protest, strike, march, riot, clash and disorder headlines from GDELT Doc 2.0 + the existing UK news RSS feeds. De-duped, escalation-detected (riots/clashes/arrests bump the score).',
+  social:     'Modelled social-media mania — 24-hour pool of UK posting behaviours (4am gym posts, Tesco self-checkout meltdowns, sliding into ex DMs). Live r/unitedkingdom comment velocity surfaces as a real-time chatter proxy.',
+  spotify:    'UK Top Tracks — Apple Music marketing RSS chart with Wikipedia "UK Singles Chart" article fallback. 5-source chain. Trash-pop peaks contribute to the gauge.',
+  reddit:     'Reddit UK Trending — live hot feed across r/unitedkingdom, r/CasualUK, r/AskUK and friends. The top 5 posts surface as inline rows, each clickable through to the thread.',
+};
+
 /* Tiny SVG sparkline.  values: 0..1 array, n points.  Returns SVG markup. */
 function _renderSparkline(spark){
   if (!spark || !spark.values || !spark.values.length) return '';
@@ -7518,12 +7627,18 @@ function renderCard(sig){
       }).join('') + `</div>`;
     }
   }
+  // Per-signal explainer tooltip — show a "?" pip when we have explainer copy
+  const tipText = SIGNAL_EXPLAINERS[sig.key];
+  const tipBtn  = tipText
+    ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(sig.title)}?" data-tip="${_escAttr(tipText)}">?</button>`
+    : '';
   return `
     <article class="card${wide}">
       <div class="head">
         <div class="head-left">
           <span class="icon" aria-hidden="true">${icon}</span>
           <div class="title">${esc(sig.title)}</div>
+          ${tipBtn}
         </div>
         ${chip}
       </div>
@@ -8263,6 +8378,19 @@ function _showToast(message, ms){
   toast._hideTimer = setTimeout(() => { toast.style.opacity = '0'; }, ms || 3500);
 }
 
+/* Probe (synchronous) whether the browser supports Web Share API file attachments.
+   We check this WITHOUT awaiting the PNG generation — if we awaited first the
+   click would lose its user-gesture context and any subsequent window.open would
+   be silently blocked by popup blockers.  Mobile Safari/Chrome return true here;
+   desktop browsers almost always return false. */
+function _supportsFileShare(){
+  if (!navigator.share || !navigator.canShare) return false;
+  try {
+    const probe = new File([new Uint8Array([0])], 'probe.png', { type: 'image/png' });
+    return navigator.canShare({ files: [probe] });
+  } catch(_){ return false; }
+}
+
 async function openShare(platform, btn){
   const text = buildShareText();
   const url  = buildPermalinkUrl();
@@ -8280,7 +8408,6 @@ async function openShare(platform, btn){
     if (navigator.clipboard?.writeText){
       navigator.clipboard.writeText(payload).then(()=> flashCopied(btn));
     } else {
-      // Fallback copy
       const ta = document.createElement('textarea');
       ta.value = payload; document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); flashCopied(btn); } catch(e){}
@@ -8289,7 +8416,7 @@ async function openShare(platform, btn){
     return;
   }
 
-  // Save Image button — pure download, no platform redirect
+  // Save Image — pure PNG download, no platform redirect
   if (platform === 'save-image'){
     try {
       const blob = await generateGaugePNGBlob();
@@ -8301,38 +8428,52 @@ async function openShare(platform, btn){
     return;
   }
 
-  // For social platforms — generate the gauge PNG and try to attach.
-  // On mobile (Web Share API supports files): single share sheet with the image attached.
-  // On desktop: download the PNG + open the platform's compose URL with text+link.
-  let pngBlob = null;
-  try { pngBlob = await generateGaugePNGBlob(); } catch(_){ /* fall through to URL-only share */ }
-
-  // Mobile / supported browsers — Web Share Level 2 with files
-  if (pngBlob && platform === 'twitter' && navigator.share && navigator.canShare){
-    const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
-    if (navigator.canShare({ files: [file] })){
+  // ---- Twitter / X share with PNG ----
+  // Two paths:
+  //   1. Mobile (Web Share API supports files): single native share sheet with
+  //      the gauge PNG already attached.  navigator.share is gesture-aware so
+  //      the await before it is allowed.
+  //   2. Desktop (no file-share support): open X compose IMMEDIATELY (synchronous,
+  //      preserves the click's user-gesture context, popup blocker stays happy),
+  //      then download the PNG in the background so the user can drag it onto
+  //      their tweet.
+  if (platform === 'twitter'){
+    if (_supportsFileShare()){
+      // Mobile path
       try {
-        await navigator.share({
-          title: 'Is It Kicking Off?',
-          text:  `${text}\n${url}`,
-          files: [file],
-        });
-        return; // success — share sheet handled it
-      } catch(e){
-        // User cancelled or share failed — fall through to download path
-        if (e && e.name === 'AbortError') return;
-      }
+        const pngBlob = await generateGaugePNGBlob();
+        if (pngBlob){
+          const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })){
+            try {
+              await navigator.share({
+                title: 'Is It Kicking Off?',
+                text:  `${text}\n${url}`,
+                files: [file],
+              });
+              return;
+            } catch(e){
+              if (e && e.name === 'AbortError') return;
+              // Non-abort failure — fall through to URL-open path below
+            }
+          }
+        }
+      } catch(_){ /* fall through */ }
     }
+    // Desktop path — OPEN URL FIRST (synchronous), then async PNG download.
+    // This is critical: any await before window.open kills the popup gesture.
+    window.open(targets.twitter, '_blank', 'noopener,noreferrer,width=600,height=520');
+    // Fire-and-forget PNG download
+    generateGaugePNGBlob().then(pngBlob => {
+      if (pngBlob){
+        _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
+        _showToast('📸 Gauge image also saved — drag it onto your tweet', 4500);
+      }
+    }).catch(e => console.warn('PNG bg download failed:', e));
+    return;
   }
 
-  // Desktop / fallback path — download the image first so the user can attach
-  // it to the tweet, then open the X compose window.  X's compose endpoint
-  // doesn't accept file attachments via URL, so manual attach is the only way.
-  if (pngBlob && platform === 'twitter'){
-    _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
-    _showToast('📸 Gauge image saved — drag it into the X tweet box', 5000);
-  }
-
+  // All other platforms — synchronous URL open, no file attachment attempted
   const u = targets[platform]; if (!u) return;
   window.open(u, '_blank', 'noopener,noreferrer,width=600,height=520');
 }
@@ -8417,6 +8558,89 @@ async function fetchHistoryFromSupabase(regionId, days){
     return await r.json();
   } catch(_){ return null; }
 }
+
+/* =========================================================
+   Snapshots CSV download — pulls every row from the public
+   `snapshots` table and emits a downloadable CSV.  Header row
+   is fixed; signals JSON column gets one CSV column per signal
+   key seen across all rows so it opens cleanly in Excel/Numbers.
+   ========================================================= */
+async function downloadSnapshotsCSV(){
+  const status = document.getElementById('dl-csv-status');
+  const btn    = document.getElementById('dl-csv-btn');
+  if (!_supabaseEnabled()){
+    if (status) status.textContent = 'database not configured · check SUPABASE_URL constant';
+    return;
+  }
+  if (btn) btn.disabled = true;
+  if (status){ status.textContent = 'fetching rows…'; status.style.color = 'var(--ink-dim)'; }
+  try {
+    // Pull every snapshot, newest first. Supabase returns max 1000 rows by default;
+    // we send Range header to bump the cap. Years of data fit comfortably under 50k.
+    const url = `${SUPABASE_URL}/rest/v1/snapshots?select=*&order=captured_at.desc`;
+    const r = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Range': '0-49999',
+      },
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = await r.json();
+    if (!Array.isArray(rows) || !rows.length){
+      if (status){ status.textContent = '0 rows in database yet'; status.style.color = 'var(--amber)'; }
+      return;
+    }
+
+    // Discover every signal key present anywhere in the dataset
+    const signalKeys = new Set();
+    for (const row of rows){
+      if (row.signals && typeof row.signals === 'object'){
+        for (const k of Object.keys(row.signals)) signalKeys.add(k);
+      }
+    }
+    const signalCols = [...signalKeys].sort();
+
+    // Build CSV
+    const header = ['id', 'captured_at', 'region_id', 'score', 'tier', ...signalCols];
+    const escCsv = v => {
+      if (v == null) return '';
+      const s = String(v);
+      // Quote if contains comma, quote, or newline; double-quote any internal quotes
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    const lines = [header.map(escCsv).join(',')];
+    for (const row of rows){
+      const sig = row.signals || {};
+      const out = [
+        row.id, row.captured_at, row.region_id, row.score, row.tier,
+        ...signalCols.map(k => sig[k] != null ? sig[k] : ''),
+      ];
+      lines.push(out.map(escCsv).join(','));
+    }
+    const csv = lines.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const today = new Date().toISOString().slice(0, 10);
+    _downloadBlobAsPng(blob, `iiko-snapshots-${today}.csv`);  // helper named for PNG but works for any blob
+    if (status){
+      status.textContent = `✓ ${rows.length} row${rows.length>1?'s':''} downloaded`;
+      status.style.color = 'var(--brew, #3ecf8e)';
+    }
+  } catch(e){
+    if (status){
+      status.textContent = 'failed: ' + (e.message || 'unknown');
+      status.style.color = 'var(--red)';
+    }
+    console.warn('[csv] download failed:', e);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+(function _wireCSVDownload(){
+  const btn = document.getElementById('dl-csv-btn');
+  if (btn) btn.addEventListener('click', downloadSnapshotsCSV);
+})();
 
 // Parse permalink hash on page load — surface a banner with the snapshot
 // the sharer captured.  Hash format: #s=87&t=ALL+OUT+SCRAP&r=United+Kingdom&d=2026-04-27
@@ -8819,12 +9043,14 @@ function renderAll(bulk){
       catch(e){ console.warn('[zeitgeist] render threw, skipping:', e.message); }
       continue;
     }
+    // Render group divider only when at least one of its signals will actually
+    // show. Otherwise we'd leave a stranded "Live Odds" header above empty space.
+    const visibleInGroup = group.keys.filter(k => sigs[k] && !sigs[k].hide);
+    if (!visibleInGroup.length) continue;
     signalsHtml += `<div class="grid-divider">${group.label}</div>`;
-    for (const k of group.keys){
-      if (sigs[k]){
-        signalsHtml += renderCard(sigs[k]);
-        orderedSignals.push(sigs[k]);
-      }
+    for (const k of visibleInGroup){
+      signalsHtml += renderCard(sigs[k]);
+      orderedSignals.push(sigs[k]);
     }
   }
   $('#signals').innerHTML = signalsHtml;
