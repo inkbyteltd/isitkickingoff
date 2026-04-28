@@ -369,7 +369,7 @@
   a.branch.protest-link{cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s}
   a.branch.protest-link:hover{border-color:var(--accent);background:rgba(255,138,31,.06)}
   a.branch.protest-link::after{content:"↗";color:var(--ink-faint);font-size:11px;margin-left:6px;opacity:.6}
-  .chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg-3);color:var(--ink-faint);border:1px solid var(--line-2)}
+  .chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg-3);color:var(--ink-faint);border:1px solid var(--line-2);display:inline-block;white-space:nowrap;flex:0 0 auto}
   .chip.live{color:var(--green);border-color:rgba(62,207,142,.35);background:rgba(62,207,142,.08)}
   .chip.model{color:var(--amber);border-color:rgba(255,138,31,.35);background:rgba(255,138,31,.08)}
   .chip.err{color:var(--red);border-color:rgba(239,75,75,.35);background:rgba(239,75,75,.08)}
@@ -378,7 +378,20 @@
      food + green-leaf on the pacifier side. */
   .chip.agitator{color:#ef4b4b;border-color:rgba(239,75,75,.45);background:rgba(239,75,75,.10)}
   .chip.pacifier{color:#3ecf8e;border-color:rgba(62,207,142,.45);background:rgba(62,207,142,.10)}
-  .chip-group{display:inline-flex;gap:6px;align-items:center;flex-wrap:nowrap;flex-shrink:0;white-space:nowrap}
+  /* Chip group — keep both chips ALWAYS on one line, side by side, no matter
+     how narrow the container gets. flex-direction:row explicit (some browsers
+     default to column inside certain ancestors), flex-wrap:nowrap to forbid
+     stacking, flex-shrink:0 so it doesn't get squeezed by a long title.
+     The TITLE is what wraps to multiple lines if space gets tight, not the chips. */
+  .chip-group{
+    display:inline-flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    flex-shrink:0;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
 
   /* Live indicator tickers — always 2 columns on desktop (Stella+Kebab row 1,
      Cocaine+Rizla row 2). Stacks to 1 column on mobile. */
@@ -8067,8 +8080,10 @@ function renderEnvCards(env){
     : `<span class="chip model">Modelled</span>`;
 
   // 🛢️ Oil prices — with last-known fallback so the card never reads blank.
-  // Brent has been ~$70-90/bbl through 2024-2026. Use $78 as a recent baseline.
-  const OIL_FALLBACK = { brentUSD: 78.50, source: 'Recent baseline (live feed unavailable)' };
+  // Brent baseline updated Apr 2026: ~$108-112/bbl range. The live feed is the
+  // source of truth; this baseline only shows if every live source fails (which
+  // means the Cloudflare Worker proxy isn't deployed yet — see /api/health).
+  const OIL_FALLBACK = { brentUSD: 110.00, source: 'Recent baseline · live Worker not deployed (check /api/health)' };
   const oRaw = env.oil || {};
   const o = Number.isFinite(oRaw.brentUSD) ? oRaw : OIL_FALLBACK;
   const oilIsLive = oRaw.live === true && Number.isFinite(oRaw.brentUSD);
@@ -8092,7 +8107,7 @@ function renderEnvCards(env){
   const oilDelta = Number.isFinite(o.dayChangePct)
     ? `<span style="color:${oilArrowColor};font-weight:600">${oilArrow} ${Math.abs(o.dayChangePct).toFixed(2)}%</span>`
     : `<span style="color:var(--ink-faint)">${oilIsLive ? 'change pending' : 'baseline reading'}</span>`;
-  const oilFootSource = oilIsLive ? 'Stooq + Yahoo · BZ=F' : 'Recent baseline · ~$70-90 range';
+  const oilFootSource = oilIsLive ? 'Stooq + Yahoo · BZ=F' : 'Baseline · deploy /api/quote Worker for live';
 
   const html = `
     <article class="ticker" id="env-shit">
