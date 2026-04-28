@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Changelog · Is It Kicking Off?</title>
 <meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
+<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -109,7 +110,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
-      <a href="./shop.html">🛍️ Shop</a>
+      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -134,7 +135,37 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.7 <span class="stamp">live</span></div>
+      <div class="release-ver">v1.8 <span class="stamp">live</span></div>
+      <div class="release-tag">🔥🧊 Agitator / Pacifier chips on Live Indicators · Apr 2026</div>
+    </div>
+    <p class="intro">A small touch with a lot of story. The four Live Indicators each carry a new effect chip next to the existing Modelled tag: <span class="chip agitator" style="display:inline-block;vertical-align:middle">🔥 Agitator</span> for the cards that <i>fuel</i> the country's argy-bargy curve, <span class="chip pacifier" style="display:inline-block;vertical-align:middle">🧊 Pacifier</span> for the cards that <i>calm it down</i>. Booze and stimulants on the agitator side; food and the green leaf on the pacifier side. Two simple chips, but they make the dashboard tell a story you couldn't tell without them.</p>
+    <h3>🔥 Agitators (winds the country up)</h3>
+    <ul>
+      <li><b>🍺 Stella Artois Index</b> — booze fuels British argy-bargy. Universally observed.</li>
+      <li><b>🐟 Cocaine in UK Waters</b> — stimulant. Quietly the fuel behind a non-trivial fraction of weekend agro.</li>
+    </ul>
+    <h3>🧊 Pacifiers (calms it down)</h3>
+    <ul>
+      <li><b>🥙 Kebab &amp; Fast-Food Index</b> — full belly, lower tempers. The post-pub kebab is essentially a peace treaty negotiated in pitta.</li>
+      <li><b>🌿 Rizla &amp; OCB</b> — mellow as it gets. The universal British de-escalator.</li>
+    </ul>
+    <h3>🛠️ Implementation</h3>
+    <ul>
+      <li>New <code>.chip.agitator</code> (red) and <code>.chip.pacifier</code> (green) CSS classes alongside the existing <code>.chip.live</code> / <code>.chip.model</code>. Same chip vocabulary, new colour family.</li>
+      <li>New <code>.chip-group</code> wrapper so each ticker can carry both chips on the right side of its header without breaking the flex layout.</li>
+      <li>Hover any chip for a one-line explanation of <i>why</i> that substance maps to that effect.</li>
+      <li>Each tooltip explainer (the <b>?</b> pip) updated to lead with the agitator/pacifier framing — same story echoed in the methodology section so the framing is documented.</li>
+      <li>Methodology Live Indicators bullet list also updated: each of the four bullets now carries an inline coloured chip + a one-line "why this is an agitator / pacifier" line.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced with test-deploy patches. No new external dependencies.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.7</div>
       <div class="release-tag">🐛 NCB X-timeline · 🛢️ Brent baseline · 📐 methodology overflow · Apr 2026</div>
     </div>
     <p class="intro">Three bug fixes. NCB module was showing "sample post · Nitter feed unavailable" because public Nitter mirrors are mostly defunct in 2026; switched the fallback to X's official Timeline widget which fetches live tweets straight from x.com. Brent Crude card was reading blank when proxies failed — now falls back to a recent baseline price ($78.50) tagged "Baseline" so the card never reads dead. Methodology table was triggering a horizontal scrollbar — added <code>overflow-wrap:anywhere</code> on cell content.</p>

@@ -6,6 +6,7 @@
 <title>Is It Kicking Off? — UK Aggravation Threat Index</title>
 <meta name="description" content="A live, data-driven threat index for the United Kingdom. Are we having a brew or is it about to kick off? Aggregates weather, football, news tension, booze patterns, bank holidays and time-of-day." />
 <link rel="canonical" href="https://isitkickingoff.com/" />
+<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn, generic link unfurls) -->
@@ -372,6 +373,12 @@
   .chip.live{color:var(--green);border-color:rgba(62,207,142,.35);background:rgba(62,207,142,.08)}
   .chip.model{color:var(--amber);border-color:rgba(255,138,31,.35);background:rgba(255,138,31,.08)}
   .chip.err{color:var(--red);border-color:rgba(239,75,75,.35);background:rgba(239,75,75,.08)}
+  /* Effect chips for live indicators — red Agitator (winds the country up),
+     green Pacifier (calms it down). Booze + stimulants on the agitator side;
+     food + green-leaf on the pacifier side. */
+  .chip.agitator{color:#ef4b4b;border-color:rgba(239,75,75,.45);background:rgba(239,75,75,.10)}
+  .chip.pacifier{color:#3ecf8e;border-color:rgba(62,207,142,.45);background:rgba(62,207,142,.10)}
+  .chip-group{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
 
   /* Live indicator tickers — always 2 columns on desktop (Stella+Kebab row 1,
      Cocaine+Rizla row 2). Stacks to 1 column on mobile. */
@@ -833,7 +840,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html">🪵 Changelog</a>
-      <a href="./shop.html">🛍️ Shop</a>
+      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -1150,13 +1157,15 @@
       feed back into the Kick-Off Index, they just illustrate the kinds of behaviour the index is tracking.
       All four use a 15-minute integration step, a 04:00 "trading day" boundary (so post-pub Friday-night
       consumption correctly counts toward Friday's tally), and tick forward live once per second with a
-      Poisson-ish jitter for visible motion.
+      Poisson-ish jitter for visible motion. Each card carries a small <span class="chip agitator" style="display:inline-block;vertical-align:middle">🔥 Agitator</span>
+      or <span class="chip pacifier" style="display:inline-block;vertical-align:middle">🧊 Pacifier</span>
+      tag indicating whether the substance fuels the country's argy-bargy or calms it down.
     </p>
     <ul style="color:var(--ink-dim);font-size:13px;line-height:1.6;margin:8px 0 14px;padding-left:20px">
-      <li><b>🍺 Stella Artois Index</b> — pints poured today across the UK. Calibrated to ~2.5M pints on a big Saturday (peak ~400k/hr).</li>
-      <li><b>🥙 Kebab &amp; Fast-Food Index</b> — takeaway orders today across all channels. Calibrated to UK volumes (1.3M kebabs/day baseline; peak ~1M orders/hr Saturday 23:00).</li>
-      <li><b>🐟 Cocaine in UK Waters</b> — modelled aquatic concentration in ng/L across six major UK water bodies (Thames, Mersey, Trent, Clyde, Tyne, Loch Lomond). Curve peaks Monday morning post-weekend wastewater purge. Research basis: Kings College London 2019 study finding cocaine in 100% of Thames shrimp.</li>
-      <li><b>🌿 Rizla &amp; OCB</b> — rolling-paper packs sold today, with a stacked brand-share visualisation (Rizla Blue / OCB Slim / OCB Premium / etc.). Modelled with weekend peak, evening curve, sunshine and bank-holiday uplift.</li>
+      <li><b>🍺 Stella Artois Index</b> — <span class="chip agitator" style="display:inline-block;vertical-align:middle;font-size:9px">🔥 Agitator</span> Pints poured today across the UK. Calibrated to ~2.5M pints on a big Saturday (peak ~400k/hr). Booze fuels the argy-bargy curve.</li>
+      <li><b>🥙 Kebab &amp; Fast-Food Index</b> — <span class="chip pacifier" style="display:inline-block;vertical-align:middle;font-size:9px">🧊 Pacifier</span> Takeaway orders today across all channels. Calibrated to UK volumes (1.3M kebabs/day baseline; peak ~1M orders/hr Saturday 23:00). Full belly, lower tempers — the post-pub kebab is essentially a peace treaty.</li>
+      <li><b>🐟 Cocaine in UK Waters</b> — <span class="chip agitator" style="display:inline-block;vertical-align:middle;font-size:9px">🔥 Agitator</span> Modelled aquatic concentration in ng/L across six major UK water bodies. Curve peaks Monday morning post-weekend wastewater purge. Stimulant — quietly the fuel behind a non-trivial fraction of weekend agro. Research basis: Kings College London 2019 study finding cocaine in 100% of Thames shrimp.</li>
+      <li><b>🌿 Rizla &amp; OCB</b> — <span class="chip pacifier" style="display:inline-block;vertical-align:middle;font-size:9px">🧊 Pacifier</span> Rolling-paper packs sold today, with a stacked brand-share visualisation. Modelled with weekend peak, evening curve, sunshine and bank-holiday uplift. The universal British de-escalator.</li>
     </ul>
     <p style="color:var(--ink-faint);font-size:12px;margin-top:14px">
       Disclaimer: a bit of fun, not a forecast. Be kind, drink water, share a chippy tea.
@@ -7848,7 +7857,10 @@ function renderTickers(ctx){
           <div class="title">Stella Artois Index · Pints poured today (UK)</div>
           ${tipFor('stella', 'Stella Artois Index')}
         </div>
-        <span class="chip model">Modelled</span>
+        <div class="chip-group">
+          <span class="chip agitator" title="Booze fuels British argy-bargy">🔥 Agitator</span>
+          <span class="chip model">Modelled</span>
+        </div>
       </div>
       <div class="big" id="stella-big">${fmtNum(totals.stella)}<span class="unit">pints</span></div>
       <div class="rate">Currently flowing at <b id="stella-rate">${fmtNum(Math.round(r.stellaRate/3600))}</b> pints/second</div>
@@ -7867,7 +7879,10 @@ function renderTickers(ctx){
           <div class="title">Kebab &amp; Fast-Food Index · Orders today (UK)</div>
           ${tipFor('kebab', 'Kebab and Fast-Food Index')}
         </div>
-        <span class="chip model">Modelled</span>
+        <div class="chip-group">
+          <span class="chip pacifier" title="Full belly · lower tempers · post-pub peace treaty">🧊 Pacifier</span>
+          <span class="chip model">Modelled</span>
+        </div>
       </div>
       <div class="big" id="kebab-big">${fmtNum(totals.kebab)}<span class="unit">orders</span></div>
       <div class="rate">Currently ordering at <b id="kebab-rate">${fmtNum(Math.round(r.kebabRate/3600))}</b> orders/second</div>
@@ -7886,7 +7901,10 @@ function renderTickers(ctx){
           <div class="title">Cocaine in UK Waters · Aquatic Concentration</div>
           ${tipFor('coke', 'Cocaine in UK Waters')}
         </div>
-        <span class="chip model" title="Modelled from Kings College / EU wastewater studies">Modelled</span>
+        <div class="chip-group">
+          <span class="chip agitator" title="Stimulant · winds the country up · Saturday-night fuel">🔥 Agitator</span>
+          <span class="chip model" title="Modelled from Kings College / EU wastewater studies">Modelled</span>
+        </div>
       </div>
       <div class="big">${avgNgL} <span class="unit">ng/L avg</span></div>
       <div class="rate">Peak in <b>${rivers[0].name}</b> at <b>${rivers[0].ngL}</b> ng/L</div>
@@ -7913,7 +7931,10 @@ function renderTickers(ctx){
           <div class="title">Rizla &amp; OCB · Rolling Papers Sold Today</div>
           ${tipFor('rizla', 'Rizla and OCB')}
         </div>
-        <span class="chip model">Modelled</span>
+        <div class="chip-group">
+          <span class="chip pacifier" title="Mellow as it gets · the universal British de-escalator">🧊 Pacifier</span>
+          <span class="chip model">Modelled</span>
+        </div>
       </div>
       <div class="big" id="rizla-big">${fmtNum(totals.rizla)}<span class="unit">packs</span></div>
       <div class="rate">Currently selling at <b id="rizla-rate">${fmtNum(Math.round(r.rizlaRate/3600))}</b> packs/second</div>
@@ -8357,10 +8378,10 @@ const WEIGHTS = {
    ========================================================= */
 const SIGNAL_EXPLAINERS = {
   // Live indicator tickers (sit above the signals grid)
-  stella:     'Stella Artois Index — modelled UK lager consumption with Stella\'s ~14% category share applied. Calibrated against BBPA (British Beer & Pub Association) figures: ~10 billion pints sold nationally per year. Hour-of-day curve respects the 17:00 post-work pint, the Friday 21:00 pub peak, and the Sunday-roast wind-down. Counter resets at 04:00 (last orders cleared, carriage settled).',
-  kebab:      'Kebab & Fast-Food Index — modelled UK takeaway demand including kebab shops, chippies, late-night burger vans and post-pub pizza. Calibrated against MCA Insight\'s UK takeaway market figures (~£11.5bn/year, ~3 million orders/day nationally). Curve respects the Friday 18:00 family-night spike and the Saturday 23:00 post-pub kebab run. Doner-leans-kebab on weekends, donair-leans-pizza on weeknights.',
-  coke:       'Cocaine in UK Waters — modelled aquatic concentrations (ng/L) across five UK rivers: Thames, Mersey, Severn, Clyde, Tyne. Anchored to Kings College London\'s 2019 study which found measurable cocaine and benzoylecgonine in Thames shrimp at locations across Greater London. Concentrations vary by upstream population density and weekend usage cycles. The shrimp are not pleased.',
-  rizla:      'Rizla & OCB — modelled UK rolling-papers market split across the four major brands: Rizla (Imperial Tobacco UK ~62% share), OCB, Smoking, Raw. Daily volume calibrated against Imperial Tobacco UK and Republic Technologies UK shipment estimates: ~30,000 packs per peak hour nationally. Brand share legend below shows the actual market split. Includes both tobacco and non-tobacco end-uses (we\'re not asking).',
+  stella:     'Stella Artois Index — 🔥 Agitator. Booze fuels British argy-bargy. Modelled UK lager consumption with Stella\'s ~14% category share applied. Calibrated against BBPA (British Beer & Pub Association) figures: ~10 billion pints sold nationally per year. Hour-of-day curve respects the 17:00 post-work pint, the Friday 21:00 pub peak, and the Sunday-roast wind-down. Counter resets at 04:00 (last orders cleared, carriage settled).',
+  kebab:      'Kebab & Fast-Food Index — 🧊 Pacifier. Full belly, lower tempers. The post-pub kebab is essentially a peace treaty negotiated in pitta. Modelled UK takeaway demand including kebab shops, chippies, late-night burger vans and post-pub pizza. Calibrated against MCA Insight\'s UK takeaway market figures (~£11.5bn/year, ~3 million orders/day nationally). Curve respects the Friday 18:00 family-night spike and the Saturday 23:00 post-pub kebab run.',
+  coke:       'Cocaine in UK Waters — 🔥 Agitator. Stimulant. Winds the country up. Quietly the fuel behind a non-trivial fraction of weekend agro. Modelled aquatic concentrations (ng/L) across five UK rivers: Thames, Mersey, Severn, Clyde, Tyne. Anchored to Kings College London\'s 2019 study which found measurable cocaine and benzoylecgonine in Thames shrimp. The shrimp are not pleased.',
+  rizla:      'Rizla & OCB — 🧊 Pacifier. Mellow as it gets. The universal British de-escalator. Modelled UK rolling-papers market split across Rizla (Imperial Tobacco UK ~62% share), OCB, Smoking, Raw. Daily volume calibrated against Imperial Tobacco UK and Republic Technologies UK shipment estimates: ~30,000 packs per peak hour nationally. Includes both tobacco and non-tobacco end-uses (we\'re not asking).',
 
   // Environment & Energy row (v1.3)
   shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. The fish are deeply unimpressed.',
