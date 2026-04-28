@@ -25,7 +25,11 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
   body{background:radial-gradient(1200px 600px at 80% -10%,rgba(255,138,31,.08),transparent 60%),var(--bg-0);min-height:100vh}
-  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+  /* Outer wrap is wider so the 6-item top nav (incl. yellow Buy us a brew)
+     never wraps or clips on desktop. The inner article still uses a narrower
+     reading column via .reading-col so long-form prose stays comfortable. */
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+  .reading-col{max-width:760px;margin:0 auto}
   .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
   .top-nav .nav-links{display:contents}
   .top-nav .nav-burger{display:none}
@@ -211,6 +215,8 @@
     <div style="font-family:var(--mono);font-size:22px">📰</div>
   </header>
 
+  <div class="reading-col">
+
   <!-- HERO BLOG POST -->
   <article class="post" id="post-001">
     <div class="meta">
@@ -349,16 +355,16 @@
     <a href="./changelog.html">🪵 Changelog</a> for build notes
   </div>
 
-  <!-- NEWSLETTER SIGNUP -->
-  <section class="newsletter" id="newsletter" aria-label="Newsletter signup">
-    <h2>📬 Subscribe to the Blog</h2>
-    <p>One essay per month, plus the occasional dispatch when something properly kicks off. No spam, no tracking, easy unsubscribe.</p>
-    <form id="newsletter-form" novalidate>
-      <input type="email" id="newsletter-email" placeholder="you@example.co.uk" autocomplete="email" required />
-      <button type="submit">Subscribe</button>
-    </form>
-    <div class="success">✓ You're on the list. Cheers — first essay lands soon.</div>
-    <span class="small">Wire to Buttondown / Google Sheets / Supabase before launch — sign-ups are stored in your browser only for now.</span>
+  <!-- SUBSTACK CALLOUT — long-form essays live there, not on a mailing list -->
+  <section class="newsletter" aria-label="Substack callout">
+    <h2>✍️ Read more from the author</h2>
+    <p>The essays here cross-post to <b>Rory Wilmer's Substack</b> — where you'll also find earlier writing on creative work, signal-tracking, brand and behavioural economics. If you liked the piece above, that's where to follow along.</p>
+    <a href="https://substack.com/@rorywilmer" target="_blank" rel="noopener noreferrer"
+       style="display:inline-flex;align-items:center;gap:10px;padding:12px 22px;background:var(--accent);color:#0a0d12;font-family:var(--mono);font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:8px;transition:transform .15s,filter .15s"
+       onmouseover="this.style.transform='translateY(-1px)';this.style.filter='brightness(1.08)'" onmouseout="this.style.transform='';this.style.filter=''">
+      ✍️ Follow on Substack
+    </a>
+    <span class="small">substack.com/@rorywilmer · free, no spam</span>
   </section>
 
   <footer class="foot">
@@ -373,6 +379,8 @@
       <a href="mailto:commiepinko1968@gmail.com" style="color:var(--ink-dim);text-decoration:none;margin:0 5px">Contact</a>
     </span>
   </footer>
+
+  </div><!-- /.reading-col -->
 </div>
 
 <script>
@@ -393,25 +401,8 @@
   });
 })();
 
-// Newsletter signup — stores email locally for now. Wire to Buttondown / Google Apps Script before launch.
-(function(){
-  const form = document.getElementById('newsletter-form');
-  const wrap = document.getElementById('newsletter');
-  const input = document.getElementById('newsletter-email');
-  if (!form || !wrap || !input) return;
-  try { if (localStorage.getItem('iiko-newsletter')) wrap.classList.add('signed-up'); } catch(_){}
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const v = (input.value || '').trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
-      input.style.borderColor = 'var(--accent)';
-      input.focus();
-      return;
-    }
-    try { localStorage.setItem('iiko-newsletter', v); } catch(_){}
-    wrap.classList.add('signed-up');
-  });
-})();
+// Newsletter signup removed — long-form essays now syndicate to
+// substack.com/@rorywilmer instead. The Substack callout is a simple link.
 </script>
 </body>
 </html>

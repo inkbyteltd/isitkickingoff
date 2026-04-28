@@ -1,14 +1,9 @@
 # Cloudflare Workers Static Assets config.
 # Tells `npx wrangler deploy` to serve every file in this folder as a static site.
-# This is the modern equivalent of an old Cloudflare Pages project — same end
-# result (HTML files served from a global CDN), but uses the Workers runtime
-# under the hood.
 
 name = "isitkickingoff"
 compatibility_date = "2026-04-27"
 
-# Serve every file in the repo root as a static asset.
-# `_headers` and `_redirects` files are still honoured.
 [assets]
 directory = "./"
-not_found_handling = "404-page"   # serve our /404.html on unknown URLs
+not_found_handling = "404-page"

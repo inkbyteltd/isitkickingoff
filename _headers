@@ -10,11 +10,8 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Robots-Tag: noindex, nofollow
 
-# Long-cache the favicon data URI route (no-op for inline SVG, but keeps
-# the rule in place for if/when we add a real /favicon.ico file later).
 /favicon.ico
   Cache-Control: public, max-age=86400
 
-# Tighter cache on HTML so updates appear quickly during testing.
 /*.html
   Cache-Control: public, max-age=300, must-revalidate
