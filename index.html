@@ -11023,6 +11023,29 @@ function renderAll(bulk){
   renderRegionBar(regionScores);
   renderHeatmap(regionScores);
 
+  // Build the FULL signal list — includes both card-rendered signals (in
+  // orderedSignals from the SIGNAL_GROUPS loop) AND score-only wrappers like
+  // storm/shit (v2.3) that contribute to the gauge but don't render as cards.
+  // Anything with a key in WEIGHTS counts as part of the model and should be
+  // captured in the snapshot + Supabase + CSV history.
+  const allWeightedSignals = [];
+  const seenKeys = new Set();
+  for (const s of orderedSignals){
+    if (s && s.key && !seenKeys.has(s.key)){
+      allWeightedSignals.push(s);
+      seenKeys.add(s.key);
+    }
+  }
+  // Sweep sigs for any weighted signal not already in orderedSignals (storm, shit, etc)
+  for (const k of Object.keys(WEIGHTS)){
+    if (seenKeys.has(k)) continue;
+    const s = sigs[k];
+    if (s && s.key) {
+      allWeightedSignals.push(s);
+      seenKeys.add(k);
+    }
+  }
+
   // Persist snapshot for the standalone snapshot.html page (read on next nav)
   try {
     const tier = tierFor(currentScore);
@@ -11033,8 +11056,8 @@ function renderAll(bulk){
       tierColor: tier.color,
       tierBlurb: pickBlurb(tier),
       region: { id: SELECTED_REGION, name: region.name, flag: region.flag },
-      signals: orderedSignals.map(s => ({
-        key: s.key, title: s.title, icon: s.icon || '•',
+      signals: allWeightedSignals.map(s => ({
+        key: s.key, title: s.title || s.key, icon: s.icon || '•',
         score: +(s.score || 0).toFixed(3),
         weight: WEIGHTS[s.key] || 0,
         contribution: +((s.score || 0) * (WEIGHTS[s.key] || 0) * 100).toFixed(2),
@@ -11055,7 +11078,7 @@ function renderAll(bulk){
   try {
     const tier = tierFor(currentScore);
     const signalScores = {};
-    for (const s of orderedSignals){
+    for (const s of allWeightedSignals){
       if (s && s.key) signalScores[s.key] = +(s.score || 0).toFixed(3);
     }
     recordSnapshotToSupabase(currentScore, tier.label, SELECTED_REGION, signalScores);
