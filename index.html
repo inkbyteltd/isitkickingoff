@@ -10547,15 +10547,39 @@ function _showToast(message, ms){
    than window.open() when we have to compose URLs in a click handler that may
    chain off other work. Browsers almost always treat <a target="_blank"> clicks
    as user-initiated, so popup blockers leave them alone. */
+/* Open a URL in a new tab as reliably as possible across browsers and popup
+   blockers. Critical: this MUST be called synchronously inside the click
+   handler, before any await — once user activation is lost, all popup attempts
+   will be blocked.
+
+   Strategy: window.open() first (most browsers honour it during user activation),
+   fall back to a synthetic <a target="_blank"> click (Safari historically more
+   permissive of this), and as a last resort, return false so the caller can
+   show a manual link or fallback message. */
 function _openInNewTab(url){
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { try { document.body.removeChild(a); } catch(_){} }, 50);
+  // 1. Try window.open — most reliable inside user gesture. Some browsers
+  //    return null if blocked; treat that as failure.
+  try {
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if (win) { try { win.opener = null; } catch(_){} return true; }
+  } catch(_){}
+  // 2. Synthetic anchor click — Safari and some Firefox configs allow this
+  //    even when window.open is blocked.
+  try {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { try { document.body.removeChild(a); } catch(_){} }, 50);
+    return true;
+  } catch(_){}
+  // 3. Last resort — navigate this tab to the URL. Not ideal but the user gets
+  //    where they're trying to go.
+  try { location.href = url; } catch(_){}
+  return false;
 }
 
 /* Detect if we should attempt Web Share API with file attachment.
@@ -10580,7 +10604,10 @@ async function openShare(platform, btn){
   const enc = encodeURIComponent;
   const targets = {
     whatsapp: `https://api.whatsapp.com/send?text=${enc(text + ' ' + url)}`,
-    twitter:  `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`,
+    // X (Twitter) — use x.com canonical domain. The /intent/post endpoint is
+    // the modern alias for /intent/tweet; both still work but x.com avoids a
+    // 301 redirect that can lose query params on older mobile browsers.
+    twitter:  `https://x.com/intent/post?text=${enc(text)}&url=${enc(url)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}&quote=${enc(text)}`,
     reddit:   `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(text)}`,
     telegram: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`,
@@ -10611,62 +10638,52 @@ async function openShare(platform, btn){
     return;
   }
 
-  // ---- All social platforms — SAME RELIABLE PATTERN ----
-  // 1. On MOBILE: try Web Share API (native share sheet with PNG attached).
-  //    If sharing succeeds or user cancels, done — no fallthrough.
-  // 2. On DESKTOP: open the platform's compose URL via synthetic <a> click,
-  //    AND for Twitter only fire a background PNG download so the user has
-  //    the gauge image to drag onto their tweet.
+  // ---- All social platforms — RELIABLE PATTERN ----
   //
-  // Crucially: the PNG download ONLY fires on desktop. On mobile a downloaded
-  // file isn't drag-able onto an X composer anyway — it'd just clutter the
-  // user's Photos roll. Mobile gets the share sheet OR a clean URL open only.
+  // CRITICAL ORDERING RULE: open the platform URL SYNCHRONOUSLY inside the
+  // click handler, BEFORE any await. User activation (the trust token that
+  // lets us open popups, call navigator.share, etc.) lives only as long as
+  // the call stack of the original click. The moment we hit `await`, that
+  // activation is lost and any subsequent window.open / navigator.share /
+  // synthetic anchor click will be blocked by the browser.
+  //
+  // Previous bug: we awaited generateGaugePNGBlob() before navigator.share()
+  // on mobile, and on desktop we relied on a synthetic anchor click that some
+  // popup blockers reject. Result: the X compose tab never opened, only the
+  // PNG downloaded. Fixed by opening the URL first, then handling PNG work
+  // in a fire-and-forget background promise.
   const _ua = navigator.userAgent || '';
   const _isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(_ua);
 
-  if (platform === 'twitter' && _isMobile && navigator.share){
-    // Mobile path: try the native share sheet. Attach PNG if the browser
-    // supports file sharing; otherwise share text+URL only — still way better
-    // than triggering a Downloads folder save the user can't easily use.
-    try {
-      const shareData = { title: 'Is It Kicking Off?', text: `${text}\n${url}` };
-      if (navigator.canShare){
-        try {
-          const pngBlob = await generateGaugePNGBlob();
-          if (pngBlob){
-            const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
-            if (navigator.canShare({ files: [file] })) shareData.files = [file];
-          }
-        } catch(_){}
-      }
-      try {
-        await navigator.share(shareData);
-        return;  // Shared successfully — exit
-      } catch(e){
-        if (e && e.name === 'AbortError') return;  // User cancelled — exit
-        // Other share-API errors fall through to URL-open
-      }
-    } catch(_){}
-    // Fallthrough: open X compose URL — but DO NOT trigger PNG download on mobile
+  // ---- X (Twitter) special case — wants both the compose URL AND a PNG ----
+  if (platform === 'twitter'){
+    // Step 1: open the X compose URL IMMEDIATELY. This is the critical line
+    // — must happen synchronously, before any await, while user activation
+    // is still fresh. Both desktop (new tab) and mobile (X app or x.com)
+    // get this. We use _openInNewTab which tries window.open first.
     const u = targets.twitter;
     if (u) _openInNewTab(u);
+
+    // Step 2: PNG handling — runs in the background, never blocks the
+    // compose URL from opening. On desktop we save it to Downloads so the
+    // user can drag it into the X composer. On mobile we don't bother —
+    // a file in the Downloads folder is no use for a mobile X tweet, and
+    // attaching a file via navigator.share after URL-open would race with
+    // the compose page and confuse the share sheet.
+    if (!_isMobile){
+      generateGaugePNGBlob().then(pngBlob => {
+        if (pngBlob){
+          _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
+          _showToast('📸 Gauge image also saved — drag it onto your tweet', 4500);
+        }
+      }).catch(e => console.warn('PNG bg download failed:', e));
+    }
     return;
   }
 
-  // ALL other paths (desktop X, every non-X platform on any device) — open via <a> click
+  // ---- All other social platforms — open URL synchronously, no PNG. ----
   const u = targets[platform];
   if (u) _openInNewTab(u);
-
-  // Twitter DESKTOP bonus: fire-and-forget PNG download so the user has the
-  // gauge image to drag onto their tweet. Mobile never reaches this branch.
-  if (platform === 'twitter' && !_isMobile){
-    generateGaugePNGBlob().then(pngBlob => {
-      if (pngBlob){
-        _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
-        _showToast('📸 Gauge image also saved — drag it onto your tweet', 4500);
-      }
-    }).catch(e => console.warn('PNG bg download failed:', e));
-  }
 }
 
 function wireShareButtons(){

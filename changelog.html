@@ -135,7 +135,34 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.9 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.10 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 X share fix — URL now opens, PNG saves in background · Apr 2026</div>
+    </div>
+    <p class="intro">Bug report: clicking the gauge's <b>X share</b> button was downloading a PNG to your computer but <i>not</i> opening the X compose tab — neither on desktop nor mobile. Two stacked causes; one fix.</p>
+    <h3>What was broken</h3>
+    <ul>
+      <li><b>Desktop</b>: we used a synthetic <code>&lt;a target="_blank"&gt;</code> click to open the URL. Some browsers' popup blockers reject this pattern as a "popup" rather than a navigation, even when called inside a click handler. The PNG download fired separately and worked, leaving the user with a downloaded file but no X tab.</li>
+      <li><b>Mobile</b>: we did <code>await generateGaugePNGBlob()</code> <i>before</i> calling <code>navigator.share()</code>. Browsers track <b>user activation</b> — a trust token that lets you open popups and call share sheets — and that token is destroyed by the first <code>await</code>. By the time we asked the share sheet to open, the browser had revoked permission. The fallback URL-open then also failed for the same reason.</li>
+    </ul>
+    <h3>What changed</h3>
+    <ul>
+      <li><b>The X URL now opens FIRST</b>, synchronously, before any <code>await</code> — while user activation is still fresh. PNG generation runs in the background after.</li>
+      <li><b><code>_openInNewTab</code> hardened</b> with a three-tier fallback: <code>window.open()</code> first (most reliable inside user gesture), then synthetic anchor click (Safari is more permissive of this), then <code>location.href</code> as a last resort.</li>
+      <li><b>Intent URL updated</b> from <code>twitter.com/intent/tweet</code> to <code>x.com/intent/post</code> — the modern canonical, avoids a 301 redirect that some older mobile browsers strip query params from.</li>
+      <li><b>Mobile path simplified</b>: rather than try Web Share API with a PNG attachment (which never worked reliably due to the activation issue), we just open the X compose URL on mobile too. Cleaner, more predictable. If users want to attach an image they can do it from the X composer's native picker.</li>
+      <li><b>Desktop PNG behaviour unchanged</b>: still downloads to Downloads with a toast saying "drag it onto your tweet."</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Same <code>openShare()</code> function, restructured. No new dependencies.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+      <li>Added inline comments explaining the user-activation rule so the next person touching this code (probably future me) doesn't reintroduce the bug.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.9</div>
       <div class="release-tag">🧹 Consumption row gap fix · McFlurry + Vape moved up · Apr 2026</div>
     </div>
     <p class="intro">Trailing gap in the Consumption section: McFlurry Machine and Vape Flavours UK were sat in their own half-row at the bottom, leaving 2 empty cells next to them. Moved both up to row 2, alongside Greggs and Chippy. The breakfast pair (Fry-Up Tracker + English Breakfast Index) now takes row 3 on its own, side-by-side. Layout is three clean rows with no dead space.</p>
