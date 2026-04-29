@@ -1128,6 +1128,8 @@
         <tr><td>🍟 Chippy Run</td><td>2%</td><td>Modelled UK fish-and-chip + takeaway demand. Grounded in published numbers (~10,500 chip shops nationally, ~25% of UK adults order a takeaway on Friday night). Hour-of-day curve with the iconic <b>Friday 18:00–20:00 peak</b> + Sunday-evening leftover spike (nobody's cooking) + post-pub kebab/chip run weekends 22:00+. Rotating quip from a 14-line pool ("salt-and-vinegar economy in full swing", "battered sausage sales climbing", "wally jar consulted").</td></tr>
         <tr><td>💨 Vape Flavours UK</td><td>2%</td><td>Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 flavours from disposable retail-share data (Vapouround / ECigIntelligence 2024): Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol, Cherry Cola, Pink Lemonade, Mr Blue, Cotton Candy Ice, Apple Peach. Each tagged with the dominant brand (Elf Bar, Lost Mary, Geek Bar Pulse, IVG, SKE Crystal, Hayati Pro Max). Daily-rotating ranking with normalised market-share %. Hour-of-day activity curve peaks 19:00-24:00 (post-work + post-pub). Card shows the #1 flavour as the headline, top 5 as inline rows.</td></tr>
         <tr><td>💬 UK Slang Tracker</td><td>1%</td><td>Modelled top 5 UK regional slang phrases rotated daily. Pool of 24 phrases tagged by region: <b>Cockney</b> (innit, leave it out, on me 'ed son), <b>Scouse</b> (sound lad, la, boss), <b>Geordie</b> (wor lass, haway man, gan canny), <b>Yorkshire</b> (ay up, by 'eck, reet good), <b>Brummie/Peaky</b> (by order of the Peakys, bostin), <b>Welsh</b> (tidy mun, lush, butt), <b>Glaswegian</b> (gie it laldy, away an' bile yer heid, pure mental), <b>Mancunian</b> (mint, mad fer it), <b>West Country</b> (gert lush, me babber). Each carries a recognition % reflecting how widely the phrase is used.</td></tr>
+        <tr><td>🪨 Pagan Wheel of the Year</td><td>1%</td><td>The eight festivals of the Celtic / druidic calendar — <b>Imbolc</b> (1 Feb), <b>Spring Equinox</b> (~20 Mar), <b>Beltane</b> (1 May), <b>Summer Solstice</b> (~21 Jun), <b>Lughnasadh</b> (1 Aug), <b>Autumn Equinox</b> (~22 Sep), <b>Samhain</b> (31 Oct), <b>Winter Solstice</b> (~21 Dec). Card shows days to the next festival as the headline, with the upcoming three plus two notable stone circles (Stonehenge, Avebury, Callanish, Castlerigg, Ring of Brodgar, Long Meg, Rollright, Newgrange) rotated daily. Score peaks within ±3 days of a major festival when the crowds gather, druidic robes are deployed, and hilltop fires are lit.</td></tr>
+        <tr><td>🔮 British Folklore Watch</td><td>1%</td><td>Rotating top of UK folkloric calendar events — Padstow Obby Oss, Burning of the Clavie, Up Helly Aa, Cheese Rolling at Cooper's Hill, Lewes Bonfire Night, Helston Furry Dance, Mari Lwyd, Burryman procession, Egremont Crab Fair — plus today's rotating cryptid sighting watch: <b>Loch Ness Monster</b>, <b>Beast of Bodmin</b>, <b>Surrey Puma</b>, <b>Black Shuck</b>, <b>Spring-heeled Jack</b>, <b>Owlman of Mawnan</b>, <b>Cornish Pixies</b>. Score peaks around Halloween / May Day / Solstice nights and during stormy weather (storms wake Black Shuck, fog brings Spring-heeled Jack). Twilight hours bump up cryptid likelihood. October bonus for witching season.</td></tr>
         <tr><td>🐎 Recent UK Racing</td><td>2%</td><td><b>Curated rotation of real notable UK race winners</b> from the past 12 months — Cheltenham Festival (Gold Cup, Champion Hurdle, Queen Mother), Royal Ascot, Grand National, Epsom Derby, 2000 Guineas, Glorious Goodwood, Ebor Festival, St Leger, Bet365 Gold Cup. 4 races shown daily, deterministic rotation per date. Each entry verifiable on Racing Post — links out to <code>racingpost.com/results</code> for the full card. <b>Refresh policy:</b> the <code>RECENT_UK_RACE_WINNERS</code> array is updated quarterly with the most recent notable winners. Live upgrade path: At The Races / Racing Post commercial APIs once we'd justify the spend.</td></tr>
         <tr><td>🎲 National Lottery</td><td>2%</td><td><b>Now LIVE attempt</b> — <code>fetchNationalLottery()</code> tries to scrape current jackpot values from <code>national-lottery.co.uk</code> via corsproxy.io / allorigins.win.  Regex-extracts £XM patterns near each game name (Lotto / EuroMillions / Set For Life / Thunderball).  When the scrape lands, the chip flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span> and sub-line shows "live: national-lottery.co.uk".  Falls back to modelled rolling jackpots per-game (deterministic per-day rollover count) when the scrape is blocked.  Game windows: <b>Lotto</b> (Wed + Sat draws, base £2M, ~£25M cap), <b>EuroMillions</b> (Tue + Fri, £17M base, £230M cap), <b>Set For Life</b> (Mon + Thu, fixed £10k/m × 30yrs), <b>Thunderball</b> (Tue/Wed/Fri/Sat, fixed £500k). Score peaks when a big rollover approaches.</td></tr>
         <tr><td>⚽ Last Results · Football</td><td>2%</td><td><b>Live recent UK match results</b> via TheSportsDB's <code>eventslastleague.php</code> endpoint (free, no commercial API key required). Pulls finished matches across the Premier League, Championship, EFL L1, EFL L2, Scottish Premiership, UEFA Champions League, Europa League and Conference League. Filters for matches with real <code>intHomeScore</code> and <code>intAwayScore</code> values, sorts newest-first, surfaces the top 5. Headline picks the most dramatic scoreline (largest goal difference). Each row links to a Google News search for that fixture's coverage. Live by virtue of TheSportsDB's continuous updates after each match. Falls back to a small set of recent reference results when the API window is empty.</td></tr>
@@ -4485,9 +4487,11 @@ const KEEP_CALM_FILLERS = [
   { icon:'🫖', title:'PROPER BREW',   sub:'first, decisions later'     },
   { icon:'⛅', title:"IT'S BRIGHT",  sub:'somewhere in the country'   },
 ];
-function _fillerCardHtml(seedOffset){
-  const seed = (new Date().getDate() * 11 + (seedOffset || 0) * 7) % KEEP_CALM_FILLERS.length;
-  const f = KEEP_CALM_FILLERS[seed];
+function _fillerCardHtml(absoluteIdx){
+  // absoluteIdx is the pool index already shifted by day-seed + filler position.
+  // Caller is responsible for ensuring different idx per filler within a render.
+  const idx = ((absoluteIdx | 0) % KEEP_CALM_FILLERS.length + KEEP_CALM_FILLERS.length) % KEEP_CALM_FILLERS.length;
+  const f = KEEP_CALM_FILLERS[idx];
   return `<article class="card filler-card" aria-hidden="true">
     <div class="filler-inner">
       <div class="filler-icon">${f.icon}</div>
@@ -5690,6 +5694,177 @@ function signalPatriot(){
   }));
 
   return { ...base, valueLabel, subLabel, score, patriotUpcoming };
+}
+
+/* =========================================================
+   Signal: 🪨 Pagan Wheel of the Year (modelled, v2.2)
+   The eight festivals of the Celtic / druidic calendar — solstices,
+   equinoxes, and the four cross-quarter days. We track the days
+   to the next one and surface the upcoming three. Score peaks
+   within ±3 days of a major festival (Stonehenge gathering, fires
+   on hilltops, druidic robes deployed).
+   ========================================================= */
+const PAGAN_WHEEL = [
+  { mon: 2, day:  1, name:'Imbolc',          icon:'🕯️', blurb:'first stirrings of spring · Brigid\'s flame · ewes lambing',          stones:'Hill of Slane'        },
+  { mon: 3, day: 20, name:'Spring Equinox',  icon:'🌷', blurb:'Ostara · day equals night · sunrise alignment at Stonehenge',         stones:'Stonehenge'           },
+  { mon: 5, day:  1, name:'Beltane',         icon:'🔥', blurb:'fertility fires lit · maypoles · Edinburgh Calton Hill ceremony',    stones:'Tara · Edinburgh'      },
+  { mon: 6, day: 21, name:'Summer Solstice', icon:'☀️', blurb:'longest day · 7,000+ at Stonehenge sunrise · druidic vigil',         stones:'Stonehenge · Avebury' },
+  { mon: 8, day:  1, name:'Lughnasadh',      icon:'🌾', blurb:'first harvest · Lammas loaves baked · hill-top fairs',                stones:'Tailtin · Wales'      },
+  { mon: 9, day: 22, name:'Autumn Equinox',  icon:'🍂', blurb:'Mabon · the balance · second harvest · cider season opens',           stones:'Avebury · Castlerigg' },
+  { mon:10, day: 31, name:'Samhain',         icon:'🎃', blurb:'thinning of the veil · Druidic new year · ancestors abroad',          stones:'Tlachtga (Hill of Ward)' },
+  { mon:12, day: 21, name:'Winter Solstice', icon:'🌙', blurb:'longest night · druidic vigil at dawn · Newgrange illuminated',        stones:'Newgrange · Stonehenge' },
+];
+const STONE_CIRCLES = [
+  { name:'Stonehenge',         loc:'Wiltshire',   note:'sun-aligned (solstices)'  },
+  { name:'Avebury',            loc:'Wiltshire',   note:'largest stone circle in Europe' },
+  { name:'Callanish Stones',   loc:'Lewis',       note:'13 standing stones · 5,000 yrs' },
+  { name:'Castlerigg',         loc:'Cumbria',     note:'38 stones · Lake District' },
+  { name:'Ring of Brodgar',    loc:'Orkney',      note:'27 surviving stones · solar' },
+  { name:'Rollright Stones',   loc:'Oxfordshire', note:"the King's Men · cursed legend" },
+  { name:'Long Meg & Daughters', loc:'Cumbria',  note:'oval ring · solstice marker'    },
+  { name:'Newgrange',          loc:'Co. Meath',   note:'older than Stonehenge · solstice' },
+];
+function signalPagan(){
+  const base = { key:'pagan', title:'Pagan Wheel of the Year', icon:'🪨', live:false, modelled:true };
+  const now = new Date();
+  // Find the next pagan festival
+  const upcomingFestivals = PAGAN_WHEEL.map(f => {
+    let d = new Date(now.getFullYear(), f.mon - 1, f.day, 0, 0, 0);
+    if (d < now) d = new Date(now.getFullYear() + 1, f.mon - 1, f.day, 0, 0, 0);
+    return { ...f, ts:d.getTime(), days: Math.ceil((d.getTime() - now.getTime()) / 86400000) };
+  }).sort((a,b) => a.days - b.days);
+
+  const next = upcomingFestivals[0];
+  const daysToNext = next.days;
+  // Score: peaks within ±3 days of a major festival, low otherwise
+  const score = daysToNext === 0 ? 0.85
+              : daysToNext <= 3  ? 0.55 + (3 - daysToNext) * 0.10
+              : daysToNext <= 14 ? 0.30 - (daysToNext - 3) * 0.015
+              :                    0.20;
+
+  const valueLabel = daysToNext === 0
+    ? `${next.icon} ${next.name} · today`
+    : daysToNext === 1
+      ? `${next.icon} ${next.name} · tomorrow`
+      : `${next.icon} ${next.name} · in ${daysToNext}d`;
+
+  const subLabel = next.blurb;
+
+  // Top 3 upcoming festivals as "branches" + 2 stone circle entries
+  const seed = now.getDate();
+  const stones = [STONE_CIRCLES[seed % STONE_CIRCLES.length], STONE_CIRCLES[(seed + 3) % STONE_CIRCLES.length]];
+  const paganUpcoming = upcomingFestivals.slice(0, 3).map(f => ({
+    label: `${f.icon} ${f.name}`,
+    tag: f.days === 0 ? 'today' : f.days === 1 ? 'tomorrow' : `T-${f.days}d`,
+    score: f.days === 0 ? 0.85 : f.days <= 3 ? 0.65 : 0.40,
+    isToday: f.days === 0,
+  })).concat(stones.map(s => ({
+    label: `🪨 ${s.name}`,
+    tag: s.loc,
+    score: 0.30,
+    isToday: false,
+  })));
+
+  return { ...base, valueLabel, subLabel, score, patriotUpcoming: paganUpcoming };
+}
+
+/* =========================================================
+   Signal: 🔮 British Folklore Watch (modelled, v2.2)
+   Cryptid sightings + folk traditions + ancient festivals.
+   Mostly a flavour signal — peaks around Halloween, May Day,
+   Solstice nights, and during dramatic weather (storms wake
+   Black Shuck, fog brings Spring-heeled Jack). Modelled as a
+   rotating top 4 list of "today's folk activity" from a
+   curated pool, with daily seed for stable rotation.
+   ========================================================= */
+const FOLKLORE_EVENTS = [
+  // Anchored to specific dates
+  { mon: 1, day:11, name:"Burning of the Clavie",     icon:'🔥', loc:'Burghead'   },
+  { mon: 1, day:25, name:'Burns Night',               icon:'🥃', loc:'Scotland'   },
+  { mon: 1, day:30, name:'Up Helly Aa',               icon:'🛡️', loc:'Lerwick'    },
+  { mon: 2, day: 2, name:'Candlemas',                 icon:'🕯️', loc:'England'    },
+  { mon: 2, day:14, name:"Jack Valentine's eve",      icon:'💝', loc:'Norfolk'    },
+  { mon: 4, day:23, name:"St George's Day Mummers",   icon:'🐉', loc:'England'    },
+  { mon: 5, day: 1, name:'Padstow Obby Oss',          icon:'🐎', loc:'Cornwall'   },
+  { mon: 5, day: 1, name:'Beltane Fire Festival',     icon:'🔥', loc:'Edinburgh'  },
+  { mon: 5, day: 8, name:'Helston Furry Dance',       icon:'💐', loc:'Cornwall'   },
+  { mon: 5, day:29, name:'Cheese Rolling',            icon:'🧀', loc:"Cooper's Hill" },
+  { mon: 6, day:21, name:'Stonehenge Solstice Vigil', icon:'🪨', loc:'Wiltshire'  },
+  { mon: 8, day: 5, name:'Burryman procession',       icon:'🌿', loc:'South Queensferry' },
+  { mon: 9, day: 8, name:'Egremont Crab Fair',        icon:'🦀', loc:'Cumbria'    },
+  { mon:10, day:11, name:'Goose Fair',                icon:'🦆', loc:'Nottingham' },
+  { mon:10, day:31, name:'Samhain · Tlachtga',        icon:'👻', loc:'Co. Meath'  },
+  { mon:11, day: 5, name:'Lewes Bonfire Night',       icon:'🔥', loc:'Sussex'     },
+  { mon:12, day:13, name:'Mari Lwyd',                 icon:'💀', loc:'Wales'      },
+  { mon:12, day:26, name:'Boxing Day Mummers',        icon:'🎭', loc:'England'    },
+];
+const CRYPTID_REPORTS = [
+  { name:'Loch Ness Monster',    loc:'Highlands',     icon:'🦕', peak:'summer'  },
+  { name:'Beast of Bodmin',      loc:'Cornwall',      icon:'🐈‍⬛', peak:'autumn'  },
+  { name:'Surrey Puma',          loc:'Surrey',        icon:'🐈', peak:'autumn'  },
+  { name:'Black Shuck',          loc:'East Anglia',   icon:'🐺', peak:'storms'  },
+  { name:'Spring-heeled Jack',   loc:'London',        icon:'🌫️', peak:'fog'    },
+  { name:'Owlman of Mawnan',     loc:'Cornwall',      icon:'🦉', peak:'dusk'    },
+  { name:'Beast of Dean',        loc:'Forest of Dean',icon:'🐗', peak:'twilight' },
+  { name:'Loch Morar Monster',   loc:'Highlands',     icon:'🌊', peak:'summer'  },
+  { name:'Cornish Pixies',       loc:'Bodmin Moor',   icon:'🧚', peak:'mist'    },
+];
+function signalFolklore(){
+  const base = { key:'folklore', title:'British Folklore Watch', icon:'🔮', live:false, modelled:true };
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const dow = now.getDay();
+  const h = now.getHours();
+  const seed = now.getDate() * 11 + now.getMonth() * 7;
+
+  // Find next folk event
+  const upcomingEvents = FOLKLORE_EVENTS.map(e => {
+    let dt = new Date(now.getFullYear(), e.mon - 1, e.day, 0, 0, 0);
+    if (dt < now) dt = new Date(now.getFullYear() + 1, e.mon - 1, e.day, 0, 0, 0);
+    return { ...e, days: Math.ceil((dt.getTime() - now.getTime()) / 86400000) };
+  }).sort((a,b) => a.days - b.days);
+
+  const next = upcomingEvents[0];
+
+  // Score: peaks around Halloween / May Day / Solstices / when next folk event is imminent
+  let score = 0.20;
+  if (next.days === 0) score = 0.75;
+  else if (next.days <= 3) score = 0.50;
+  else if (next.days <= 14) score = 0.30;
+  // Twilight / night hours bump up cryptid likelihood
+  if (h >= 21 || h < 5) score = Math.min(0.85, score + 0.10);
+  // October bump (witching season)
+  if (m === 10) score = Math.min(0.85, score + 0.10);
+
+  // Pick 2 cryptids in rotation today
+  const cryptids = [
+    CRYPTID_REPORTS[seed % CRYPTID_REPORTS.length],
+    CRYPTID_REPORTS[(seed + 4) % CRYPTID_REPORTS.length],
+  ];
+
+  const valueLabel = next.days === 0
+    ? `${next.icon} ${next.name} · today`
+    : next.days === 1
+      ? `${next.icon} ${next.name} · tomorrow`
+      : `${next.icon} ${next.name} · in ${next.days}d`;
+
+  const subLabel = `${next.loc} · ${cryptids[0].peak === 'storms' ? "stormy nights bring " + cryptids[0].name : "watch for " + cryptids[0].name + " near " + cryptids[0].loc}`;
+
+  // Top 2 events + 2 cryptids
+  const folkloreUpcoming = upcomingEvents.slice(0, 2).map(e => ({
+    label: `${e.icon} ${e.name}`,
+    tag: e.days === 0 ? 'today' : e.days === 1 ? 'tomorrow' : `T-${e.days}d`,
+    score: e.days === 0 ? 0.85 : e.days <= 7 ? 0.55 : 0.30,
+    isToday: e.days === 0,
+  })).concat(cryptids.map(c => ({
+    label: `${c.icon} ${c.name}`,
+    tag: c.loc,
+    score: 0.25,
+    isToday: false,
+  })));
+
+  return { ...base, valueLabel, subLabel, score, patriotUpcoming: folkloreUpcoming };
 }
 
 /* =========================================================
@@ -7640,8 +7815,10 @@ function signalsForRegion(regionId, bulk){
   const uber     = signalUber(weather?.extras);
   const delivery = signalDelivery(weather?.extras);
   const patriot  = signalPatriot();
+  const pagan    = signalPagan();
+  const folklore = signalFolklore();
   // Search panic: needs peer signals as context (+ optional real trends)
-  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, crime, spotify, reddit };
+  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, crime, spotify, reddit };
   const search   = signalSearchPanic(partial, bulk.trends);
   return { ...partial, search, voting, leaders };
 }
@@ -8619,6 +8796,8 @@ const WEIGHTS = {
   betting:   0.02,
   horses:    0.02,
   lottery:   0.02,
+  pagan:     0.01,    // 🪨 wheel-of-the-year festivals (v2.2)
+  folklore:  0.01,    // 🔮 cryptids + folk traditions (v2.2)
 };
 
 /* =========================================================
@@ -8666,6 +8845,8 @@ const SIGNAL_EXPLAINERS = {
   football:   'Firm Factor — live fixtures from TheSportsDB cross-matched against UK firm reputation list (Millwall Bushwhackers, ICF, Service Crew, Soul Crew, Zulus, Headhunters), European travelling ultras, and classic flashpoint derbies (Old Firm, Tyne-Wear, Steel City).',
   betting:    'Last Results · Football — REAL recent finished matches across the UK pyramid (Premier League, Championship, EFL L1/L2, Scottish Premiership, UCL, UEL, UECL) via TheSportsDB\'s eventslastleague.php. Top 5 results sorted newest-first; headline picks the most dramatic scoreline. Each row links to Google News for that fixture\'s coverage.',
   horses:     'Recent UK Racing — curated rotation of real notable UK race winners from the past 12 months (Cheltenham Festival, Royal Ascot, Grand National, Derby Day, Glorious Goodwood, St Leger, Bet365 Gold Cup, etc.). 4 races shown daily, deterministic rotation. Each row links to Racing Post results.',
+  pagan:      'Pagan Wheel of the Year — the eight festivals of the Celtic / druidic calendar: Imbolc, Spring Equinox, Beltane, Summer Solstice, Lughnasadh, Autumn Equinox, Samhain, Winter Solstice. Tracks days to the next, surfaces upcoming three plus two notable stone circles (Stonehenge, Avebury, Callanish, Castlerigg, Newgrange, Long Meg, Rollright, Ring of Brodgar). Score peaks within ±3 days of a major festival when the crowds gather at the stones, robes are deployed, and hilltop fires are lit.',
+  folklore:   'British Folklore Watch — a rotating top of UK folkloric calendar events (Padstow Obby Oss, Burning of the Clavie, Up Helly Aa, Cheese Rolling, Lewes Bonfire Night, Helston Furry Dance, Mari Lwyd, Burryman procession, etc.) plus today\'s rotating cryptid sighting watch (Loch Ness Monster, Beast of Bodmin, Surrey Puma, Black Shuck, Spring-heeled Jack, Owlman of Mawnan, Cornish Pixies). Score peaks around Halloween / May Day / Solstice nights and during stormy weather (storms wake Black Shuck, fog brings Spring-heeled Jack).',
   transport:  'TfL Unified API for London (live tube/bus status). Rush-hour modelled curve elsewhere in the UK. Disruptions, signal failures and severe delays all push the score up.',
   roadRage:   'News-driven indicator. Scans live UK news headlines for road / motorway / M25 / A-road / closure / jam keywords. The more roads in chaos, the higher the score.',
   uber:       'Modelled Uber surge curve based on weather + time-of-day. There is no public Uber API, but the Friday-night-rain spike is real enough to model deterministically.',
@@ -10637,7 +10818,7 @@ function renderAll(bulk){
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
     { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','icecream','vape'] },
-    { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses'] },
+    { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
     { feature:'finance' },         // 💷 Finance & Markets — sits under Daily Pulse
@@ -10680,17 +10861,24 @@ function renderAll(bulk){
       signalsHtml += renderCard(sigs[k]);
       orderedSignals.push(sigs[k]);
     }
-    // Pad with KEEP CALM filler cards if the group's count isn't a multiple of 4
-    // (the desktop column count) — fills trailing dead space gracefully.
-    const remainder = visibleInGroup.length % 4;
-    if (remainder > 0){
-      const fillerCount = 4 - remainder;
-      for (let i = 0; i < fillerCount; i++){
-        // The .f1/.f2/.f3 class lets CSS hide trailing fillers on narrow viewports
-        signalsHtml += _fillerCardHtml(i).replace(
-          'filler-card',
-          `filler-card f${i+1}`
-        );
+    // Pad with KEEP CALM filler cards ONLY for groups marked with pad:true
+    // (currently just Calendar & Sport). Other groups left as-is — we'd rather
+    // have an honest gap than spam KEEP CALM cards site-wide.
+    if (group.pad){
+      const remainder = visibleInGroup.length % 4;
+      if (remainder > 0){
+        const fillerCount = 4 - remainder;
+        // Day-seeded base offset so the rotation differs day-to-day. Within
+        // a single render we add `i` so each filler in this group is unique.
+        const today = new Date();
+        const baseSeed = today.getDate() * 11 + today.getMonth() * 7;
+        for (let i = 0; i < fillerCount; i++){
+          // The .f1/.f2/.f3 class lets CSS hide trailing fillers on narrow viewports
+          signalsHtml += _fillerCardHtml(baseSeed + i).replace(
+            'filler-card',
+            `filler-card f${i+1}`
+          );
+        }
       }
     }
   }

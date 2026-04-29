@@ -135,7 +135,34 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.1 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.2 <span class="stamp">live</span></div>
+      <div class="release-tag">🪨 Pagan Wheel · 🔮 Folklore Watch · British mystic shit · Apr 2026</div>
+    </div>
+    <p class="intro">Two new signal cards land in the Calendar &amp; Sport group: 🪨 <b>Pagan Wheel of the Year</b> tracks the eight Celtic / druidic festivals (Imbolc, Beltane, Solstices, Equinoxes, Lughnasadh, Samhain), and 🔮 <b>British Folklore Watch</b> rotates UK folk traditions and cryptid sightings. Brings the group from 7 to 9 cards — the trailing-row gap from the v2.1 layout fix narrows to a clean two-cell trail with KEEP CALM fillers handling the rest.</p>
+    <h3>🪨 Pagan Wheel of the Year</h3>
+    <ul>
+      <li>Tracks the <b>8 wheel-of-the-year festivals</b>: Imbolc (1 Feb), Spring Equinox (~20 Mar), Beltane (1 May), Summer Solstice (~21 Jun), Lughnasadh (1 Aug), Autumn Equinox (~22 Sep), Samhain (31 Oct), Winter Solstice (~21 Dec).</li>
+      <li>Headline shows days to the next festival. Inline list shows the next 3 festivals plus 2 notable <b>stone circles</b> (rotated daily from a pool of 8: Stonehenge, Avebury, Callanish, Castlerigg, Newgrange, Long Meg, Rollright, Ring of Brodgar).</li>
+      <li>Score peaks within ±3 days of a major festival — when the crowds gather at the stones, druidic robes are deployed, and hilltop fires are lit. 1% weight, modelled.</li>
+    </ul>
+    <h3>🔮 British Folklore Watch</h3>
+    <ul>
+      <li><b>18 folkloric events</b> on the UK calendar: Padstow Obby Oss, Burning of the Clavie, Up Helly Aa, Cheese Rolling at Cooper's Hill, Lewes Bonfire Night, Helston Furry Dance, Mari Lwyd, Burryman procession, Egremont Crab Fair, Goose Fair, plus the seasonal pagan tie-ins.</li>
+      <li><b>9 cryptid reports</b> rotated daily: Loch Ness Monster, Beast of Bodmin, Surrey Puma, Black Shuck, Spring-heeled Jack, Owlman of Mawnan, Beast of Dean, Loch Morar Monster, Cornish Pixies.</li>
+      <li>Score peaks around Halloween / May Day / Solstice nights and during stormy weather (storms wake Black Shuck, fog brings Spring-heeled Jack). Twilight hours bump up cryptid likelihood. October gets a witching-season bonus. 1% weight, modelled.</li>
+    </ul>
+    <h3>🛠️ Implementation</h3>
+    <ul>
+      <li>Two new signal functions: <code>signalPagan()</code> and <code>signalFolklore()</code> following the same pattern as <code>signalPatriot()</code>. Each surfaces a top-list as <code>patriotUpcoming</code> branches so the existing renderer handles them out the box.</li>
+      <li>Added to <code>SIGNAL_GROUPS</code> Calendar &amp; Sport keys (now 9 entries: bh, patriot, england, lottery, football, betting, horses, pagan, folklore).</li>
+      <li>Two new explainer keys + two new methodology table rows + 1% weight each.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.1</div>
       <div class="release-tag">🎨 Polymarket tooltips · NCB tweet rendering · KEEP CALM filler cards · Apr 2026</div>
     </div>
     <p class="intro">Three aesthetic and functional fixes after v2.0 went live: every Polymarket card now carries a <b>?</b> tooltip (was just the first one), the Zeitgeist X-timeline widget actually renders the latest tweet, and partial signal-group rows get padded with playful <b>KEEP CALM</b> filler cards instead of leaving dead space.</p>
