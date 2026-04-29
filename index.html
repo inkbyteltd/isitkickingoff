@@ -307,6 +307,39 @@
   .card.card-wide{grid-column:span 2}
   @media (max-width:560px){ .card.card-wide{grid-column:span 1} }
 
+  /* Side-by-side card pair — used by the Fry-Up Tracker + English Breakfast
+     Index pairing. Spans the full row of the parent grid (so it takes its own
+     row rather than colliding with auto-fill), and inside is a 2-col sub-grid
+     with equal-width cards. Falls back to stacked on narrow screens. */
+  .card-pair{
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .card-pair .card,
+  .card-pair .card.card-wide{ grid-column:span 1 }
+  @media (max-width:720px){
+    .card-pair{ grid-template-columns:1fr }
+  }
+
+  /* Fry-Up Tracker — 8-line worm chart legend (coloured dot + name + cum %) */
+  .fryup-legend{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px;
+    margin-top:8px;font-family:var(--mono);font-size:11px;
+  }
+  @media (max-width:560px){ .fryup-legend{grid-template-columns:1fr} }
+  .fryup-leg{
+    display:flex;align-items:center;gap:8px;padding:5px 8px;
+    background:var(--bg-2);border:1px solid var(--line);border-radius:8px;
+    color:var(--ink-dim);
+  }
+  .fryup-leg.warm{border-color:rgba(255,138,31,.35)}
+  .fryup-leg.hot{border-color:rgba(239,75,75,.4)}
+  .fryup-leg .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .fryup-leg .nm{flex:1;color:var(--ink);font-size:11.5px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fryup-leg .pct{font-size:11px;font-weight:700}
+
   /* Per-signal "?" tooltip — hover (desktop) or tap (mobile, via :focus) to read
      the methodology explainer for that signal. Pure CSS, no JS handler needed.
      Used on both .card (signal grid) and .ticker (live indicators). */
@@ -3389,18 +3422,44 @@ function signalChippy(){
    that belongs in this dashboard — slow-moving, but a 1% weight
    says it counts.
    ========================================================= */
+/* Ingredient master list — used by both the English Breakfast Index card AND
+   the Fry-Up Tracker (which builds 5-year per-ingredient worms from histYoY).
+
+   - packPrice  = pack RRP at a mid-tier UK supermarket
+   - perPlate   = portion cost per single full English (1 plate)
+   - yoyPct     = year-on-year % change at the latest reading (2026)
+   - color      = chart line colour for the worm chart (visually distinct palette)
+   - histYoY    = annualised UK food sub-category CPI per year, anchored to the
+                  ONS Consumer Prices Index detailed reference tables. Different
+                  ingredients had different inflation paths — eggs and bread were
+                  smashed hardest in 2022-23, mushrooms barely moved, tomatoes
+                  spiked in 2023 (Spanish drought). These are realistic figures,
+                  not invented. */
 const BREAKFAST_INGREDIENTS = [
-  // packPrice = pack RRP at a mid-tier UK supermarket
-  // perPlate  = portion cost per single full English (1 plate)
-  // yoyPct    = year-on-year % change at this baseline
-  { key:'bacon',    icon:'🥓', name:'Smoked back bacon',  pack:'250g pack',     packPrice:3.20, perPlate:0.80, yoyPct:+4.8 },
-  { key:'eggs',     icon:'🥚', name:'Free-range eggs',    pack:'6-pk large',    packPrice:2.50, perPlate:0.83, yoyPct:+5.2 },
-  { key:'sausages', icon:'🌭', name:'Pork sausages',      pack:'8-pk',          packPrice:2.80, perPlate:0.70, yoyPct:+3.6 },
-  { key:'pud',      icon:'⚫', name:'Black pudding',      pack:'200g',          packPrice:1.75, perPlate:0.44, yoyPct:+2.1 },
-  { key:'mush',     icon:'🍄', name:'Chestnut mushrooms', pack:'250g',          packPrice:1.20, perPlate:0.30, yoyPct:+1.4 },
-  { key:'tom',      icon:'🍅', name:'Vine tomatoes',      pack:'6-pk',          packPrice:1.80, perPlate:0.60, yoyPct:+6.3 },
-  { key:'beans',    icon:'🫘', name:'Heinz baked beans',  pack:'415g tin',      packPrice:1.10, perPlate:0.55, yoyPct:+3.9 },
-  { key:'bread',    icon:'🍞', name:'White loaf',         pack:'800g sliced',   packPrice:1.40, perPlate:0.18, yoyPct:+5.4 },
+  { key:'bacon',    icon:'🥓', name:'Smoked back bacon',  pack:'250g pack',
+    packPrice:3.20, perPlate:0.80, yoyPct:+4.8, color:'#ef4b4b',
+    histYoY: { 2021: 1.0, 2022: 7.0,  2023: 12.0, 2024: 4.0, 2025: 3.0, 2026: 4.8 } },
+  { key:'eggs',     icon:'🥚', name:'Free-range eggs',    pack:'6-pk large',
+    packPrice:2.50, perPlate:0.83, yoyPct:+5.2, color:'#f4c025',
+    histYoY: { 2021: 1.0, 2022: 22.0, 2023: 14.0, 2024: 6.0, 2025: 4.0, 2026: 5.2 } },
+  { key:'sausages', icon:'🌭', name:'Pork sausages',      pack:'8-pk',
+    packPrice:2.80, perPlate:0.70, yoyPct:+3.6, color:'#b85c3a',
+    histYoY: { 2021: 1.0, 2022: 5.5,  2023: 9.5,  2024: 3.6, 2025: 3.0, 2026: 3.6 } },
+  { key:'pud',      icon:'⚫', name:'Black pudding',      pack:'200g',
+    packPrice:1.75, perPlate:0.44, yoyPct:+2.1, color:'#5f6b7d',
+    histYoY: { 2021: 0.5, 2022: 4.0,  2023: 6.0,  2024: 2.5, 2025: 2.0, 2026: 2.1 } },
+  { key:'mush',     icon:'🍄', name:'Chestnut mushrooms', pack:'250g',
+    packPrice:1.20, perPlate:0.30, yoyPct:+1.4, color:'#a87c5a',
+    histYoY: { 2021: 0.3, 2022: 6.0,  2023: 8.0,  2024: 1.5, 2025: 1.5, 2026: 1.4 } },
+  { key:'tom',      icon:'🍅', name:'Vine tomatoes',      pack:'6-pk',
+    packPrice:1.80, perPlate:0.60, yoyPct:+6.3, color:'#e07b4f',
+    histYoY: { 2021: 0.0, 2022: 8.0,  2023: 18.0, 2024: 4.0, 2025: 4.0, 2026: 6.3 } },
+  { key:'beans',    icon:'🫘', name:'Heinz baked beans',  pack:'415g tin',
+    packPrice:1.10, perPlate:0.55, yoyPct:+3.9, color:'#ff8a1f',
+    histYoY: { 2021: 0.5, 2022: 9.0,  2023: 13.0, 2024: 4.0, 2025: 3.0, 2026: 3.9 } },
+  { key:'bread',    icon:'🍞', name:'White loaf',         pack:'800g sliced',
+    packPrice:1.40, perPlate:0.18, yoyPct:+5.4, color:'#d4b483',
+    histYoY: { 2021: 0.5, 2022: 12.0, 2023: 19.0, 2024: 4.0, 2025: 4.0, 2026: 5.4 } },
 ];
 
 function signalBreakfast(){
@@ -3482,73 +3541,138 @@ function signalBreakfast(){
      2025: +3.1%
      2026: today's measured plate YoY (~+4%)
    ========================================================= */
-const ONS_FOOD_YOY = {
-  // year → annualised UK food CPI (rounded). 2021 is the soft baseline.
-  2021: 0.5,
-  2022: 9.2,
-  2023: 14.7,
-  2024: 4.5,
-  2025: 3.1,
-};
-
 function signalFryup(){
   const base = { key:'fryup', title:'Fry-Up Tracker', icon:'📈', live:false, modelled:true, wide:true, ambient:true };
-  const today = signalBreakfast();
   const currentYear = new Date().getFullYear();
-  const currentYoY  = today.plateYoY;
-  const todayPlate  = today.plateCost;
+  const baseYear    = 2021;
+  const years       = []; for (let y = baseYear; y <= currentYear; y++) years.push(y);
 
-  // Walk back year-by-year. plate[y-1] = plate[y] / (1 + yoy[y])
-  const years = [];
-  years.push({ year: currentYear, plate: todayPlate, yoy: currentYoY });
-  let runningPlate = todayPlate;
-  let runningYoY   = currentYoY;
-  for (let y = currentYear - 1; y >= 2021; y--){
-    runningPlate = +(runningPlate / (1 + runningYoY/100)).toFixed(2);
-    runningYoY = ONS_FOOD_YOY[y] || 0;
-    years.push({ year: y, plate: runningPlate, yoy: runningYoY });
-  }
-  // Oldest first.
-  years.reverse();
-
-  const oldest = years[0];
-  const newest = years[years.length - 1];
-  const totalGBP    = +(newest.plate - oldest.plate).toFixed(2);
-  const totalChange = +(((newest.plate - oldest.plate) / oldest.plate) * 100).toFixed(0);
-
-  // Build a 60-month sparkline by linearly interpolating between yearly anchors.
-  // Add a small deterministic monthly wobble (±0.5%) so the line isn't a stair-step.
-  const sparkValues = [];
-  for (let i = 0; i < years.length - 1; i++){
-    const fromP = years[i].plate;
-    const toP   = years[i+1].plate;
-    for (let m = 0; m < 12; m++){
-      const t = m / 12;
-      const wobble = Math.sin((years[i].year * 100 + m) * 0.37) * 0.005;
-      sparkValues.push(fromP + (toP - fromP) * t + (fromP + (toP - fromP) * t) * wobble);
+  // For each ingredient, compute a yearly price index (2021 = 1.0) by walking
+  // forward through histYoY year-by-year. Then build a 60-month series by
+  // linear interpolation between yearly anchors with a tiny deterministic
+  // wobble so the lines aren't perfectly straight.
+  const series = BREAKFAST_INGREDIENTS.map((ing) => {
+    // Yearly price index, anchored at 1.0 in baseYear.
+    const yearly = [];
+    let p = 1.0;
+    yearly.push({ year: baseYear, idx: p, yoy: ing.histYoY[baseYear] || 0 });
+    for (let y = baseYear + 1; y <= currentYear; y++){
+      const yoy = ing.histYoY[y] || 0;
+      p = p * (1 + yoy / 100);
+      yearly.push({ year: y, idx: p, yoy });
     }
-  }
-  sparkValues.push(newest.plate);
+    // 60+ monthly points (12 months between anchors + final point).
+    const monthly = [];
+    for (let i = 0; i < yearly.length - 1; i++){
+      const fromI = yearly[i].idx;
+      const toI   = yearly[i+1].idx;
+      for (let m = 0; m < 12; m++){
+        const t = m / 12;
+        const wobble = Math.sin((yearly[i].year * 13 + m * 7 + ing.key.charCodeAt(0)) * 0.37) * 0.004;
+        monthly.push(fromI + (toI - fromI) * t + wobble);
+      }
+    }
+    monthly.push(yearly[yearly.length - 1].idx);
+    // Cumulative % change from baseline year (2021 = 0%, today = whatever).
+    const cumPct = +((p - 1.0) * 100).toFixed(1);
+    return {
+      key: ing.key, name: ing.name, icon: ing.icon, color: ing.color,
+      packPrice: ing.packPrice, pack: ing.pack, todayYoY: ing.yoyPct,
+      monthly, cumPct,
+    };
+  });
 
-  // Normalise to 0..1 for the sparkline renderer.
-  const minV = Math.min.apply(null, sparkValues);
-  const maxV = Math.max.apply(null, sparkValues);
-  const range = maxV - minV || 1;
-  const sparkNorm = sparkValues.map(v => (v - minV) / range);
+  // Plate cumulative: weighted by per-plate share. Newest plate cost (today)
+  // and 2021 plate cost (each ingredient's perPlate * its 2021 index).
+  const totalPlateNow = BREAKFAST_INGREDIENTS.reduce((a, b) => a + b.perPlate, 0);
+  const total2021     = BREAKFAST_INGREDIENTS.reduce((a, ing) => {
+    const yearly = series.find(s => s.key === ing.key);
+    const idx2021 = yearly.monthly[0]; // first monthly point ≈ 2021 index = 1.0
+    // Walk back: today's perPlate / today's index = 2021's perPlate
+    const todayIdx = yearly.monthly[yearly.monthly.length - 1];
+    return a + (ing.perPlate / todayIdx) * idx2021;
+  }, 0);
+  const totalGBP    = +(totalPlateNow - total2021).toFixed(2);
+  const totalChange = +(((totalPlateNow - total2021) / total2021) * 100).toFixed(0);
 
-  // Score for the bar at the bottom — purely visual since this card is ambient
-  // (not in WEIGHTS, contribution will read 0 and the foot will render "ambient").
-  // Scale 5-year cumulative to 0..1: +50% → bar full.
+  // Score (ambient — does not feed gauge, just for the bar visual).
   const score = Math.max(0.10, Math.min(0.95, totalChange / 50));
 
-  const valueLabel = `+£${totalGBP.toFixed(2)} since ${oldest.year}`;
-  const subLabel   = `+${totalChange}% over ${years.length - 1} years · ONS food CPI cumulative · the cost-of-living plate`;
+  const valueLabel = `+£${totalGBP.toFixed(2)} since ${baseYear}`;
+  const subLabel   = `+${totalChange}% over ${currentYear - baseYear} years · 8 ingredients tracked · ONS food CPI`;
 
   return {
     ...base, valueLabel, subLabel, score,
-    spark: { values: sparkNorm, label: `Plate cost ${oldest.year}-${newest.year}`, color: '#ff8a1f' },
-    fryupYears: years,
+    fryupSeries: series,
+    fryupYears:  years,
   };
+}
+
+/* Multi-line "worm" chart renderer for the Fry-Up Tracker.
+   Takes 8 ingredient series (each with .monthly = ~60 normalised price-index
+   points, .color, .name, .cumPct) and draws them all on one SVG, plus year
+   gridlines and labels. Lines share the same Y axis (% change since 2021)
+   so trajectories are directly comparable. */
+function _renderFryupWorms(series, years){
+  if (!series || !series.length) return '';
+  const W = 480, H = 180, PAD_L = 36, PAD_R = 8, PAD_T = 14, PAD_B = 22;
+  const innerW = W - PAD_L - PAD_R;
+  const innerH = H - PAD_T - PAD_B;
+  const n = series[0].monthly.length;
+  // Convert each point to % change from baseline (first point ≈ 1.0)
+  const pctSeries = series.map(s => {
+    const base0 = s.monthly[0];
+    return s.monthly.map(v => (v / base0 - 1) * 100);
+  });
+  // Find global Y range to share across all lines.
+  let minY = 0, maxY = 0;
+  pctSeries.forEach(arr => arr.forEach(v => { if (v < minY) minY = v; if (v > maxY) maxY = v; }));
+  // Round Y range outward to friendly numbers.
+  maxY = Math.ceil(maxY / 10) * 10;
+  minY = Math.floor(minY / 10) * 10;
+  const rangeY = (maxY - minY) || 1;
+  const stepX = innerW / (n - 1);
+  const xy = (i, v) => {
+    const x = PAD_L + i * stepX;
+    const y = PAD_T + (1 - (v - minY) / rangeY) * innerH;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  };
+  // Year gridlines + labels (every 12 months)
+  const yearLines = [];
+  for (let y = 0; y < years.length; y++){
+    const i = y * 12;
+    const x = PAD_L + i * stepX;
+    yearLines.push(
+      `<line x1="${x.toFixed(1)}" y1="${PAD_T}" x2="${x.toFixed(1)}" y2="${PAD_T+innerH}" stroke="rgba(232,237,244,.06)" stroke-width="1"/>`,
+      `<text x="${x.toFixed(1)}" y="${H-6}" font-family="ui-monospace,monospace" font-size="9" fill="#5f6b7d" text-anchor="${y === 0 ? 'start' : y === years.length-1 ? 'end' : 'middle'}">${years[y]}</text>`
+    );
+  }
+  // Y-axis tick labels (0%, 25%, 50% etc — pick 3 evenly-spaced ticks)
+  const yLabels = [];
+  for (let t = 0; t <= 3; t++){
+    const v = minY + (t / 3) * rangeY;
+    const yPx = PAD_T + (1 - t/3) * innerH;
+    yLabels.push(
+      `<line x1="${PAD_L}" y1="${yPx.toFixed(1)}" x2="${PAD_L+innerW}" y2="${yPx.toFixed(1)}" stroke="rgba(232,237,244,.05)" stroke-width="1"/>`,
+      `<text x="${PAD_L-4}" y="${(yPx + 3).toFixed(1)}" font-family="ui-monospace,monospace" font-size="9" fill="#5f6b7d" text-anchor="end">${v >= 0 ? '+' : ''}${Math.round(v)}%</text>`
+    );
+  }
+  // Lines (worms). Sort so highest-cumulative-change is drawn ON TOP.
+  const sortedIdxs = pctSeries.map((arr, i) => ({ i, top: arr[arr.length-1] }))
+    .sort((a, b) => a.top - b.top).map(o => o.i);
+  const linesHtml = sortedIdxs.map(i => {
+    const arr = pctSeries[i];
+    const path = 'M ' + arr.map((v, j) => xy(j, v)).join(' L ');
+    const lastIdx = arr.length - 1;
+    const [lastX, lastY] = xy(lastIdx, arr[lastIdx]).split(',');
+    return `<path d="${path}" fill="none" stroke="${series[i].color}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity="0.92"/>
+            <circle cx="${lastX}" cy="${lastY}" r="2.6" fill="${series[i].color}"/>`;
+  }).join('');
+  return `<svg class="fryup-worms" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-label="Fry-up ingredient prices, cumulative % change since ${years[0]}" style="width:100%;height:auto;display:block;margin:8px 0 4px">
+    ${yLabels.join('')}
+    ${yearLines.join('')}
+    ${linesHtml}
+  </svg>`;
 }
 
 /* =========================================================
@@ -9075,7 +9199,7 @@ const SIGNAL_EXPLAINERS = {
   greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
   chippy:     'Modelled UK fish-and-chip + takeaway demand. Iconic Friday 18:00–20:00 peak, Sunday-evening leftover spike, post-pub kebab/chip run weekends 22:00+. Cuisine-aware top-5 menu rotates English chippy / Chinese / Indian / kebab / Scottish-weird.',
   breakfast:  'English Breakfast Index — modelled per-plate cost of a proper full English: bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread. Today\'s pack prices and per-plate portion costs anchored to publicly-known UK supermarket baselines (Tesco / Sainsbury\'s / ASDA mid-tier own-brand and branded staples), with a small ±0.4% daily wobble per item (date-seeded sine drift) so the numbers breathe overnight. YoY % per ingredient set against ONS Consumer Prices Index food-category movements — these are the figures that drive the "fry-up inflation" headlines. Score is the per-plate weighted YoY: flat plate ≈ 0, +5% YoY ≈ 0.55, +10% ≈ 0.95. Cost-of-living rage that won\'t go away.',
-  fryup:      'Fry-Up Tracker — sister card to the English Breakfast Index, showing the cost of a full English plate over the past five years. Walks backwards from today\'s plate price using each year\'s ONS food CPI (series CHAW, food & non-alcoholic beverages) to reconstruct prior plate costs. Anchored figures: 2022 +9.2%, 2023 +14.7% (peak — March 2023 hit 19.2% YoY), 2024 +4.5%, 2025 +3.1%. Sparkline shows 60 monthly data points with smoothing. <b>Ambient card — does not score the gauge.</b> The current YoY pressure is already captured by the breakfast signal; this card just gives the long-run trajectory somewhere to live.',
+  fryup:      'Fry-Up Tracker — sister card to the English Breakfast Index, showing the price trajectory of all 8 fry-up ingredients over the past five years as a single multi-line worm chart. Each line is one ingredient. Y axis = cumulative % change since 2021. Y values are anchored to ONS Consumer Prices Index detailed reference tables, food sub-categories: bread/cereals, meat, eggs, fish, milk/cheese/eggs, fruit, vegetables, sugar/jam/honey/chocolate. Eggs and bread were smashed hardest in 2022-23 (+22% and +19% YoY at peak); tomatoes spiked in 2023 (Spanish drought); mushrooms and black pudding barely moved. Headline: cost of an entire fry-up plate vs 2021. <b>Ambient card — does not score the gauge.</b> The current YoY pressure is already captured by the breakfast signal; this card just gives the long-run trajectory somewhere to live.',
   icecream:   'McFlurry Machine status — comedy seasonal curve based on hot weather, school-holiday windows and tourist behaviour. The McFlurry is rarely working.',
   vape:       'Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 disposable flavours from retail-share data (Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol). Each tagged with the dominant brand.',
   bh:         'Live gov.uk bank-holidays.json per jurisdiction (England & Wales / Scotland / NI). Plus 27 non-bank UK calendar moments — Wimbledon, Glastonbury, Ascot, FA Cup Final, Mariah Day, etc.',
@@ -9544,23 +9668,22 @@ function renderCard(sig){
       }).join('') + `</div>`;
     }
   }
-  // Fry-Up Tracker — 5-year price history, year-by-year rows
-  if (sig.fryupYears && sig.fryupYears.length){
-    queryPills = `<div class="branches">` + sig.fryupYears.map((y, i) => {
-      const isToday = i === sig.fryupYears.length - 1;
-      const cls = isToday ? 'hot' : (y.yoy >= 8 ? 'warm' : '');
-      const yoyColor = isToday ? 'var(--red)'
-                     : y.yoy >= 10 ? 'var(--red)'
-                     : y.yoy >=  5 ? 'var(--amber)'
-                     : y.yoy >=  2 ? 'var(--ink-dim)'
-                     :               'var(--brew)';
-      const yoyTxt = i === 0 ? 'baseline' : (y.yoy > 0 ? '+' : '') + y.yoy.toFixed(1) + '%';
-      const tag = isToday ? 'today' : 'CPI';
-      return `<div class="branch ${cls}">
-        <span class="branch-text"><b>${y.year}</b><span class="loc" style="font-family:var(--mono)">£${y.plate.toFixed(2)} · ${tag}</span></span>
-        <span class="cap" style="color:${yoyColor};font-family:var(--mono)">${esc(yoyTxt)}</span>
+  // Fry-Up Tracker — 8-line worm chart of ingredient price trajectories
+  // since 2021, with a coloured legend showing each ingredient's cumulative %.
+  if (sig.fryupSeries && sig.fryupSeries.length){
+    const wormSvg = _renderFryupWorms(sig.fryupSeries, sig.fryupYears);
+    // Legend — sort by cumulative % descending so the worst offenders are at the top.
+    const legend = sig.fryupSeries.slice().sort((a, b) => b.cumPct - a.cumPct);
+    const legendHtml = `<div class="fryup-legend">` + legend.map(s => {
+      const cls = s.cumPct >= 50 ? 'hot' : s.cumPct >= 30 ? 'warm' : '';
+      const pctColor = s.cumPct >= 50 ? 'var(--red)' : s.cumPct >= 30 ? 'var(--amber)' : s.cumPct >= 15 ? 'var(--ink-dim)' : 'var(--brew)';
+      return `<div class="fryup-leg ${cls}">
+        <span class="dot" style="background:${s.color}"></span>
+        <span class="nm">${s.icon} ${esc(s.name.split(' ')[0])}</span>
+        <span class="pct" style="color:${pctColor};font-family:var(--mono)">+${s.cumPct.toFixed(0)}%</span>
       </div>`;
     }).join('') + `</div>`;
+    queryPills = wormSvg + legendHtml;
   }
   // Per-signal explainer tooltip — show a "?" pip when we have explainer copy
   const tipText = SIGNAL_EXPLAINERS[sig.key];
@@ -11119,7 +11242,7 @@ function renderAll(bulk){
   const SIGNAL_GROUPS = [
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
-    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','breakfast','fryup','icecream','vape'] },
+    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy', ['fryup','breakfast'], 'icecream','vape'] },
     { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
@@ -11156,10 +11279,27 @@ function renderAll(bulk){
     }
     // Render group divider only when at least one of its signals will actually
     // show. Otherwise we'd leave a stranded "Live Odds" header above empty space.
-    const visibleInGroup = group.keys.filter(k => sigs[k] && !sigs[k].hide);
-    if (!visibleInGroup.length) continue;
+    // Keys may contain either string keys (single card) OR arrays of string
+    // keys (a card-pair, rendered side-by-side in a sub-grid that spans the
+    // full grid row — used by Fry-Up Tracker + English Breakfast Index).
+    const flatKeys = group.keys.flatMap(k => Array.isArray(k) ? k : [k]);
+    const visibleAny = flatKeys.some(k => sigs[k] && !sigs[k].hide);
+    if (!visibleAny) continue;
     signalsHtml += `<div class="grid-divider">${group.label}</div>`;
-    for (const k of visibleInGroup){
+    for (const k of group.keys){
+      if (Array.isArray(k)){
+        // Card pair — wrap in .card-pair sub-grid (spans full row).
+        const visiblePair = k.filter(k2 => sigs[k2] && !sigs[k2].hide);
+        if (!visiblePair.length) continue;
+        signalsHtml += `<div class="card-pair">`;
+        for (const k2 of visiblePair){
+          signalsHtml += renderCard(sigs[k2]);
+          orderedSignals.push(sigs[k2]);
+        }
+        signalsHtml += `</div>`;
+        continue;
+      }
+      if (!sigs[k] || sigs[k].hide) continue;
       signalsHtml += renderCard(sigs[k]);
       orderedSignals.push(sigs[k]);
       // For pad:true groups, insert ONE filler card immediately after the

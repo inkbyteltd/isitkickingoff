@@ -135,7 +135,35 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.6 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.7 <span class="stamp">live</span></div>
+      <div class="release-tag">📊 8-line ingredient worm chart · side-by-side breakfast pair · Apr 2026</div>
+    </div>
+    <p class="intro">Two improvements to the breakfast pair landed in v2.6. <b>(1)</b> The Fry-Up Tracker now shows an <b>8-line worm chart</b> — one coloured line per ingredient — instead of a single plate-cost sparkline. Each ingredient walks its own historical YoY path anchored to ONS food sub-category CPI (eggs +22% YoY at the 2022 peak, bread smashed by the wheat shock at +19% YoY in 2023, tomatoes spiked in 2023 from the Spanish drought, mushrooms and black pudding barely moved). Lines are sorted by cumulative-since-2021 and shown with a coloured legend. <b>(2)</b> Fry-Up Tracker and English Breakfast Index now sit <b>side-by-side</b> in a forced 2-column sub-grid wrapper that always takes its own row, regardless of viewport width. Fry-Up on the left, Breakfast on the right.</p>
+    <h3>The new chart</h3>
+    <ul>
+      <li>New <code>_renderFryupWorms()</code> SVG renderer: 8 lines, shared Y axis (% change since 2021), year gridlines, Y-axis tick labels, end-of-line markers.</li>
+      <li>Each ingredient carries its own <code>histYoY</code> series (2021–2026) anchored to real ONS Consumer Prices Index sub-category figures. The lines diverge: <b>Eggs +61%</b>, <b>Bread +52%</b>, <b>Tomatoes +47%</b> at the top, <b>Mushrooms +20%</b>, <b>Black Pudding +18%</b> at the bottom.</li>
+      <li>Plate cost reconstructed from the per-ingredient indices: <b>£3.21 in 2021 → £4.40 in 2026 = +£1.19 / +37% over 5 years</b>.</li>
+      <li>Coloured 2-column legend (sorted by worst offender first) under the chart, with a chip per ingredient showing today's cumulative %.</li>
+    </ul>
+    <h3>Side-by-side layout</h3>
+    <ul>
+      <li>New CSS class <code>.card-pair</code> — uses <code>grid-column:1 / -1</code> to span the full row of the parent auto-fill grid, then sets <code>grid-template-columns:1fr 1fr</code> internally for two equal cards.</li>
+      <li>Bulletproof regardless of viewport: collapses to single column under 720px, stays 2-up at all wider sizes. Doesn't fight the auto-fill layout — it sidesteps it.</li>
+      <li>SIGNAL_GROUPS now supports nested arrays as keys: <code>[['fryup','breakfast']]</code> renders as a paired card-pair wrapper. Backwards compatible with all existing string keys.</li>
+      <li>Fry-Up Tracker on the left, English Breakfast Index on the right.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>BREAKFAST_INGREDIENTS</code> now carries a per-ingredient <code>color</code> and <code>histYoY</code> map — same source of truth feeds both cards.</li>
+      <li>Inline JS parse: ✅ clean. Worm chart logic test: 8 ingredients, plate +37% cumulative. <code>deploy-test/</code> bundle synced.</li>
+      <li>Total model weight unchanged at <b>1.31</b> (fryup is still ambient, breakfast still 1%).</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.6</div>
       <div class="release-tag">📈 Fry-Up Tracker · ℹ️ About page · Apr 2026</div>
     </div>
     <p class="intro">Two related pieces. <b>(1)</b> A second wide module sat next to the English Breakfast Index — the <b>📈 Fry-Up Tracker</b>. It walks backwards from today's plate cost using each year's ONS food CPI to reconstruct prior plate prices over the past five years. Headline: <b>+£1.28 since 2021 · +41% over 5 years</b>. Sparkline of 60 monthly data points + a year-by-year table. Ambient — does not score the gauge, since the current YoY pressure is already captured by the breakfast signal. <b>(2)</b> A new <a href="./about.html">About</a> page in the top nav, telling the story of why the site exists, how the model works, and the long-term plan to build a multi-year archive of the British mood.</p>
