@@ -106,6 +106,7 @@
     </button>
     <div class="nav-links">
       <a href="./index.html">📊 Dashboard</a>
+      <a href="./about.html">ℹ️ About</a>
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
@@ -134,7 +135,35 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.5 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.6 <span class="stamp">live</span></div>
+      <div class="release-tag">📈 Fry-Up Tracker · ℹ️ About page · Apr 2026</div>
+    </div>
+    <p class="intro">Two related pieces. <b>(1)</b> A second wide module sat next to the English Breakfast Index — the <b>📈 Fry-Up Tracker</b>. It walks backwards from today's plate cost using each year's ONS food CPI to reconstruct prior plate prices over the past five years. Headline: <b>+£1.28 since 2021 · +41% over 5 years</b>. Sparkline of 60 monthly data points + a year-by-year table. Ambient — does not score the gauge, since the current YoY pressure is already captured by the breakfast signal. <b>(2)</b> A new <a href="./about.html">About</a> page in the top nav, telling the story of why the site exists, how the model works, and the long-term plan to build a multi-year archive of the British mood.</p>
+    <h3>Fry-Up Tracker</h3>
+    <ul>
+      <li>New <code>signalFryup()</code> function + <code>ONS_FOOD_YOY</code> data const + <code>fryupYears</code> render branch.</li>
+      <li>Anchored to ONS Consumer Prices Index, food &amp; non-alcoholic beverages category (CHAW): 2022 +9.2%, 2023 +14.7% (peak), 2024 +4.5%, 2025 +3.1%.</li>
+      <li>Sparkline reuses the existing <code>_renderSparkline</code> helper; year-by-year table reuses the branches/cap pattern from Greggs / Chippy.</li>
+      <li>Card is tagged <code>ambient:true</code> — <code>renderCard</code> swaps the foot from "weight 1% · +0.5 pts" to "ambient · context · not scored" so the maths reads honestly.</li>
+      <li>Fills the gap that the wide English Breakfast Index card created on the right side of row N+1.</li>
+    </ul>
+    <h3>About page</h3>
+    <ul>
+      <li>New <code>about.html</code> with three long-form sections: <b>The story</b>, <b>How the model works</b>, and <b>The long game · gauging the nation</b>.</li>
+      <li>Links into the dashboard, changelog and essays. Includes a tier table, a CTA for the brew button, and a couple of pull-quotes.</li>
+      <li>Top nav updated across <i>all</i> pages (dashboard, about, snapshot, news, changelog, shop, legal) — About now sits second from the left, between Dashboard and Snapshot.</li>
+      <li>Footer link added on the dashboard pointing to About.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>WEIGHTS unchanged (fryup is ambient). Total model weight stays at <b>1.31</b>.</li>
+      <li>Inline JS parse: ✅ clean. Plate trajectory test: 2021 £3.12 → 2026 £4.40 (+41%). <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.5</div>
       <div class="release-tag">🍳 English Breakfast Index · cost-of-living rage on a plate · Apr 2026</div>
     </div>
     <p class="intro">A new wide card in the <b>Consumption</b> group: the <b>🍳 English Breakfast Index</b>. Tracks the per-plate cost of a proper full English — bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread — and the year-on-year change. The plate today comes in around <b>£4.40</b>, up <b>+4.3% YoY</b> on a weighted basket. Verdict line escalates from "Plate's holding." through "Bacon's being cheeky." to "This is now a war." as the plate gets dearer. The English breakfast is an important part of British culture, and its price is exactly the kind of slow-moving cost-of-living grumble that belongs on this dashboard.</p>

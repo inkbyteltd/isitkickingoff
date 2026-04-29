@@ -870,6 +870,7 @@
     </button>
     <div class="nav-links">
       <a href="./" class="active">📊 Dashboard</a>
+      <a href="./about.html">ℹ️ About</a>
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html">🪵 Changelog</a>
@@ -1229,6 +1230,7 @@
   <footer class="small">
     isitkickingoff · build v1 · © <span id="yr">2026</span> · <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">☕ Buy us a brew</a><br/>
     <span style="display:inline-block;margin-top:6px;color:var(--ink-faint)">
+      <a href="./about.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">About</a> ·
       <a href="./news.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Essays</a> ·
       <a href="./legal.html#privacy" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Privacy</a> ·
       <a href="./legal.html#terms" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Terms</a> ·
@@ -3455,6 +3457,98 @@ function signalBreakfast(){
     }));
 
   return { ...base, valueLabel, subLabel, score, breakfastItems, plateCost, plateYoY };
+}
+
+/* =========================================================
+   Signal: 📈 Fry-Up Tracker (v2.5, ambient — context only)
+   Sister card to the English Breakfast Index. Tracks the
+   cost of a full English plate over the past 5 years using
+   ONS food CPI year-on-year figures as the historical anchor.
+   Walks BACKWARDS from today's plate cost using each year's
+   weighted YoY to reconstruct prior plate prices, then renders
+   a 60-month sparkline + year-by-year table.
+
+   This card is ambient — it does NOT contribute to the gauge
+   (no entry in WEIGHTS). The current-period inflation pressure
+   is already captured by the breakfast signal; this card just
+   visualises the long-run trajectory so the cost-of-living
+   grumble has somewhere to live.
+
+   Anchored to ONS Consumer Prices Index, food & non-alcoholic
+   beverages category (CPI series CHAW). Headline figures:
+     2022: +9.2%   (Russia/Ukraine + supply shock)
+     2023: +14.7%  (peak — Mar 2023 hit 19.2% YoY)
+     2024: +4.5%
+     2025: +3.1%
+     2026: today's measured plate YoY (~+4%)
+   ========================================================= */
+const ONS_FOOD_YOY = {
+  // year → annualised UK food CPI (rounded). 2021 is the soft baseline.
+  2021: 0.5,
+  2022: 9.2,
+  2023: 14.7,
+  2024: 4.5,
+  2025: 3.1,
+};
+
+function signalFryup(){
+  const base = { key:'fryup', title:'Fry-Up Tracker', icon:'📈', live:false, modelled:true, wide:true, ambient:true };
+  const today = signalBreakfast();
+  const currentYear = new Date().getFullYear();
+  const currentYoY  = today.plateYoY;
+  const todayPlate  = today.plateCost;
+
+  // Walk back year-by-year. plate[y-1] = plate[y] / (1 + yoy[y])
+  const years = [];
+  years.push({ year: currentYear, plate: todayPlate, yoy: currentYoY });
+  let runningPlate = todayPlate;
+  let runningYoY   = currentYoY;
+  for (let y = currentYear - 1; y >= 2021; y--){
+    runningPlate = +(runningPlate / (1 + runningYoY/100)).toFixed(2);
+    runningYoY = ONS_FOOD_YOY[y] || 0;
+    years.push({ year: y, plate: runningPlate, yoy: runningYoY });
+  }
+  // Oldest first.
+  years.reverse();
+
+  const oldest = years[0];
+  const newest = years[years.length - 1];
+  const totalGBP    = +(newest.plate - oldest.plate).toFixed(2);
+  const totalChange = +(((newest.plate - oldest.plate) / oldest.plate) * 100).toFixed(0);
+
+  // Build a 60-month sparkline by linearly interpolating between yearly anchors.
+  // Add a small deterministic monthly wobble (±0.5%) so the line isn't a stair-step.
+  const sparkValues = [];
+  for (let i = 0; i < years.length - 1; i++){
+    const fromP = years[i].plate;
+    const toP   = years[i+1].plate;
+    for (let m = 0; m < 12; m++){
+      const t = m / 12;
+      const wobble = Math.sin((years[i].year * 100 + m) * 0.37) * 0.005;
+      sparkValues.push(fromP + (toP - fromP) * t + (fromP + (toP - fromP) * t) * wobble);
+    }
+  }
+  sparkValues.push(newest.plate);
+
+  // Normalise to 0..1 for the sparkline renderer.
+  const minV = Math.min.apply(null, sparkValues);
+  const maxV = Math.max.apply(null, sparkValues);
+  const range = maxV - minV || 1;
+  const sparkNorm = sparkValues.map(v => (v - minV) / range);
+
+  // Score for the bar at the bottom — purely visual since this card is ambient
+  // (not in WEIGHTS, contribution will read 0 and the foot will render "ambient").
+  // Scale 5-year cumulative to 0..1: +50% → bar full.
+  const score = Math.max(0.10, Math.min(0.95, totalChange / 50));
+
+  const valueLabel = `+£${totalGBP.toFixed(2)} since ${oldest.year}`;
+  const subLabel   = `+${totalChange}% over ${years.length - 1} years · ONS food CPI cumulative · the cost-of-living plate`;
+
+  return {
+    ...base, valueLabel, subLabel, score,
+    spark: { values: sparkNorm, label: `Plate cost ${oldest.year}-${newest.year}`, color: '#ff8a1f' },
+    fryupYears: years,
+  };
 }
 
 /* =========================================================
@@ -7880,6 +7974,7 @@ function signalsForRegion(regionId, bulk){
   const licensing= safe(()=>signalLicensing(), 'licensing');
   const chippy   = safe(()=>signalChippy(), 'chippy');
   const breakfast= safe(()=>signalBreakfast(), 'breakfast');
+  const fryup    = safe(()=>signalFryup(), 'fryup');
   const vape     = safe(()=>signalVape(), 'vape');
   const slang    = safe(()=>signalSlang(), 'slang');
   const betting  = safe(()=>signalBetting(bulk.football), 'betting');
@@ -7912,7 +8007,7 @@ function signalsForRegion(regionId, bulk){
   const storm    = _stormSignal(bulk.storm);
   const shit     = _shitSignal(bulk.weatherMap);
   // Search panic: needs peer signals as context (+ optional real trends)
-  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, breakfast, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
+  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, breakfast, fryup, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
   const search   = signalSearchPanic(partial, bulk.trends);
   return { ...partial, search, voting, leaders };
 }
@@ -8980,6 +9075,7 @@ const SIGNAL_EXPLAINERS = {
   greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
   chippy:     'Modelled UK fish-and-chip + takeaway demand. Iconic Friday 18:00–20:00 peak, Sunday-evening leftover spike, post-pub kebab/chip run weekends 22:00+. Cuisine-aware top-5 menu rotates English chippy / Chinese / Indian / kebab / Scottish-weird.',
   breakfast:  'English Breakfast Index — modelled per-plate cost of a proper full English: bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread. Today\'s pack prices and per-plate portion costs anchored to publicly-known UK supermarket baselines (Tesco / Sainsbury\'s / ASDA mid-tier own-brand and branded staples), with a small ±0.4% daily wobble per item (date-seeded sine drift) so the numbers breathe overnight. YoY % per ingredient set against ONS Consumer Prices Index food-category movements — these are the figures that drive the "fry-up inflation" headlines. Score is the per-plate weighted YoY: flat plate ≈ 0, +5% YoY ≈ 0.55, +10% ≈ 0.95. Cost-of-living rage that won\'t go away.',
+  fryup:      'Fry-Up Tracker — sister card to the English Breakfast Index, showing the cost of a full English plate over the past five years. Walks backwards from today\'s plate price using each year\'s ONS food CPI (series CHAW, food & non-alcoholic beverages) to reconstruct prior plate costs. Anchored figures: 2022 +9.2%, 2023 +14.7% (peak — March 2023 hit 19.2% YoY), 2024 +4.5%, 2025 +3.1%. Sparkline shows 60 monthly data points with smoothing. <b>Ambient card — does not score the gauge.</b> The current YoY pressure is already captured by the breakfast signal; this card just gives the long-run trajectory somewhere to live.',
   icecream:   'McFlurry Machine status — comedy seasonal curve based on hot weather, school-holiday windows and tourist behaviour. The McFlurry is rarely working.',
   vape:       'Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 disposable flavours from retail-share data (Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol). Each tagged with the dominant brand.',
   bh:         'Live gov.uk bank-holidays.json per jurisdiction (England & Wales / Scotland / NI). Plus 27 non-bank UK calendar moments — Wimbledon, Glastonbury, Ascot, FA Cup Final, Mariah Day, etc.',
@@ -9051,7 +9147,7 @@ function renderCard(sig){
     : '<span class="chip model" title="'+_escAttr(sig.err||'modelled')+'">Modelled</span>';
   const contribution = (sig.score * (WEIGHTS[sig.key]||0) * 100);
   const icon = sig.icon || '•';
-  const wide = (sig.key === 'search' || sig.key === 'booze' || sig.key === 'petrol' || sig.key === 'protests' || sig.key === 'social' || sig.key === 'spotify' || sig.key === 'reddit' || sig.key === 'betting' || sig.key === 'horses' || sig.key === 'breakfast') ? ' card-wide' : '';
+  const wide = (sig.key === 'search' || sig.key === 'booze' || sig.key === 'petrol' || sig.key === 'protests' || sig.key === 'social' || sig.key === 'spotify' || sig.key === 'reddit' || sig.key === 'betting' || sig.key === 'horses' || sig.key === 'breakfast' || sig.key === 'fryup') ? ' card-wide' : '';
   // Escape ALL HTML-significant chars — defence in depth for any field that
   // might carry third-party text (RSS titles, fixture team names, etc.)
   const esc = s => String(s == null ? '' : s)
@@ -9448,11 +9544,34 @@ function renderCard(sig){
       }).join('') + `</div>`;
     }
   }
+  // Fry-Up Tracker — 5-year price history, year-by-year rows
+  if (sig.fryupYears && sig.fryupYears.length){
+    queryPills = `<div class="branches">` + sig.fryupYears.map((y, i) => {
+      const isToday = i === sig.fryupYears.length - 1;
+      const cls = isToday ? 'hot' : (y.yoy >= 8 ? 'warm' : '');
+      const yoyColor = isToday ? 'var(--red)'
+                     : y.yoy >= 10 ? 'var(--red)'
+                     : y.yoy >=  5 ? 'var(--amber)'
+                     : y.yoy >=  2 ? 'var(--ink-dim)'
+                     :               'var(--brew)';
+      const yoyTxt = i === 0 ? 'baseline' : (y.yoy > 0 ? '+' : '') + y.yoy.toFixed(1) + '%';
+      const tag = isToday ? 'today' : 'CPI';
+      return `<div class="branch ${cls}">
+        <span class="branch-text"><b>${y.year}</b><span class="loc" style="font-family:var(--mono)">£${y.plate.toFixed(2)} · ${tag}</span></span>
+        <span class="cap" style="color:${yoyColor};font-family:var(--mono)">${esc(yoyTxt)}</span>
+      </div>`;
+    }).join('') + `</div>`;
+  }
   // Per-signal explainer tooltip — show a "?" pip when we have explainer copy
   const tipText = SIGNAL_EXPLAINERS[sig.key];
   const tipBtn  = tipText
     ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(sig.title)}?" data-tip="${_escAttr(tipText)}">?</button>`
     : '';
+  // Ambient cards (e.g. Fry-Up Tracker) — context only, no weight in the gauge.
+  // Render a different foot so it doesn't say "weight 0%   +0.0 pts".
+  const footHtml = sig.ambient
+    ? `<div class="foot"><span style="opacity:.8">ambient · context</span><span style="opacity:.8">not scored</span></div>`
+    : `<div class="foot"><span>weight ${Math.round((WEIGHTS[sig.key]||0)*100)}%</span><span>+${contribution.toFixed(1)} pts</span></div>`;
   return `
     <article class="card${wide}">
       <div class="head">
@@ -9468,10 +9587,7 @@ function renderCard(sig){
       ${sparkHtml}
       ${queryPills}
       <div class="bar"><i style="width:${Math.round(sig.score*100)}%"></i></div>
-      <div class="foot">
-        <span>weight ${Math.round((WEIGHTS[sig.key]||0)*100)}%</span>
-        <span>+${contribution.toFixed(1)} pts</span>
-      </div>
+      ${footHtml}
     </article>
   `;
 }
@@ -11003,7 +11119,7 @@ function renderAll(bulk){
   const SIGNAL_GROUPS = [
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
-    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','breakfast','icecream','vape'] },
+    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','breakfast','fryup','icecream','vape'] },
     { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },

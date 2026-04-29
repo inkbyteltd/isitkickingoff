@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>About · Is It Kicking Off?</title>
+<meta name="description" content="Why we built Is It Kicking Off? — a satirical UK aggravation threat-index dashboard, the model behind it, and the long-term plan for measuring the mood of the nation." />
+<link rel="canonical" href="https://isitkickingoff.com/about.html" />
+<meta name="theme-color" content="#07090c" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Is It Kicking Off?" />
+<meta property="og:title" content="About · Is It Kicking Off?" />
+<meta property="og:description" content="Why we built it, how the model works, and where the data goes long-term. A satirical aggravation index for the United Kingdom." />
+<meta property="og:url" content="https://isitkickingoff.com/about.html" />
+<meta property="og:image" content="https://isitkickingoff.com/og-image.png" />
+<meta property="og:locale" content="en_GB" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@inkbyteltd" />
+<meta name="twitter:title" content="About · Is It Kicking Off?" />
+<meta name="twitter:description" content="Why we built it, how the model works, and where the data goes long-term." />
+<meta name="twitter:image" content="https://isitkickingoff.com/og-image.png" />
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='t'%3E%3Cpath d='M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z'/%3E%3C/clipPath%3E%3Cpath d='M0,0 v30 h60 v-30 z' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 v30 M0,15 h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 v30 M0,15 h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E" />
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="IIKO About" />
+
+<style>
+  :root {
+    --bg-0:#07090c; --bg-1:#0d1117; --bg-2:#141a22; --bg-3:#1c2430;
+    --line:#232c3a; --line-2:#2e3a4d;
+    --ink:#e8edf4; --ink-dim:#9aa6b8; --ink-faint:#5f6b7d;
+    --green:#3ecf8e; --amber:#ff8a1f; --red:#ef4b4b;
+    --accent:#ff8a1f;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(1200px 600px at 80% -10%,rgba(255,138,31,.08),transparent 60%),var(--bg-0);min-height:100vh}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+  .reading-col{max-width:780px;margin:0 auto}
+
+  /* Top nav — matches dashboard */
+  .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
+  .top-nav .nav-links{display:contents}
+  .top-nav .nav-burger{display:none}
+  .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
+  .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
+  .top-nav a.active{background:var(--accent);color:#0a0d12;font-weight:700}
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700;margin-left:auto}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12}
+  @media (max-width:640px){
+    .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
+    .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .top-nav .nav-burger .nav-burger-icon{font-size:20px;color:var(--accent);transition:transform .2s ease}
+    .top-nav.open .nav-burger .nav-burger-icon{transform:rotate(90deg)}
+    .top-nav .nav-links{display:none;flex-direction:column;width:100%;gap:4px;padding:4px 4px 6px}
+    .top-nav.open .nav-links{display:flex}
+    .top-nav a{padding:11px 16px;border-radius:8px;text-align:center;border:1px solid var(--line)}
+    .top-nav a.active{border-color:var(--accent)}
+    .top-nav a.nav-bmc{margin-left:0}
+  }
+
+  /* Masthead */
+  .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}
+  .mast h1{font-family:var(--mono);font-weight:800;letter-spacing:-.02em;font-size:clamp(26px,4.5vw,40px);margin:0;line-height:1}
+  .mast h1 .kick{color:var(--accent)}
+  .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+
+  /* Story block — long-form prose */
+  .story{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:28px 26px;margin-bottom:18px;line-height:1.75}
+  .story h2{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .story h2:not(:first-child){margin-top:28px}
+  .story h3{margin:18px 0 8px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+  .story p{margin:10px 0;color:var(--ink);font-size:15px}
+  .story p.lede{font-size:18px;line-height:1.65;color:var(--ink);margin:8px 0 18px}
+  .story p.lede b{color:var(--accent)}
+  .story ul{padding-left:22px;margin:10px 0}
+  .story li{margin-bottom:8px;color:var(--ink);font-size:15px;line-height:1.7}
+  .story li b{color:var(--accent)}
+  .story em{color:var(--ink-dim);font-style:italic}
+  .story code{background:var(--bg-2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:13px;color:var(--accent)}
+  .story a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(255,138,31,.3)}
+  .story a:hover{border-bottom-color:var(--accent)}
+  .story blockquote{margin:18px 0;padding:12px 18px;border-left:3px solid var(--accent);background:var(--bg-2);border-radius:0 8px 8px 0;color:var(--ink-dim);font-style:italic;font-size:15px}
+
+  /* Pull-quote panel — for big satirical lines */
+  .pull{background:linear-gradient(180deg,rgba(255,138,31,.08),var(--bg-1));border:1px solid var(--line-2);border-left:4px solid var(--accent);border-radius:14px;padding:24px 26px;margin:24px 0;font-family:var(--mono);font-size:15px;line-height:1.7;color:var(--ink)}
+  .pull b{color:var(--accent)}
+
+  /* Tier table */
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:14px 0 6px}
+  .tier{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .tier .swatch{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
+  .tier .label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+  .tier .range{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:4px}
+  .tier .vibe{margin-top:6px;font-size:13px;color:var(--ink-dim);line-height:1.5}
+
+  /* CTA card */
+  .cta-card{background:linear-gradient(180deg,rgba(255,138,31,.08),var(--bg-1));border:1px solid var(--line-2);border-radius:14px;padding:24px;margin:24px 0;text-align:center}
+  .cta-card h2{font-family:var(--mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .cta-card p{color:var(--ink-dim);font-size:14px;line-height:1.6;margin:0 0 14px}
+  .cta-card .btn-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .cta-card a{display:inline-block;padding:11px 22px;background:var(--accent);color:#0a0d12;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border-radius:999px;transition:transform .15s,filter .15s}
+  .cta-card a:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .cta-card a.bmc{background:#ffdd00}
+  .cta-card a.alt{background:transparent;color:var(--ink-dim);border:1px solid var(--line-2)}
+  .cta-card a.alt:hover{color:var(--ink);border-color:var(--accent)}
+
+  footer.foot{margin-top:24px;color:var(--ink-faint);font-family:var(--mono);font-size:10px;text-align:center;letter-spacing:.08em;text-transform:uppercase;line-height:1.6}
+  footer.foot a{color:var(--ink-dim);text-decoration:none;margin:0 6px}
+  footer.foot a:hover{color:var(--accent)}
+</style>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1cd37e47538c4c47b71a4f5c37527b60"}'></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="top-nav" aria-label="Site sections">
+    <button class="nav-burger" aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+      <span class="nav-burger-icon" aria-hidden="true">☰</span>
+    </button>
+    <div class="nav-links">
+      <a href="./index.html">📊 Dashboard</a>
+      <a href="./about.html" class="active">ℹ️ About</a>
+      <a href="./snapshot.html">📸 Snapshot</a>
+      <a href="./news.html">📝 Essays</a>
+      <a href="./changelog.html">🪵 Changelog</a>
+      <a href="./shop.html">🛍️ Shop</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
+    </div>
+  </nav>
+
+  <header class="mast">
+    <div>
+      <h1>ABOUT · IS IT <span class="kick">KICKING OFF</span>?</h1>
+      <div class="tag">Why we made it · how it works · where it's going</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:22px">ℹ️</div>
+  </header>
+
+  <div class="reading-col">
+
+    <!-- ========= STORY ========= -->
+    <article class="story">
+      <h2>The story</h2>
+
+      <p class="lede">Britain doesn't have a number for how it feels. The weather has one. The economy has several. The footy has eleven. But the <b>collective national mood</b> — the murmuring, twitching, kettle-on, queue-forming, slow-burn aggravation that defines a Tuesday afternoon in the UK — has, until now, gone unmeasured.</p>
+
+      <p>This site exists to fix that.</p>
+
+      <p><b>Is It Kicking Off?</b> is a single-page dashboard that aggregates around <b>40 live and modelled signals</b> — weather, football fixtures, news tension, pub capacity, bank holidays, fuel prices, sewage spills, royal drama, the moon, the price of a fry-up — into one <em>kick-off score</em> from 0 to 100, ticking every minute. Green means "have a brew." Red means "stay indoors." The needle moves in real time.</p>
+
+      <p>The shape of the day is the shape of the gauge: 5am is a calm green, 11pm Friday is amber bleeding into red, Sunday roast hour is a perfectly composed yellow, Boxing Day at 2pm is whatever you make of it.</p>
+
+      <h3>Why we built it</h3>
+
+      <p>It started as a joke and refused to stay one.</p>
+
+      <p>The premise — that you could mash up Met Office storm warnings, Wetherspoons capacity, the lunar cycle, Greggs sausage-roll demand and Polymarket UK politics into a single mood ring for the country — was funny enough to start. But once we started actually wiring real APIs in, the satire stopped being only satire. The signals correlate in ways you'd expect (rainy Friday + Premier League derby + late payday = score climbing through the afternoon) and in ways you wouldn't (Brent crude moves before petrol pump rage, sewage spill reports cluster around storm fronts, McFlurry-machine despair tracks tourist seasons.)</p>
+
+      <p>What started as a comedy gauge is, accidentally, a kind of ambient social barometer. We left the comedy in.</p>
+
+      <p>The other reason: <b>British data is hostile</b>. Most public services that would let you measure the country at a glance are paywalled, gated, or buried in PDFs. So we built an open, free, no-login dashboard out of the public APIs that <em>are</em> available — Open-Meteo for weather, ONS for inflation, the CMA Pump Watch for fuel, the Met Office RSS for storms, TheSportsDB for fixtures, Wikipedia for calendar moments, and dozens more — and we put the whole thing on Cloudflare so it's free to keep online forever.</p>
+
+      <div class="pull">
+        We don't want this to be a one-off gag. We want a <b>five-year archive of the British mood</b>, day by day, signal by signal, free for anyone to download, plot, ridicule or use. The CSV button at the bottom of the dashboard already lets you do this.
+      </div>
+    </article>
+
+    <!-- ========= HOW THE MODEL WORKS ========= -->
+    <article class="story">
+      <h2>How the model works</h2>
+
+      <p class="lede">A weighted blend of around 40 signals, refreshed live, gauged on a 0–100 scale. The weights were chosen by hand and they get tweaked in public — every change is logged in the <a href="./changelog.html">changelog</a>.</p>
+
+      <h3>The signals</h3>
+
+      <p>Each signal returns a normalised <code>0..1</code> score. They span eight rough groups, all visible on the dashboard:</p>
+
+      <ul>
+        <li><b>Atmosphere & Time</b> — hour-of-day envelope, live regional weather, sunset proximity, moon phase. The day's literal shape.</li>
+        <li><b>Environment & Energy</b> — Met Office storm warnings, sewage spill estimates, UK power-mix breakdown, Brent crude. The country's ambient backdrop.</li>
+        <li><b>Consumption</b> — Wetherspoons capacity, licensing/last-orders, kettle demand from National Grid, Greggs, chippies, the English Breakfast Index, the Fry-Up Tracker, McFlurry status, vape flavours. What Britain is putting in its mouth.</li>
+        <li><b>Calendar & Sport</b> — bank holidays, patriot days, England fixtures (cricket, rugby, football), the National Lottery, Firm Factor flashpoint matches, last football results, UK racing, the Pagan Wheel of the Year, British Folklore Watch. What's on the calendar, real or magical.</li>
+        <li><b>Mobility & Delivery</b> — TfL status, road rage from headlines, Uber surge, Deliveroo demand. The moving country.</li>
+        <li><b>Daily Pulse, Finance & Polymarket</b> — Search Panic Index, live UK forecourt prices, the FTSE / Dow / NASDAQ / S&P, GBP exchange rates, crypto, UK-relevant Polymarket prediction-market probabilities.</li>
+        <li><b>Sentiment</b> — royal drama, telly listings, news tension from headlines, regional UK slang.</li>
+        <li><b>Rage & Disorder, Street & Chatter, Streaming & Reddit</b> — London crime, UK terror threat level, checkout rage, A&E pressure, civil unrest, social media mania, Spotify UK trending, r/unitedkingdom velocity.</li>
+      </ul>
+
+      <h3>The scoring</h3>
+
+      <p>Each signal has a weight in <code>WEIGHTS</code>. We multiply the signal's <code>0..1</code> score by its weight, sum them all, and scale to <code>0..100</code>. The total weights add up to about <b>1.31</b> right now — close to but slightly over 1, which lets the model overshoot when several large signals all light up together (a stormy bank-holiday Friday with a Spurs derby, say). Weights are not equal: time-of-day and weather are worth more than slang or moon phase.</p>
+
+      <p>The full breakdown is on the dashboard, in the methodology table at the bottom. It updates with every release and we never hide anything.</p>
+
+      <h3>Tiers</h3>
+
+      <p>The 0–100 score collapses to a tier with a colour and a verdict:</p>
+
+      <div class="tiers">
+        <div class="tier"><span class="swatch" style="background:var(--green)"></span><span class="label">Have a brew</span><div class="range">0–24</div><div class="vibe">All quiet on the southern front.</div></div>
+        <div class="tier"><span class="swatch" style="background:#a3d977"></span><span class="label">Mildly miffed</span><div class="range">25–39</div><div class="vibe">Tea on, biscuits out, low-grade tutting.</div></div>
+        <div class="tier"><span class="swatch" style="background:#f4c025"></span><span class="label">Tetchy</span><div class="range">40–54</div><div class="vibe">Eye-rolls in the queue. Mild horn use.</div></div>
+        <div class="tier"><span class="swatch" style="background:var(--amber)"></span><span class="label">Brewing</span><div class="range">55–69</div><div class="vibe">Mood's changing. Strangers making eye contact.</div></div>
+        <div class="tier"><span class="swatch" style="background:var(--red)"></span><span class="label">Argy-bargy</span><div class="range">70–84</div><div class="vibe">Bin lid as shield. Family WhatsApp lit up.</div></div>
+        <div class="tier"><span class="swatch" style="background:#b41f1f"></span><span class="label">Kicking off</span><div class="range">85–100</div><div class="vibe">Stay indoors. Curtains drawn. The country is at war with itself.</div></div>
+      </div>
+
+      <h3>Live vs modelled</h3>
+
+      <p>Each card shows a <b>Live</b> or <b>Modelled</b> chip. Live signals come from real APIs we hit on every page load (or via our Cloudflare Worker proxy when a source is CORS-blocked). Modelled signals are deterministic functions of date, time-of-day, weather and other signals — useful when no live API exists (e.g. there's no public Greggs sausage-roll endpoint, sadly). We do not invent data: a modelled card always says so.</p>
+
+      <p>For the curious: the technical stack is <b>one HTML file</b>, no build step, no framework, plus a Cloudflare Worker for server-side fetches. The whole site is open and inspectable in your browser's view-source. We like it that way.</p>
+    </article>
+
+    <!-- ========= LONG TERM ========= -->
+    <article class="story">
+      <h2>The long game · gauging the nation</h2>
+
+      <p class="lede">A single number for today is fun. <b>A five-year archive of that number</b> — broken down by signal, by region, by hour-of-day — is something else entirely.</p>
+
+      <p>Every snapshot the dashboard takes is recorded. We persist:</p>
+
+      <ul>
+        <li><b>The daily score</b>, region by region (England, Scotland, Wales, Northern Ireland, plus 12 cities).</li>
+        <li><b>Every signal's contribution</b>, so we can answer questions like "did the football matter on that Saturday in October?"</li>
+        <li><b>UK polling</b> — voting intention and leader approval, captured weekly.</li>
+        <li><b>Live indicator readings</b> — Stella & Kebab indices, cocaine concentration in UK rivers, Rizla market share, the Polymarket UK probabilities, whatever's happening in the live tickers.</li>
+      </ul>
+
+      <p>The history is downloadable as a CSV from the dashboard. The full snapshot is also persisted to <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">Supabase</a> in best-effort write mode, so we can plot multi-year trends as the dataset grows.</p>
+
+      <h3>What we hope to find</h3>
+
+      <p>Some questions we actually don't know the answer to yet:</p>
+
+      <ul>
+        <li>Does the country measurably calm down on the day after a general election? Or get angrier?</li>
+        <li>How long does the post-Premier-League-derby aggravation half-life actually last? Hours? Days?</li>
+        <li>Which has a bigger effect on the gauge: a heatwave or a bank holiday?</li>
+        <li>Is there a mood difference between a no-mayor English city and one with a regional mayor?</li>
+        <li>Does the Pagan Wheel of the Year actually correlate with anything, or are we kidding ourselves on that one (it's possible).</li>
+        <li>What does the gauge look like on Christmas morning at 6am vs. 6am on a Wednesday in February? (We have hypotheses. We'd like proof.)</li>
+      </ul>
+
+      <p>We'll publish what we find as <a href="./news.html">essays</a> on the blog. The data will stay free for anyone else who wants to mine it.</p>
+
+      <div class="pull">
+        Britain is <b>chronically under-measured by tone</b>. The ONS will tell you food inflation rose 4.3% but not that bacon is being cheeky about it. We're trying to fix the second part.
+      </div>
+
+      <h3>Who's behind it</h3>
+
+      <p>Built and maintained by <a href="https://inkbyte.co.uk" target="_blank" rel="noopener noreferrer">Inkbyte</a>, a small UK studio, with help from the public APIs and open data feeds that Britain has fortunately not yet privatised. No funding, no investors, no API keys to anything paywalled. If you find a bug or have a signal to suggest, the <a href="./changelog.html">changelog</a> is the front door.</p>
+
+      <p>If the site is useful or makes you laugh, you can keep it online by buying us a brew. That's how the hosting bill gets paid.</p>
+    </article>
+
+    <!-- ========= CTA ========= -->
+    <section class="cta-card">
+      <h2>Get involved</h2>
+      <p>Use the dashboard. Download the CSV. Tell a friend it exists. Buy us a brew if you want it to keep going.</p>
+      <div class="btn-row">
+        <a href="./index.html">📊 Open the dashboard</a>
+        <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="bmc">🍵 Buy us a brew</a>
+        <a href="./news.html" class="alt">📝 Read the essays</a>
+      </div>
+    </section>
+
+    <footer class="foot">
+      isitkickingoff · © <span id="yr">2026</span> ·
+      <a href="./index.html">Dashboard</a> ·
+      <a href="./changelog.html">Changelog</a> ·
+      <a href="./legal.html#privacy">Privacy</a> ·
+      <a href="./legal.html#disclaimer">Disclaimer</a> ·
+      <a href="mailto:hello@inkbyte.co.uk">Contact</a>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  // Burger nav (matches the dashboard pattern)
+  (function(){
+    var nav = document.querySelector('.top-nav');
+    var btn = nav && nav.querySelector('.nav-burger');
+    if (!nav || !btn) return;
+    btn.addEventListener('click', function(){
+      var open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+  // Year stamp
+  var y = document.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
