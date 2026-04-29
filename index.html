@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Is It Kicking Off? — UK Aggravation Threat Index</title>
 <meta name="description" content="A live, data-driven threat index for the United Kingdom. Are we having a brew or is it about to kick off? Aggregates weather, football, news tension, booze patterns, bank holidays and time-of-day." />
 <link rel="canonical" href="https://isitkickingoff.com/" />
@@ -95,7 +95,12 @@
     --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;overflow-x:hidden;max-width:100vw}
+  /* width:100% / max-width:100% is more reliable than max-width:100vw on iOS —
+     iOS Safari sometimes computes 100vw including reserved gutter space for the
+     Dynamic Island, which makes the body slightly wider than the visible viewport
+     and creates an asymmetric "gap" on the right edge. Using percent-of-parent
+     keeps the body strictly inside the visible area. */
+  html,body{margin:0;padding:0;width:100%;max-width:100%;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;overflow-x:hidden}
   /* iOS niceties: no callout menu on long-press, smooth momentum scroll, no tap highlight */
   button,.region-pill,.heatmap-tile,.share-btn,.hl-row{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;user-select:none}
   .heatmap-wrap,.meth-scroll{-webkit-overflow-scrolling:touch}
@@ -106,7 +111,18 @@
       var(--bg-0);
     min-height:100vh;
   }
-  .wrap{max-width:1200px;margin:0 auto;padding:24px 20px 60px}
+  /* Wrap honours iOS safe-area-insets so the gauge / hero / signal grid never
+     sit underneath the rounded screen corner or Dynamic Island gutter on
+     iPhone. env(safe-area-inset-*) returns 0px on browsers that don't need it,
+     so desktop and Android Chrome get the original 20px on each side. The
+     `max(20px, env(...))` pattern means we always have AT LEAST 20px and add
+     more only if the device demands it. */
+  .wrap{
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:24px max(20px, env(safe-area-inset-right)) 60px max(20px, env(safe-area-inset-left));
+  }
 
   /* Top navigation — links to Dashboard / Snapshot / News / Coffee / Shop.
      Uses flex-wrap so the 6 buttons line-wrap cleanly on tablet widths instead of
