@@ -51,7 +51,7 @@
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: https: blob:;
   font-src 'self' data:;
-  connect-src 'self' https://*.bbci.co.uk https://*.theguardian.com https://*.skynews.com https://*.dailymail.co.uk https://*.mirror.co.uk https://api.rss2json.com https://api.allorigins.win https://corsproxy.io https://api.open-meteo.com https://api.gdeltproject.org https://www.gov.uk https://en.wikipedia.org https://api.tvmaze.com https://www.thesportsdb.com https://www.reddit.com https://old.reddit.com https://oauth.reddit.com https://news.met.police.uk https://ws-public.interpol.int https://data.police.uk https://data.elexon.co.uk https://api.nationalgrideso.com https://rss.applemarketingtools.com https://itunes.apple.com https://api.bank-holidays.json.gov.uk https://www.applyforuploadcommercialvehicleoperatorlicence.service.gov.uk https://nitter.net https://nitter.privacydev.net https://www.national-lottery.co.uk https://*.supabase.co https://api.coingecko.com https://api.frankfurter.app https://stooq.com https://api.codetabs.com https://open.er-api.com https://open.exchangerate-api.com;
+  connect-src 'self' https://*.bbci.co.uk https://*.theguardian.com https://*.skynews.com https://*.dailymail.co.uk https://*.mirror.co.uk https://api.rss2json.com https://api.allorigins.win https://corsproxy.io https://api.open-meteo.com https://api.gdeltproject.org https://www.gov.uk https://en.wikipedia.org https://api.tvmaze.com https://www.thesportsdb.com https://www.reddit.com https://old.reddit.com https://oauth.reddit.com https://news.met.police.uk https://ws-public.interpol.int https://data.police.uk https://data.elexon.co.uk https://api.nationalgrideso.com https://rss.applemarketingtools.com https://itunes.apple.com https://api.bank-holidays.json.gov.uk https://www.applyforuploadcommercialvehicleoperatorlicence.service.gov.uk https://nitter.net https://nitter.privacydev.net https://www.national-lottery.co.uk https://*.supabase.co https://api.coingecko.com https://api.frankfurter.app https://stooq.com https://api.codetabs.com https://open.er-api.com https://open.exchangerate-api.com https://gamma-api.polymarket.com;
   frame-src 'self' https://platform.twitter.com https://syndication.twitter.com;
   object-src 'none';
   base-uri 'self';
@@ -1145,6 +1145,7 @@
         <tr><td>₿ Crypto</td><td>0%</td><td><b>LIVE</b> — Bitcoin, Ethereum, and Solana prices in GBP via the <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">CoinGecko free public API</a> (no key needed, CORS-friendly). 24-hour percentage change colour-coded. Ambient context.</td></tr>
         <tr><td>💱 Pound In Your Pocket</td><td>0%</td><td><b>LIVE</b> — GBP exchange rates via a multi-source chain: <a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Frankfurter</a> (ECB-backed) → <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Open ER-API</a> → <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">ExchangeRate-API</a>. All three are free, no key, CORS-friendly. Five flagged currency rows: 🇺🇸 USD, 🇪🇺 EUR, 🇯🇵 JPY, 🇨🇦 CAD, 🇦🇺 AUD. Ambient context.</td></tr>
         <tr><td>💊 Tech &amp; Pharma Movers</td><td>0%</td><td>Five large-cap stocks: Apple, NVIDIA, Alphabet (Nasdaq tech), AstraZeneca, GSK (LSE pharma). Multi-source fetch (Stooq → Yahoo via three proxies). Each row shows day change in percent, colour-coded. Top mover by absolute % change is the headline. Ambient context.</td></tr>
+        <tr><td>🎯 Polymarket UK</td><td>0%</td><td><b>LIVE</b> — Top 4 UK-related prediction markets by 24-hour volume, fetched live via our Worker proxy from <a href="https://polymarket.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Polymarket's</a> public Gamma API. UK-relevance filter catches Westminster, Labour/Tory/Reform leadership, NHS, royals, Premier League, and any market mentioning the UK or its big institutions. Each card shows the question, current YES probability (colour-coded green/amber/red by confidence), 24h trading volume, and links to the full Polymarket order book. Ambient context.</td></tr>
       </tbody>
     </table>
     </div>
@@ -2947,25 +2948,44 @@ function signalRoadRage(newsItems){
    2024 disposable category).  Hourly activity curve peaks evenings
    + post-pub.
    ========================================================= */
+// Vape flavour pool — 22 flavours tagged with seasonal/temporal/contextual
+// affinities. tags: 'icy' = menthol-leaning, 'fruity' = berry/citrus,
+// 'tropical' = mango/pineapple, 'dessert' = sweet/creamy, 'cola' = soft-drink,
+// 'menthol' = pure mint/menthol, 'energy' = energy-drink-style,
+// 'classic' = tobacco/aniseed legacy. Each can carry multiple tags.
 const VAPE_FLAVOURS = [
-  { name:'Strawberry Ice',     icon:'🍓', share:0.18, brand:'Elf Bar / Lost Mary' },
-  { name:'Blue Razz Lemonade', icon:'🫐', share:0.14, brand:'Lost Mary BM600'    },
-  { name:'Watermelon Ice',     icon:'🍉', share:0.12, brand:'Elf Bar 600'        },
-  { name:'Triple Mango',       icon:'🥭', share:0.10, brand:'Geek Bar Pulse'     },
-  { name:'Menthol',            icon:'❄️', share:0.09, brand:'IVG / SKE Crystal'  },
-  { name:'Cherry Cola',        icon:'🍒', share:0.08, brand:'Lost Mary'          },
-  { name:'Pink Lemonade',      icon:'🍋', share:0.07, brand:'Elf Bar BC5000'     },
-  { name:'Mr Blue',            icon:'💙', share:0.06, brand:'IVG 2400'           },
-  { name:'Cotton Candy Ice',   icon:'🍭', share:0.05, brand:'Hayati Pro Max'     },
-  { name:'Apple Peach',        icon:'🍏', share:0.05, brand:'SKE Crystal Bar'    },
+  { name:'Strawberry Ice',      icon:'🍓', share:0.16, brand:'Elf Bar / Lost Mary',  tags:['fruity','icy'] },
+  { name:'Blue Razz Lemonade',  icon:'🫐', share:0.13, brand:'Lost Mary BM600',      tags:['fruity','citrus'] },
+  { name:'Watermelon Ice',      icon:'🍉', share:0.11, brand:'Elf Bar 600',           tags:['fruity','icy','summer'] },
+  { name:'Triple Mango',        icon:'🥭', share:0.09, brand:'Geek Bar Pulse',        tags:['tropical','summer'] },
+  { name:'Menthol',             icon:'❄️', share:0.08, brand:'IVG / SKE Crystal',    tags:['menthol','icy','winter'] },
+  { name:'Cherry Cola',         icon:'🍒', share:0.07, brand:'Lost Mary',             tags:['cola','dessert'] },
+  { name:'Pink Lemonade',       icon:'🍋', share:0.06, brand:'Elf Bar BC5000',        tags:['citrus','summer'] },
+  { name:'Mr Blue',             icon:'💙', share:0.05, brand:'IVG 2400',              tags:['fruity'] },
+  { name:'Cotton Candy Ice',    icon:'🍭', share:0.04, brand:'Hayati Pro Max',        tags:['dessert','icy','weekend'] },
+  { name:'Apple Peach',         icon:'🍏', share:0.04, brand:'SKE Crystal Bar',       tags:['fruity'] },
+  { name:'Pineapple Ice',       icon:'🍍', share:0.04, brand:'Lost Mary OS5000',      tags:['tropical','icy','summer'] },
+  { name:'Banana Ice',          icon:'🍌', share:0.03, brand:'Elf Bar Lowit',         tags:['tropical','icy'] },
+  { name:'Energy Ice',          icon:'⚡', share:0.03, brand:'Geek Bar',              tags:['energy','icy','weekend','night'] },
+  { name:'Bubblegum',           icon:'🍬', share:0.03, brand:'IVG 2400',              tags:['dessert','sweet'] },
+  { name:'Vimto',               icon:'🍇', share:0.03, brand:'Lost Mary BM6000',      tags:['fruity','classic'] },
+  { name:'Spearmint',           icon:'🌿', share:0.02, brand:'Elf Bar BC5000',        tags:['menthol','morning'] },
+  { name:'Apple & Mint',        icon:'🍎', share:0.02, brand:'SKE Crystal',           tags:['menthol','fruity'] },
+  { name:'Tobacco',             icon:'🚬', share:0.02, brand:'Lost Mary 4-in-1',      tags:['classic','morning'] },
+  { name:'Coffee',              icon:'☕', share:0.02, brand:'IVG 2400',              tags:['classic','morning','winter'] },
+  { name:'Mojito',              icon:'🍃', share:0.02, brand:'Elf Bar Mate 500',      tags:['menthol','summer','weekend'] },
+  { name:'Toffee Caramel',      icon:'🍮', share:0.02, brand:'Hayati Pro Ultra',      tags:['dessert','winter','night'] },
+  { name:'Snow Berry',          icon:'❅', share:0.02, brand:'Lost Mary OS5000',      tags:['fruity','icy','winter'] },
 ];
+
 function signalVape(){
   const base = { key:'vape', title:'Vape Flavours UK', icon:'💨', live:false, modelled:true };
-  const d = new Date();
-  const h = d.getHours() + d.getMinutes()/60;
+  const d   = new Date();
+  const h   = d.getHours() + d.getMinutes()/60;
   const dow = d.getDay();
+  const m   = d.getMonth(); // 0-11
 
-  // Activity curve — vape use peaks post-work / post-pub
+  // ---- Activity curve — vape use peaks post-work / post-pub ----
   let activity;
   if      (h < 6)   activity = 0.18;
   else if (h < 9)   activity = 0.45;
@@ -2974,28 +2994,70 @@ function signalVape(){
   else if (h < 17)  activity = 0.55;
   else if (h < 19)  activity = 0.75;
   else if (h < 22)  activity = 0.85;
-  else if (h < 24)  activity = 0.92;  // post-pub vape peak
+  else if (h < 24)  activity = 0.92;
   else              activity = 0.55;
   if (dow === 5 || dow === 6) activity = Math.min(1, activity + 0.08);
 
-  // Top 5 with deterministic daily rotation so the order varies day-to-day
-  // but stays stable through the day.
-  const seed = d.getDate() * 7;
-  const ranked = VAPE_FLAVOURS.map((f, i) => ({
-    ...f,
-    weight: f.share + ((seed + i*3) % 7) * 0.005,
-  })).sort((a,b) => b.weight - a.weight).slice(0, 5);
+  // ---- Context-aware tag bonuses ----
+  // Each flavour gets a multiplier based on which of its tags match RIGHT NOW.
+  // Stacks if a flavour is e.g. both 'icy' AND 'winter' on a January evening.
+  const isSummer  = m >= 3 && m <= 8;        // Apr-Sep
+  const isWinter  = !isSummer;                // Oct-Mar
+  const isMorning = h >= 6 && h < 12;
+  const isEvening = h >= 17 && h < 22;
+  const isNight   = h >= 22 || h < 4;
+  const isWeekend = dow === 0 || dow === 5 || dow === 6;
+
+  function tagMul(tags){
+    if (!tags || !tags.length) return 1.0;
+    let m = 1.0;
+    if (tags.includes('summer')  && isSummer)  m *= 1.45;
+    if (tags.includes('winter')  && isWinter)  m *= 1.45;
+    if (tags.includes('summer')  && !isSummer) m *= 0.55;  // out of season — quieter
+    if (tags.includes('winter')  && !isWinter) m *= 0.65;
+    if (tags.includes('icy')     && isSummer)  m *= 1.25;  // ice flavours peak in summer
+    if (tags.includes('menthol') && isWinter)  m *= 1.20;  // menthol stronger in winter
+    if (tags.includes('morning') && isMorning) m *= 1.40;
+    if (tags.includes('night')   && isNight)   m *= 1.35;
+    if (tags.includes('weekend') && isWeekend) m *= 1.25;
+    if (tags.includes('weekend') && !isWeekend) m *= 0.80;
+    if (tags.includes('energy')  && (isEvening || isNight) && isWeekend) m *= 1.40;
+    if (tags.includes('classic') && isMorning) m *= 1.15;
+    if (tags.includes('tropical') && isSummer) m *= 1.25;
+    return m;
+  }
+
+  // ---- Daily rotation seed — keeps order stable through a day, varies day-to-day ----
+  const seed = d.getDate() * 11 + d.getMonth() * 7 + dow * 3;
+
+  const ranked = VAPE_FLAVOURS.map((f, i) => {
+    const ctxMul = tagMul(f.tags);
+    const noise  = ((seed + i*7) % 11) * 0.004;       // ±0.04 deterministic jitter
+    return Object.assign({}, f, { weight: f.share * ctxMul + noise });
+  }).sort((a,b) => b.weight - a.weight).slice(0, 5);
+
   const top = ranked[0];
   const totalShare = ranked.reduce((a,b) => a + b.weight, 0);
-  // Normalise so percentages add to ~100 within the top 5
-  const normalised = ranked.map(r => ({ ...r, pct: Math.round((r.weight / totalShare) * 100) }));
+  const normalised = ranked.map(r => Object.assign({}, r, { pct: Math.round((r.weight / totalShare) * 100) }));
 
-  return { ...base,
+  // Subline mentions the contextual reason behind today's top flavour
+  let contextNote = '';
+  if (top.tags){
+    if (top.tags.includes('summer') && isSummer)  contextNote = '· summer fruit run';
+    else if (top.tags.includes('winter') && isWinter) contextNote = '· winter warmer';
+    else if (top.tags.includes('icy') && isSummer) contextNote = '· ice on a hot day';
+    else if (top.tags.includes('menthol') && isWinter) contextNote = '· cold-snap menthol';
+    else if (top.tags.includes('night') && isNight) contextNote = '· late-night peak';
+    else if (top.tags.includes('weekend') && isWeekend) contextNote = '· weekend rush';
+    else if (top.tags.includes('morning') && isMorning) contextNote = '· morning starter';
+  }
+
+  return Object.assign({}, base, {
     valueLabel: `${top.icon} ${top.name}`,
-    subLabel: `top flavour · ${normalised[0].pct}% share · ${top.brand} · ${(activity*100).toFixed(0)}% UK vape activity`,
+    subLabel: `top flavour · ${normalised[0].pct}% share · ${top.brand} · ${(activity*100).toFixed(0)}% UK vape activity ${contextNote}`.trim(),
     score: 0.20 + activity * 0.45,
     vapeFlavours: normalised,
-  };
+  });
 }
 
 /* =========================================================
@@ -4386,6 +4448,15 @@ function _financeFeatureHtml(){
     <div class="grid-feature">
       <h3 class="feature-title">💷 Finance &amp; Markets · Live context</h3>
       <div class="env-grid" id="finance-tickers"></div>
+    </div>
+  `;
+}
+
+function _polymarketFeatureHtml(){
+  return `
+    <div class="grid-feature">
+      <h3 class="feature-title">🎯 Polymarket · UK Predictions</h3>
+      <div class="env-grid" id="polymarket-tickers"></div>
     </div>
   `;
 }
@@ -6007,6 +6078,24 @@ async function fetchExchangeRates(){
       }
     }
   } catch(_){}
+  return out;
+}
+
+// 🎯 Polymarket UK — fetched via our Worker (server-side proxy filters for
+// UK-related markets and returns top-N by 24h volume). Always returns
+// { live, markets, count } even on failure.
+async function fetchPolymarketUK(){
+  const out = { live:false, markets:[] };
+  try {
+    const r = await fetch('/api/polymarket?limit=4');
+    if (r.ok){
+      const j = await r.json();
+      if (j && Array.isArray(j.markets) && j.markets.length){
+        out.live = true;
+        out.markets = j.markets;
+      }
+    }
+  } catch(e){ console.warn('[polymarket] threw:', e.message); }
   return out;
 }
 
@@ -8333,6 +8422,73 @@ function renderFinanceCards(fin){
   if (target) target.innerHTML = html;
 }
 
+/* =========================================================
+   🎯 Polymarket renderer (v2.0). Same .ticker visual language.
+   ========================================================= */
+function renderPolymarketCards(poly){
+  poly = poly || {};
+  const tipFor = (key, title) => {
+    const t = SIGNAL_EXPLAINERS[key];
+    return t ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(title)}?" data-tip="${_escAttr(t)}">?</button>` : '';
+  };
+  const markets = (poly.markets || []).slice(0, 4);
+  const fmtVol = v => v >= 1_000_000 ? '$' + (v/1_000_000).toFixed(1) + 'M'
+                    : v >= 1_000     ? '$' + (v/1_000).toFixed(0) + 'k'
+                    : '$' + Math.round(v || 0);
+  const liveChip = poly.live ? `<span class="chip live">Live</span>` : `<span class="chip model">Modelled</span>`;
+
+  // If we got no markets back, render 4 placeholder cards so the layout doesn't collapse.
+  const cards = markets.length ? markets : [null, null, null, null];
+
+  const html = cards.map((m, i) => {
+    if (!m){
+      return `
+        <article class="ticker">
+          <div class="head">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="emoji" aria-hidden="true">🎯</span>
+              <div class="title">UK Prediction Market</div>
+              ${i === 0 ? tipFor('poly', 'Polymarket UK') : ''}
+            </div>
+            ${liveChip}
+          </div>
+          <div class="big" style="font-size:18px;line-height:1.3;color:var(--ink-faint)">Loading UK markets…</div>
+          <div class="sub" style="margin-top:8px">Worker proxy fetching live odds from polymarket.com</div>
+          <div class="foot">
+            <span>Polymarket Gamma API</span>
+            <span>via Worker</span>
+          </div>
+        </article>
+      `;
+    }
+    const yesPct = Number.isFinite(m.yesPct) ? m.yesPct : 50;
+    const noPct  = 100 - yesPct;
+    const yesCol = yesPct >= 60 ? '#3ecf8e' : yesPct <= 40 ? '#ef4b4b' : '#f4c025';
+    return `
+      <article class="ticker">
+        <div class="head">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="emoji" aria-hidden="true">🎯</span>
+            <div class="title" style="white-space:normal;font-size:11px;line-height:1.4">${_escAttr(m.question || 'UK market')}</div>
+            ${i === 0 ? tipFor('poly', 'Polymarket UK') : ''}
+          </div>
+          ${liveChip}
+        </div>
+        <div class="big" style="color:${yesCol}">${yesPct}<span class="unit">% YES</span></div>
+        <div class="rate">NO ${noPct}% · 24h vol ${fmtVol(m.volume24h)}</div>
+        <div class="rate-bar"><i style="width:${yesPct}%;background:${yesCol}"></i></div>
+        <div class="foot">
+          <span>Polymarket · live odds</span>
+          ${m.url ? `<a href="${_escAttr(m.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">view ↗</a>` : '<span>—</span>'}
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  const target = document.getElementById('polymarket-tickers');
+  if (target) target.innerHTML = html;
+}
+
 
 // Live tick loop — increments counters every second based on current rate
 let TICKER_INTERVAL = null;
@@ -8427,6 +8583,8 @@ const SIGNAL_EXPLAINERS = {
   crypto:     'Crypto — live Bitcoin, Ethereum and Solana prices in GBP via the CoinGecko free public API (no API key needed). Shows current price plus 24-hour percentage change, colour-coded green/red. Bitcoin is the headline; Ethereum runs about half of decentralised finance; Solana is the perpetually-online newcomer. When traditional markets sleep on weekends, crypto keeps trading.',
   fx:         'Pound In Your Pocket — live GBP exchange rates via a multi-source chain: Frankfurter (ECB-backed) → Open ER-API (IMF-backed) → ExchangeRate-API. All three are free, no key, CORS-friendly — if one is blocked, the next steps in. Shows what £1 buys today in 5 major currencies: USD, EUR, JPY, CAD, AUD. The GBP/USD rate is "cable" to traders and the cleanest read on UK relative strength. EUR is the holiday-money number.',
   pharmatech: 'Tech & Pharma Movers — five large-cap stocks across two sectors that matter to the UK story: Apple, NVIDIA, Alphabet (US tech megacaps), plus AstraZeneca and GSK (UK-listed pharma giants on the LSE). Multi-source fetch (Stooq primary, Yahoo via three proxies). Each row shows day change in percent, colour-coded. Tech moves the global mood; pharma moves the FTSE more than people realise.',
+  // Polymarket row (v2.0)
+  poly:       'Polymarket UK Predictions — top 4 UK-related prediction markets by 24-hour volume, fetched live via our Worker proxy from Polymarket\'s public Gamma API. Each card shows the market question, the current YES probability (in percent), 24h trading volume, and links straight to Polymarket where you can see the full order book. UK-relevance filter catches Westminster, Labour/Tory/Reform leadership, NHS, royals, Premier League, and any market whose question mentions the UK or its big institutions.',
 
   // Signal grid — main scoring inputs
   time:       'Hour-of-day "activity envelope" — nothing kicks off at 5am regardless of how tense the news is. A multiplier that dampens the gauge by time-of-day; weekend evenings peak.',
@@ -8919,25 +9077,60 @@ function renderCard(sig){
   `;
 }
 
+// Tween-aware setGauge — reads the gauge's CURRENT state (mid-sweep, previous
+// reading, etc) and animates smoothly to the target score over ~900ms with an
+// ease-out curve. Eliminates the jerk that used to happen when the loading
+// sweep snapped to 0 then jumped to the live score.
+let _GAUGE_TWEEN = null;
 function setGauge(score){
-  // First real reading: stop the loading sweep animation if running
-  stopLoadingSweep();
-  const tier = tierFor(score);
-  // Arc length: total path ~283 for r=90 semicircle
   const total = 283;
-  const len = total * (score/100);
-  const arc = $('#arc');
-  arc.setAttribute('stroke-dasharray', `${len} ${total-len+10}`);
-  // Needle: -90deg at 0, +90deg at 100
-  const deg = -90 + (score/100)*180;
-  $('#needle').setAttribute('transform',`rotate(${deg} 110 120)`);
-  // Value
-  $('#index-num').textContent = Math.round(score);
-  // Tier label + colour
-  const label = $('#tier-label');
+  const arc    = $('#arc');
+  const needle = $('#needle');
+  const num    = $('#index-num');
+  const label  = $('#tier-label');
+  if (!arc || !needle || !num){ return; }
+
+  // 1) Read current arc length so we know where to tween FROM
+  const currDash = arc.getAttribute('stroke-dasharray') || `0 ${total + 10}`;
+  const currLen  = parseFloat(currDash.split(/\s+/)[0]) || 0;
+  const fromScore = Math.max(0, Math.min(100, (currLen / total) * 100));
+
+  // 2) Stop any running sweep / prior tween — but DON'T reset to 0
+  stopLoadingSweep();
+  if (_GAUGE_TWEEN){ cancelAnimationFrame(_GAUGE_TWEEN); _GAUGE_TWEEN = null; }
+
+  // 3) Cache previous score so the next page load can start from it instead
+  //    of from 0 (further smoothing for return visits)
+  try { sessionStorage.setItem('iiko-last-gauge', String(Math.round(score))); } catch(_){}
+
+  // 4) Tier label + colour update right away (text doesn't need easing)
+  const tier = tierFor(score);
   label.textContent = tier.label;
   label.style.color = tier.color;
   $('#tier-sub').textContent = pickBlurb(tier);
+
+  // 5) Tween arc, needle and number from current to target with ease-out cubic
+  const duration = 900;
+  const start    = performance.now();
+  const easeOut  = t => 1 - Math.pow(1 - t, 3);
+
+  function step(now){
+    const elapsed = now - start;
+    const t = Math.min(1, elapsed / duration);
+    const eased = easeOut(t);
+    const liveScore = fromScore + (score - fromScore) * eased;
+    const liveLen   = total * (liveScore / 100);
+    const liveDeg   = -90 + (liveScore / 100) * 180;
+    arc.setAttribute('stroke-dasharray', `${liveLen.toFixed(2)} ${(total - liveLen + 10).toFixed(2)}`);
+    needle.setAttribute('transform', `rotate(${liveDeg.toFixed(2)} 110 120)`);
+    num.textContent = Math.round(liveScore);
+    if (t < 1){
+      _GAUGE_TWEEN = requestAnimationFrame(step);
+    } else {
+      _GAUGE_TWEEN = null;
+    }
+  }
+  _GAUGE_TWEEN = requestAnimationFrame(step);
 }
 
 // ---- Loading sweep animation -----------------------------------------------
@@ -8972,8 +9165,45 @@ function stopLoadingSweep(){
     LOADING_SWEEP = null;
   }
 }
+// Seed the gauge with the last-known score (from sessionStorage) so return
+// visitors see the gauge open at their previous reading rather than at 0.
+// The loading sweep then takes over and oscillates around the seed value
+// until real data lands.
+(function _seedGaugeFromCache(){
+  try {
+    const cached = parseInt(sessionStorage.getItem('iiko-last-gauge') || '', 10);
+    if (Number.isFinite(cached) && cached >= 0 && cached <= 100){
+      const total = 283;
+      const len = total * (cached / 100);
+      const deg = -90 + (cached / 100) * 180;
+      const arc = document.getElementById('arc');
+      const needle = document.getElementById('needle');
+      const num = document.getElementById('index-num');
+      if (arc) arc.setAttribute('stroke-dasharray', `${len.toFixed(2)} ${(total - len + 10).toFixed(2)}`);
+      if (needle) needle.setAttribute('transform', `rotate(${deg.toFixed(2)} 110 120)`);
+      if (num) num.textContent = String(cached);
+    }
+  } catch(_){}
+})();
 // Start the sweep immediately so the first paint shows motion
 startLoadingSweep();
+
+// Mobile: tap outside an open ? tooltip to dismiss it. The CSS keeps the
+// tooltip visible while the .tip-btn is :focused; on touch devices there's
+// no native blur-on-outside-tap unless we wire it up. This handler blurs any
+// focused tip-btn the moment the user taps anywhere that isn't that button.
+document.addEventListener('click', (e) => {
+  const focused = document.activeElement;
+  if (!focused || !focused.classList || !focused.classList.contains('tip-btn')) return;
+  if (focused === e.target || focused.contains(e.target)) return;
+  focused.blur();
+}, { passive: true });
+// Also dismiss on Escape (desktop nicety, costs nothing)
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const focused = document.activeElement;
+  if (focused && focused.classList && focused.classList.contains('tip-btn')) focused.blur();
+});
 
 function renderTrend(currentScore, currentSignals){
   const range = TREND_RANGES[TREND_RANGE] || TREND_RANGES['7'];
@@ -9711,45 +9941,54 @@ async function openShare(platform, btn){
   }
 
   // ---- All social platforms — SAME RELIABLE PATTERN ----
-  // 1. Open the platform's compose URL via synthetic <a> click. This is the
-  //    most reliable cross-browser way to trigger a new tab/window — popup
-  //    blockers treat it as a real user click, not a programmatic popup.
-  // 2. For Twitter/X specifically: ALSO fire a background PNG download so
-  //    the user has the gauge image saved to drag onto their tweet. The
-  //    download is non-blocking and runs after the tab opens.
-  // 3. Mobile path (Web Share API with file): only fires on actual mobile
-  //    UAs. On desktop we never go down that branch — clicking the X icon
-  //    on a laptop should always open X.com, not a system share sheet.
-  if (platform === 'twitter' && _supportsFileShare()){
-    // Mobile native share sheet with PNG attached
+  // 1. On MOBILE: try Web Share API (native share sheet with PNG attached).
+  //    If sharing succeeds or user cancels, done — no fallthrough.
+  // 2. On DESKTOP: open the platform's compose URL via synthetic <a> click,
+  //    AND for Twitter only fire a background PNG download so the user has
+  //    the gauge image to drag onto their tweet.
+  //
+  // Crucially: the PNG download ONLY fires on desktop. On mobile a downloaded
+  // file isn't drag-able onto an X composer anyway — it'd just clutter the
+  // user's Photos roll. Mobile gets the share sheet OR a clean URL open only.
+  const _ua = navigator.userAgent || '';
+  const _isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(_ua);
+
+  if (platform === 'twitter' && _isMobile && navigator.share){
+    // Mobile path: try the native share sheet. Attach PNG if the browser
+    // supports file sharing; otherwise share text+URL only — still way better
+    // than triggering a Downloads folder save the user can't easily use.
     try {
-      const pngBlob = await generateGaugePNGBlob();
-      if (pngBlob){
-        const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
-        if (navigator.canShare({ files: [file] })){
-          try {
-            await navigator.share({
-              title: 'Is It Kicking Off?',
-              text:  `${text}\n${url}`,
-              files: [file],
-            });
-            return;
-          } catch(e){
-            if (e && e.name === 'AbortError') return;
-            // Fall through to URL-open path
+      const shareData = { title: 'Is It Kicking Off?', text: `${text}\n${url}` };
+      if (navigator.canShare){
+        try {
+          const pngBlob = await generateGaugePNGBlob();
+          if (pngBlob){
+            const file = new File([pngBlob], 'iiko-snapshot.png', { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) shareData.files = [file];
           }
-        }
+        } catch(_){}
       }
-    } catch(_){ /* fall through */ }
+      try {
+        await navigator.share(shareData);
+        return;  // Shared successfully — exit
+      } catch(e){
+        if (e && e.name === 'AbortError') return;  // User cancelled — exit
+        // Other share-API errors fall through to URL-open
+      }
+    } catch(_){}
+    // Fallthrough: open X compose URL — but DO NOT trigger PNG download on mobile
+    const u = targets.twitter;
+    if (u) _openInNewTab(u);
+    return;
   }
 
-  // ALL other paths (desktop X, every non-X platform) — open via <a> click
+  // ALL other paths (desktop X, every non-X platform on any device) — open via <a> click
   const u = targets[platform];
   if (u) _openInNewTab(u);
 
-  // Twitter desktop bonus: fire-and-forget PNG download so the user has the
-  // gauge image to drag onto the tweet they're about to compose.
-  if (platform === 'twitter'){
+  // Twitter DESKTOP bonus: fire-and-forget PNG download so the user has the
+  // gauge image to drag onto their tweet. Mobile never reaches this branch.
+  if (platform === 'twitter' && !_isMobile){
     generateGaugePNGBlob().then(pngBlob => {
       if (pngBlob){
         _downloadBlobAsPng(pngBlob, `iiko-snapshot-${new Date().toISOString().slice(0,10)}.png`);
@@ -10268,13 +10507,15 @@ async function fetchBulk(){
   // v1.4 — Finance & Markets row (ambient, not scored). Second batch so a slow
   // Yahoo proxy can never block the gauge from rendering. Each fetch is fully
   // self-contained with its own try/catch — withTimeout swallows everything.
-  let stocks = null, crypto = null, fx = null, pharmatech = null;
+  // v2.0 — Polymarket UK predictions added to the same batch.
+  let stocks = null, crypto = null, fx = null, pharmatech = null, poly = null;
   try {
-    [stocks, crypto, fx, pharmatech] = await Promise.all([
+    [stocks, crypto, fx, pharmatech, poly] = await Promise.all([
       withTimeout(fetchStockIndices(),       T, 'stocks'),
       withTimeout(fetchCrypto(),             T, 'crypto'),
       withTimeout(fetchExchangeRates(),      T, 'fx'),
       withTimeout(fetchTechPharma(),         T, 'pharmatech'),
+      withTimeout(fetchPolymarketUK(),       T, 'polymarket'),
     ]);
   } catch(e){ console.warn('[finance fetch batch] failed:', e.message); }
   // Every downstream consumer handles null/missing gracefully via fallbacks,
@@ -10309,6 +10550,8 @@ async function fetchBulk(){
     crypto:      crypto,
     fx:          fx,
     pharmatech:  pharmatech,
+    // v2.0 — Polymarket UK predictions (ambient, not scored)
+    poly:        poly,
   };
 }
 
@@ -10337,6 +10580,7 @@ function renderAll(bulk){
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
     { feature:'finance' },         // 💷 Finance & Markets — sits under Daily Pulse
+    { feature:'polymarket' },      // 🎯 Polymarket UK — directly below Finance
     { feature:'zeitgeist' },
     { label:'Sentiment',           keys:['royal','telly','news','slang'] },
     { label:'Rage & Disorder',     keys:['crime','threat','checkout','aande'] },
@@ -10359,6 +10603,11 @@ function renderAll(bulk){
     if (group.feature === 'finance'){
       try { signalsHtml += _financeFeatureHtml(); }
       catch(e){ console.warn('[finance feature] render threw, skipping:', e.message); }
+      continue;
+    }
+    if (group.feature === 'polymarket'){
+      try { signalsHtml += _polymarketFeatureHtml(); }
+      catch(e){ console.warn('[polymarket feature] render threw, skipping:', e.message); }
       continue;
     }
     // Render group divider only when at least one of its signals will actually
@@ -10408,6 +10657,11 @@ function renderAll(bulk){
       pharmatech: bulk.pharmatech,
     });
   } catch(e){ console.warn('[finance] render failed:', e.message); }
+
+  // v2.0 — Polymarket UK predictions row (ambient, not scored).
+  try {
+    renderPolymarketCards(bulk.poly);
+  } catch(e){ console.warn('[polymarket] render failed:', e.message); }
 
   // Gauge
   setGauge(currentScore);

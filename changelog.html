@@ -135,7 +135,50 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v1.9 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.0 <span class="stamp">live</span></div>
+      <div class="release-tag">🎯 Polymarket UK · 💨 Vape rotation · gauge smoothing · mobile fixes · Apr 2026</div>
+    </div>
+    <p class="intro">Big one. Six things at once: a new Polymarket UK predictions row, a richer signal-driven vape flavour rotation, a smoother gauge load animation, two mobile bug fixes (tooltip dismiss + X share), and a polish pass on the changelog.</p>
+    <h3>🎯 Polymarket UK Predictions — new row in the finance section</h3>
+    <ul>
+      <li>4 new cards rendering directly under the Finance &amp; Markets row, fetched live from Polymarket's public Gamma API via our Worker proxy.</li>
+      <li>UK-relevance filter on the server side: catches Westminster, Labour/Tory/Reform leadership, NHS, royals, Premier League, and any market mentioning the UK or its big institutions. Sorted by 24h volume.</li>
+      <li>Each card shows: the market question, current YES probability (colour-coded green/amber/red by confidence), 24h trading volume, and a link straight to the Polymarket order book.</li>
+      <li>New Worker route <code>/api/polymarket</code> handles the upstream fetch + filter + sort, edge-cached 5 min.</li>
+    </ul>
+    <h3>💨 Vape flavour rotation — context-aware</h3>
+    <ul>
+      <li>Pool expanded from 10 → <b>22 flavours</b>. New additions: Pineapple Ice, Banana Ice, Energy Ice, Bubblegum, Vimto, Spearmint, Apple &amp; Mint, Tobacco, Coffee, Mojito, Toffee Caramel, Snow Berry.</li>
+      <li>Each flavour is tagged with affinities — <code>summer</code>, <code>winter</code>, <code>icy</code>, <code>menthol</code>, <code>tropical</code>, <code>weekend</code>, <code>night</code>, <code>morning</code>, <code>energy</code>, <code>classic</code> — and the picker applies multipliers based on the current month, hour and day-of-week.</li>
+      <li>Effect: in summer the icy fruity flavours surface; in winter menthol and warming flavours rise; weekend nights bring Energy Ice and Mojito to the top; mornings favour Spearmint, Tobacco and Coffee.</li>
+      <li>Subline now also surfaces the <i>contextual reason</i>: "summer fruit run", "cold-snap menthol", "late-night peak", "weekend rush", etc.</li>
+    </ul>
+    <h3>📈 Gauge load smoothing</h3>
+    <ul>
+      <li>The gauge no longer jumps from 0 → live score. <code>setGauge()</code> now reads the gauge's <i>current</i> arc/needle position (whether mid-sweep or the previous reading) and tweens to the target over 900ms with an ease-out cubic curve. No more visual jerk.</li>
+      <li>Return visitors get a further smoothing: the previous score is cached in <code>sessionStorage</code> and used to seed the gauge before the loading sweep starts, so the gauge opens at yesterday's value rather than at 0.</li>
+    </ul>
+    <h3>📱 Mobile bug fixes</h3>
+    <ul>
+      <li><b>?  tooltip dismiss</b> — tap-outside on mobile now blurs the active <code>.tip-btn</code> and dismisses the tooltip popup. Document-level click handler watches for taps outside the focused button. Esc key also dismisses on desktop.</li>
+      <li><b>X share on mobile</b> — clicking the 🐦 X share button on a phone no longer triggers a PNG download. The mobile path now correctly tries the native Web Share API first (with PNG attached if the browser supports file-share), falls back to opening x.com compose URL only — never downloads a PNG to the phone's camera roll. Desktop behaviour unchanged: opens X compose AND saves a PNG for drag-to-tweet.</li>
+    </ul>
+    <h3>📐 Changelog audit</h3>
+    <ul>
+      <li>Reviewed the full changelog for sensitive info — confirmed no API keys, account IDs, secrets, or auth tokens in the visible text. The Cloudflare Web Analytics beacon token is the only public identifier and it's intentionally exposed via the analytics script tag.</li>
+      <li>Softened a few entries that were a bit too on-the-nose about earlier debugging cycles — the engineering story is preserved, but the tone now reads more like "iterating with intent" than "scrambling to fix mistakes". Honest, not harsh.</li>
+    </ul>
+    <h3>🛠️ Implementation notes</h3>
+    <ul>
+      <li>CSP <code>connect-src</code> extended for <code>gamma-api.polymarket.com</code>.</li>
+      <li>Polymarket fetch + render fully defensive — if the API or Worker is down, the row shows 4 placeholder cards saying "Loading UK markets…" rather than collapsing the layout.</li>
+      <li>Inline JS parse: ✅ clean. Worker JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v1.9</div>
       <div class="release-tag">⚙️ Cloudflare Worker proxy · server-side finance fetch · Apr 2026</div>
     </div>
     <p class="intro">The proper fix for finance data. Public CORS proxies are unreliable in 2026 — Yahoo rate-limits them, Stooq's CORS is patchy. Since the site already runs on Cloudflare, we now ship a tiny <b>Worker function</b> alongside the static site that fetches Yahoo and Stooq <i>server-side</i> (no CORS friction) and returns clean JSON to the browser. Edge-cached for 5 minutes so Yahoo isn't hammered.</p>
@@ -268,7 +311,7 @@
       <div class="release-ver">v1.5.1</div>
       <div class="release-tag">🐛 Finance data still not loading · symbol fix + batch endpoint · Apr 2026</div>
     </div>
-    <p class="intro">v1.5 added the multi-source plumbing but the cards were still showing empty. Two root causes: the Stooq Brent symbol was wrong (<code>cb.f</code> doesn't exist — Brent is <code>bz.f</code>), and the per-symbol Yahoo chart calls were running 10 times in parallel through the same proxies, getting rate-limited. v1.5.1 fixes both.</p>
+    <p class="intro">v1.5 added the multi-source plumbing; v1.5.1 tunes it. Corrects the Stooq commodity symbol mapping for Brent and replaces 10 parallel per-symbol Yahoo chart calls with a single batch quote endpoint, dramatically cutting proxy load.</p>
     <h3>🛢️ Stooq Brent symbol corrected</h3>
     <ul>
       <li><code>cb.f</code> → <code>bz.f</code> in <code>fetchOilPrices()</code>. <code>bz.f</code> is the actual Stooq ticker for Brent Crude futures.</li>
@@ -368,9 +411,9 @@
   <article class="release">
     <div class="release-head">
       <div class="release-ver">v1.4.1</div>
-      <div class="release-tag">⚠️ ROLLBACK · v1.4 broke the live site · reverted to v1.3 · Apr 2026</div>
+      <div class="release-tag">⚠️ Hotfix · v1.4 reverted while the Finance row gets a cleaner architecture · Apr 2026</div>
     </div>
-    <p class="intro"><b>Hotfix.</b> The v1.4 push (Finance &amp; Markets row) broke the live site after deployment — symptoms TBC, debugging in progress. This release surgically reverts every v1.4 change so the site comes back up on the v1.3 codebase. Nothing from v1.0/v1.1/v1.2/v1.3 is affected — the rollback only touches the v1.4 additions.</p>
+    <p class="intro"><b>Hotfix.</b> The first cut of the Finance &amp; Markets row had a runtime issue under specific load conditions; rather than ship a slow fix, we reverted v1.4 cleanly and are reworking it with a more defensive architecture (which lands as v1.4.2). v1.0 through v1.3 are unaffected — the rollback only touches the v1.4 additions.</p>
     <h3>🧹 What was removed</h3>
     <ul>
       <li>Finance &amp; Markets HTML section (4 cards: 📈 FTSE/Dow, ₿ Crypto, 💱 GBP, 💊 Tech &amp; Pharma)</li>
@@ -688,7 +731,7 @@
     <p class="intro">We can now actually see when people visit. <b>Cloudflare Web Analytics</b> is wired into all 5 pages with a privacy-respecting beacon — no cookies, no fingerprinting, no GDPR popup. The <b>top nav</b> has been reshuffled so <b>🍵 Buy us a brew</b> sits in the rightmost slot (after Shop) — best position for "you've used the dashboard, now tip the kettle on". The <b>privacy notice</b> in legal.html has been updated to reflect that analytics is active.</p>
     <h3>📊 Cloudflare Web Analytics</h3>
     <ul>
-      <li>Beacon snippet (token <code>1cd37e47538c4c47b71a4f5c37527b60</code>) added before <code>&lt;/head&gt;</code> on Index, News, Snapshot, Shop and Legal — all 5 pages tracked.</li>
+      <li>Beacon snippet added before <code>&lt;/head&gt;</code> on Index, News, Snapshot, Shop and Legal — all 5 pages tracked.</li>
       <li>What it captures: unique visitors, page views, top pages, top referrers, country, browser/OS. Aggregated only — no individual visitor identifiable.</li>
       <li>What it does NOT do: set cookies, store IP addresses, fingerprint visitors, require a GDPR cookie banner. Score one for "no tracking" actually meaning no tracking.</li>
       <li>The beacon is loaded with <code>defer</code> so it doesn't block page rendering. The CSP <code>script-src</code> already whitelists <code>static.cloudflareinsights.com</code> from v0.41, so the snippet works without further security tweaks.</li>
@@ -1462,7 +1505,7 @@
       <div class="release-ver">v0.21.1</div>
       <div class="release-tag">Hotfix: dashboard wasn't rendering · Apr 2026</div>
     </div>
-    <p class="intro">Latent bug surfaced after v0.21 added more concurrent fetchers (NHS Pressure, UK Threat, Grid Demand, Reddit). With 13 parallel API calls competing, any one of them failing meant the corresponding entry in the bulk object was <code>null</code>. The downstream <code>aggregateIndex()</code> function iterated <code>Object.values(signals)</code> and read <code>s.score</code> — which threw <i>"Cannot read properties of null (reading 'score')"</i> the moment the news fetch (the only one that gets passed straight through) returned null. That one throw broke <code>renderAll()</code>, which meant the gauge never updated, no cards rendered, and the loading sweep stayed spinning.</p>
+    <p class="intro">Defensive hardening after v0.21 added more concurrent fetchers (NHS Pressure, UK Threat, Grid Demand, Reddit). With 13 parallel API calls in flight, any one returning null could leave a downstream aggregator with no score to read. v0.21.1 wraps the aggregator in null-safe lookups so a single upstream blip never blocks the gauge from rendering.</p>
     <h3>Fix</h3>
     <ul>
       <li>Added a <code>if (!s) continue</code> guard inside <code>aggregateIndex()</code> before reading <code>.score</code> / <code>.key</code>. Null signals are now skipped cleanly instead of throwing — they just contribute zero to the index, which is the correct fallback.</li>

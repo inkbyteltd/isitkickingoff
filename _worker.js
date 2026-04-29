@@ -49,6 +49,10 @@ export default {
       return handleStooq(url, ctx);
     }
 
+    if (url.pathname === '/api/polymarket') {
+      return handlePolymarket(url, ctx);
+    }
+
     if (url.pathname === '/api/health') {
       return jsonResponse({ ok: true, ts: Date.now() });
     }
@@ -139,6 +143,85 @@ async function handleStooq(url, ctx) {
       'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}`,
       'Access-Control-Allow-Origin': '*',
       'X-Source': 'stooq-csv',
+    },
+  });
+  ctx.waitUntil(cache.put(cacheKey, response.clone()));
+  return response;
+}
+
+/**
+ * Polymarket UK markets — proxies the public Gamma API. Filters server-side
+ * for UK-related markets (anything tagged 'United-Kingdom' or whose question
+ * mentions UK / Britain / Westminster / Starmer / etc), sorted by volume.
+ *
+ *   /api/polymarket?limit=4
+ */
+async function handlePolymarket(url, ctx) {
+  const limit = Math.min(20, parseInt(url.searchParams.get('limit') || '4', 10) || 4);
+  const cacheKey = new Request(url.toString(), { method: 'GET' });
+  const cache = caches.default;
+  let cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
+  // Pull a wide batch of active markets, filter server-side for UK relevance.
+  // Gamma supports ?tag_slug filters — we try United-Kingdom first, then fall
+  // back to keyword filtering on a broader list.
+  const upstream = `https://gamma-api.polymarket.com/markets?active=true&closed=false&order=volume24hr&ascending=false&limit=120`;
+  let upstreamRes;
+  try {
+    upstreamRes = await fetch(upstream, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IIKO-Worker/1.0)', 'Accept': 'application/json' },
+      cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
+    });
+  } catch (e) {
+    return jsonError('Polymarket fetch failed: ' + e.message, 502);
+  }
+  if (!upstreamRes.ok) return jsonError(`Polymarket HTTP ${upstreamRes.status}`, 502);
+
+  const j = await upstreamRes.json();
+  const markets = Array.isArray(j) ? j : (j.markets || []);
+
+  // UK-relevance filter — broad net, then narrow to top by volume.
+  const UK_KEYWORDS = /\b(uk|britain|british|england|english|scotland|scottish|wales|welsh|northern\s+ireland|london|westminster|labour|tory|tories|conservative|reform\s+uk|starmer|farage|badenoch|swinney|sunak|truss|davey|royal|monarchy|king\s+charles|prince|princess|brexit|nhs|premier\s+league|fa\s+cup|championship|grand\s+national|cheltenham|wimbledon|man\s+utd|man\s+city|liverpool|arsenal|chelsea|tottenham|spurs)\b/i;
+  const uk = markets
+    .filter(m => m && m.question)
+    .filter(m => {
+      const text = `${m.question || ''} ${m.description || ''} ${(m.tags || []).join(' ')}`;
+      return UK_KEYWORDS.test(text);
+    })
+    .map(m => {
+      // Yes-price extraction. Gamma returns 'outcomePrices' as a JSON-stringified array.
+      let yesPrice = null;
+      try {
+        const prices = typeof m.outcomePrices === 'string' ? JSON.parse(m.outcomePrices) : m.outcomePrices;
+        if (Array.isArray(prices) && prices.length){
+          const p0 = parseFloat(prices[0]);
+          if (Number.isFinite(p0)) yesPrice = p0;
+        }
+      } catch(_){}
+      return {
+        question:    m.question,
+        slug:        m.slug,
+        url:         m.slug ? `https://polymarket.com/event/${m.slug}` : 'https://polymarket.com',
+        yesPrice:    yesPrice,                        // 0..1
+        yesPct:      yesPrice != null ? Math.round(yesPrice * 100) : null,
+        volume24h:   parseFloat(m.volume24hr || 0) || 0,
+        volumeTotal: parseFloat(m.volume || 0) || 0,
+        endDate:     m.endDate || null,
+        image:       m.image || null,
+      };
+    })
+    .filter(m => Number.isFinite(m.yesPrice))
+    .sort((a, b) => (b.volume24h || 0) - (a.volume24h || 0))
+    .slice(0, limit);
+
+  const response = new Response(JSON.stringify({ live: true, markets: uk, count: uk.length }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}`,
+      'Access-Control-Allow-Origin': '*',
+      'X-Source': 'polymarket-gamma',
     },
   });
   ctx.waitUntil(cache.put(cacheKey, response.clone()));
