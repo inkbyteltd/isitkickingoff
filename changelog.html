@@ -135,7 +135,40 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.7 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.9 <span class="stamp">live</span></div>
+      <div class="release-tag">🧹 Consumption row gap fix · McFlurry + Vape moved up · Apr 2026</div>
+    </div>
+    <p class="intro">Trailing gap in the Consumption section: McFlurry Machine and Vape Flavours UK were sat in their own half-row at the bottom, leaving 2 empty cells next to them. Moved both up to row 2, alongside Greggs and Chippy. The breakfast pair (Fry-Up Tracker + English Breakfast Index) now takes row 3 on its own, side-by-side. Layout is three clean rows with no dead space.</p>
+    <h3>New Consumption layout (4-col desktop)</h3>
+    <ul>
+      <li><b>Row 1:</b> 🍺 Wetherspoons (wide) · 🍻 Licensing · 🫖 Kettle</li>
+      <li><b>Row 2:</b> 🌭 Greggs · 🍟 Chippy · 🍦 McFlurry · 💨 Vape</li>
+      <li><b>Row 3:</b> 📈 Fry-Up Tracker (wide) · 🍳 English Breakfast Index (wide) — paired card row</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>SIGNAL_GROUPS Consumption keys reordered: <code>['booze','licensing','kettle','greggs','chippy','icecream','vape', ['fryup','breakfast']]</code>.</li>
+      <li>No weight changes, no signal changes — pure layout.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.8</div>
+      <div class="release-tag">📋 Methodology table sync — added missing breakfast + fryup rows · Apr 2026</div>
+    </div>
+    <p class="intro">Audit caught two signals that had been added to the dashboard without their methodology rows landing: the <b>🍳 English Breakfast Index</b> (1%, added in v2.5) and the <b>📈 Fry-Up Tracker</b> (ambient, added in v2.6 and expanded in v2.7). Both rows now in the table. Intro paragraph bumped from "over 35 signals" to "over 50 signals" with an explicit ambient-vs-weighted explanation. Saved a feedback note and built an automated audit script that compares WEIGHTS keys against table rows, so this drift is caught next time before shipping.</p>
+    <ul>
+      <li>New rows added in Consumption order between Chippy Run and Vape Flavours UK so the table mirrors the grid.</li>
+      <li>Audit script confirms all 43 weighted signals + 9 ambient signals = 52 rows · all keys matched.</li>
+      <li>Memory note: <i>"Always update methodology table when adding signals"</i> — same pattern as the changelog reminder.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.7</div>
       <div class="release-tag">📊 8-line ingredient worm chart · side-by-side breakfast pair · Apr 2026</div>
     </div>
     <p class="intro">Two improvements to the breakfast pair landed in v2.6. <b>(1)</b> The Fry-Up Tracker now shows an <b>8-line worm chart</b> — one coloured line per ingredient — instead of a single plate-cost sparkline. Each ingredient walks its own historical YoY path anchored to ONS food sub-category CPI (eggs +22% YoY at the 2022 peak, bread smashed by the wheat shock at +19% YoY in 2023, tomatoes spiked in 2023 from the Spanish drought, mushrooms and black pudding barely moved). Lines are sorted by cumulative-since-2021 and shown with a coloured legend. <b>(2)</b> Fry-Up Tracker and English Breakfast Index now sit <b>side-by-side</b> in a forced 2-column sub-grid wrapper that always takes its own row, regardless of viewport width. Fry-Up on the left, Breakfast on the right.</p>
