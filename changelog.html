@@ -135,7 +135,31 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.11 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.12 <span class="stamp">live</span></div>
+      <div class="release-tag">📱 Mobile right-edge gap — actually fixed · safe-area-inset + 100% width · Apr 2026</div>
+    </div>
+    <p class="intro">Follow-up: <b>v2.11 didn't fully solve it</b>. The user reported the same right-edge gap with a fresh screenshot. Investigation revealed the root cause is subtler: <code>max-width:100vw</code> on iOS Safari is <i>not</i> the same as <code>max-width:100%</code>. iOS includes the gutter reserved for the Dynamic Island in its <code>vw</code> measurement, which makes the body slightly wider than the visible viewport. Combined with <code>overflow-x:hidden</code> from v2.11, the right edge gets clipped — but the wrap's symmetric 20px padding then sits relative to the clipped (wider) body, creating asymmetric inset relative to what the user actually sees.</p>
+    <h3>What changed (real fix)</h3>
+    <ul>
+      <li><b>Body width</b>: <code>max-width:100vw</code> → <code>width:100%; max-width:100%</code>. Percent-of-parent stays strictly inside the visible viewport regardless of how iOS calculates <code>vw</code>. This is the change v2.11 should have made.</li>
+      <li><b>Wrap padding now safe-area-aware</b>: <code>max(20px, env(safe-area-inset-left))</code> and <code>max(20px, env(safe-area-inset-right))</code>. On iPhones with rounded corners or a Dynamic Island, the wrap respects the device's reserved gutter. On every other device <code>env(...)</code> returns 0 and we fall back to the original 20px on each side.</li>
+      <li><b>Viewport meta</b>: added <code>viewport-fit=cover</code>. Required for <code>env(safe-area-inset-*)</code> to actually return non-zero values on iOS — without it, the safe-area is ignored and the page sits in the legacy "letterbox" zone above the safe area.</li>
+      <li><b>Wrap explicit width</b>: <code>.wrap</code> now has <code>width:100%</code> alongside <code>max-width:1200px</code> so it always fills its parent.</li>
+      <li><b>v2.11's <code>overflow-x:hidden</code> kept</b> as a belt-and-braces guard against any future rogue overflow.</li>
+    </ul>
+    <h3>Why v2.11 missed it</h3>
+    <p>v2.11's diagnosis was correct (something was making the document wider than the viewport) but the fix targeted the symptom (overflow clipping) rather than the cause (vw measurement on iOS). Adding <code>max-width:100vw</code> actually made the problem slightly worse on iPhones with a Dynamic Island, because <code>100vw</code> there is the <i>full</i> hardware width, not the visible-content width. Switching to <code>100%</code> resolves it cleanly.</p>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. Comment added to the body rule explaining the iOS pitfall so future-me doesn't reintroduce <code>max-width:100vw</code>.</li>
+      <li>Other pages (about, news, changelog, legal, shop, snapshot) didn't have the <code>max-width:100vw</code> rule and were unaffected — left as-is.</li>
+      <li><code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.11</div>
       <div class="release-tag">🐛 Mobile right-edge gap hotfix · Apr 2026</div>
     </div>
     <p class="intro">Bug report (with screenshot): on iPhone Safari the dashboard was rendering with a noticeable gap along the right side — every section sat narrower than the viewport and shifted left. The page itself wasn't broken, just sitting off-centre.</p>
@@ -149,6 +173,7 @@
       <li>Added <code>overflow-x:hidden</code> + <code>max-width:100vw</code> to <code>html, body</code>. Belt-and-braces clip at the root: any rogue wide child is now visually clipped and can't push the document beyond the viewport.</li>
       <li>Verified there's no <code>position:sticky</code> in the page (only one <code>position:fixed</code>, on the toast) so the overflow clip is safe and won't break any pinned elements.</li>
       <li>Tablet/desktop layout unchanged — the fix is invisible at widths where nothing was overflowing in the first place.</li>
+    </ul>
     <h3>🔄 Project sync</h3>
     <ul>
       <li>One-line CSS change to <code>html,body</code> rule. No JS touched, no new dependencies.</li>
