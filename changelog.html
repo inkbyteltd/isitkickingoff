@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Changelog · Is It Kicking Off?</title>
 <meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
-<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -110,7 +109,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
-      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="./shop.html">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -135,7 +134,35 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.4 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.5 <span class="stamp">live</span></div>
+      <div class="release-tag">🍳 English Breakfast Index · cost-of-living rage on a plate · Apr 2026</div>
+    </div>
+    <p class="intro">A new wide card in the <b>Consumption</b> group: the <b>🍳 English Breakfast Index</b>. Tracks the per-plate cost of a proper full English — bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread — and the year-on-year change. The plate today comes in around <b>£4.40</b>, up <b>+4.3% YoY</b> on a weighted basket. Verdict line escalates from "Plate's holding." through "Bacon's being cheeky." to "This is now a war." as the plate gets dearer. The English breakfast is an important part of British culture, and its price is exactly the kind of slow-moving cost-of-living grumble that belongs on this dashboard.</p>
+    <h3>What lands on the card</h3>
+    <ul>
+      <li><b>Eight ingredients</b>, each with today's pack price, the per-plate portion cost, and the YoY % change colour-coded (green/dim/amber/red).</li>
+      <li><b>Plate cost headline</b>: today's total per-plate, plus the weighted YoY in the sub-line and a satirical verdict line.</li>
+      <li><b>Daily wobble</b>: ±0.4% per ingredient via date-seeded sine drift so the numbers breathe overnight without hammering any API.</li>
+      <li><b>YoY anchored to ONS</b>: each ingredient's year-on-year is set against ONS Consumer Prices Index food-category figures — the same data behind every "fry-up inflation" headline.</li>
+    </ul>
+    <h3>Scoring</h3>
+    <ul>
+      <li>Score = the per-plate weighted YoY %. Flat plate ≈ 0.10, +5% YoY ≈ 0.55, +10% ≈ 0.95.</li>
+      <li>Weight = <b>1%</b> in WEIGHTS. Slow-moving cultural data shouldn't dominate the gauge but it should be in there.</li>
+      <li>Total model weight: 1.30 → <b>1.31</b>.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>New <code>signalBreakfast()</code> function + <code>BREAKFAST_INGREDIENTS</code> data const + <code>breakfastItems</code> render branch (matches the <code>greggsItems</code> / <code>chippyItems</code> pattern).</li>
+      <li>Wired into <code>signalsForRegion()</code> with <code>safe()</code> wrapper, into the <b>Consumption</b> group in SIGNAL_GROUPS, and tagged <code>wide:true</code> so it spans the full row.</li>
+      <li>Methodology row + SIGNAL_EXPLAINERS tooltip added.</li>
+      <li>Inline JS parse: ✅ clean. Live test plate £4.40 / +4.3% YoY / score 0.48 / "Bacon's being cheeky." <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.4</div>
       <div class="release-tag">⚖️ Search Panic weight reduced 5% → 2% · honest reweighting · Apr 2026</div>
     </div>
     <p class="intro">A weight correction. The <b>🔍 Search Panic Index</b> module had a 5% weight — same as Road Rage — but on inspection it was carrying more weight than it deserves: Google nerfed the Trends RSS endpoint, so the live boost path mostly fails, and the modelled-fallback heuristic is built on top of <i>other already-weighted signals</i> (football, weather, news, booze, bank holidays). It was both partially-modelled and partially-derivative. Reducing to 2% reflects the actual contribution honestly.</p>

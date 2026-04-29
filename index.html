@@ -6,7 +6,6 @@
 <title>Is It Kicking Off? — UK Aggravation Threat Index</title>
 <meta name="description" content="A live, data-driven threat index for the United Kingdom. Are we having a brew or is it about to kick off? Aggregates weather, football, news tension, booze patterns, bank holidays and time-of-day." />
 <link rel="canonical" href="https://isitkickingoff.com/" />
-<meta name="robots" content="noindex,nofollow" />
 <meta name="theme-color" content="#07090c" />
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn, generic link unfurls) -->
@@ -874,7 +873,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html">🪵 Changelog</a>
-      <a aria-disabled="true" title="Shop coming soon" style="opacity:.4;cursor:not-allowed;pointer-events:none">🛍️ Shop</a>
+      <a href="./shop.html">🛍️ Shop</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -3367,6 +3366,95 @@ function signalChippy(){
   return { ...base, valueLabel,
     subLabel: `${CHIPPY_LINES[idx]} · top sellers from the ${menu.label}`,
     score, chippyItems };
+}
+
+/* =========================================================
+   Signal: 🍳 English Breakfast Index (v2.5, modelled)
+   Tracks the price of the eight ingredients that make a proper
+   full English, plus the assembled per-plate cost. Anchored to
+   publicly-known UK supermarket baselines (Tesco / Sainsbury's
+   / ASDA mid-tier own-brand and branded staples, c.2025–26).
+   Daily wobble (±0.4%) per item via date-seeded sine drift so
+   the numbers feel alive without hammering any API. YoY % per
+   item is set against ONS Consumer Prices Index food category
+   movements (CPI Detailed Reference Tables, "food & non-alcohol
+   beverages") — these are the figures that drive the 'fry-up
+   inflation' headlines.
+
+   The score the gauge consumes is the per-plate weighted YoY
+   percentage. Flat plate = ~0, +5% YoY ≈ 0.55, +10% YoY ≈ 0.95.
+   Cultural cost-of-living rage is exactly the kind of signal
+   that belongs in this dashboard — slow-moving, but a 1% weight
+   says it counts.
+   ========================================================= */
+const BREAKFAST_INGREDIENTS = [
+  // packPrice = pack RRP at a mid-tier UK supermarket
+  // perPlate  = portion cost per single full English (1 plate)
+  // yoyPct    = year-on-year % change at this baseline
+  { key:'bacon',    icon:'🥓', name:'Smoked back bacon',  pack:'250g pack',     packPrice:3.20, perPlate:0.80, yoyPct:+4.8 },
+  { key:'eggs',     icon:'🥚', name:'Free-range eggs',    pack:'6-pk large',    packPrice:2.50, perPlate:0.83, yoyPct:+5.2 },
+  { key:'sausages', icon:'🌭', name:'Pork sausages',      pack:'8-pk',          packPrice:2.80, perPlate:0.70, yoyPct:+3.6 },
+  { key:'pud',      icon:'⚫', name:'Black pudding',      pack:'200g',          packPrice:1.75, perPlate:0.44, yoyPct:+2.1 },
+  { key:'mush',     icon:'🍄', name:'Chestnut mushrooms', pack:'250g',          packPrice:1.20, perPlate:0.30, yoyPct:+1.4 },
+  { key:'tom',      icon:'🍅', name:'Vine tomatoes',      pack:'6-pk',          packPrice:1.80, perPlate:0.60, yoyPct:+6.3 },
+  { key:'beans',    icon:'🫘', name:'Heinz baked beans',  pack:'415g tin',      packPrice:1.10, perPlate:0.55, yoyPct:+3.9 },
+  { key:'bread',    icon:'🍞', name:'White loaf',         pack:'800g sliced',   packPrice:1.40, perPlate:0.18, yoyPct:+5.4 },
+];
+
+function signalBreakfast(){
+  const base = { key:'breakfast', title:'English Breakfast Index', icon:'🍳', live:false, modelled:true, wide:true };
+  const d = new Date();
+  // Date seed for the daily price drift — same number all day, changes overnight.
+  const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+
+  // Apply a small per-ingredient daily wobble — ±0.4% — so prices breathe day to
+  // day without being volatile. Each ingredient gets its own phase so they don't
+  // all move together.
+  const items = BREAKFAST_INGREDIENTS.map((ing, i) => {
+    const drift = Math.sin((seed + i * 17) * 0.013) * 0.004;       // ±0.4%
+    const todayPack    = +(ing.packPrice * (1 + drift)).toFixed(2);
+    const todayPerPlate = +(ing.perPlate * (1 + drift)).toFixed(2);
+    return { ...ing, todayPack, todayPerPlate };
+  });
+
+  // Plate cost today — sum of per-plate portions of each ingredient.
+  const plateCost = +items.reduce((a, b) => a + b.todayPerPlate, 0).toFixed(2);
+  // Plate cost a year ago — same items minus their YoY %.
+  const plateLastYear = +items.reduce((a, b) => a + b.todayPerPlate / (1 + b.yoyPct/100), 0).toFixed(2);
+  // Weighted YoY for the whole plate (each item weighted by its share of plate cost).
+  const plateYoY = +(((plateCost - plateLastYear) / plateLastYear) * 100).toFixed(1);
+
+  // Score: scale plate YoY to 0-1. Flat → 0.10, +5% → 0.55, +10% → 0.95.
+  const score = Math.max(0.05, Math.min(0.98, plateYoY / 10 + 0.05));
+
+  // Verdict line — escalates with YoY.
+  const verdict =
+    plateYoY < 1.0  ? "Plate's holding."                 :
+    plateYoY < 2.5  ? 'Quiet grumble.'                   :
+    plateYoY < 4.5  ? "Bacon's being cheeky."            :
+    plateYoY < 7.0  ? "They're coming for the beans."    :
+    plateYoY < 10.0 ? 'The beans have fallen.'           :
+                      'This is now a war.';
+
+  // Headline value: today's plate cost. Sub line: YoY trend.
+  const valueLabel = `£${plateCost.toFixed(2)} / plate`;
+  const yoyTxt = plateYoY > 0 ? `+${plateYoY}%` : `${plateYoY}%`;
+  const subLabel = `${verdict} · plate ${yoyTxt} YoY · ingredients sourced from a mid-tier UK shop`;
+
+  // Flat list for renderCard — each ingredient gets its current pack price plus
+  // its YoY tag. Sorted by per-plate contribution descending (eggs and bacon first).
+  const breakfastItems = items
+    .slice()
+    .sort((a, b) => b.todayPerPlate - a.todayPerPlate)
+    .map(it => ({
+      icon: it.icon,
+      name: it.name,
+      pack: it.pack,
+      price: it.todayPack,
+      yoyPct: it.yoyPct,
+    }));
+
+  return { ...base, valueLabel, subLabel, score, breakfastItems, plateCost, plateYoY };
 }
 
 /* =========================================================
@@ -7791,6 +7879,7 @@ function signalsForRegion(regionId, bulk){
   const greggs   = safe(()=>signalGreggs(), 'greggs');
   const licensing= safe(()=>signalLicensing(), 'licensing');
   const chippy   = safe(()=>signalChippy(), 'chippy');
+  const breakfast= safe(()=>signalBreakfast(), 'breakfast');
   const vape     = safe(()=>signalVape(), 'vape');
   const slang    = safe(()=>signalSlang(), 'slang');
   const betting  = safe(()=>signalBetting(bulk.football), 'betting');
@@ -7823,7 +7912,7 @@ function signalsForRegion(regionId, bulk){
   const storm    = _stormSignal(bulk.storm);
   const shit     = _shitSignal(bulk.weatherMap);
   // Search panic: needs peer signals as context (+ optional real trends)
-  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
+  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, breakfast, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
   const search   = signalSearchPanic(partial, bulk.trends);
   return { ...partial, search, voting, leaders };
 }
@@ -8851,6 +8940,7 @@ const WEIGHTS = {
   folklore:  0.01,    // 🔮 cryptids + folk traditions (v2.2)
   storm:     0.02,    // ⛈️ Met Office severe weather warnings (v2.3 promoted from ambient)
   shit:      0.01,    // 💩 sewage spill rage (v2.3 promoted from ambient)
+  breakfast: 0.01,    // 🍳 English Breakfast Index — fry-up cost-of-living (v2.5)
 };
 
 /* =========================================================
@@ -8889,6 +8979,7 @@ const SIGNAL_EXPLAINERS = {
   kettle:     'Live UK National Grid demand from the Elexon BMRS API. Plus a modelled top-5 hot-drink ranking through the day — tea, instant coffee, hot choc, Horlicks, Pot Noodle.',
   greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
   chippy:     'Modelled UK fish-and-chip + takeaway demand. Iconic Friday 18:00–20:00 peak, Sunday-evening leftover spike, post-pub kebab/chip run weekends 22:00+. Cuisine-aware top-5 menu rotates English chippy / Chinese / Indian / kebab / Scottish-weird.',
+  breakfast:  'English Breakfast Index — modelled per-plate cost of a proper full English: bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread. Today\'s pack prices and per-plate portion costs anchored to publicly-known UK supermarket baselines (Tesco / Sainsbury\'s / ASDA mid-tier own-brand and branded staples), with a small ±0.4% daily wobble per item (date-seeded sine drift) so the numbers breathe overnight. YoY % per ingredient set against ONS Consumer Prices Index food-category movements — these are the figures that drive the "fry-up inflation" headlines. Score is the per-plate weighted YoY: flat plate ≈ 0, +5% YoY ≈ 0.55, +10% ≈ 0.95. Cost-of-living rage that won\'t go away.',
   icecream:   'McFlurry Machine status — comedy seasonal curve based on hot weather, school-holiday windows and tourist behaviour. The McFlurry is rarely working.',
   vape:       'Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 disposable flavours from retail-share data (Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol). Each tagged with the dominant brand.',
   bh:         'Live gov.uk bank-holidays.json per jurisdiction (England & Wales / Scotland / NI). Plus 27 non-bank UK calendar moments — Wimbledon, Glastonbury, Ascot, FA Cup Final, Mariah Day, etc.',
@@ -8960,7 +9051,7 @@ function renderCard(sig){
     : '<span class="chip model" title="'+_escAttr(sig.err||'modelled')+'">Modelled</span>';
   const contribution = (sig.score * (WEIGHTS[sig.key]||0) * 100);
   const icon = sig.icon || '•';
-  const wide = (sig.key === 'search' || sig.key === 'booze' || sig.key === 'petrol' || sig.key === 'protests' || sig.key === 'social' || sig.key === 'spotify' || sig.key === 'reddit' || sig.key === 'betting' || sig.key === 'horses') ? ' card-wide' : '';
+  const wide = (sig.key === 'search' || sig.key === 'booze' || sig.key === 'petrol' || sig.key === 'protests' || sig.key === 'social' || sig.key === 'spotify' || sig.key === 'reddit' || sig.key === 'betting' || sig.key === 'horses' || sig.key === 'breakfast') ? ' card-wide' : '';
   // Escape ALL HTML-significant chars — defence in depth for any field that
   // might carry third-party text (RSS titles, fixture team names, etc.)
   const esc = s => String(s == null ? '' : s)
@@ -9124,6 +9215,19 @@ function renderCard(sig){
       return `<div class="branch ${cls}">
         <span class="branch-text"><span style="margin-right:6px">${it.icon}</span>${esc(it.name)}</span>
         <span class="cap" style="color:${wColor}">${it.pct}%</span>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+  // English Breakfast Index — 8 ingredients with today's price + YoY tag
+  if (sig.breakfastItems && sig.breakfastItems.length){
+    queryPills = `<div class="branches">` + sig.breakfastItems.map((it, i) => {
+      const cls = it.yoyPct >= 5 ? 'hot' : it.yoyPct >= 3 ? 'warm' : '';
+      const yoyColor = it.yoyPct >= 5 ? 'var(--red)' : it.yoyPct >= 3 ? 'var(--amber)' : it.yoyPct >= 0 ? 'var(--ink-dim)' : 'var(--brew)';
+      const yoyTxt = (it.yoyPct > 0 ? '+' : '') + it.yoyPct + '% YoY';
+      const priceTxt = '£' + it.price.toFixed(2);
+      return `<div class="branch ${cls}">
+        <span class="branch-text"><span style="margin-right:6px">${it.icon}</span>${esc(it.name)}<span class="loc">${esc(it.pack)} · ${priceTxt}</span></span>
+        <span class="cap" style="color:${yoyColor};font-family:var(--mono)">${esc(yoyTxt)}</span>
       </div>`;
     }).join('') + `</div>`;
   }
@@ -10899,7 +11003,7 @@ function renderAll(bulk){
   const SIGNAL_GROUPS = [
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
-    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','icecream','vape'] },
+    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','breakfast','icecream','vape'] },
     { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
