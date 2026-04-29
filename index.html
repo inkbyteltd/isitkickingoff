@@ -1137,7 +1137,7 @@
         <tr><td>🎌 Patriot &amp; Notable Days</td><td>3%</td><td>Curated UK calendar of patron-saint days (St George/David/Andrew/Patrick), war-remembrance dates (VE Day, Remembrance Day, Bonfire Night), royal milestones (Queen Elizabeth II birthday + death, Diana birthday + death anniversary), political anniversaries (Brexit Day, Thatcher death), and notable-figure birthdays — including the genuinely silly ones (Boris Johnson, Liz Truss "the lettuce remembers", Nigel Farage, Tony Blair, Piers Morgan, Russell Brand, plus the truly cursed Halloween + Jimmy Savile birthday coincidence on 31 Oct). Live by virtue of being driven by browser clock against a real curated table. When today matches a notable date the score jumps to that day's tier (Bonfire Night 0.95, St George's 0.85, Halloween+Savile 0.90); when the calendar's quiet, falls forward/back to the nearest notable day within ±10 days with a proximity dampener.</td></tr>
         <tr><td>🚇 Transport Chaos</td><td>6%</td><td>TfL Unified API (London live) + rush-hour model elsewhere</td></tr>
         <tr><td>🚗 Road Rage</td><td>5%</td><td>Rush-hour curve + traffic-keyword hits from news RSS</td></tr>
-        <tr><td>🔍 Search Panic Index</td><td>5%</td><td>Curated British panic queries surfaced by current conditions, optionally boosted by live Google Trends GB</td></tr>
+        <tr><td>🔍 Search Panic Index</td><td>2%</td><td>Curated British panic queries surfaced by current conditions, optionally boosted by live Google Trends GB. <b>v2.4:</b> weight reduced from 5% → 2% — Google nerfed the Trends RSS endpoint so this is mostly modelled, and its heuristic re-uses other already-weighted signals (football, weather, news, booze), making it partially derivative. 2% is the honest weight.</td></tr>
         <tr><td>☀️ Daylight hours</td><td>4%</td><td>Open-Meteo sunrise/sunset, solar-calendar fallback</td></tr>
         <tr><td>🏴 England On Tour</td><td>3%</td><td><b>Multi-sport</b> — football <b>plus cricket plus rugby</b>. (a) <b>Live fixtures</b>: existing TheSportsDB football pull plus a new <code>fetchEnglandSports()</code> that hits TheSportsDB rugby league IDs (Six Nations, English Premiership, URC, Champions Cup, Rugby World Cup) and cricket league IDs (international Tests, T20, ODI, IPL, The Hundred). Filters all events to home-nation teams (England · Scotland · Wales · Northern Ireland · Republic of Ireland) within ±24/60 hours. (b) <b>16-entry tournament window list</b> covering 2026-2028: T20 World Cup, Six Nations, World Cup, Premiership Rugby Final, The Hundred, Autumn Nations Series, Rugby World Cup 2027, Cricket World Cup 2027, Euro 2028, The Ashes 2028/29 (each tagged with sport icon ⚽🏉🏏 and weight). (c) Card displays "MATCHDAY" + sport icons when home nation is playing today across any sport, "in flight" when a tournament is active, or top 3 upcoming events (with sport icon + days-to) when calendar is quiet.</td></tr>
         <tr><td>🌕 Lunacy Factor (moon phase)</td><td>3%</td><td>Pure astronomical maths — never fails</td></tr>
@@ -8817,7 +8817,7 @@ const WEIGHTS = {
   bh:        0.07,
   transport: 0.06,
   roadrage:  0.05,
-  search:    0.05,
+  search:    0.02,    // v2.4: dropped from 5% — mostly modelled (Google Trends RSS blocked) + partially derivative
   daylight:  0.04,
   england:   0.03,
   moon:      0.03,

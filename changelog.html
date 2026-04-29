@@ -135,7 +135,33 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.3 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.4 <span class="stamp">live</span></div>
+      <div class="release-tag">⚖️ Search Panic weight reduced 5% → 2% · honest reweighting · Apr 2026</div>
+    </div>
+    <p class="intro">A weight correction. The <b>🔍 Search Panic Index</b> module had a 5% weight — same as Road Rage — but on inspection it was carrying more weight than it deserves: Google nerfed the Trends RSS endpoint, so the live boost path mostly fails, and the modelled-fallback heuristic is built on top of <i>other already-weighted signals</i> (football, weather, news, booze, bank holidays). It was both partially-modelled and partially-derivative. Reducing to 2% reflects the actual contribution honestly.</p>
+    <h3>Why the cut</h3>
+    <ul>
+      <li><b>Mostly modelled, not live</b>: <code>fetchGoogleTrendsGB()</code> tries two RSS endpoints via <code>allorigins</code>; both are routinely blocked by Google in 2026. When the live data does arrive, it adds at most a +0.4 boost to matching queries — modest by design.</li>
+      <li><b>Partially derivative</b>: the heuristic reads <code>news.score</code>, <code>football.score</code>, <code>booze.score</code>, <code>bh.score</code>, <code>england.score</code> as inputs to its multipliers. Those are all already weighted in the model. So Search Panic was effectively double-counting.</li>
+      <li><b>Net effect</b>: a 5% weight on a signal that's mostly an aggregate of other weighted signals was inflating the gauge by ~1-3 points on average.</li>
+    </ul>
+    <h3>What stays the same</h3>
+    <ul>
+      <li>The card still appears in the Daily Pulse group with its full 5-query "panic queries the nation can't stop typing" list.</li>
+      <li>Live Google Trends boost still applies when the RSS cooperates — flagged with the "REAL" pill on each query.</li>
+      <li>The signal still contributes to the gauge, just at a more honest weight.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>WEIGHTS updated: <code>search: 0.05</code> → <code>0.02</code>. Methodology row updated.</li>
+      <li>Total model weight: 1.33 → 1.30 (back to where it was before v2.3 promotions, near the original 1.30).</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.3</div>
       <div class="release-tag">⚖️ Two ambient signals promoted into the gauge calculation · Apr 2026</div>
     </div>
     <p class="intro">First careful step away from the strict 38-signal model: <b>⛈️ Met Office Storm Watch (2%)</b> and <b>💩 Shit Index (1%)</b> now contribute to the kick-off index. Both were ambient-context cards before. The deliberate, conservative add — these two are the ambient signals that genuinely map to "kicking off" mood (storm warnings = real disruption, sewage rage = a reliable UK fury topic). Crypto, oil, FTSE, Polymarket, the rest stay at 0% — they're context, not mood drivers.</p>
