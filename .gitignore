@@ -1,0 +1,24 @@
+# macOS noise
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor noise
+*.swp
+*.swo
+.idea/
+.vscode/
+*.sublime-*
+
+# Log / build output
+*.log
+node_modules/
+dist/
+build/
+
+# Local secrets — never commit (Supabase keys, AdSense, etc.)
+.env
+.env.local
+.env.*.local
+secrets.json

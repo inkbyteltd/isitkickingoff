@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1a2030"/>
+      <stop offset="65%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#07090c"/>
+    </radialGradient>
+    <radialGradient id="cap" cx="35%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#d8dde6"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Full-bleed background circle for safe cropping -->
+  <circle cx="500" cy="500" r="500" fill="url(#bg)"/>
+
+  <!-- Outer Union Jack ring accent (subtle, 8px wide, near edge) -->
+  <circle cx="500" cy="500" r="486" fill="none" stroke="#012169" stroke-width="6" opacity="0.55"/>
+  <circle cx="500" cy="500" r="478" fill="none" stroke="#C8102E" stroke-width="3" opacity="0.6"/>
+
+  <!-- Main gauge arc — 4 colour zones, 180° spanning over the top -->
+  <!-- Centre at (500, 600), radius 360, stroke 64 -->
+  <!-- Green zone: 180°-225° (left side, 0-25%) -->
+  <path d="M 140 600 A 360 360 0 0 1 245 345" stroke="#3ecf8e" stroke-width="64" fill="none" stroke-linecap="butt"/>
+  <!-- Yellow zone: 225°-270° (left-top, 25-50%) -->
+  <path d="M 245 345 A 360 360 0 0 1 500 240" stroke="#f4c025" stroke-width="64" fill="none" stroke-linecap="butt"/>
+  <!-- Orange zone: 270°-315° (right-top, 50-75%) -->
+  <path d="M 500 240 A 360 360 0 0 1 755 345" stroke="#ff8a1f" stroke-width="64" fill="none" stroke-linecap="butt"/>
+  <!-- Red zone: 315°-360° (right side, 75-100%) -->
+  <path d="M 755 345 A 360 360 0 0 1 860 600" stroke="#ef4b4b" stroke-width="64" fill="none" stroke-linecap="butt"/>
+
+  <!-- Tick marks (every 18°, so 11 ticks across the 180° arc) -->
+  <g stroke="#ffffff" stroke-width="4" opacity="0.55">
+    <!-- 0/100 (180°): from (140,600) inward to (200,600) -->
+    <line x1="140" y1="600" x2="196" y2="600"/>
+    <!-- 18°: angle 198° -->
+    <line x1="158" y1="488" x2="211" y2="505"/>
+    <!-- 36°: angle 216° -->
+    <line x1="209" y1="389" x2="255" y2="421"/>
+    <!-- 54°: angle 234° -->
+    <line x1="288" y1="307" x2="324" y2="349"/>
+    <!-- 72°: angle 252° -->
+    <line x1="389" y1="248" x2="411" y2="299"/>
+    <!-- 90° (centre, 270°): from (500,240) down -->
+    <line x1="500" y1="240" x2="500" y2="296"/>
+    <!-- 108°: angle 288° -->
+    <line x1="611" y1="248" x2="589" y2="299"/>
+    <!-- 126°: angle 306° -->
+    <line x1="712" y1="307" x2="676" y2="349"/>
+    <!-- 144°: angle 324° -->
+    <line x1="791" y1="389" x2="745" y2="421"/>
+    <!-- 162°: angle 342° -->
+    <line x1="842" y1="488" x2="789" y2="505"/>
+    <!-- 100/100 (360°): from (860,600) inward -->
+    <line x1="860" y1="600" x2="804" y2="600"/>
+  </g>
+
+  <!-- BIG bold needle pointing at ~72/100 (deep into the orange zone, satisfyingly ominous) -->
+  <!-- Score 72 → angle 180° + (72/100)*180° = 309.6° from positive x-axis -->
+  <!-- Tip at (500 + 330*cos(309.6°), 600 + 330*sin(309.6°)) = (710, 348) -->
+  <polygon points="486,612 514,588 718,344" fill="#ff8a1f" stroke="#b41f1f" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Centre cap with "?" -->
+  <circle cx="500" cy="600" r="62" fill="url(#cap)" stroke="#0d1117" stroke-width="4"/>
+  <text x="500" y="635" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="80" font-weight="900" text-anchor="middle" fill="#ff8a1f">?</text>
+
+  <!-- Brand mark below gauge -->
+  <text x="500" y="780" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="46" font-weight="800" letter-spacing="6" text-anchor="middle" fill="#e8edf4">IS&#160;IT&#160;KICKING&#160;OFF</text>
+  <text x="500" y="820" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="22" font-weight="600" letter-spacing="8" text-anchor="middle" fill="#5f6b7d">UK&#160;THREAT&#160;INDEX</text>
+
+  <!-- Tiny Union Jack flag at the very top, centered above arc apex -->
+  <g transform="translate(450, 130)">
+    <rect width="100" height="50" fill="#012169"/>
+    <clipPath id="t-jack"><path d="M50,25 h50 v25 z v25 h-50 z h-50 v-25 z v-25 h50 z"/></clipPath>
+    <path d="M0,0 L100,50 M100,0 L0,50" stroke="#fff" stroke-width="10"/>
+    <path d="M0,0 L100,50 M100,0 L0,50" clip-path="url(#t-jack)" stroke="#C8102E" stroke-width="6"/>
+    <path d="M50,0 v50 M0,25 h100" stroke="#fff" stroke-width="16"/>
+    <path d="M50,0 v50 M0,25 h100" stroke="#C8102E" stroke-width="10"/>
+  </g>
+</svg>

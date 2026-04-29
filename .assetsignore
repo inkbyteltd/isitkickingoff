@@ -1,0 +1,11 @@
+# Files in this directory that should NOT be served as public static assets.
+# Wrangler reads this when it builds the static asset bundle.
+#
+# _worker.js is the Worker entry (referenced by `main` in wrangler.toml).
+# We want it to RUN server-side, not be downloadable at /_worker.js.
+
+_worker.js
+wrangler.toml
+.assetsignore
+.gitignore
+.DS_Store

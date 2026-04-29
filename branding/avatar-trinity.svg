@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <radialGradient id="dim" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.0)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.45)"/>
+    </radialGradient>
+    <clipPath id="circle-crop">
+      <circle cx="500" cy="500" r="500"/>
+    </clipPath>
+  </defs>
+
+  <!-- Full-bleed Union Jack (clipped to circle) -->
+  <g clip-path="url(#circle-crop)">
+    <rect width="1000" height="1000" fill="#012169"/>
+    <!-- White diagonal cross (St Andrew + St Patrick base) -->
+    <path d="M0,0 L1000,1000 M1000,0 L0,1000" stroke="#fff" stroke-width="180"/>
+    <!-- Red diagonals (off-centre to make St Patrick's cross) -->
+    <clipPath id="quadrant">
+      <path d="M500,500 L1000,500 L1000,1000 L500,1000 Z M500,500 L0,500 L0,0 L500,0 Z"/>
+    </clipPath>
+    <path d="M0,0 L1000,1000 M1000,0 L0,1000" clip-path="url(#quadrant)" stroke="#C8102E" stroke-width="100"/>
+    <!-- White vertical and horizontal -->
+    <path d="M500,0 v1000 M0,500 h1000" stroke="#fff" stroke-width="280"/>
+    <!-- Red vertical and horizontal (St George's cross) -->
+    <path d="M500,0 v1000 M0,500 h1000" stroke="#C8102E" stroke-width="180"/>
+
+    <!-- Dim overlay so emoji medallion stands out -->
+    <rect width="1000" height="1000" fill="url(#dim)"/>
+    <rect width="1000" height="1000" fill="rgba(7,9,12,0.35)"/>
+  </g>
+
+  <!-- Central white medallion -->
+  <circle cx="500" cy="500" r="320" fill="#f4f0e8" stroke="#0d1117" stroke-width="10"/>
+  <circle cx="500" cy="500" r="305" fill="none" stroke="#ff8a1f" stroke-width="3" opacity="0.6"/>
+
+  <!-- Three emojis arranged in triangle: pint (top), kebab (bottom-left), kettle (bottom-right) -->
+  <text x="500" y="395" font-size="190" text-anchor="middle" font-family="Apple Color Emoji, Noto Color Emoji, Segoe UI Emoji, EmojiOne Color, sans-serif">🍺</text>
+  <text x="380" y="660" font-size="150" text-anchor="middle" font-family="Apple Color Emoji, Noto Color Emoji, Segoe UI Emoji, EmojiOne Color, sans-serif">🥙</text>
+  <text x="620" y="660" font-size="150" text-anchor="middle" font-family="Apple Color Emoji, Noto Color Emoji, Segoe UI Emoji, EmojiOne Color, sans-serif">🫖</text>
+
+  <!-- Brand text curved across bottom (using a path for elegance, but simpler straight version) -->
+  <text x="500" y="755" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="32" font-weight="800" letter-spacing="6" text-anchor="middle" fill="#0d1117">IS&#160;IT&#160;KICKING&#160;OFF</text>
+  <text x="500" y="788" font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="18" font-weight="600" letter-spacing="6" text-anchor="middle" fill="#5f6b7d">UK&#160;THREAT&#160;INDEX</text>
+</svg>
