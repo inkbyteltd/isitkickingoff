@@ -1160,8 +1160,8 @@
         <tr><td>⛽ Petrol Pump Rage</td><td>1%</td><td><b>Live UK forecourt prices</b> via the <b>CMA Pump Watch</b> open-data scheme — mandated by the UK Energy Act 2023, which requires every retailer with 4+ stations to publish a daily JSON feed of E10 / B7 / E5 / SDV prices. We fetch <b>14 retailers in parallel</b> (Asda, Morrisons, Tesco, Sainsbury's, Applegreen, Ascona, JET, Esso, Shell, BP, Texaco, Rontec, M&amp;S, Co-op) and average the unleaded / diesel / super / premium prices across <b>every station that responds</b> — typically thousands of forecourts. Source line on the card reads "<i>CMA Pump Watch · N retailers · M stations</i>". Falls back to a hardcoded recent UK national average if every live feed is blocked. Rage score is modelled by day-of-week (Friday afternoon weekend-fill panic peak, Sunday-evening dread, weekday commute) and amplified if unleaded &gt; £1.65/L.</td></tr>
         <tr><td>🗳️ Westminster Voting Intention</td><td>1%</td><td>Hardcoded indicative averages of the major UK pollsters (YouGov · Opinium · Ipsos · Savanta). Score is driven by <b>polarisation</b> — the gap between leading and second party. Knife-edge race (gap &lt; 2pts) = high score (more pub argument fuel); runaway lead = low score. Live upgrade path: Wikipedia MediaWiki API (origin=*) or scheduled GitHub Actions scrape of Politico Poll-of-Polls UK / pollster press releases</td></tr>
         <tr><td>👔 Party Leader Approval (Pint Test)</td><td>1%</td><td>Hardcoded net favourability ratings (favourable − unfavourable). Score is driven by <b>how few leaders sit in net-positive territory</b> — fewer liked leaders = fiercer pub debate. Surfaces the "British pint test" — who you'd most like to share a pint with, with "(least dreadful)" qualifier when nobody is in net-positive. Live upgrade: weekly scrape of Ipsos / YouGov leader-rating press releases</td></tr>
-        <tr><td>💩 Shit Index</td><td>0%</td><td>Modelled UK sewage spill estimate with <b>live rain modifier</b>. Anchored to <b>Environment Agency Event Duration Monitoring (EDM)</b> data: ~3.6M sewage spill events recorded across England in 2023, ~4.7M hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today's estimate scales with the UK-average current rainfall reading from Open-Meteo (dry day ~0.7× baseline, heavy rain up to ~2.5×). Card shows three of England's worst-offending water companies with their real annual EDM figures (United Utilities ~97k/yr, Severn Trent ~60k/yr, Yorkshire Water ~63k/yr, etc.). Ambient context — does NOT feed the kick-off index.</td></tr>
-        <tr><td>⛈️ Met Office Storm Watch</td><td>0%</td><td><b>LIVE</b> — Met Office severe weather warnings via the official <a href="https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">NSWWS RSS feed</a> (no API key needed). Parses the highest active warning level (Yellow / Amber / Red), counts active warnings nationally, and surfaces the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Ambient context.</td></tr>
+        <tr><td>💩 Shit Index</td><td>1%</td><td>Modelled UK sewage spill estimate with <b>live rain modifier</b>. Anchored to <b>Environment Agency Event Duration Monitoring (EDM)</b> data: ~3.6M sewage spill events recorded across England in 2023, ~4.7M hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today's estimate scales with the UK-average current rainfall reading from Open-Meteo (dry day ~0.7× baseline, heavy rain up to ~2.5×). Card shows three of England's worst-offending water companies with their real annual EDM figures (United Utilities ~97k/yr, Severn Trent ~60k/yr, Yorkshire Water ~63k/yr, etc.). Ambient context — does NOT feed the kick-off index.</td></tr>
+        <tr><td>⛈️ Met Office Storm Watch</td><td>2%</td><td><b>LIVE</b> — Met Office severe weather warnings via the official <a href="https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/uk" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">NSWWS RSS feed</a> (no API key needed). Parses the highest active warning level (Yellow / Amber / Red), counts active warnings nationally, and surfaces the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Ambient context.</td></tr>
         <tr><td>⚡ National Grid Power Mix</td><td>0%</td><td><b>LIVE</b> — UK electricity generation breakdown from the <b>Elexon BMRS FUELHH dataset</b> (same provider as the kettle-demand module). Renders the top 5 fuel sources right now as horizontal worm-bars with percentage of total grid generation: gas (CCGT/OCGT), wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). When wind crosses 50% the country is briefly running on weather. Ambient context.</td></tr>
         <tr><td>🛢️ Brent Crude Oil Tracker</td><td>0%</td><td><b>LIVE</b> — Brent crude (BZ=F) spot price in USD via a multi-source chain: <a href="https://stooq.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Stooq</a> (<code>cb.f</code> Brent Crude futures) primary, Yahoo Finance via three CORS proxies (allorigins, corsproxy, codetabs) as fallback. Shows current price in USD/barrel, day-over-day percentage change colour-coded, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair with the ⛽ Petrol Pump Rage card for a full pump-to-platform read. Ambient context.</td></tr>
         <tr><td>📈 Stock Indices</td><td>0%</td><td><b>LIVE</b> — Four major indices via a multi-source fetch chain: FTSE 100 (LSE), Dow Jones Industrial Average, NASDAQ Composite, S&amp;P 500. Tries <a href="https://stooq.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Stooq</a> first (free CSV, CORS-friendly), then Yahoo Finance via three CORS proxies (api.allorigins.win, corsproxy.io, api.codetabs.com). Day change colour-coded green up / red down. Falls back to "—" placeholders if every source is blocked. Ambient context.</td></tr>
@@ -7817,10 +7817,61 @@ function signalsForRegion(regionId, bulk){
   const patriot  = signalPatriot();
   const pagan    = signalPagan();
   const folklore = signalFolklore();
+  // v2.3 — promote two ambient signals into the gauge calculation. Both render
+  // visually in the Environment row via renderEnvCards (unchanged); these
+  // wrappers are score-only objects that exist purely to feed aggregateIndex.
+  const storm    = _stormSignal(bulk.storm);
+  const shit     = _shitSignal(bulk.weatherMap);
   // Search panic: needs peer signals as context (+ optional real trends)
-  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, crime, spotify, reddit };
+  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
   const search   = signalSearchPanic(partial, bulk.trends);
   return { ...partial, search, voting, leaders };
+}
+
+/* =========================================================
+   Score-only signal wrappers (v2.3)
+   These convert raw bulk data into minimal signal objects with
+   {key, score} so aggregateIndex can use them. The visual cards
+   are still rendered separately by renderEnvCards from raw bulk
+   data — these wrappers don't affect rendering at all.
+   ========================================================= */
+function _stormSignal(stormData){
+  // Met Office severe weather warning level → 0-1 score
+  const level = (stormData && stormData.level) || 'green';
+  const score = level === 'red'    ? 0.95   // life-threatening: chaos
+              : level === 'amber'  ? 0.65   // significant disruption
+              : level === 'yellow' ? 0.30   // be aware: low-grade grumbling
+              :                      0.05;  // green: nothing
+  return {
+    key: 'storm',
+    title: 'Storm Watch',
+    icon: '⛈️',
+    live: !!(stormData && stormData.live),
+    modelled: !(stormData && stormData.live),
+    score,
+  };
+}
+function _shitSignal(weatherMap){
+  // Use the same computeShitIndex output to derive a score. Multiplier 0.7-2.5
+  // maps to 0-1: dry baseline ≈ 0.20, average wet day ≈ 0.50, storm-overflow
+  // (combined sewer overflows triggered) ≈ 0.85+.
+  let score = 0.25;
+  let live = false;
+  try {
+    const shit = computeShitIndex(weatherMap || {});
+    live = !!(shit && shit.live);
+    const mult = (shit && shit.multiplier) || 1.0;
+    // Linear: 0.7x → 0.10, 1.0x → 0.25, 1.5x → 0.50, 2.0x → 0.70, 2.5x → 0.85
+    score = Math.max(0.05, Math.min(0.95, (mult - 0.55) / 2.4));
+  } catch (_){}
+  return {
+    key: 'shit',
+    title: 'Shit Index',
+    icon: '💩',
+    live,
+    modelled: !live,
+    score,
+  };
 }
 
 /* Hour-of-day "activity envelope" — a global multiplier on the aggregate.
@@ -8798,6 +8849,8 @@ const WEIGHTS = {
   lottery:   0.02,
   pagan:     0.01,    // 🪨 wheel-of-the-year festivals (v2.2)
   folklore:  0.01,    // 🔮 cryptids + folk traditions (v2.2)
+  storm:     0.02,    // ⛈️ Met Office severe weather warnings (v2.3 promoted from ambient)
+  shit:      0.01,    // 💩 sewage spill rage (v2.3 promoted from ambient)
 };
 
 /* =========================================================
@@ -8813,8 +8866,8 @@ const SIGNAL_EXPLAINERS = {
   rizla:      'Rizla & OCB — 🧊 Pacifier. Mellow as it gets. The universal British de-escalator. Modelled UK rolling-papers market split across Rizla (Imperial Tobacco UK ~62% share), OCB, Smoking, Raw. Daily volume calibrated against Imperial Tobacco UK and Republic Technologies UK shipment estimates: ~30,000 packs per peak hour nationally. Includes both tobacco and non-tobacco end-uses (we\'re not asking).',
 
   // Environment & Energy row (v1.3)
-  shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. The fish are deeply unimpressed.',
-  storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). The Met Office issues these warnings under the National Severe Weather Warning Service. Green = all clear (suspiciously quiet).',
+  shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. <b>v2.3:</b> now contributes 1% to the kick-off index — pollution outrage is a reliable UK rage topic.',
+  storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). <b>v2.3:</b> now contributes 2% to the kick-off index — Amber/Red warnings genuinely shift the national mood (cancelled trains, flooded gardens, panic at Tesco).',
   power:      'Power Mix — live UK electricity generation breakdown from the Elexon BMRS FUELHH dataset (same provider as the kettle module). Shows the top 5 fuel sources right now as a percentage of total grid generation: gas, wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.',
   oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD via a multi-source chain: Stooq (cb.f, free CSV, CORS-friendly) primary, Yahoo Finance via three CORS proxies as fallback. Shows current price, day-over-day change colour-coded, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
 

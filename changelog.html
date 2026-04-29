@@ -135,7 +135,50 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.2 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.3 <span class="stamp">live</span></div>
+      <div class="release-tag">⚖️ Two ambient signals promoted into the gauge calculation · Apr 2026</div>
+    </div>
+    <p class="intro">First careful step away from the strict 38-signal model: <b>⛈️ Met Office Storm Watch (2%)</b> and <b>💩 Shit Index (1%)</b> now contribute to the kick-off index. Both were ambient-context cards before. The deliberate, conservative add — these two are the ambient signals that genuinely map to "kicking off" mood (storm warnings = real disruption, sewage rage = a reliable UK fury topic). Crypto, oil, FTSE, Polymarket, the rest stay at 0% — they're context, not mood drivers.</p>
+    <h3>⛈️ Storm Watch · 2% weight</h3>
+    <ul>
+      <li>Score mapping based on the Met Office's National Severe Weather Warning Service: <b>Green</b> 0.05 (background) · <b>Yellow</b> 0.30 (low-grade grumbling) · <b>Amber</b> 0.65 (significant disruption) · <b>Red</b> 0.95 (life-threatening chaos).</li>
+      <li>Card rendering unchanged — the chip pip and warning list still appear in the Environment row exactly as before. The score is added invisibly to the aggregator.</li>
+    </ul>
+    <h3>💩 Shit Index · 1% weight</h3>
+    <ul>
+      <li>Score scales linearly with the rain modifier already powering the card: <b>0.7×</b> baseline (dry) → ~0.10 score, <b>1.0×</b> (average) → ~0.25, <b>1.5×</b> → ~0.50, <b>2.0×</b> → ~0.70, <b>2.5×</b> (storm overflow trigger) → ~0.85.</li>
+      <li>Pollution outrage is one of the most reliable UK rage topics on social media — felt this deserved a small but real contribution.</li>
+    </ul>
+    <h3>🛡️ What's NOT being weighted (and why)</h3>
+    <ul>
+      <li><b>🛢️ Brent Crude</b>: already represented downstream by Petrol Pump Rage (which is weighted). Double-counting would distort.</li>
+      <li><b>⚡ Power Mix</b>: interesting context, not mood-relevant. Wind being 60% today doesn't make anyone tense.</li>
+      <li><b>📈 FTSE/Dow, ₿ Crypto, 💊 Tech &amp; Pharma</b>: too niche — most Brits don't watch markets daily.</li>
+      <li><b>💱 Pound In Your Pocket</b>: deferred to Step 2 (will get a 1% threshold-gated weight when cable drops below ~1.20 — only kicks in when the pound is genuinely weak).</li>
+      <li><b>🎯 Polymarket UK</b>: downstream of news (which is weighted). Markets pricing in PM resignation is a derivative of news drama.</li>
+    </ul>
+    <h3>🛠️ Implementation notes</h3>
+    <ul>
+      <li>Two new score-only wrappers <code>_stormSignal()</code> and <code>_shitSignal()</code> convert raw bulk data into <code>{key, score}</code> objects for <code>aggregateIndex</code>. The visual env-tickers row still renders from raw bulk data via <code>renderEnvCards</code> — totally unchanged.</li>
+      <li>Methodology table rows updated: 0% → 2% (storm) and 0% → 1% (shit).</li>
+      <li>Tooltip explainers reflect the new contribution weights.</li>
+      <li>Tier thresholds (<code>HAVING A BREW</code> 0–15, <code>A BIT TENSE</code> 16–30, etc.) <b>unchanged</b> for now. Will observe over the next few days and decide if a small bump is needed (e.g. <code>KICKING OFF</code> 76 → 78) once the new average reading settles.</li>
+    </ul>
+    <h3>📅 Step 2 (later this week)</h3>
+    <ul>
+      <li>Add <code>fx</code> weakness at 1% (threshold-gated) — only contributes when GBP/USD is below ~1.20.</li>
+      <li>Add <code>stocks</code> at 0.5% with a "big down day" trigger.</li>
+      <li>If the gauge feels more alive, possibly recalibrate one or two tier boundaries.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.2</div>
       <div class="release-tag">🪨 Pagan Wheel · 🔮 Folklore Watch · British mystic shit · Apr 2026</div>
     </div>
     <p class="intro">Two new signal cards land in the Calendar &amp; Sport group: 🪨 <b>Pagan Wheel of the Year</b> tracks the eight Celtic / druidic festivals (Imbolc, Beltane, Solstices, Equinoxes, Lughnasadh, Samhain), and 🔮 <b>British Folklore Watch</b> rotates UK folk traditions and cryptid sightings. Brings the group from 7 to 9 cards — the trailing-row gap from the v2.1 layout fix narrows to a clean two-cell trail with KEEP CALM fillers handling the rest.</p>
