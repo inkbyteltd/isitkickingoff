@@ -7313,7 +7313,7 @@ function signalBetting(footballData){
   // — now shows REAL recent match results pulled from TheSportsDB's
   // eventslastleague.php endpoint (already fetched in fetchAllFootballEvents).
   // No commercial API key required — TheSportsDB is free and battle-tested.
-  const base = { key:'betting', title:'Last Results · Football', icon:'⚽', live:false, modelled:true };
+  const base = { key:'betting', title:'Last Results · Football', icon:'⚽', live:false, modelled:true, wide:true };
   const events = (footballData?.events || []);
 
   // Filter for FINISHED matches only — those with real scores set.
@@ -9430,6 +9430,35 @@ function stopLoadingSweep(){
 // Start the sweep immediately so the first paint shows motion
 startLoadingSweep();
 
+// Filler card quote rotation — every 8 seconds, cycle to the next item in
+// the KEEP_CALM_FILLERS pool with a soft fade. Targets any `.filler-rotating`
+// in the dashboard; runs once per page lifecycle.
+(function _startFillerRotation(){
+  let idx = 0;
+  setInterval(() => {
+    const cards = document.querySelectorAll('.filler-rotating');
+    if (!cards.length) return;
+    idx = (idx + 1) % KEEP_CALM_FILLERS.length;
+    const f = KEEP_CALM_FILLERS[idx];
+    cards.forEach(card => {
+      const inner = card.querySelector('.filler-inner');
+      if (!inner) return;
+      // Fade out → swap → fade in
+      inner.style.transition = 'opacity .3s';
+      inner.style.opacity = '0';
+      setTimeout(() => {
+        const ic  = inner.querySelector('.filler-icon');
+        const tt  = inner.querySelector('.filler-title');
+        const sb  = inner.querySelector('.filler-sub');
+        if (ic) ic.textContent = f.icon;
+        if (tt) tt.textContent = f.title;
+        if (sb) sb.textContent = f.sub;
+        inner.style.opacity = '';
+      }, 320);
+    });
+  }, 8000);
+})();
+
 // Mobile: tap outside an open ? tooltip to dismiss it. The CSS keeps the
 // tooltip visible while the .tip-btn is :focused; on touch devices there's
 // no native blur-on-outside-tap unless we wire it up. This handler blurs any
@@ -10860,25 +10889,17 @@ function renderAll(bulk){
     for (const k of visibleInGroup){
       signalsHtml += renderCard(sigs[k]);
       orderedSignals.push(sigs[k]);
-    }
-    // Pad with KEEP CALM filler cards ONLY for groups marked with pad:true
-    // (currently just Calendar & Sport). Other groups left as-is — we'd rather
-    // have an honest gap than spam KEEP CALM cards site-wide.
-    if (group.pad){
-      const remainder = visibleInGroup.length % 4;
-      if (remainder > 0){
-        const fillerCount = 4 - remainder;
-        // Day-seeded base offset so the rotation differs day-to-day. Within
-        // a single render we add `i` so each filler in this group is unique.
+      // For pad:true groups, insert ONE filler card immediately after the
+      // betting card (Last Results · Football, which is wide:true) so the
+      // trailing slot in that row is filled cleanly. No other fillers — keeps
+      // the design tight without a row of repeated KEEP CALMs.
+      if (group.pad && k === 'betting'){
         const today = new Date();
-        const baseSeed = today.getDate() * 11 + today.getMonth() * 7;
-        for (let i = 0; i < fillerCount; i++){
-          // The .f1/.f2/.f3 class lets CSS hide trailing fillers on narrow viewports
-          signalsHtml += _fillerCardHtml(baseSeed + i).replace(
-            'filler-card',
-            `filler-card f${i+1}`
-          );
-        }
+        const seed = today.getDate() * 11 + today.getMonth() * 7;
+        signalsHtml += _fillerCardHtml(seed).replace(
+          'filler-card',
+          'filler-card filler-rotating'
+        );
       }
     }
   }
