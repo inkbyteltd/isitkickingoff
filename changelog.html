@@ -135,7 +135,31 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.10 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.11 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 Mobile right-edge gap hotfix · Apr 2026</div>
+    </div>
+    <p class="intro">Bug report (with screenshot): on iPhone Safari the dashboard was rendering with a noticeable gap along the right side — every section sat narrower than the viewport and shifted left. The page itself wasn't broken, just sitting off-centre.</p>
+    <h3>What was happening</h3>
+    <ul>
+      <li>The page root had no horizontal-overflow guard. Some child element somewhere on the page (a worm chart row, a runtime-injected widget, a long unbroken token) was wider than a phone viewport.</li>
+      <li>That made the document wider than the viewport. Because <code>.wrap</code> uses <code>margin:0 auto</code>, it stayed centred on the (now-wider) document — meaning it appeared shifted off-centre relative to the visible viewport. The user perceives this as "extra gap on the right" while the actual overflowing element sits invisibly off-screen.</li>
+    </ul>
+    <h3>What changed</h3>
+    <ul>
+      <li>Added <code>overflow-x:hidden</code> + <code>max-width:100vw</code> to <code>html, body</code>. Belt-and-braces clip at the root: any rogue wide child is now visually clipped and can't push the document beyond the viewport.</li>
+      <li>Verified there's no <code>position:sticky</code> in the page (only one <code>position:fixed</code>, on the toast) so the overflow clip is safe and won't break any pinned elements.</li>
+      <li>Tablet/desktop layout unchanged — the fix is invisible at widths where nothing was overflowing in the first place.</li>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>One-line CSS change to <code>html,body</code> rule. No JS touched, no new dependencies.</li>
+      <li>Inline CSS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+      <li>Follow-up worth doing: track down which child was actually overflowing so the underlying cause is fixed, not just clipped. Suspect: a worm-chart row or one of the rotating ticker rails on a particularly long string.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.10</div>
       <div class="release-tag">🐛 X share fix — URL now opens, PNG saves in background · Apr 2026</div>
     </div>
     <p class="intro">Bug report: clicking the gauge's <b>X share</b> button was downloading a PNG to your computer but <i>not</i> opening the X compose tab — neither on desktop nor mobile. Two stacked causes; one fix.</p>
