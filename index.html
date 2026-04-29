@@ -244,6 +244,27 @@
     color:var(--ink-faint);margin:32px 0 12px;
   }
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  /* "Keep Calm" filler cards — round out the trailing partial row of a signal
+     group. Slim, lower-contrast, very obviously a filler (not a signal). On
+     mobile/tablet (1-col, 2-col) the trailing fillers can over-render — we
+     hide the second + third filler on smaller breakpoints so only one shows. */
+  .filler-card{
+    background:linear-gradient(180deg,rgba(255,138,31,.04),rgba(13,17,23,.6));
+    border:1px dashed var(--line-2);
+    border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    min-height:120px;padding:24px 18px;
+    opacity:.55;transition:opacity .2s;
+  }
+  .filler-card:hover{opacity:.85}
+  .filler-inner{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .filler-icon{font-size:30px;filter:grayscale(.2);margin-bottom:2px}
+  .filler-title{font-family:var(--mono);font-size:13px;font-weight:800;letter-spacing:.18em;color:var(--ink-dim)}
+  .filler-sub{font-family:var(--sans);font-size:11px;color:var(--ink-faint);font-style:italic}
+  /* Hide trailing fillers on narrower viewports (where they'd be redundant) */
+  @media (max-width:1100px){ .filler-card.f3{display:none} }
+  @media (max-width:820px){  .filler-card.f2{display:none} }
+  @media (max-width:560px){  .filler-card.f1{display:none} }
   /* Subtle group divider — small label spanning the full grid row */
   .grid-divider{
     grid-column:1 / -1;
@@ -4443,6 +4464,39 @@ function _envFeatureHtml(){
   `;
 }
 
+/* "Keep Calm" filler cards — render at the end of any signal group whose
+   visible card count isn't a multiple of 4 (the desktop column count). They
+   round out the trailing partial row so the design doesn't leave dead space.
+   Content rotates daily so it doesn't go stale. */
+const KEEP_CALM_FILLERS = [
+  { icon:'🇬🇧', title:'KEEP CALM',     sub:'and carry on'              },
+  { icon:'☕',  title:'KEEP CALM',     sub:'and put the kettle on'     },
+  { icon:'🚏', title:'KEEP CALM',     sub:'and queue politely'         },
+  { icon:'☔', title:'KEEP CALM',     sub:'and blame the weather'      },
+  { icon:'😤', title:'KEEP CALM',     sub:'and tut quietly'            },
+  { icon:'🚆', title:'KEEP CALM',     sub:'and blame the trains'       },
+  { icon:'🥙', title:'KEEP CALM',     sub:'and order a kebab'          },
+  { icon:'🚇', title:'MIND',          sub:'the gap'                    },
+  { icon:'🍻', title:'KEEP CALM',     sub:"it's nearly Friday"         },
+  { icon:'🌧️', title:'KEEP CALM',     sub:"it's only drizzle"          },
+  { icon:'🛒', title:'KEEP CALM',     sub:'and avoid the bagging area' },
+  { icon:'📺', title:'KEEP CALM',     sub:"and put EastEnders on"      },
+  { icon:'🇬🇧', title:'CARRY ON',     sub:'regardless'                 },
+  { icon:'🫖', title:'PROPER BREW',   sub:'first, decisions later'     },
+  { icon:'⛅', title:"IT'S BRIGHT",  sub:'somewhere in the country'   },
+];
+function _fillerCardHtml(seedOffset){
+  const seed = (new Date().getDate() * 11 + (seedOffset || 0) * 7) % KEEP_CALM_FILLERS.length;
+  const f = KEEP_CALM_FILLERS[seed];
+  return `<article class="card filler-card" aria-hidden="true">
+    <div class="filler-inner">
+      <div class="filler-icon">${f.icon}</div>
+      <div class="filler-title">${f.title}</div>
+      <div class="filler-sub">${f.sub}</div>
+    </div>
+  </article>`;
+}
+
 function _financeFeatureHtml(){
   return `
     <div class="grid-feature">
@@ -4568,10 +4622,15 @@ function _zeitgeistHtml(ncbData){
 function _zeitgeistMountWidget(){
   const node = document.getElementById('zeitgeist');
   if (!node) return;
-  // Bail early if there's no embed to render
-  if (!node.querySelector('blockquote.twitter-tweet')) return;
+  // Bail early ONLY if there's nothing for X widgets.js to render.
+  // We support both: <blockquote class="twitter-tweet"> (specific tweet embed,
+  // when Nitter gave us a tweet URL) AND <a class="twitter-timeline">
+  // (latest-tweet timeline, when Nitter is down and we fall back to live X).
+  const hasBlockquote = node.querySelector('blockquote.twitter-tweet');
+  const hasTimeline   = node.querySelector('a.twitter-timeline');
+  if (!hasBlockquote && !hasTimeline) return;
 
-  // If already loaded, just call load(). Otherwise inject the script tag once.
+  // If widgets.js is already loaded, just call load(). Otherwise inject once.
   if (window.twttr && window.twttr.widgets){
     try { window.twttr.widgets.load(node); } catch(_){}
     return;
@@ -8450,7 +8509,7 @@ function renderPolymarketCards(poly){
             <div style="display:flex;align-items:center;gap:10px">
               <span class="emoji" aria-hidden="true">🎯</span>
               <div class="title">UK Prediction Market</div>
-              ${i === 0 ? tipFor('poly', 'Polymarket UK') : ''}
+              ${tipFor('poly', 'Polymarket UK')}
             </div>
             ${liveChip}
           </div>
@@ -8469,10 +8528,10 @@ function renderPolymarketCards(poly){
     return `
       <article class="ticker">
         <div class="head">
-          <div style="display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
             <span class="emoji" aria-hidden="true">🎯</span>
-            <div class="title" style="white-space:normal;font-size:11px;line-height:1.4">${_escAttr(m.question || 'UK market')}</div>
-            ${i === 0 ? tipFor('poly', 'Polymarket UK') : ''}
+            <div class="title" style="white-space:normal;font-size:11px;line-height:1.4;flex:1;min-width:0">${_escAttr(m.question || 'UK market')}</div>
+            ${tipFor('poly', 'Polymarket UK')}
           </div>
           ${liveChip}
         </div>
@@ -10620,6 +10679,19 @@ function renderAll(bulk){
     for (const k of visibleInGroup){
       signalsHtml += renderCard(sigs[k]);
       orderedSignals.push(sigs[k]);
+    }
+    // Pad with KEEP CALM filler cards if the group's count isn't a multiple of 4
+    // (the desktop column count) — fills trailing dead space gracefully.
+    const remainder = visibleInGroup.length % 4;
+    if (remainder > 0){
+      const fillerCount = 4 - remainder;
+      for (let i = 0; i < fillerCount; i++){
+        // The .f1/.f2/.f3 class lets CSS hide trailing fillers on narrow viewports
+        signalsHtml += _fillerCardHtml(i).replace(
+          'filler-card',
+          `filler-card f${i+1}`
+        );
+      }
     }
   }
   $('#signals').innerHTML = signalsHtml;

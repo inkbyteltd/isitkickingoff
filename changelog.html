@@ -135,7 +135,35 @@
 
   <article class="release">
     <div class="release-head">
-      <div class="release-ver">v2.0 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.1 <span class="stamp">live</span></div>
+      <div class="release-tag">🎨 Polymarket tooltips · NCB tweet rendering · KEEP CALM filler cards · Apr 2026</div>
+    </div>
+    <p class="intro">Three aesthetic and functional fixes after v2.0 went live: every Polymarket card now carries a <b>?</b> tooltip (was just the first one), the Zeitgeist X-timeline widget actually renders the latest tweet, and partial signal-group rows get padded with playful <b>KEEP CALM</b> filler cards instead of leaving dead space.</p>
+    <h3>🎯 Polymarket — ? on every card</h3>
+    <ul>
+      <li>All 4 Polymarket cards now show the <b>?</b> hover-info pip in their header (previously only the first card had it for layout reasons). Each tooltip explains the data source and UK-relevance filter — consistent with the rest of the dashboard.</li>
+    </ul>
+    <h3>🎭 Zeitgeist · No Context Brits — fixed tweet rendering</h3>
+    <ul>
+      <li>Bug: <code>_zeitgeistMountWidget()</code> bailed early if it couldn't find a <code>&lt;blockquote class="twitter-tweet"&gt;</code>. But the v1.7 fallback uses <code>&lt;a class="twitter-timeline"&gt;</code> when Nitter is down (which is most of the time now). The widget loader was never being invoked, so the Timeline embed never rendered.</li>
+      <li>Fix: the early-bail now checks for both element types. When Nitter fails (the common case in 2026), the X Timeline widget loads and renders NCB's most recent tweet directly from x.com — no API key, no Nitter dependency.</li>
+    </ul>
+    <h3>🇬🇧 KEEP CALM filler cards — no more dead space</h3>
+    <ul>
+      <li>Calendar &amp; Sport (and any other group whose visible card count isn't a multiple of 4) was leaving visible gaps in the desktop grid. Now any partial trailing row gets padded with playful filler cards.</li>
+      <li>15 rotating filler messages: <i>"KEEP CALM and put the kettle on"</i>, <i>"KEEP CALM and queue politely"</i>, <i>"KEEP CALM and blame the trains"</i>, <i>"MIND the gap"</i>, <i>"PROPER BREW first, decisions later"</i>, etc. Rotates daily.</li>
+      <li>Visually distinct from real signal cards: dashed border, dimmed by default, lighter weight — so they read as filler at a glance, not as signals you can interact with.</li>
+      <li>Responsive media queries hide trailing fillers on narrower viewports (1-col mobile only ever shows the first filler; 2-col tablet shows two; 4-col desktop shows up to three) — the layout looks intentional at every breakpoint.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+    </ul>
+  </article>
+
+  <article class="release">
+    <div class="release-head">
+      <div class="release-ver">v2.0</div>
       <div class="release-tag">🎯 Polymarket UK · 💨 Vape rotation · gauge smoothing · mobile fixes · Apr 2026</div>
     </div>
     <p class="intro">Big one. Six things at once: a new Polymarket UK predictions row, a richer signal-driven vape flavour rotation, a smoother gauge load animation, two mobile bug fixes (tooltip dismiss + X share), and a polish pass on the changelog.</p>
