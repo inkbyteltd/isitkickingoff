@@ -5792,8 +5792,10 @@ async function fetchOilPrices(){
     // Multi-source: try Stooq first (cb.f = Brent Crude futures, free CSV,
     // CORS-friendly), then Yahoo BZ=F via the 3-proxy chain. Same robust
     // pattern as the Stock Indices fetcher.
-    // Stooq symbol for Brent Crude futures is bz.f (NOT cb.f — that's wrong).
-    let q = await _fetchStooqQuote('bz.f');
+    // Try multiple Stooq Brent symbol variants — their commodity codes vary.
+    let q = await _fetchStooqQuote('cb.f');
+    if (!q || !q.live) q = await _fetchStooqQuote('bz.f');
+    if (!q || !q.live) q = await _fetchStooqQuote('^bz');
     if (!q || !q.live) q = await _fetchYahooQuote('BZ=F');
     if (q && q.live){
       out.live = true;

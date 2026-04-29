@@ -61,47 +61,72 @@ export default {
   },
 };
 
+/**
+ * Yahoo Finance quote — Yahoo's v7/finance/quote endpoint started returning
+ * 401 to server-side calls in 2024+ (requires session crumb). v8/finance/chart
+ * is still open. We loop the requested symbols, hit v8/chart per-symbol in
+ * parallel, and aggregate into the same response shape v7 used to return —
+ * so the dashboard code that parses j.quoteResponse.result keeps working.
+ */
 async function handleYahooQuote(url, ctx) {
-  const symbols = (url.searchParams.get('symbols') || '').trim();
-  if (!symbols) return jsonError('Missing ?symbols= param', 400);
-  if (!ALLOWED_SYMBOLS.test(symbols)) return jsonError('Invalid symbols characters', 400);
-  if (symbols.length > 200) return jsonError('Too many symbols', 400);
+  const symbolsRaw = (url.searchParams.get('symbols') || '').trim();
+  if (!symbolsRaw) return jsonError('Missing ?symbols= param', 400);
+  if (!ALLOWED_SYMBOLS.test(symbolsRaw)) return jsonError('Invalid symbols characters', 400);
+  if (symbolsRaw.length > 200) return jsonError('Too many symbols', 400);
 
   const cacheKey = new Request(url.toString(), { method: 'GET' });
   const cache = caches.default;
-
   let cached = await cache.match(cacheKey);
   if (cached) return cached;
 
-  const upstream = `${YAHOO_QUOTE}?symbols=${encodeURIComponent(symbols)}`;
-  let upstreamRes;
-  try {
-    upstreamRes = await fetch(upstream, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; IIKO-Worker/1.0)',
-        'Accept': 'application/json,text/plain,*/*',
-      },
-      cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
-    });
-  } catch (e) {
-    return jsonError('Yahoo fetch failed: ' + e.message, 502);
-  }
+  const symbols = symbolsRaw.split(',').map(s => s.trim()).filter(Boolean).slice(0, 20);
 
-  if (!upstreamRes.ok) {
-    return jsonError(`Yahoo HTTP ${upstreamRes.status}`, 502);
-  }
+  const fetchOne = async (sym) => {
+    try {
+      const u = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=5d&interval=1d`;
+      const r = await fetch(u, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; IIKO-Worker/1.0)',
+          'Accept': 'application/json,text/plain,*/*',
+        },
+        cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
+      });
+      if (!r.ok) return null;
+      const j = await r.json();
+      const res = j && j.chart && j.chart.result && j.chart.result[0];
+      if (!res) return null;
+      const meta = res.meta || {};
+      const quote = res.indicators && res.indicators.quote && res.indicators.quote[0];
+      const closes = ((quote && quote.close) || []).filter(v => Number.isFinite(v));
+      if (closes.length < 2) return null;
+      const last = closes[closes.length - 1];
+      const prev = closes[closes.length - 2];
+      return {
+        symbol: sym,
+        shortName: meta.symbol || sym,
+        regularMarketPrice: last,
+        regularMarketPreviousClose: prev,
+        regularMarketChange: last - prev,
+        regularMarketChangePercent: ((last - prev) / prev) * 100,
+        currency: meta.currency || 'USD',
+      };
+    } catch (_) {
+      return null;
+    }
+  };
 
-  const body = await upstreamRes.text();
+  const results = (await Promise.all(symbols.map(fetchOne))).filter(Boolean);
+
+  const body = JSON.stringify({ quoteResponse: { result: results, error: null } });
   const response = new Response(body, {
     status: 200,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}`,
       'Access-Control-Allow-Origin': '*',
-      'X-Source': 'yahoo-v7-quote',
+      'X-Source': 'yahoo-v8-chart-aggregated',
     },
   });
-
   ctx.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
 }
