@@ -9042,11 +9042,76 @@ function renderFinanceCards(fin){
 /* =========================================================
    🎯 Polymarket renderer (v2.0). Same .ticker visual language.
    ========================================================= */
+/* Per-market tooltip text for Polymarket cards. Generates a contextual
+   explainer for the SPECIFIC market the user is hovering, rather than the
+   generic Polymarket explainer. Describes the question, the current implied
+   probability, how Polymarket pricing works, the 24h volume in plain English,
+   and when the market resolves. */
+function _polymarketTipText(m){
+  if (!m || !m.question) {
+    return SIGNAL_EXPLAINERS.poly || 'UK prediction market.';
+  }
+  const yesPct = Number.isFinite(m.yesPct) ? Math.round(m.yesPct) : 50;
+  const noPct  = 100 - yesPct;
+  const yesCents = Math.round(yesPct);
+  // Probability descriptor in plain English
+  const probWord =
+    yesPct >= 90 ? 'overwhelmingly likely' :
+    yesPct >= 70 ? 'likely' :
+    yesPct >= 55 ? 'leaning yes' :
+    yesPct >= 45 ? 'a coin flip' :
+    yesPct >= 30 ? 'leaning no' :
+    yesPct >= 10 ? 'unlikely' :
+                   'very unlikely';
+  // Volume descriptor — context for how seriously traders are taking it
+  const v = Number.isFinite(m.volume24h) ? m.volume24h : 0;
+  const volWord =
+    v >= 1_000_000 ? 'Huge market — '   :
+    v >=   250_000 ? 'Active market — ' :
+    v >=    25_000 ? 'Modest volume — ' :
+    v >=     1_000 ? 'Light volume — '  :
+                     'Quiet market — ';
+  const volStr = v >= 1_000_000 ? '$' + (v/1_000_000).toFixed(1) + 'M'
+               : v >=     1_000 ? '$' + Math.round(v/1_000) + 'k'
+               :                  '$' + Math.round(v);
+  // Resolution date — try to parse and format nicely
+  let resolveLine = '';
+  if (m.endDate) {
+    try {
+      const d = new Date(m.endDate);
+      if (!isNaN(d.getTime())) {
+        const now = new Date();
+        const days = Math.round((d.getTime() - now.getTime()) / 86400000);
+        const dateTxt = d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+        resolveLine = days <= 0 ? ` Market resolves any moment — outcome past its end date (${dateTxt}).`
+                    : days === 1 ? ` Market resolves <b>tomorrow</b> (${dateTxt}).`
+                    : days <= 7  ? ` Market resolves in <b>${days} days</b> (${dateTxt}).`
+                    : days <= 30 ? ` Market resolves in <b>${days} days</b> (${dateTxt}).`
+                    :              ` Market resolves on <b>${dateTxt}</b> (${days} days from now).`;
+      }
+    } catch(_){}
+  }
+  return `<b>This Polymarket market is asking:</b><br/>"${m.question}"<br/><br/>`
+       + `Current pricing: <b>${yesPct}% YES</b>, ${noPct}% NO — `
+       + `the market currently considers this outcome <b>${probWord}</b>. `
+       + `In Polymarket terms, a buyer of YES at ${yesCents}¢ wins $1 if the outcome resolves YES, so the price IS the implied probability. `
+       + `${volWord}${volStr} has traded in the last 24h.`
+       + resolveLine
+       + ` Markets like this often move <i>before</i> mainstream news — when the YES price ticks suddenly, something has happened. `
+       + `Click "view ↗" for the full order book and recent trade history on polymarket.com.`;
+}
+
 function renderPolymarketCards(poly){
   poly = poly || {};
   const tipFor = (key, title) => {
     const t = SIGNAL_EXPLAINERS[key];
     return t ? `<button class="tip-btn" type="button" aria-label="What is ${_escAttr(title)}?" data-tip="${_escAttr(t)}">?</button>` : '';
+  };
+  // Per-market variant — uses _polymarketTipText so each card explains its own
+  // specific prediction rather than the generic Polymarket-feed explainer.
+  const tipForMarket = (m) => {
+    const t = _polymarketTipText(m);
+    return `<button class="tip-btn" type="button" aria-label="About this market" data-tip="${_escAttr(t)}">?</button>`;
   };
   const markets = (poly.markets || []).slice(0, 4);
   const fmtVol = v => v >= 1_000_000 ? '$' + (v/1_000_000).toFixed(1) + 'M'
@@ -9087,7 +9152,7 @@ function renderPolymarketCards(poly){
           <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
             <span class="emoji" aria-hidden="true">🎯</span>
             <div class="title" style="white-space:normal;font-size:11px;line-height:1.4;flex:1;min-width:0">${_escAttr(m.question || 'UK market')}</div>
-            ${tipFor('poly', 'Polymarket UK')}
+            ${tipForMarket(m)}
           </div>
           ${liveChip}
         </div>
@@ -11279,7 +11344,7 @@ function renderAll(bulk){
   const SIGNAL_GROUPS = [
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
-    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','icecream','vape', ['fryup','breakfast']] },
+    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','icecream','vape', ['breakfast','fryup']] },
     { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
