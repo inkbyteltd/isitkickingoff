@@ -9084,21 +9084,24 @@ function _polymarketTipText(m){
         const days = Math.round((d.getTime() - now.getTime()) / 86400000);
         const dateTxt = d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
         resolveLine = days <= 0 ? ` Market resolves any moment — outcome past its end date (${dateTxt}).`
-                    : days === 1 ? ` Market resolves <b>tomorrow</b> (${dateTxt}).`
-                    : days <= 7  ? ` Market resolves in <b>${days} days</b> (${dateTxt}).`
-                    : days <= 30 ? ` Market resolves in <b>${days} days</b> (${dateTxt}).`
-                    :              ` Market resolves on <b>${dateTxt}</b> (${days} days from now).`;
+                    : days === 1 ? ` Market resolves tomorrow (${dateTxt}).`
+                    : days <= 30 ? ` Market resolves in ${days} days (${dateTxt}).`
+                    :              ` Market resolves on ${dateTxt} (${days} days from now).`;
       }
     } catch(_){}
   }
-  return `<b>This Polymarket market is asking:</b><br/>"${m.question}"<br/><br/>`
-       + `Current pricing: <b>${yesPct}% YES</b>, ${noPct}% NO — `
-       + `the market currently considers this outcome <b>${probWord}</b>. `
+  // NOTE: tooltip is rendered via CSS `content: attr(data-tip)` which displays
+  // the attribute value as plain text — no HTML tags. Use punctuation, em-dash
+  // and line spacing to add rhythm; do NOT use <br>, <b>, <i>, etc. or they
+  // show as literal characters in the popover.
+  return `This Polymarket market is asking: "${m.question}". `
+       + `Current pricing: ${yesPct}% YES, ${noPct}% NO — `
+       + `the market considers this outcome ${probWord}. `
        + `In Polymarket terms, a buyer of YES at ${yesCents}¢ wins $1 if the outcome resolves YES, so the price IS the implied probability. `
        + `${volWord}${volStr} has traded in the last 24h.`
        + resolveLine
-       + ` Markets like this often move <i>before</i> mainstream news — when the YES price ticks suddenly, something has happened. `
-       + `Click "view ↗" for the full order book and recent trade history on polymarket.com.`;
+       + ` Markets like this often move before mainstream news — when the YES price ticks suddenly, something has happened. `
+       + `Click "view ↗" for the full order book on polymarket.com.`;
 }
 
 function renderPolymarketCards(poly){
@@ -9260,8 +9263,8 @@ const SIGNAL_EXPLAINERS = {
   rizla:      'Rizla & OCB — 🧊 Pacifier. Mellow as it gets. The universal British de-escalator. Modelled UK rolling-papers market split across Rizla (Imperial Tobacco UK ~62% share), OCB, Smoking, Raw. Daily volume calibrated against Imperial Tobacco UK and Republic Technologies UK shipment estimates: ~30,000 packs per peak hour nationally. Includes both tobacco and non-tobacco end-uses (we\'re not asking).',
 
   // Environment & Energy row (v1.3)
-  shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. <b>v2.3:</b> now contributes 1% to the kick-off index — pollution outrage is a reliable UK rage topic.',
-  storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). <b>v2.3:</b> now contributes 2% to the kick-off index — Amber/Red warnings genuinely shift the national mood (cancelled trains, flooded gardens, panic at Tesco).',
+  shit:       'Shit Index — modelled UK sewage spill estimate with live rain modifier. Anchored to Environment Agency Event Duration Monitoring (EDM) data: ~3.6 million sewage spill events recorded across England in 2023, ~4.7 million hours of total discharge. Combined sewer overflows trigger more frequently when it rains, so today\'s estimate scales with the UK-average current rainfall reading (dry ~0.7× baseline, heavy rain up to ~2.5×). The three water companies shown rotate daily; their annual figures are real EA league-table numbers. Contributes 1% to the kick-off index — pollution outrage is a reliable UK rage topic.',
+  storm:      'Met Office Storm Watch — live severe weather warnings via the official Met Office RSS feed (no API key needed). Parses the highest-active warning level (Yellow / Amber / Red), the count of active warnings nationally, and the dominant hazard categories (rain, wind, snow, ice, fog, thunderstorm, lightning, heat, cold). Green = all clear (suspiciously quiet). Contributes 2% to the kick-off index — Amber/Red warnings genuinely shift the national mood (cancelled trains, flooded gardens, panic at Tesco).',
   power:      'Power Mix — live UK electricity generation breakdown from the Elexon BMRS FUELHH dataset (same provider as the kettle module). Shows the top 5 fuel sources right now as a percentage of total grid generation: gas, wind, nuclear, biomass, solar, hydro, coal, imports. Updates every 30 minutes (settlement period). The wind-share number is the one to watch — when it goes above 50% the country is briefly running on weather, which is delightful.',
   oil:        'Oil & Gas Tracker — Brent crude (BZ=F) spot price in USD via a multi-source chain: Stooq (cb.f, free CSV, CORS-friendly) primary, Yahoo Finance via three CORS proxies as fallback. Shows current price, day-over-day change colour-coded, and a 5-day sparkline. Brent is the global benchmark for North Sea crude and is what ultimately drives UK forecourt and gas-bill prices a few weeks downstream. Pair this with the ⛽ Petrol Pump Rage card on the main grid for a full pump-to-platform read.',
 
@@ -9284,7 +9287,7 @@ const SIGNAL_EXPLAINERS = {
   greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
   chippy:     'Modelled UK fish-and-chip + takeaway demand. Iconic Friday 18:00–20:00 peak, Sunday-evening leftover spike, post-pub kebab/chip run weekends 22:00+. Cuisine-aware top-5 menu rotates English chippy / Chinese / Indian / kebab / Scottish-weird.',
   breakfast:  'English Breakfast Index — modelled per-plate cost of a proper full English: bacon, eggs, sausages, black pudding, mushrooms, vine tomatoes, baked beans, white bread. Today\'s pack prices and per-plate portion costs anchored to publicly-known UK supermarket baselines (Tesco / Sainsbury\'s / ASDA mid-tier own-brand and branded staples), with a small ±0.4% daily wobble per item (date-seeded sine drift) so the numbers breathe overnight. YoY % per ingredient set against ONS Consumer Prices Index food-category movements — these are the figures that drive the "fry-up inflation" headlines. Score is the per-plate weighted YoY: flat plate ≈ 0, +5% YoY ≈ 0.55, +10% ≈ 0.95. Cost-of-living rage that won\'t go away.',
-  fryup:      'Fry-Up Tracker — sister card to the English Breakfast Index, showing the price trajectory of all 8 fry-up ingredients over the past five years as a single multi-line worm chart. Each line is one ingredient. Y axis = cumulative % change since 2021. Y values are anchored to ONS Consumer Prices Index detailed reference tables, food sub-categories: bread/cereals, meat, eggs, fish, milk/cheese/eggs, fruit, vegetables, sugar/jam/honey/chocolate. Eggs and bread were smashed hardest in 2022-23 (+22% and +19% YoY at peak); tomatoes spiked in 2023 (Spanish drought); mushrooms and black pudding barely moved. Headline: cost of an entire fry-up plate vs 2021. <b>Ambient card — does not score the gauge.</b> The current YoY pressure is already captured by the breakfast signal; this card just gives the long-run trajectory somewhere to live.',
+  fryup:      'Fry-Up Tracker — sister card to the English Breakfast Index, showing the price trajectory of all 8 fry-up ingredients over the past five years as a single multi-line worm chart. Each line is one ingredient. Y axis = cumulative % change since 2021. Y values are anchored to ONS Consumer Prices Index detailed reference tables, food sub-categories: bread/cereals, meat, eggs, fish, milk/cheese/eggs, fruit, vegetables, sugar/jam/honey/chocolate. Eggs and bread were smashed hardest in 2022-23 (+22% and +19% YoY at peak); tomatoes spiked in 2023 (Spanish drought); mushrooms and black pudding barely moved. Headline: cost of an entire fry-up plate vs 2021. Ambient card — does not score the gauge. The current YoY pressure is already captured by the breakfast signal; this card just gives the long-run trajectory somewhere to live.',
   icecream:   'McFlurry Machine status — comedy seasonal curve based on hot weather, school-holiday windows and tourist behaviour. The McFlurry is rarely working.',
   vape:       'Modelled UK vape category — ~5.6M adult vapers (ASH 2024). Top 5 disposable flavours from retail-share data (Strawberry Ice, Blue Razz Lemonade, Watermelon Ice, Triple Mango, Menthol). Each tagged with the dominant brand.',
   bh:         'Live gov.uk bank-holidays.json per jurisdiction (England & Wales / Scotland / NI). Plus 27 non-bank UK calendar moments — Wimbledon, Glastonbury, Ascot, FA Cup Final, Mariah Day, etc.',

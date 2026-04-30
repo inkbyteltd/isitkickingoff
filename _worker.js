@@ -191,7 +191,9 @@ async function handlePolymarket(url, ctx) {
   // Pull a wide batch of active markets, filter server-side for UK relevance.
   // Gamma supports ?tag_slug filters — we try United-Kingdom first, then fall
   // back to keyword filtering on a broader list.
-  const upstream = `https://gamma-api.polymarket.com/markets?active=true&closed=false&order=volume24hr&ascending=false&limit=120`;
+  // 250 is a good balance: enough markets to find ≥4 UK-relevant ones, not so
+  // many that the worker invocation gets slow.
+  const upstream = `https://gamma-api.polymarket.com/markets?active=true&closed=false&order=volume24hr&ascending=false&limit=250`;
   let upstreamRes;
   try {
     upstreamRes = await fetch(upstream, {
@@ -207,7 +209,53 @@ async function handlePolymarket(url, ctx) {
   const markets = Array.isArray(j) ? j : (j.markets || []);
 
   // UK-relevance filter — broad net, then narrow to top by volume.
-  const UK_KEYWORDS = /\b(uk|britain|british|england|english|scotland|scottish|wales|welsh|northern\s+ireland|london|westminster|labour|tory|tories|conservative|reform\s+uk|starmer|farage|badenoch|swinney|sunak|truss|davey|royal|monarchy|king\s+charles|prince|princess|brexit|nhs|premier\s+league|fa\s+cup|championship|grand\s+national|cheltenham|wimbledon|man\s+utd|man\s+city|liverpool|arsenal|chelsea|tottenham|spurs)\b/i;
+  // Keep this list aggressive — Polymarket cycles markets fast and a tight
+  // filter routinely returns <4 results during quieter UK news weeks. Better
+  // to let a few near-misses through than show empty cards.
+  const UK_KEYWORDS = new RegExp([
+    // Country names + adjectives
+    'uk','u\\.k\\.','britain','british','england','english','scotland','scottish','wales','welsh',
+    'northern\\s+ireland','great\\s+britain','united\\s+kingdom',
+    // Major cities
+    'london','manchester','birmingham','liverpool','glasgow','edinburgh','cardiff','belfast',
+    'leeds','sheffield','newcastle','bristol','nottingham',
+    // Westminster & political institutions
+    'westminster','downing\\s+street','no\\.?\\s*10','number\\s*10','parliament','commons','lords',
+    'pm\\b','prime\\s+minister','chancellor','home\\s+secretary','foreign\\s+secretary',
+    'general\\s+election','by-election','manifesto',
+    // Parties
+    'labour','tory','tories','conservative','conservatives','reform\\s+uk','reform\\s+party',
+    'lib\\s+dem','liberal\\s+democrat','lib-dem','snp','plaid\\s+cymru','green\\s+party\\s+uk',
+    // UK politicians (current + recent)
+    'starmer','farage','badenoch','swinney','sunak','truss','davey','rayner','reeves','lammy',
+    'corbyn','jeremy\\s+corbyn','hunt','blair','cameron','brown','milne','mcdonnell','kemi',
+    'rishi','keir',
+    // Royal family
+    'royal','royals','monarchy','king\\s+charles','prince\\s+william','prince\\s+harry',
+    'kate\\s+middleton','princess\\s+kate','princess\\s+of\\s+wales','meghan','sussex','cambridge',
+    'queen\\s+camilla','prince\\s+andrew','windsor',
+    // Brexit & EU
+    'brexit','rejoin','single\\s+market','customs\\s+union',
+    // NHS & public services
+    'nhs','national\\s+health','bbc','itv','channel\\s+4','sky\\s+news','gb\\s+news',
+    // Football — leagues, clubs, fixtures
+    'premier\\s+league','epl','english\\s+football','fa\\s+cup','league\\s+cup','carabao\\s+cup',
+    'efl\\b','championship','community\\s+shield','wembley',
+    'man\\s+utd','manchester\\s+united','man\\s+city','manchester\\s+city',
+    'liverpool\\s+fc','arsenal','chelsea','tottenham','spurs','newcastle\\s+united',
+    'aston\\s+villa','west\\s+ham','everton','leeds\\s+united','leicester','wolves',
+    'brighton','crystal\\s+palace','fulham','brentford','nottingham\\s+forest',
+    'celtic','rangers','old\\s+firm',
+    // Other British sports
+    'six\\s+nations','rugby\\s+world\\s+cup','england\\s+cricket','ashes','t20\\s+world\\s+cup',
+    'cricket\\s+world\\s+cup','wimbledon','grand\\s+national','cheltenham\\s+festival','royal\\s+ascot',
+    'epsom\\s+derby','epsom\\b','silverstone','british\\s+gp','british\\s+grand\\s+prix','open\\s+championship',
+    'cheltenham','gold\\s+cup','goodwood','aintree',
+    // Cultural events / venues
+    'glastonbury','eurovision','euros','euro\\s+202','world\\s+cup\\s+202',
+    // Economy
+    'pound\\b','gbp','sterling','ftse','bank\\s+of\\s+england','boe\\b','interest\\s+rate'
+  ].join('|'), 'i');
   const uk = markets
     .filter(m => m && m.question)
     .filter(m => {
