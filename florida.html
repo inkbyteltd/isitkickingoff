@@ -1821,7 +1821,7 @@ function signalFloridaReddit(){
   // a curated rotation when live fetch fails or hasn't completed yet.
   if (LIVE.reddit && LIVE.reddit.posts && LIVE.reddit.posts.length){
     return {
-      key:'redfloridaman', title:'Florida Subreddits · Live', icon:'👽', live:true, modelled:false,
+      key:'redfloridaman', title:'Florida Subreddits · Live', icon:'👽', live:true, modelled:false, wide:true,
       valueLabel: `${LIVE.reddit.posts.length} hot posts`,
       subLabel: `r/FloridaMan + r/Florida + r/Miami + r/Tampa + r/Orlando + r/jacksonville + r/FloridaKeys · ${LIVE.reddit.subsHit}/7 subs responding`,
       score: 0.65, redditPosts: LIVE.reddit.posts,
