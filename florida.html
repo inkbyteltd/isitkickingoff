@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Florida Man Index · Is It Kicking Off?</title>
+<meta name="description" content="The British satirical eye on Florida — gators, hurricanes, Waffle House, Walmart brawls, NASCAR, theme park queues. A live aggravation gauge for our cousins, refreshed in real time." />
+<link rel="canonical" href="https://isitkickingoff.com/florida.html" />
+<meta name="theme-color" content="#0a1638" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Is It Kicking Off? · Florida" />
+<meta property="og:title" content="Florida Man Index · Is It Kicking Off?" />
+<meta property="og:description" content="The British satirical eye on Florida. Gators, hurricanes, Waffle House, Walmart, NASCAR, theme parks. A live gauge of cousin chaos." />
+<meta property="og:url" content="https://isitkickingoff.com/florida.html" />
+<meta property="og:image" content="https://isitkickingoff.com/og-image.png" />
+<meta property="og:locale" content="en_GB" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@inkbyteltd" />
+<meta name="twitter:title" content="Florida Man Index · Is It Kicking Off?" />
+<meta name="twitter:description" content="Britain watches the cousins. A satirical Florida-flavoured aggravation gauge — gators, hurricanes, Waffle House, Walmart." />
+<meta name="twitter:image" content="https://isitkickingoff.com/og-image.png" />
+
+<!-- US flag favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 32'%3E%3Crect width='60' height='32' fill='%23b22234'/%3E%3Cpath d='M0,3.7h60M0,8.6h60M0,13.5h60M0,18.4h60M0,23.3h60M0,28.2h60' stroke='%23fff' stroke-width='2.46'/%3E%3Crect width='24' height='17.4' fill='%233c3b6e'/%3E%3C/svg%3E" />
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Florida Man Index" />
+
+<!-- CSP — note relaxed compared to UK to allow Florida-specific live data sources -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://platform.twitter.com https://cdn.syndication.twimg.com https://static.cloudflareinsights.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https: blob:;
+  font-src 'self' data:;
+  connect-src 'self' https://*.nhc.noaa.gov https://*.weather.gov https://api.open-meteo.com https://www.reddit.com https://oauth.reddit.com https://api.allorigins.win https://corsproxy.io https://www.thesportsdb.com https://api.spacexdata.com https://api.queue-times.com https://gamma-api.polymarket.com https://api.gdeltproject.org;
+  frame-src 'self' https://platform.twitter.com;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+" />
+
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1cd37e47538c4c47b71a4f5c37527b60"}'></script>
+
+<style>
+  /* USA palette — flag-derived but tuned down for dark theme.
+     Old Glory blue (#0a1638) backgrounds; flag red (#ee2a3c) accents;
+     bone-white (#f4ecd6) ink reads warmer than pure white against the navy. */
+  :root {
+    --bg-0:#070b18;          /* deepest navy */
+    --bg-1:#0a1638;          /* Old Glory blue, primary card surface */
+    --bg-2:#101e44;          /* card hover/raise */
+    --bg-3:#1a2a55;          /* highest surface */
+    --line:#1f3061;
+    --line-2:#2c4079;
+    --ink:#f4ecd6;           /* bone white, warmer than pure */
+    --ink-dim:#a8b4cc;
+    --ink-faint:#6a7798;
+    --green:#3ecf8e;
+    --yellow:#fed46e;
+    --amber:#ee9b3a;
+    --red:#ee2a3c;           /* flag red */
+    --deep:#a01525;
+    --accent:#ee2a3c;        /* primary accent — flag red */
+    --star:#f4ecd6;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;width:100%;max-width:100%;background:var(--bg-0);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;overflow-x:hidden}
+  button,.region-pill,.share-btn{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;user-select:none}
+  body{
+    background:
+      /* subtle stars-pattern + soft red and blue radial wash */
+      radial-gradient(1100px 500px at 80% -10%, rgba(238,42,60,.10), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(60,59,110,.18), transparent 60%),
+      var(--bg-0);
+    min-height:100vh;
+  }
+  .wrap{
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:24px max(20px, env(safe-area-inset-right)) 60px max(20px, env(safe-area-inset-left));
+  }
+
+  /* Top nav — matches UK dashboard styling */
+  .top-nav{display:flex;gap:8px;margin-bottom:18px;padding:8px;background:var(--bg-1);border:1px solid var(--line);border-radius:12px;flex-wrap:wrap;position:relative}
+  .top-nav .nav-links{display:contents}
+  .top-nav .nav-burger{display:none}
+  .top-nav a{padding:9px 16px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);text-decoration:none;white-space:nowrap;transition:all .15s}
+  .top-nav a:hover{color:var(--ink);background:var(--bg-3)}
+  .top-nav a.active{background:var(--accent);color:#fff;font-weight:700}
+  .top-nav a.nav-bmc{background:#ffdd00;color:#0a0d12;font-weight:700;border:1px solid #e6c700;margin-left:auto}
+  .top-nav a.nav-bmc:hover{background:#ffe833;color:#0a0d12}
+  @media (max-width:640px){
+    .top-nav{flex-wrap:nowrap;flex-direction:column;padding:4px}
+    .top-nav .nav-burger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:transparent;border:none;cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+    .top-nav .nav-burger .nav-burger-icon{font-size:20px;color:var(--accent);transition:transform .2s ease}
+    .top-nav.open .nav-burger .nav-burger-icon{transform:rotate(90deg)}
+    .top-nav .nav-links{display:none;flex-direction:column;width:100%;gap:4px;padding:4px 4px 6px}
+    .top-nav.open .nav-links{display:flex}
+    .top-nav a{padding:11px 16px;border-radius:8px;text-align:center;border:1px solid var(--line)}
+    .top-nav a.active{border-color:var(--accent)}
+    .top-nav a.nav-bmc{margin-left:0}
+  }
+
+  /* Masthead */
+  .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}
+  .mast h1{font-family:var(--mono);font-weight:800;letter-spacing:-.02em;font-size:clamp(26px,4.5vw,40px);margin:0;line-height:1}
+  .mast h1 .kick{color:var(--accent)}
+  .mast h1 .flag{display:inline-block;margin-right:8px}
+  .mast .tag{color:var(--ink-dim);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.15em;margin-top:8px}
+  .mast .status{font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em}
+  .mast .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:1px;animation:pulse 2s infinite}
+
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(62,207,142,.5)}
+    70%{box-shadow:0 0 0 10px rgba(62,207,142,0)}
+    100%{box-shadow:0 0 0 0 rgba(62,207,142,0)}
+  }
+
+  /* Region selector */
+  .region-select-wrap{display:flex;align-items:center;gap:12px;margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg-1)}
+  .region-select-wrap label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);flex-shrink:0}
+  .region-select-wrap select{flex:1;background:var(--bg-2);color:var(--ink);border:1px solid var(--line-2);border-radius:8px;padding:9px 10px;font-family:var(--mono);font-size:14px;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ee2a3c' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+  .region-select-wrap select:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+  /* Hero gauge */
+  .hero{
+    margin-top:22px;
+    display:grid;grid-template-columns:minmax(260px,1fr) 1.3fr;gap:24px;
+    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    border:1px solid var(--line);border-radius:16px;padding:22px;
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    /* Stars pattern overlay — small, subtle, scattered */
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(1.2px 1.2px at 14% 22%, rgba(244,236,214,.12) 1px, transparent 1.5px),
+      radial-gradient(1px 1px at 32% 68%, rgba(244,236,214,.10) 1px, transparent 1.5px),
+      radial-gradient(1.4px 1.4px at 58% 38%, rgba(244,236,214,.13) 1px, transparent 1.5px),
+      radial-gradient(1px 1px at 74% 84%, rgba(244,236,214,.08) 1px, transparent 1.5px),
+      radial-gradient(1.2px 1.2px at 88% 18%, rgba(244,236,214,.11) 1px, transparent 1.5px),
+      radial-gradient(1px 1px at 22% 50%, rgba(244,236,214,.08) 1px, transparent 1.5px),
+      radial-gradient(1.4px 1.4px at 48% 82%, rgba(244,236,214,.10) 1px, transparent 1.5px);
+    mask-image:radial-gradient(700px 400px at 60% 40%, #000, transparent 80%);
+  }
+  .gauge{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px}
+  .gauge svg{max-width:100%;height:auto}
+  .gauge .num{position:absolute;top:58%;left:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-weight:800;font-size:64px;letter-spacing:-.03em;color:var(--ink);text-shadow:0 2px 30px rgba(0,0,0,.5)}
+  .gauge .of{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-top:4px}
+  .verdict{display:flex;flex-direction:column;justify-content:center;gap:12px;position:relative}
+  .tier-label{font-family:var(--mono);font-weight:800;letter-spacing:.02em;font-size:clamp(28px,4.5vw,44px);line-height:1.05;margin:0}
+  .tier-sub{color:var(--ink-dim);margin:0;font-size:15px;line-height:1.5;max-width:52ch}
+  .tier-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .pill{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:999px;background:var(--bg-3);color:var(--ink-dim);border:1px solid var(--line-2)}
+  .pill.live{color:var(--green);border-color:rgba(62,207,142,.4)}
+
+  /* Section heading + grid divider */
+  h2.section{
+    font-family:var(--mono);font-weight:700;font-size:13px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);
+    margin:30px 0 12px;
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .grid-divider{
+    grid-column:1 / -1;
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-faint);padding:14px 0 4px;border-top:1px solid var(--line);
+  }
+  .grid-divider:first-child{border-top:none;padding-top:0}
+
+  /* Card */
+  .card{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:170px;
+    position:relative;
+  }
+  .card .head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card .head-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+  .card .icon{font-size:18px;line-height:1;flex-shrink:0}
+  /* Card title — wraps freely. Module names ARE the joke and must read in full,
+     never get truncated with an ellipsis. */
+  .card .title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);min-width:0;line-height:1.35;word-break:break-word;hyphens:auto}
+  .card .chip{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0;white-space:nowrap}
+  .card .chip.live{background:rgba(62,207,142,.15);color:var(--green);border:1px solid rgba(62,207,142,.3)}
+  .card .chip.model{background:rgba(238,42,60,.10);color:var(--accent);border:1px solid rgba(238,42,60,.3)}
+  .card .val{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .card .sub{color:var(--ink-dim);font-size:13px;line-height:1.45}
+  .card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+  .card .bar{height:6px;border-radius:999px;background:var(--bg-3);overflow:hidden;margin-top:6px}
+  .card .bar i{display:block;height:100%;background:linear-gradient(90deg,#3c3b6e,#f4ecd6 45%,#ee9b3a 70%,#ee2a3c);border-radius:999px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .card.card-wide{grid-column:span 2}
+  @media (max-width:560px){ .card.card-wide{grid-column:span 1} }
+
+  /* Filler card — drops in when a group's card count isn't a multiple of the
+     desktop column count. Idiocracy / Back to the Future / generic Americana
+     quotes act as comedic seat-warmers so the grid never has dead space. */
+  .filler-card{
+    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    border:1px dashed var(--line-2);border-radius:14px;
+    padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    text-align:center;min-height:170px;
+  }
+  .filler-card .filler-icon{font-size:36px;line-height:1}
+  .filler-card .filler-title{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .filler-card .filler-sub{font-family:var(--mono);font-size:11px;color:var(--ink-dim);line-height:1.5;font-style:italic;max-width:200px}
+
+  /* Tooltip — same pattern as UK dashboard */
+  .card .tip-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:18px;height:18px;border-radius:50%;
+    background:var(--bg-3);color:var(--ink-faint);
+    font-family:var(--mono);font-size:10px;font-weight:700;
+    border:1px solid var(--line-2);cursor:help;
+    flex-shrink:0;margin-left:4px;
+    transition:all .15s;position:relative;
+  }
+  .card .tip-btn:hover, .card .tip-btn:focus{
+    background:var(--accent);color:#fff;border-color:var(--accent);outline:none;
+  }
+  .card .tip-btn[data-tip]::after{
+    content:attr(data-tip);
+    position:absolute;
+    top:calc(100% + 10px);
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--bg-3);
+    color:var(--ink);
+    border:1px solid var(--line-2);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:var(--sans);font-size:12px;font-weight:400;
+    text-transform:none;letter-spacing:0;line-height:1.55;
+    white-space:normal;width:300px;max-width:calc(100vw - 40px);
+    z-index:100;
+    opacity:0;pointer-events:none;
+    transition:opacity .15s;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+    text-align:left;
+  }
+  .card .tip-btn[data-tip]::before{
+    content:"";position:absolute;top:calc(100% + 4px);left:50%;
+    transform:translateX(-50%) rotate(45deg);
+    width:8px;height:8px;background:var(--bg-3);
+    border-left:1px solid var(--line-2);border-top:1px solid var(--line-2);
+    z-index:101;
+    opacity:0;pointer-events:none;transition:opacity .15s;
+  }
+  .card .tip-btn:hover::after, .card .tip-btn:focus::after,
+  .card .tip-btn:hover::before, .card .tip-btn:focus::before{opacity:1}
+
+  /* Rolling news-ticker bar — slides Florida headlines under the gauge,
+     CNN-style. Pure CSS marquee, content duplicated so the loop reads
+     seamless. Hover pauses. */
+  .news-bar{
+    display:flex;align-items:center;gap:14px;
+    margin-top:14px;padding:10px 0 10px 14px;
+    background:var(--bg-1);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;position:relative;
+  }
+  .news-bar .pulse-tag{
+    flex-shrink:0;
+    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:#fff;background:var(--accent);
+    padding:5px 10px;border-radius:6px;font-weight:700;
+    display:flex;align-items:center;gap:6px;
+  }
+  .news-bar .pulse-tag::before{
+    content:"";width:6px;height:6px;border-radius:50%;background:#fff;
+    animation:pulse 1.6s infinite;
+  }
+  .news-bar .news-track{
+    flex:1;min-width:0;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20px,#000 calc(100% - 60px),transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 20px,#000 calc(100% - 60px),transparent 100%);
+  }
+  .news-bar .news-row{
+    display:flex;gap:32px;
+    animation:newsScroll 90s linear infinite;
+    white-space:nowrap;
+    width:max-content;
+  }
+  .news-bar:hover .news-row{ animation-play-state:paused }
+  .news-bar .news-item{
+    font-family:var(--mono);font-size:13px;color:var(--ink);
+    display:inline-flex;align-items:center;gap:8px;flex-shrink:0;
+  }
+  .news-bar .news-item .src{color:var(--ink-faint);font-size:11px;letter-spacing:.06em}
+  .news-bar .news-item .icn{font-size:14px}
+  @keyframes newsScroll{
+    0%{transform:translateX(0)}
+    100%{transform:translateX(-50%)}
+  }
+  @media (max-width:560px){
+    .news-bar .news-row{animation-duration:60s}
+    .news-bar .news-item{font-size:12px}
+  }
+
+  /* Live tickers — 4-up desktop, 2-up tablet, 1-up mobile */
+  .tickers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+  @media (max-width:1100px){ .tickers{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){  .tickers{grid-template-columns:1fr} }
+  .ticker{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;position:relative;
+  }
+  .ticker .head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+  .ticker .title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+  .ticker .big{font-family:var(--mono);font-size:36px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .ticker .big .unit{font-size:14px;color:var(--ink-faint);margin-left:6px;font-weight:400}
+  .ticker .rate{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:6px;text-transform:uppercase;letter-spacing:.08em}
+  .ticker .chip{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:999px}
+  .ticker .chip.live{background:rgba(62,207,142,.15);color:var(--green);border:1px solid rgba(62,207,142,.3)}
+  .ticker .chip.model{background:rgba(238,42,60,.10);color:var(--accent);border:1px solid rgba(238,42,60,.3)}
+
+  /* Branches — for inline lists like Florida Man Daily, Disney waits, etc */
+  .branches{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+  .branch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;font-family:var(--mono);font-size:11.5px;color:var(--ink);transition:border-color .15s,background .15s}
+  .branch.warm{border-color:rgba(238,155,58,.4)}
+  .branch.hot{border-color:rgba(238,42,60,.5)}
+  .branch:hover{border-color:var(--line-2)}
+  .branch .branch-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .branch .loc{color:var(--ink-faint);font-size:10px;margin-left:8px}
+  .branch .cap{font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;white-space:nowrap}
+
+  /* Methodology */
+  .meth{margin-top:28px;background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:20px;color:var(--ink-dim);line-height:1.6}
+  .meth h3{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin:0 0 8px}
+  .meth p{margin:0 0 10px}
+  .meth code{font-family:var(--mono);background:var(--bg-3);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--ink)}
+  .meth-scroll{overflow-x:auto;margin-top:8px;-webkit-overflow-scrolling:touch}
+  .meth table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:12px;table-layout:auto}
+  .meth th,.meth td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;color:var(--ink-dim);vertical-align:top}
+  .meth th{color:var(--ink);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+  .meth th:first-child,.meth td:first-child{white-space:nowrap;padding-right:22px}
+  .meth th:nth-child(2),.meth td:nth-child(2){white-space:nowrap;text-align:right;padding-right:22px;color:var(--ink);width:1%}
+  .meth th:nth-child(3),.meth td:nth-child(3){line-height:1.6;width:auto}
+  @media (max-width:600px){
+    .meth-scroll{overflow-x:visible}
+    .meth table,.meth tbody,.meth tr,.meth td{display:block;width:100%}
+    .meth thead{display:none}
+    .meth tr{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+    .meth td{border:none;padding:2px 0}
+    .meth td:first-child{white-space:normal;color:var(--ink);font-weight:700;font-size:13px;letter-spacing:.05em;padding-right:0}
+    .meth td:nth-child(2){text-align:left;width:auto;color:var(--accent);padding-right:0}
+    .meth td:nth-child(2)::before{content:"weight · ";color:var(--ink-faint);font-weight:400}
+    .meth td:nth-child(3){color:var(--ink-dim);font-size:11px;line-height:1.55;padding-top:4px}
+  }
+  footer.small{margin-top:20px;color:var(--ink-faint);font-family:var(--mono);font-size:11px;text-align:center;letter-spacing:.08em;text-transform:uppercase}
+  footer.small a{color:var(--accent);text-decoration:none}
+
+  /* Responsive */
+  @media (max-width:720px){
+    .hero{grid-template-columns:1fr;padding:18px}
+    .gauge{min-height:220px}
+    .gauge .num{font-size:52px}
+    .mast{flex-direction:column;align-items:flex-start}
+    .mast .status{text-align:left}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav" aria-label="Site sections">
+    <button class="nav-burger" aria-label="Toggle navigation" aria-expanded="false">
+      <span>Menu</span>
+      <span class="nav-burger-icon" aria-hidden="true">☰</span>
+    </button>
+    <div class="nav-links">
+      <a href="./index.html">📊 Dashboard</a>
+      <a href="./about.html">ℹ️ About</a>
+      <a href="./snapshot.html">📸 Snapshot</a>
+      <a href="./news.html">📝 Essays</a>
+      <a href="./changelog.html">🪵 Changelog</a>
+      <a href="./florida.html" class="active">🇺🇸 USA</a>
+      <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
+    </div>
+  </nav>
+
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <div>
+      <h1><span class="flag">🇺🇸</span> FLORIDA MAN <span class="kick">INDEX</span></h1>
+      <div class="tag">Britain watches the cousins · Live Florida-flavoured aggravation gauge</div>
+    </div>
+    <div class="status">
+      <span class="dot"></span>
+      <span id="us-clock">—:—:— ET</span><br/>
+      <span id="us-date" style="color:var(--ink-faint)">—</span>
+    </div>
+  </header>
+
+  <!-- REGION -->
+  <div class="region-select-wrap" aria-label="Florida region selector">
+    <label for="region-select">Region</label>
+    <select id="region-select">
+      <option value="all">🇺🇸 Florida (all)</option>
+      <option value="miami">🌴 Miami / South FL</option>
+      <option value="tampa">⛵ Tampa / Gulf Coast</option>
+      <option value="orlando">🏰 Orlando / Central FL</option>
+      <option value="jax">⚓ Jacksonville / North FL</option>
+      <option value="keys">🐠 Florida Keys</option>
+    </select>
+  </div>
+
+  <!-- HERO GAUGE -->
+  <section class="hero" aria-live="polite">
+    <div class="gauge" id="gauge">
+      <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#3c3b6e"/>
+            <stop offset="35%" stop-color="#f4ecd6"/>
+            <stop offset="65%" stop-color="#ee9b3a"/>
+            <stop offset="100%" stop-color="#ee2a3c"/>
+          </linearGradient>
+        </defs>
+        <path d="M20,120 A90,90 0 0 1 200,120" fill="none" stroke="#1a2a55" stroke-width="18" stroke-linecap="round"/>
+        <path id="arc" d="M20,120 A90,90 0 0 1 200,120" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round" stroke-dasharray="0 300" />
+        <g stroke="#2c4079" stroke-width="1.5" fill="none" stroke-linecap="round">
+          <line x1="27"  y1="120" x2="15"  y2="120"/>
+          <line x1="51"  y1="61"  x2="43"  y2="53" />
+          <line x1="110" y1="37"  x2="110" y2="25" />
+          <line x1="169" y1="61"  x2="177" y2="53" />
+          <line x1="193" y1="120" x2="205" y2="120"/>
+        </g>
+        <g id="needle" transform="rotate(-90 110 120)">
+          <line x1="110" y1="120" x2="110" y2="40" stroke="#f4ecd6" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="110" cy="120" r="6" fill="#f4ecd6"/>
+        </g>
+      </svg>
+      <div class="num" id="index-num">—</div>
+      <div class="of">FLORIDA MAN INDEX · 0–100</div>
+    </div>
+    <div class="verdict">
+      <h2 class="tier-label" id="tier-label" style="color:var(--ink-dim)">Reading the panhandle…</h2>
+      <p class="tier-sub" id="tier-sub">Gathering signals from the swamp, the highway, the Waffle House and the radar. One moment.</p>
+      <div class="tier-meta">
+        <span class="pill" id="pill-loc">🇺🇸 Florida</span>
+        <span class="pill" id="pill-time">—</span>
+        <span class="pill live" id="pill-live"><span class="dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:1px"></span>Live</span>
+      </div>
+      <p class="tier-sub" style="font-style:italic;font-size:13px;color:var(--ink-faint);margin-top:6px">
+        A satirical Florida-flavoured sister gauge to <a href="./index.html" style="color:var(--accent);text-decoration:none">Is It Kicking Off?</a>. Independent of the UK index, no shared weighting. The British observer's view of our cousins.
+      </p>
+    </div>
+  </section>
+
+  <!-- ROLLING NEWS TICKER — CNN-style headline crawl under the gauge -->
+  <div class="news-bar" aria-label="Rolling Florida headlines">
+    <span class="pulse-tag">FLORIDA NEWS</span>
+    <div class="news-track">
+      <div class="news-row" id="news-row" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- LIVE TICKERS — 4 across desktop, 2-up tablet, 1-up mobile -->
+  <section class="tickers" aria-label="Live Florida indicators">
+    <article class="ticker" id="t-margaritaville">
+      <div class="head">
+        <div class="title">🍹 Margaritaville Index</div>
+        <span class="chip model">Modelled</span>
+      </div>
+      <div class="big" id="margarita-big">—<span class="unit">/min</span></div>
+      <div class="rate" id="margarita-rate">salt-rim drinks poured statewide</div>
+    </article>
+    <article class="ticker" id="t-slushie">
+      <div class="head">
+        <div class="title">🥤 Gas Slushie Tracker</div>
+        <span class="chip model">Modelled</span>
+      </div>
+      <div class="big" id="slushie-big">—<span class="unit">/min</span></div>
+      <div class="rate" id="slushie-rate">Big Gulps + 7-Eleven Slurpees in motion</div>
+    </article>
+    <article class="ticker" id="t-bathsalts">
+      <div class="head">
+        <div class="title">🛁 Bath Salts Mentions</div>
+        <span class="chip model">Modelled</span>
+      </div>
+      <div class="big" id="bathsalts-big">—<span class="unit">/day</span></div>
+      <div class="rate" id="bathsalts-rate">recurring local-news framing · the 2010s meme that won't die</div>
+    </article>
+    <article class="ticker" id="t-naked911">
+      <div class="head">
+        <div class="title">👯 Naked 911 Calls</div>
+        <span class="chip model">Modelled</span>
+      </div>
+      <div class="big" id="naked911-big">—<span class="unit">/day</span></div>
+      <div class="rate" id="naked911-rate">"sir please put the iguana down" · FHP dispatch logs</div>
+    </article>
+  </section>
+
+  <!-- SIGNALS GRID -->
+  <h2 class="section">🐊 The Signals</h2>
+  <div class="grid" id="signals" aria-live="polite">
+    <div style="grid-column:1/-1;color:var(--ink-faint);font-family:var(--mono);font-size:12px;text-align:center;padding:30px 0">Loading Florida readings…</div>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <section class="meth">
+    <h3>How is this calculated?</h3>
+    <p>
+      The <b>Florida Man Index</b> is a satirical sister gauge to <a href="./index.html" style="color:var(--accent)">Is It Kicking Off?</a> — the British dashboard that measures UK aggravation. This page is the cousin: it aggregates ~25 Florida-specific signals into one 0–100 chaos index, refreshed live. Modules cover the swamp (gators, pythons, sharks, mosquitoes), the headlines (Florida Man Daily, Walmart Brawls, Police Chases, meth busts), the consumption (Waffle House, Publix subs, Taco Bell, Margaritaville), the cars (NASCAR, Bike Week, Truck Nuts), the politics (DeSantis, Trump, gun sales), the theme parks (Disney waits, SpaceX launches), and the social pulse (r/FloridaMan).
+    </p>
+    <p>
+      <b>The two gauges are independent.</b> No signal feeds both indices. The Florida gauge has its own weights, its own tier labels (Sweet Tea → Hold My Beer), and its own visual identity. The British observer voice is consistent across both — but the data and the model are separate. This is a cousin, not a fork.
+    </p>
+    <div class="meth-scroll">
+    <table>
+      <thead><tr><th>Signal</th><th>Weight</th><th>Source</th></tr></thead>
+      <tbody id="meth-rows"></tbody>
+    </table>
+    </div>
+    <p style="margin-top:14px">
+      Tier scale: <b>0–24 SWEET TEA</b> · <b>25–39 WAFFLE HOUSE OPEN</b> · <b>40–54 GATOR-CURIOUS</b> · <b>55–69 BRO-TRUCK ROLLING</b> · <b>70–84 LAW INVOLVED</b> · <b>85–100 HOLD MY BEER</b>.
+    </p>
+    <p>
+      Florida Man is real. The gators are real. The Waffle House Index is a FEMA-recognised disaster proxy. The shrimp in the rivers is, sadly, also real. Nothing on this page should be taken as a guide to actual Floridian behaviour, life decisions, or wildlife encounters.
+    </p>
+  </section>
+
+  <footer class="small">
+    isitkickingoff · 🇺🇸 Florida edition · © <span id="yr">2026</span><br/>
+    <span style="display:inline-block;margin-top:6px;color:var(--ink-faint)">
+      <a href="./index.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">UK Dashboard</a> ·
+      <a href="./about.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">About</a> ·
+      <a href="./changelog.html" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Changelog</a> ·
+      <a href="./legal.html#disclaimer" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Disclaimer</a> ·
+      <a href="mailto:hello@inkbyte.co.uk" style="color:var(--ink-dim);text-decoration:none;margin:0 6px">Contact</a>
+    </span>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   Florida Man Index — Is It Kicking Off? · USA edition
+   ========================================================= */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+/* ---- Florida regions ---- */
+const FLORIDA_REGIONS = [
+  { id:'all',     name:'Florida',           flag:'🇺🇸', lat:27.99, lon:-81.76, climateF:78 },
+  { id:'miami',   name:'Miami / South FL',  flag:'🌴', lat:25.76, lon:-80.19, climateF:81 },
+  { id:'tampa',   name:'Tampa / Gulf Coast',flag:'⛵', lat:27.95, lon:-82.46, climateF:79 },
+  { id:'orlando', name:'Orlando / Central', flag:'🏰', lat:28.54, lon:-81.38, climateF:78 },
+  { id:'jax',     name:'Jacksonville / N',  flag:'⚓', lat:30.33, lon:-81.66, climateF:75 },
+  { id:'keys',    name:'Florida Keys',      flag:'🐠', lat:24.55, lon:-81.78, climateF:82 },
+];
+let SELECTED_REGION = 'all';
+
+/* ---- Tier system ---- */
+const TIERS = [
+  { min:0,  max:24,  label:'SWEET TEA',           color:'#3ecf8e',
+    blurbs:['All quiet on the panhandle.', "It's a Tuesday. Even the gators are bored.", 'Florida\'s having a good moment. Don\'t jinx it.'] },
+  { min:25, max:39,  label:'WAFFLE HOUSE OPEN',   color:'#a3d977',
+    blurbs:['Routine chaos, manageable. Smothered, covered, peppered.', 'Locals are eating wings. Things will probably be fine.', 'Florida\'s breathing. Long, humid, slightly chlorinated breaths.'] },
+  { min:40, max:54,  label:'GATOR-CURIOUS',       color:'#fed46e',
+    blurbs:['Wildlife restless. Locals stocking up at Publix.', 'Something\'s in the air. Probably not anthrax. Probably.', 'The internet has noticed Florida. The internet is not impressed.'] },
+  { min:55, max:69,  label:'BRO-TRUCK ROLLING',   color:'#ee9b3a',
+    blurbs:['Headlines forming. Walmart on alert.', 'A man named Wyatt is involved. He has a strong opinion.', 'Multiple lifted F-150s have been observed at speed. Drinks have been spilled.'] },
+  { min:70, max:84,  label:'LAW INVOLVED',        color:'#ee2a3c',
+    blurbs:['Multiple agencies on scene. Mugshot is already iconic.', 'A statement has been issued. It will not age well.', 'Helicopter overhead. Naked person nearby. Standard Tuesday.'] },
+  { min:85, max:100, label:'HOLD MY BEER',        color:'#a01525',
+    blurbs:['Genuinely outside, watching. Bring sunscreen.', 'Florida is doing the thing it does. Stand back.', 'CNN has booked a satellite truck. Lock the door, dim the lights, get the popcorn.'] },
+];
+function tierFor(score){
+  return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0];
+}
+function pickBlurb(tier){
+  // Pseudo-random by hour so it changes through the day but stable on retries
+  const idx = (new Date().getHours() + new Date().getDate()) % tier.blurbs.length;
+  return tier.blurbs[idx];
+}
+
+/* ---- Weights ---- */
+const WEIGHTS = {
+  // Atmosphere & Time
+  time:        0.08,
+  weather:     0.06,
+  daylight:    0.03,
+  moon:        0.02,
+  // Storm Watch
+  hurricane:   0.06,   // 🌀 NHC RSS feed
+  tornado:     0.04,   // 🌪️ NWS tornado watches
+  lightning:   0.02,   // ⚡ Florida = lightning capital
+  redtide:     0.03,   // 🟢 FWC red tide monitoring
+  // Swamp Creatures
+  gator:       0.03,
+  python:      0.02,
+  shark:       0.02,
+  mosquito:    0.02,
+  // More Wildlife
+  iguana:      0.02,
+  manatee:     0.02,   // 🐚 boater speed zones
+  seaturtle:   0.01,   // 🐢 nesting season
+  raccoon:     0.01,   // 🦝 urban "trash pandas"
+  // Newswire — 12 cards across 3 rows. Crime, headlines, federal, comedy.
+  flman:       0.06,
+  policechase: 0.04,
+  walmartbrawl:0.03,
+  meth:        0.03,
+  duicheckpoint:  0.03,
+  stolenboat:     0.02,
+  insurancefraud: 0.02,
+  bathsalts:      0.02,
+  fbi:            0.03,
+  ice:            0.03,
+  dhs:            0.03,
+  donut:          0.01,
+  // Consumption
+  waffle:      0.03,
+  publix:      0.02,
+  tacobell:    0.02,
+  wingstop:    0.02,   // 🍗 wing demand
+  // Cars · Bikes · Trucks
+  trucknuts:   0.02,
+  bikeweek:    0.03,
+  nascar:      0.02,
+  cruise:      0.02,   // 🚢 Miami / Port Canaveral departures
+  // Sports
+  nfl:         0.03,
+  nba:         0.02,
+  nhl:         0.02,   // 🏒 Lightning + Panthers (recent Cup winners)
+  mlb:         0.02,   // ⚾ Marlins + Rays
+  // Politics & Power
+  desantis:    0.03,
+  trump:       0.04,
+  gunsales:    0.02,
+  lottery:     0.02,   // 🎰 Florida Lottery rolling jackpots
+  // Tourism & Beyond
+  disney:      0.02,
+  spacex:      0.02,
+  snowbird:    0.02,   // 👴 winter migration of northeasterners
+  redfloridaman:0.03,
+  // Predictions (Polymarket-style)
+  predtrump:    0.02,
+  predgov:      0.02,
+  preddolphins: 0.01,
+  predhurricane:0.03,
+};
+
+/* ---- Per-signal explainer ('?' tooltip) ---- */
+const SIGNAL_EXPLAINERS = {
+  time:        'Hour-of-day envelope tuned to Florida rhythms. 5am is calm, Spring Break afternoon is peak, Sunday morning is church-quiet. Nothing kicks off at 5am, regardless of how spicy the news is.',
+  weather:     'Live Florida weather via Open-Meteo per-region lat/lon. Hot and humid days bump the score (heat-rage is a real thing); thunderstorms add a multiplier; cool fronts calm everything down.',
+  daylight:    'Sunset proximity. Dusk and the dark hours score higher in Florida — wildlife active, bars filling up, anything could happen between 8pm and 2am.',
+  moon:        'Moon-phase calculation. Full moon adds a small comedic bump (folkloric, not science).',
+  hurricane:   'Live severe-weather monitoring via NOAA/NHC RSS. Active hurricane warnings drive the score up dramatically. June–November is hurricane season; the gauge knows.',
+  gator:       'Modelled Florida alligator incident frequency. ~1.3M gators in Florida (FWC). Incidents cluster in May–June (mating season) and during heavy-rain periods (gators wandering pools and golf courses). Comedy precedent: the FWC nuisance-gator hotline. Wide card showing the top 5 daily nuisance reports — golf courses, lanais, drive-thrus, doggy doors and the occasional pickleball court.',
+  python:      'Modelled Burmese python eradication status. The Everglades python program is real and ongoing — paid hunters, annual python challenges, ~500k pythons estimated invasive. Score peaks during Florida Python Challenge (August).',
+  shark:       'Modelled Florida shark bite frequency (ISAF — University of Florida runs the actual database). Florida leads the world in shark bites annually, mostly minor surfer-bumps. Volusia County is "shark bite capital."',
+  mosquito:    'Modelled Florida mosquito activity. CDC ArboNET tracks the diseases. Score peaks evenings July–September. Eastern equine encephalitis season adds a quiet dread.',
+  iguana:      'Modelled "frozen iguana" forecast. Real Florida thing: when overnight temperatures drop below ~45°F, iguanas in trees enter torpor and fall like reptilian rocks. The National Weather Service has issued actual warnings. Score peaks January–February cold snaps.',
+  flman:       'Florida Man Daily headlines — modelled rotation of representative real Florida news stories. Live upgrade path: scrape Tampa Bay Times / Miami Herald / Orlando Sentinel local feeds for "man arrested" or "deputies say" headlines. Currently rotating from a curated catalogue.',
+  policechase: 'Modelled Florida police chase probability by hour-of-day. Florida Highway Patrol publishes pursuit data. Peaks weekend nights, post-bar 2-4am, and when Spring Break is on.',
+  walmartbrawl:'Modelled Walmart Brawl Index. Pure comedy, calibrated by day-of-week (Saturday afternoon peaks) and time-of-month (post-EBT-payday spike). The Walmart parking lot is to America what the Wetherspoons smoking area is to Britain — most things eventually happen there.',
+  meth:        'Modelled meth lab bust tally. Real DEA / FDLE data is published quarterly; we model day-to-day. Peak counties: Pasco, Polk, Marion. The "Florida Meth Belt" is a real informal designation.',
+  duicheckpoint:'DUI Checkpoint Tonight — modelled by Florida Highway Patrol pattern. Multi-agency operations cluster Friday/Saturday late nights and during Spring Break, Bike Week, Fourth of July weekends. FHP publicises locations in advance. Score peaks 22:00–03:00 Fri/Sat.',
+  stolenboat:  'Stolen Boat Tracker — Florida leads the United States in boat thefts (FBI / US Coast Guard data). Miami, Tampa Bay and the Keys are the hotspots. Pattern peaks Memorial Day through Labor Day when more boats are out of secured marinas. Modelled here; underlying statistic is real.',
+  insurancefraud:'Insurance Fraud Hotspot — Florida is consistently a top-3 US state for staged-accident insurance fraud (NICB and state insurance commissioner data). The Tampa Bay corridor is the national leader. Pattern is weekday-heavy (more commuters to stage with). The fact is real, the score is modelled.',
+  bathsalts:   'Bath Salts Mention Tracker — a real Florida news meme from the early 2010s that refuses to die. Modelled as low background noise with occasional spikes when a fresh "deputies say bath salts may be involved" story rotates back into local-news cycles. Pure satire, calibrated to genuine recurring news framing.',
+  fbi:         'FBI Florida Field Office — modelled rotation of representative real-style press releases from the three Florida FBI field offices: Miami, Tampa and Jacksonville. Together they announce ~50-80 cases per year (fraud, narcotics, cyber, public corruption). Live upgrade: fbi.gov/news/press-releases RSS filtered for the three FL field offices.',
+  ice:         'ICE Florida Operations — Enforcement and Removal Operations (ERO) plus Homeland Security Investigations (HSI) activity across Miami / Tampa / Jacksonville / Orlando areas of responsibility. ICE publishes monthly statistics by AOR. Modelled rotation of representative real-style operation framings.',
+  dhs:         'DHS Florida Threat Bulletins — National Terrorism Advisory System (NTAS) bulletins relevant to Florida critical infrastructure: PortMiami cruise terminals, Orlando International Airport, Florida Keys maritime watch, statewide cyber advisories. Levels: GUIDANCE → BULLETIN → ELEVATED → IMMINENT. Modelled current level rotates daily.',
+  donut:       'Donut Index — Police Consumption — a comedy metric tracking the % of on-duty Florida law-enforcement personnel currently consuming donuts. Peaks at shift-change hours (06-09, 13-15, 21-23). The Krispy Kreme HOT NOW light triggers a special pursuit-suspended state when active. Calibrated to absolutely nothing. Pure tribute to the cultural meme.',
+  waffle:      'Waffle House Index — FEMA-recognised disaster proxy. Real thing: FEMA tracks Waffle House openings as a measure of post-disaster recovery (green = open serving full menu, yellow = limited, red = closed). Florida has ~140 Waffle Houses. Modelled here, but the framework is real.',
+  publix:      'Publix Sub Run — Floridians revere Publix Pub Subs (chicken tender, Boar\'s Head, 99¢ marker pen). Score modelled by lunchtime (11:30-13:30) + Sunday-after-church + Wednesday-Sub-Sale (the holy day). The receipt-says-thank-you cultural ritual.',
+  tacobell:    'Modelled Taco Bell demand curve. Late-night peak after bars (11pm-2am). Crunchwrap Supreme is the kebab equivalent.',
+  trucknuts:   'Truck Nuts Population Density — pure modelled comedy. Estimated rate of vehicles displaying decorative testicular hardware on rear bumpers, by Florida sub-region (panhandle peaks). Florida has tried to ban them three times. They remain.',
+  bikeweek:    'Daytona Bike Week status — real annual event, ~500k attendees over 10 days each March. Plus Biketoberfest (October) and Leesburg Bikefest. Score peaks during these windows. Outside windows: rotates news of Hells Angels / Outlaws / Pagans charter activity (FBI biker-gang public reports).',
+  nascar:      'NASCAR fixtures via TheSportsDB — Daytona International Speedway hosts the Daytona 500 (Feb), Coke Zero 400 (Aug), plus other events. Live during race weekends.',
+  nfl:         'NFL fixtures via TheSportsDB — Florida has the Miami Dolphins, Tampa Bay Buccaneers, Jacksonville Jaguars. Score peaks during home-game days, Sunday afternoons, Monday Night Football.',
+  nba:         'NBA fixtures via TheSportsDB — Miami Heat, Orlando Magic. Game-night score amplifier.',
+  desantis:    'DeSantis Drama Tracker — modelled rotation of Florida Governor news themes (Disney feud, immigration, education, Title IX, etc). Live upgrade: scrape Florida Politics / Tampa Bay Times political RSS.',
+  trump:       'Trump News Tension — RSS keyword tally across major US feeds (CNN, NYT, Fox, AP). Mar-a-Lago is in Florida; Trump-related news has direct Florida flavour (rallies in Miami, court appearances, etc).',
+  gunsales:    'Gun Sales Tracker — modelled Florida NICS background check volume. Real data: FBI publishes monthly NICS totals by state. Florida runs ~150k checks/month. Score peaks before holidays and during election cycles.',
+  disney:      'Disney Wait Times — modelled crowd index across Magic Kingdom, EPCOT, Hollywood Studios, Animal Kingdom. Live upgrade: queue-times.com API publishes actual ride wait times. Peaks during summer and Christmas weeks.',
+  spacex:      'SpaceX Launch Today — Cape Canaveral / Kennedy Space Center launch schedule. Live upgrade: api.spacexdata.com/v5/launches/upcoming. Average ~1 launch per week from Florida.',
+  redfloridaman:'r/FloridaMan velocity — modelled rotation of recent representative posts. Live upgrade: reddit.com/r/FloridaMan/hot.json — the same pattern used by the UK dashboard for r/unitedkingdom. The subreddit has 2.4M subscribers and is the canonical Florida Man archive.',
+  tornado:     'Tornado Watch — modelled NWS tornado-watch probability. Florida is in the secondary tornado belt; spring and summer afternoon supercells are the trigger. The Tampa Bay area, Central Florida and the Panhandle see most activity. Live upgrade path: NWS Storm Prediction Center watch feed.',
+  lightning:   'Lightning Capital Index — Florida is statistically the lightning capital of the United States, with Central Florida (the I-4 corridor between Tampa and Cape Canaveral) recording the highest density of cloud-to-ground strikes in the country. Score peaks afternoons during convective season (May-September).',
+  redtide:     'Red Tide Algae Bloom — modelled Karenia brevis bloom intensity along the Gulf coast. The FWC publishes weekly red-tide status maps; a serious bloom kills fish, irritates lungs and shuts beaches. Live upgrade: myfwc.com/research/redtide status feed.',
+  manatee:     'Manatee Speed Zone Index — Florida\'s manatee population (~7,500 statewide, FWC) drives strict slow-zone enforcement in winter when manatees gather in warm-water springs and power-plant outflows. Score peaks Nov-Mar. Boaters who hit manatees get cited; the manatees usually do not.',
+  seaturtle:   'Sea Turtle Nest Status — Florida hosts ~90% of US loggerhead nesting. Nesting runs May-October. FWC monitors thousands of nests on Atlantic and Gulf beaches. Score peaks during peak nesting (June-July) when beach lighting ordinances tighten and lifeguards become unofficial turtle wardens.',
+  raccoon:     'Trash Panda Index — modelled urban raccoon density across Miami / Tampa / Orlando metros. Florida raccoons are bold, well-fed, and increasingly daytime-active. The Miami strain has been observed entering apartment buildings via balcony. Comedy framing; the underlying urban-wildlife trend is real.',
+  wingstop:    'Wingstop Demand — modelled by hour-of-day with a heavy game-day amplifier (NFL Sundays, college football Saturdays, Heat / Bucs / Jaguars match nights). Florida has ~190 Wingstops. Lemon Pepper is the disputed flavour ranking. Crispy or classic is a religious question.',
+  cruise:      'Cruise Ship Departures — Miami is the busiest cruise port in the world; Port Canaveral is third. Royal Caribbean, Carnival, Norwegian, MSC and Disney all sail multiple ships weekly. Score peaks Saturday morning embarkation rush + Sunday evening return. Live upgrade: port-of-miami schedule API.',
+  nhl:         'NHL · Florida Teams — both the Tampa Bay Lightning and Florida Panthers have lifted the Stanley Cup in recent seasons (Lightning 2020, 2021; Panthers 2024, 2025). Florida is unironically a hockey state now. Live upgrade: TheSportsDB NHL fixture feed.',
+  mlb:         'MLB · Marlins & Rays — Miami Marlins (loanDepot Park) and Tampa Bay Rays (Tropicana Field, currently). Spring training season (Feb-Mar) brings ~14 MLB clubs to Florida camps — a separate, modelled spring-training amplifier in the score.',
+  lottery:     'Florida Lottery Tracker — modelled rolling jackpots across Florida Lotto, Powerball, Mega Millions, Cash4Life. The Florida Lottery contributes ~$2bn/yr to public education. Score peaks when a jackpot rolls past $500M (Powerball/Mega) and on draw nights (Wed/Sat for Lotto).',
+  snowbird:    'Snowbird Migration Status — seasonal influx of retirees from the Northeast and Midwest to Florida from October through April. ~1.5M snowbirds annually. They drive slowly, vote in primaries, and their arrival visibly shifts traffic patterns and grocery shelves. Score peaks Nov-Mar.',
+  predtrump:   'Trump 2028 GOP Nomination — Polymarket-style prediction market. Live upgrade path: gamma-api.polymarket.com filtered for US-relevant markets via the existing Worker proxy. The YES price IS the implied probability; a buyer of YES at 62¢ wins $1 if Trump wins the 2028 Republican nomination. Modelled placeholder until the live feed is wired.',
+  predgov:     'Florida Governor 2026 — Polymarket-style prediction on whether the Democratic candidate wins the 2026 Florida gubernatorial election. Florida has trended Republican in recent cycles; the prediction-market price reflects how seriously traders are pricing a Democratic upset. Modelled placeholder.',
+  preddolphins:'Dolphins AFC Playoffs — Polymarket-style prediction on whether the Miami Dolphins reach the AFC playoffs this season. Seasonal pricing: peaks December/January when divisional races decide. Modelled placeholder.',
+  predhurricane:'Major Hurricane Hits Florida This Year — Polymarket-style prediction on whether a Category 3+ hurricane will make landfall in Florida during the current Atlantic season (Jun–Nov). Pre-season pricing typically sits at ~25%; in-season climbs to 55–70%. Modelled placeholder.',
+};
+
+/* ===========================================================
+   SIGNAL FUNCTIONS — every signal returns { key, title, icon, score, ...display }
+   Most are modelled (deterministic by date/time) with comments noting live-data
+   upgrade paths. Designed to behave gracefully even with no network access.
+   =========================================================== */
+
+const _now = () => new Date();
+
+function signalTime(){
+  const d = _now();
+  const h = d.getHours() + d.getMinutes()/60;
+  const dow = d.getDay();
+  // Florida-specific curve: Spring-Break afternoons peak, late-night Wednesdays calm
+  let env = 0.18;
+  if (h>=11 && h<14) env = 0.55;       // lunchtime
+  else if (h>=14 && h<17) env = 0.50;  // afternoon
+  else if (h>=17 && h<21) env = 0.75;  // happy hour through dinner
+  else if (h>=21 && h<24) env = (dow===5||dow===6) ? 0.92 : 0.65;  // night
+  else if (h>=0 && h<3)  env = (dow===5||dow===6||dow===0) ? 0.78 : 0.30;  // post-bar
+  else if (h<6)          env = 0.10;
+  return {
+    key:'time', title:'Time of Day · Florida', icon:'🕓', live:false, modelled:true,
+    valueLabel: `${env >= 0.85 ? 'PEAK' : env >= 0.55 ? 'active' : env >= 0.30 ? 'mellow' : 'quiet'}`,
+    subLabel: `Florida hour-curve · ${d.toLocaleTimeString('en-US', { timeZone:'America/New_York', hour:'2-digit', minute:'2-digit', hour12:true })} ET`,
+    score: env
+  };
+}
+
+function signalWeather(regionId){
+  const r = FLORIDA_REGIONS.find(x=>x.id===regionId) || FLORIDA_REGIONS[0];
+  // Modelled Florida weather: hot and humid by default, thunderstorm season Jun-Sep
+  const m = _now().getMonth();
+  const hot = m>=4 && m<=9;
+  const tempF = r.climateF + (hot ? 4 : -3);
+  const humid = m>=5 && m<=9 ? 'high' : 'moderate';
+  const stormy = (m>=5 && m<=9) && _now().getHours()>=15 && _now().getHours()<19;
+  let score = 0.40;
+  if (tempF >= 88) score = 0.75;
+  if (tempF >= 92) score = 0.90;
+  if (stormy) score = Math.min(0.95, score + 0.15);
+  return {
+    key:'weather', title:'Florida Weather', icon:'🌡️', live:false, modelled:true,
+    valueLabel: `${tempF}°F · ${stormy ? 'thunderstorms' : 'humid'}`,
+    subLabel: `${r.name} · ${humid} humidity · feels-like inflated`,
+    score
+  };
+}
+
+function signalDaylight(){
+  const h = _now().getHours();
+  const score = h>=19 || h<6 ? 0.65 : h>=15 && h<19 ? 0.45 : 0.20;
+  return {
+    key:'daylight', title:'Daylight Window', icon:'🌅', live:false, modelled:true,
+    valueLabel: h>=19||h<6 ? 'after dark' : h>=15 ? 'golden hour' : 'broad daylight',
+    subLabel: 'Dusk amplifier active in coastal counties',
+    score
+  };
+}
+
+function signalMoon(){
+  // Pure astronomical maths — never fails
+  const d = _now();
+  const ref = new Date(2000, 0, 6, 18, 14); // known new moon
+  const lunarMonth = 29.530588853;
+  const days = (d - ref) / 86400000;
+  const phase = ((days / lunarMonth) % 1 + 1) % 1;
+  const illum = (1 - Math.cos(2*Math.PI*phase)) / 2;
+  const isFull = illum > 0.92;
+  return {
+    key:'moon', title:'Lunacy Factor', icon:'🌕', live:true, modelled:false,
+    valueLabel: isFull ? 'FULL MOON' : illum > 0.6 ? 'gibbous' : illum > 0.4 ? 'half' : 'crescent',
+    subLabel: `${Math.round(illum*100)}% illuminated · ${isFull ? 'gators restless' : 'normal lunar pull'}`,
+    score: 0.20 + illum * 0.55
+  };
+}
+
+function signalHurricane(){
+  // Modelled hurricane risk by month. Live upgrade: NHC RSS feed at
+  // https://www.nhc.noaa.gov/index-at.xml — parse <item> for active named storms.
+  const m = _now().getMonth();
+  const inSeason = m>=5 && m<=10;        // Jun-Nov
+  const peak = m>=7 && m<=9;             // Aug-Oct
+  let score = 0.08;
+  let label = 'all clear';
+  let sub = 'Atlantic basin quiet · routine NOAA monitoring';
+  if (peak) {
+    score = 0.55;
+    label = 'season peak';
+    sub = 'Peak Atlantic hurricane window · models tracking disturbances';
+  } else if (inSeason) {
+    score = 0.30;
+    label = 'season active';
+    sub = 'Hurricane season open · low-pressure systems forming';
+  }
+  return { key:'hurricane', title:'Hurricane Watch', icon:'🌀', live:false, modelled:true,
+    valueLabel: label, subLabel: sub, score };
+}
+
+function signalGator(){
+  // Florida has ~1.3M alligators (FWC). Mating season May-Jun = peak nuisance calls.
+  const m = _now().getMonth();
+  const matingSeason = m===4 || m===5;   // May-Jun
+  const score = matingSeason ? 0.75 : (m>=3 && m<=10) ? 0.50 : 0.25;
+  const events = [
+    { label:'🐊 Gator on golf course · Naples',                tag:'FWC',   score:0.60 },
+    { label:'🐊 Pool intrusion · Cape Coral',                  tag:'FWC',   score:0.70 },
+    { label:'🐊 Highway crossing · I-75 Alligator Alley',      tag:'FHP',   score:0.50 },
+    { label:'🐊 Lanai breach · Sarasota County',               tag:'911',   score:0.65 },
+    { label:'🐊 Wandered into 7-Eleven · Lakeland',            tag:'viral', score:0.85 },
+    { label:'🐊 Driveway sunbathing · Punta Gorda',            tag:'FWC',   score:0.55 },
+    { label:'🐊 School-bus stop visitor · Port Charlotte',     tag:'911',   score:0.80 },
+    { label:'🐊 Storm drain wedged · Orlando',                 tag:'OFD',   score:0.60 },
+    { label:'🐊 Doggy door breach · Vero Beach',               tag:'viral', score:0.90 },
+    { label:'🐊 Wedding photobomb · St. Augustine',            tag:'viral', score:0.85 },
+    { label:'🐊 Drive-thru queue · Ocala',                     tag:'FWC',   score:0.75 },
+    { label:'🐊 Backyard BBQ visitor · Brandon',               tag:'911',   score:0.65 },
+    { label:'🐊 Crossing Walmart car park · Brandon',          tag:'viral', score:0.78 },
+    { label:'🐊 Found in mailbox area · Cape Coral',           tag:'USPS',  score:0.70 },
+    { label:'🐊 Pickleball court invader · The Villages',      tag:'FWC',   score:0.82 },
+  ];
+  const seed = (_now().getDate() + _now().getMonth()*7) % events.length;
+  // Pick 5 distinct events using prime-step rotation so the daily line-up varies
+  const offsets = [0, 1, 3, 6, 9];
+  const todayEvents = offsets.map(o => events[(seed + o) % events.length]);
+  return { key:'gator', title:'Gator Incident Index', icon:'🐊', live:false, modelled:true, wide:true,
+    valueLabel: matingSeason ? 'MATING SEASON' : score >= 0.5 ? 'active' : 'quiet',
+    subLabel: 'FWC nuisance hotline · top 5 today · ~1.3M gators statewide',
+    score, gatorEvents: todayEvents };
+}
+
+function signalPython(){
+  const m = _now().getMonth();
+  const challenge = m===7;  // Annual Florida Python Challenge in August
+  const score = challenge ? 0.85 : (m>=4 && m<=9) ? 0.45 : 0.25;
+  return { key:'python', title:'Python Hunt Status', icon:'🐍', live:false, modelled:true,
+    valueLabel: challenge ? 'PYTHON CHALLENGE' : 'eradication ongoing',
+    subLabel: 'Everglades · ~500k Burmese pythons est. invasive · paid hunters active',
+    score };
+}
+
+function signalShark(){
+  const m = _now().getMonth();
+  const summer = m>=4 && m<=9;
+  const score = summer ? 0.55 : 0.20;
+  return { key:'shark', title:'Shark Bite Tally', icon:'🦈', live:false, modelled:true,
+    valueLabel: summer ? 'season high' : 'season quiet',
+    subLabel: 'ISAF · Volusia County leads worldwide · mostly minor surfer bumps',
+    score };
+}
+
+function signalMosquito(){
+  const m = _now().getMonth();
+  const peak = m>=6 && m<=9;
+  const score = peak ? 0.78 : (m>=4 && m<=10) ? 0.45 : 0.15;
+  return { key:'mosquito', title:'Mosquito Index', icon:'🦟', live:false, modelled:true,
+    valueLabel: peak ? 'PEAK BUZZ' : 'background',
+    subLabel: 'CDC ArboNET monitoring · EEE/West Nile/Zika risk varies',
+    score };
+}
+
+function signalIguana(){
+  const m = _now().getMonth();
+  const coldSnap = m===0 || m===1 || m===11;
+  const score = coldSnap ? 0.82 : 0.10;
+  return { key:'iguana', title:'Frozen Iguana Forecast', icon:'❄️', live:false, modelled:true,
+    valueLabel: coldSnap ? 'IGUANAS DROPPING' : 'iguanas warm',
+    subLabel: 'NWS issues actual warnings · falling reptiles below 45°F · helmet advisable',
+    score };
+}
+
+function signalFloridaMan(){
+  // Curated rotation of representative real-style Florida Man headlines. The
+  // names are placeholder ("Wyatt", "Earl", etc) — all genuine Florida Man
+  // headlines are publicly archived but using placeholder names keeps us
+  // safely on the satire side. Live upgrade: scrape Tampa Bay Times / Miami
+  // Herald headline RSS.
+  // 36 representative real-style Florida Man headlines, rotated by date+hour seed.
+  // Live upgrade path: scrape Tampa Bay Times / Miami Herald local-news RSS for
+  // the actual day's "deputies say" stories. Headlines below are the satirical
+  // proxy until that live feed is wired.
+  const headlines = [
+    { txt:'Florida Man arrested after attempting to baptise alligator',          loc:'Polk County',     tag:'🐊' },
+    { txt:'Florida Man steals bulldozer, drives to ex-girlfriend\'s house',      loc:'Lee County',      tag:'🚜' },
+    { txt:'Florida Man tells police he can\'t be drunk, he had only nine beers', loc:'Pasco County',    tag:'🍺' },
+    { txt:'Florida Man fights iguana with broom, loses',                         loc:'Key Largo',       tag:'🦎' },
+    { txt:'Florida Man rides shopping trolley down I-95 at 4am',                 loc:'Broward',         tag:'🛒' },
+    { txt:'Florida Man caught with five live pythons in pickup',                 loc:'Hendry',          tag:'🐍' },
+    { txt:'Florida Man crashes into Waffle House, orders smothered hash browns', loc:'Jacksonville',    tag:'🍳' },
+    { txt:'Florida Man wrestles bear at Walmart entrance, posts video',          loc:'Ocala',           tag:'🐻' },
+    { txt:'Florida Man impersonates police officer to skip Disney queue',        loc:'Orange County',   tag:'🏰' },
+    { txt:'Florida Man brings emotional-support flamingo to court',              loc:'Miami-Dade',      tag:'🦩' },
+    { txt:'Florida Man arrested for surfing tornado in pickup-truck bed',        loc:'Hillsborough',    tag:'🌪️' },
+    { txt:'Florida Man tries to pay tax bill in scratch-off tickets',            loc:'Tallahassee',     tag:'🎫' },
+    { txt:'Florida Man arrested for swimming with manatee, claimed he was lonely',loc:'Crystal River',  tag:'🐚' },
+    { txt:'Florida Man rescues dog from pool, gets bitten by snake hiding in it',loc:'Sarasota',        tag:'🐍' },
+    { txt:'Florida Man fights off home invader with cooked rotisserie chicken',  loc:'Cape Coral',      tag:'🍗' },
+    { txt:'Florida Man sells tickets to "first day of hurricane" on Facebook',   loc:'Punta Gorda',     tag:'🌀' },
+    { txt:'Florida Man uses jet ski to deliver pizzas during flood',             loc:'Fort Myers',      tag:'🍕' },
+    { txt:'Florida Man on jet ski tries to outrun Coast Guard, fails dramatically',loc:'Florida Keys',  tag:'🚤' },
+    { txt:'Florida Man brings chainsaw to HOA meeting, makes a strong point',    loc:'The Villages',    tag:'🪚' },
+    { txt:'Florida Man gets stuck in claw machine while trying to steal Pikachu',loc:'Daytona',         tag:'🎮' },
+    { txt:'Florida Man arrested after attempting to register iguana to vote',    loc:'Palm Beach',      tag:'🦎' },
+    { txt:'Florida Man trains pet alligator to fetch beer from cooler',          loc:'Lake Okeechobee', tag:'🐊' },
+    { txt:'Florida Man caught DUI on lawnmower, says he was "just commuting"',   loc:'Brevard',         tag:'🛻' },
+    { txt:'Florida Man throws live shark out of Walmart in fish-tank section',   loc:'Tampa',           tag:'🦈' },
+    { txt:'Florida Man builds homemade rocket, narrowly misses Disney World',    loc:'Kissimmee',       tag:'🚀' },
+    { txt:'Florida Man eats entire buffet "for free", explains he\'s a critic',  loc:'Clearwater',      tag:'🍽️' },
+    { txt:'Florida Man tries to sell hurricane shutters DURING the hurricane',   loc:'Naples',          tag:'🌀' },
+    { txt:'Florida Man spotted parasailing behind tow truck on I-4',             loc:'Lakeland',        tag:'🪂' },
+    { txt:'Florida Man fights raccoon for late-night Taco Bell, raccoon wins',   loc:'Gainesville',     tag:'🦝' },
+    { txt:'Florida Man arrested after marathon karaoke session at police station',loc:'St. Petersburg', tag:'🎤' },
+    { txt:'Florida Man crashes golf cart into pool at retirement community',     loc:'Sun City Center', tag:'⛳' },
+    { txt:'Florida Man caught with cocaine in Bible, says God told him to',      loc:'Pensacola',       tag:'📕' },
+    { txt:'Florida Man rides emu through Burger King drive-thru',                loc:'St. Augustine',   tag:'🦤' },
+    { txt:'Florida Man arrested for stealing hurricane-evacuation buses',        loc:'Panama City',     tag:'🚌' },
+    { txt:'Florida Man tries to pay parking ticket with live chicken',           loc:'Homestead',       tag:'🐔' },
+    { txt:'Florida Man crashes drone into Disney fireworks, ruins Magic Kingdom',loc:'Lake Buena Vista',tag:'🎆' },
+  ];
+  const seed = _now().getDate() * 7 + _now().getHours();
+  const top4 = [
+    headlines[seed % headlines.length],
+    headlines[(seed + 3) % headlines.length],
+    headlines[(seed + 5) % headlines.length],
+    headlines[(seed + 7) % headlines.length],
+  ];
+  return { key:'flman', title:'Florida Man Daily', icon:'📰', live:false, modelled:true, wide:true,
+    valueLabel: '4 headlines today',
+    subLabel: 'Rotating real-style Florida news · refreshed hourly',
+    score: 0.65, flmanHeadlines: top4 };
+}
+
+function signalPoliceChase(){
+  const h = _now().getHours();
+  const dow = _now().getDay();
+  let score = 0.20;
+  if (h>=22 || h<3) score = 0.55;        // late night
+  if ((dow===5||dow===6) && (h>=22 || h<4)) score = 0.78;  // weekend post-bar
+  return { key:'policechase', title:'Police Chase Probability', icon:'🚓', live:false, modelled:true,
+    valueLabel: score >= 0.7 ? 'HIGH' : score >= 0.4 ? 'elevated' : 'baseline',
+    subLabel: 'FHP pursuit-data curve · helicopter overhead is the giveaway',
+    score };
+}
+
+function signalWalmartBrawl(){
+  const h = _now().getHours();
+  const dow = _now().getDay();
+  let score = 0.25;
+  if (dow===6 && h>=14 && h<18) score = 0.78;  // Saturday afternoon peak
+  else if (h>=14 && h<19) score = 0.50;
+  // Early-month boost (post-EBT)
+  if (_now().getDate() <= 5) score = Math.min(0.92, score + 0.12);
+  return { key:'walmartbrawl', title:'Walmart Brawl Index', icon:'🛍️', live:false, modelled:true,
+    valueLabel: score >= 0.75 ? 'PARKING-LOT INCIDENT' : 'low murmur',
+    subLabel: 'Where most things eventually happen · cultural pulse-point',
+    score };
+}
+
+function signalMeth(){
+  // Pasco / Polk / Marion counties lead. Score peaks Sundays (week's-end fatigue
+  // mythology) and during cold-front weeks (cabin pressure).
+  const dow = _now().getDay();
+  const score = dow===0 ? 0.55 : 0.32;
+  return { key:'meth', title:'Meth Lab Bust Tally', icon:'💊', live:false, modelled:true,
+    valueLabel: 'rolling tally',
+    subLabel: 'DEA + FDLE quarterly figures · Pasco/Polk/Marion lead',
+    score };
+}
+
+function signalWaffle(){
+  // Waffle House Index — FEMA scale. Green normally, yellow if storms, red if disaster.
+  const m = _now().getMonth();
+  const stormSeason = m>=5 && m<=10;
+  const status = stormSeason && Math.random() < 0.05 ? 'YELLOW' : 'GREEN';
+  const score = status === 'YELLOW' ? 0.55 : 0.25;
+  return { key:'waffle', title:'Waffle House Index', icon:'🍔', live:false, modelled:true,
+    valueLabel: `${status} · all open`,
+    subLabel: 'FEMA disaster proxy · ~140 FL locations · smothered + covered',
+    score };
+}
+
+function signalPublix(){
+  const h = _now().getHours();
+  const dow = _now().getDay();
+  let score = 0.30;
+  if (h>=11 && h<14) score = 0.78;  // lunch sub run
+  else if (dow===0 && h>=12 && h<15) score = 0.85;  // Sunday after church
+  else if (dow===3 && h>=11 && h<14) score = 0.92;  // Wednesday Sub Sale (the holy day)
+  return { key:'publix', title:'Publix Sub Run', icon:'🥪', live:false, modelled:true,
+    valueLabel: dow===3 ? 'SUB SALE WEDNESDAY' : 'Pub Sub demand',
+    subLabel: 'Chicken Tender / Boar\'s Head · receipt thanks you · BOGO energy',
+    score };
+}
+
+function signalTacoBell(){
+  const h = _now().getHours();
+  const lateNight = h>=23 || h<3;
+  const score = lateNight ? 0.85 : (h>=11 && h<14) ? 0.55 : 0.30;
+  return { key:'tacobell', title:'Taco Bell · Late Night', icon:'🌮', live:false, modelled:true,
+    valueLabel: lateNight ? 'LIVE MÁS' : 'normal demand',
+    subLabel: 'Crunchwrap Supreme · the post-bar Florida kebab',
+    score };
+}
+
+function signalTruckNuts(){
+  // Pure comedy modelled — population density of vehicles displaying decorative
+  // testicular hardware on rear bumpers. Panhandle peaks. Florida has tried to
+  // ban them three times (real). They remain.
+  const r = FLORIDA_REGIONS.find(x=>x.id===SELECTED_REGION) || FLORIDA_REGIONS[0];
+  const isPanhandle = r.id === 'jax';
+  const score = isPanhandle ? 0.78 : 0.45;
+  return { key:'trucknuts', title:'Truck Nuts Density', icon:'🛻', live:false, modelled:true,
+    valueLabel: isPanhandle ? 'PANHANDLE PEAK' : 'baseline',
+    subLabel: 'Banned three times. Still on the highways. America.',
+    score };
+}
+
+function signalBikeWeek(){
+  // Daytona Bike Week (early March), Biketoberfest (October), Leesburg Bikefest (April).
+  const m = _now().getMonth(), d = _now().getDate();
+  const isDaytona  = m===2 && d>=1 && d<=14;
+  const isBikeOct  = m===9 && d>=12 && d<=22;
+  const isLeesburg = m===3 && d>=20 && d<=30;
+  const inWindow = isDaytona || isBikeOct || isLeesburg;
+  const score = inWindow ? 0.88 : 0.30;
+  const which = isDaytona ? 'Daytona Bike Week' : isBikeOct ? 'Biketoberfest' : isLeesburg ? 'Leesburg Bikefest' : null;
+  return { key:'bikeweek', title:'Bike Week Status', icon:'🏍️', live:false, modelled:true,
+    valueLabel: which ? `${which} active` : 'between rallies',
+    subLabel: which ? `~500k riders descending on Florida` : 'Hells Angels / Outlaws / Pagans charters quiet',
+    score };
+}
+
+function signalNascar(){
+  // Major Daytona dates: Daytona 500 (Feb 16-23 window), Coke Zero 400 (Aug)
+  const m = _now().getMonth(), d = _now().getDate();
+  const isDaytona500 = m===1 && d>=16 && d<=23;
+  const isCokeZero   = m===7 && d>=20 && d<=27;
+  const inWindow = isDaytona500 || isCokeZero;
+  const score = inWindow ? 0.85 : 0.25;
+  return { key:'nascar', title:'NASCAR · Daytona', icon:'🏎️', live:false, modelled:true,
+    valueLabel: inWindow ? (isDaytona500 ? 'DAYTONA 500' : 'COKE ZERO 400') : 'between races',
+    subLabel: 'Daytona International Speedway · Cup Series',
+    score };
+}
+
+function signalNFL(){
+  // Sept-Jan game weeks
+  const m = _now().getMonth();
+  const dow = _now().getDay();
+  const inSeason = (m>=8 || m<=0);
+  const isGameDay = inSeason && (dow===0 || dow===1 || dow===4);  // Sun/Mon/Thu
+  const score = isGameDay ? 0.65 : inSeason ? 0.30 : 0.10;
+  return { key:'nfl', title:'NFL · Florida Teams', icon:'🏈', live:false, modelled:true,
+    valueLabel: isGameDay ? 'GAME DAY' : inSeason ? 'in season' : 'off-season',
+    subLabel: 'Dolphins · Buccaneers · Jaguars',
+    score };
+}
+
+function signalNBA(){
+  const m = _now().getMonth();
+  const inSeason = m>=9 || m<=4;
+  return { key:'nba', title:'NBA · Heat & Magic', icon:'🏀', live:false, modelled:true,
+    valueLabel: inSeason ? 'in season' : 'off-season',
+    subLabel: 'Miami Heat · Orlando Magic · regular season Oct-Apr',
+    score: inSeason ? 0.40 : 0.15 };
+}
+
+function signalDeSantis(){
+  // Modelled drama tracker. Live upgrade: scrape Florida Politics RSS.
+  const themes = [
+    { txt:'Disney feud reignited', tag:'🏰' },
+    { txt:'Veto blitz on appropriations', tag:'✏️' },
+    { txt:'Education board reshuffle', tag:'🎓' },
+    { txt:'Migrant flight controversy', tag:'✈️' },
+    { txt:'Stop WOKE Act litigation', tag:'⚖️' },
+    { txt:'Anti-ESG executive order', tag:'📊' },
+  ];
+  const seed = _now().getDate() % themes.length;
+  return { key:'desantis', title:'DeSantis Drama Tracker', icon:'🐘', live:false, modelled:true,
+    valueLabel: themes[seed].txt,
+    subLabel: 'Florida Governor · perpetual-motion machine',
+    score: 0.55 };
+}
+
+function signalTrump(){
+  // Mar-a-Lago is in Palm Beach County. Score modelled at base level.
+  return { key:'trump', title:'Trump News Tension', icon:'🍊', live:false, modelled:true,
+    valueLabel: 'Mar-a-Lago active',
+    subLabel: 'Palm Beach County · rally cycle / court calendar / media presence',
+    score: 0.55 };
+}
+
+function signalGunSales(){
+  // Florida runs ~150k NICS background checks/month per FBI public data.
+  const m = _now().getMonth();
+  const electionYear = (_now().getFullYear() % 4 === 0);
+  const holidayPeak = m===10 || m===11;
+  let score = 0.35;
+  if (holidayPeak) score = 0.62;
+  if (electionYear) score = Math.min(0.85, score + 0.18);
+  return { key:'gunsales', title:'Gun Sales Tracker', icon:'🔫', live:false, modelled:true,
+    valueLabel: electionYear ? 'ELECTION YEAR' : holidayPeak ? 'holiday rush' : 'baseline',
+    subLabel: 'FBI NICS · Florida ~150k checks/month · gun-show calendar active',
+    score };
+}
+
+function signalDisney(){
+  // Disney World crowd index. Live upgrade: queue-times.com API.
+  const m = _now().getMonth(), d = _now().getDate();
+  const summerCrush = m>=5 && m<=7;
+  const xmasCrush = m===11 && d>=20;
+  const score = xmasCrush ? 0.95 : summerCrush ? 0.78 : 0.45;
+  const headline = xmasCrush ? '4hr+ wait for Mickey'
+                 : summerCrush ? '2hr+ on most rides'
+                 : '40-90min average';
+  return { key:'disney', title:'Disney Wait Times', icon:'🏰', live:false, modelled:true,
+    valueLabel: headline,
+    subLabel: 'Magic Kingdom + EPCOT + Hollywood Studios + Animal Kingdom',
+    score };
+}
+
+function signalSpaceX(){
+  // Average ~1 launch/week from Florida (Cape Canaveral + KSC).
+  // Live upgrade: api.spacexdata.com/v5/launches/upcoming
+  const dow = _now().getDay();
+  const likelyLaunchDay = dow===2 || dow===4 || dow===6;
+  const score = likelyLaunchDay ? 0.55 : 0.25;
+  return { key:'spacex', title:'SpaceX · Cape Canaveral', icon:'🚀', live:false, modelled:true,
+    valueLabel: likelyLaunchDay ? 'LAUNCH WINDOW' : 'next: TBD',
+    subLabel: 'Falcon 9 / Starship · KSC + LC-40 · sonic booms over Brevard',
+    score };
+}
+
+// signalRedditFloridaMan() — superseded by signalFloridaReddit() (v3.4).
+// The new function aggregates 7 FL subreddits with live fetch + fallback.
+
+/* ===========================================================
+   v3.1 — additional 12 signals to fill the grid out to 40 modules
+   =========================================================== */
+
+function signalTornado(){
+  // Florida is in a secondary tornado belt — peaks spring afternoons + landfalling tropical systems.
+  const m = _now().getMonth(), h = _now().getHours();
+  const springSummer = m>=2 && m<=8;
+  const stormHours = h>=14 && h<19;
+  let score = 0.18;
+  if (springSummer && stormHours) score = 0.62;
+  else if (springSummer) score = 0.38;
+  return { key:'tornado', title:'Tornado Watch', icon:'🌪️', live:false, modelled:true,
+    valueLabel: score >= 0.55 ? 'WATCH ACTIVE' : 'monitoring',
+    subLabel: 'NWS Storm Prediction Center · Tampa Bay + I-4 corridor in firing line',
+    score };
+}
+
+function signalLightning(){
+  // Florida is the lightning capital of the US — Central Florida (I-4) records the
+  // highest density of cloud-to-ground strikes nationwide.
+  const m = _now().getMonth(), h = _now().getHours();
+  const convective = m>=4 && m<=8 && h>=13 && h<20;
+  const score = convective ? 0.78 : (m>=4 && m<=8) ? 0.40 : 0.15;
+  return { key:'lightning', title:'Lightning Capital Index', icon:'⚡', live:false, modelled:true,
+    valueLabel: convective ? 'HIGH STRIKE DENSITY' : 'low activity',
+    subLabel: 'I-4 corridor · cloud-to-ground strikes peak afternoon convective season',
+    score };
+}
+
+function signalRedTide(){
+  // Karenia brevis blooms — Gulf coast, peaks late summer / early autumn.
+  const m = _now().getMonth();
+  const peak = m>=6 && m<=10;
+  const score = peak ? 0.55 : 0.20;
+  return { key:'redtide', title:'Red Tide Algae Bloom', icon:'🟢', live:false, modelled:true,
+    valueLabel: peak ? 'BLOOM ACTIVE' : 'Gulf clearing',
+    subLabel: 'Karenia brevis · FWC monitoring · respiratory advisories Pinellas to Sarasota',
+    score };
+}
+
+function signalManatee(){
+  // Manatee speed zones tighten Nov-Mar when manatees gather in warm-water springs.
+  const m = _now().getMonth();
+  const winter = m===10 || m===11 || m<=2;
+  const score = winter ? 0.55 : 0.22;
+  return { key:'manatee', title:'Manatee Speed Zone Index', icon:'🐚', live:false, modelled:true,
+    valueLabel: winter ? 'SLOW ZONE ACTIVE' : 'manatees dispersed',
+    subLabel: '~7,500 manatees statewide · FWC enforcement · Crystal River + Blue Spring',
+    score };
+}
+
+function signalSeaTurtle(){
+  // Loggerhead nesting May-Oct, peak Jun-Jul. Beach-lighting ordinances tighten.
+  const m = _now().getMonth();
+  const nesting = m>=4 && m<=9;
+  const peak = m===5 || m===6;
+  const score = peak ? 0.65 : nesting ? 0.40 : 0.15;
+  return { key:'seaturtle', title:'Sea Turtle Nest Status', icon:'🐢', live:false, modelled:true,
+    valueLabel: peak ? 'PEAK NESTING' : nesting ? 'season active' : 'off-season',
+    subLabel: 'FL hosts ~90% of US loggerhead nests · turtle-friendly beach lighting required',
+    score };
+}
+
+function signalRaccoon(){
+  // Trash Panda Index — urban Miami/Tampa raccoons. Increasingly daytime-active.
+  const h = _now().getHours();
+  const dusk = h>=19 || h<6;
+  const score = dusk ? 0.62 : 0.30;
+  return { key:'raccoon', title:'Trash Panda Index', icon:'🦝', live:false, modelled:true,
+    valueLabel: dusk ? 'BIN RAID HOURS' : 'daytime daring',
+    subLabel: 'Miami / Tampa metros · increasingly bold · balcony-capable',
+    score };
+}
+
+function signalWingstop(){
+  // Wing demand — game-day amplifier + lunch curve.
+  const h = _now().getHours();
+  const dow = _now().getDay();
+  const m = _now().getMonth();
+  const nflSeason = m>=8 || m<=0;
+  const sundayGame = nflSeason && dow===0 && h>=12 && h<23;
+  const lunch = h>=11 && h<14;
+  const lateNight = h>=21 || h<2;
+  const score = sundayGame ? 0.92 : lateNight ? 0.70 : lunch ? 0.55 : 0.30;
+  return { key:'wingstop', title:'Wingstop Demand', icon:'🍗', live:false, modelled:true,
+    valueLabel: sundayGame ? 'GAME-DAY SURGE' : lateNight ? 'late-night peak' : lunch ? 'lunch demand' : 'baseline',
+    subLabel: '~190 FL locations · lemon pepper religious debate · crispy vs classic schism',
+    score };
+}
+
+function signalCruise(){
+  // Miami is the busiest cruise port in the world. Port Canaveral is third.
+  const dow = _now().getDay();
+  const h = _now().getHours();
+  const satEmbark = dow===6 && h>=9 && h<16;
+  const sunReturn = dow===0 && h>=6 && h<11;
+  const score = satEmbark ? 0.80 : sunReturn ? 0.70 : 0.35;
+  return { key:'cruise', title:'Cruise Ship Departures', icon:'🚢', live:false, modelled:true,
+    valueLabel: satEmbark ? 'EMBARKATION RUSH' : sunReturn ? 'returning fleet' : 'between sailings',
+    subLabel: 'Miami #1 cruise port worldwide · Port Canaveral #3 · Royal/Carnival/Norwegian/Disney',
+    score };
+}
+
+function signalNHL(){
+  // Florida Panthers + Tampa Bay Lightning — recent Cup winners. Season Oct-Apr.
+  const m = _now().getMonth();
+  const inSeason = m>=9 || m<=3;
+  const playoffs = m>=3 && m<=5;
+  const score = playoffs ? 0.78 : inSeason ? 0.50 : 0.18;
+  return { key:'nhl', title:'NHL · Lightning & Panthers', icon:'🏒', live:false, modelled:true,
+    valueLabel: playoffs ? 'PLAYOFFS' : inSeason ? 'in season' : 'off-season',
+    subLabel: 'Florida is unironically a hockey state · multiple recent Stanley Cups',
+    score };
+}
+
+function signalMLB(){
+  // Marlins (Miami) + Rays (Tampa Bay). Plus spring training in Feb-Mar (~14 MLB camps).
+  const m = _now().getMonth();
+  const springTraining = m===1 || m===2;
+  const inSeason = m>=2 && m<=9;
+  const score = springTraining ? 0.65 : inSeason ? 0.45 : 0.20;
+  return { key:'mlb', title:'MLB · Marlins & Rays', icon:'⚾', live:false, modelled:true,
+    valueLabel: springTraining ? 'SPRING TRAINING' : inSeason ? 'regular season' : 'off-season',
+    subLabel: '~14 MLB clubs hold spring training across FL · Grapefruit League',
+    score };
+}
+
+function signalLottery(){
+  // Modelled Florida Lottery jackpots. Real jackpots roll until won.
+  const dow = _now().getDay();
+  const isLottoNight = dow===3 || dow===6;     // Wed/Sat Florida Lotto
+  const isPowerNight = dow===1 || dow===3 || dow===6;
+  const score = isLottoNight ? 0.65 : isPowerNight ? 0.50 : 0.30;
+  return { key:'lottery', title:'Florida Lottery Tracker', icon:'🎰', live:false, modelled:true,
+    valueLabel: isLottoNight ? 'TONIGHT: FLORIDA LOTTO' : isPowerNight ? 'tonight: Powerball' : 'rolling jackpots',
+    subLabel: 'Lotto + Powerball + Mega Millions + Cash4Life · ~$2bn/yr to FL public schools',
+    score };
+}
+
+function signalSnowbird(){
+  // Snowbird Migration — Oct/Nov arrival, Apr departure. ~1.5M annually.
+  const m = _now().getMonth();
+  const arrived = m>=9 || m<=3;
+  const peak = m===0 || m===1 || m===11;
+  const arriving = m===9 || m===10;
+  const departing = m===3;
+  let score = 0.20;
+  let label = 'gone home', sub = 'snowbirds migrated north for the summer';
+  if (peak)        { score = 0.78; label = 'PEAK SEASON';    sub = '~1.5M visitors active · supermarket queues in Naples'; }
+  else if (arrived){ score = 0.55; label = 'in residence';   sub = 'lanais occupied · early-bird specials honoured'; }
+  else if (arriving){score = 0.45; label = 'flocks arriving';sub = 'I-95 traffic thickening · plates from Ohio/Michigan/Ontario'; }
+  else if (departing){score = 0.40;label = 'departing';      sub = 'returning home with vitamin-D top-up · until October'; }
+  return { key:'snowbird', title:'Snowbird Migration Status', icon:'👴', live:false, modelled:true,
+    valueLabel: label, subLabel: sub, score };
+}
+
+/* ===========================================================
+   Predictions group — 4 Polymarket-flavoured cards
+   ---------------------------------------------------------
+   Currently modelled placeholders. v3.3 plan: live worker-proxy fetch from
+   gamma-api.polymarket.com filtered for US/Florida-relevant markets (Trump,
+   gubernatorial, Florida senate, Heat / Bucs / Dolphins / Lightning props,
+   hurricane-related markets, SpaceX launch outcomes). The placeholders below
+   are designed to look and behave like real prediction-market cards — they
+   show a YES/NO probability, plain-English descriptor, and a slowly-drifting
+   value so the cards feel alive.
+   =========================================================== */
+function _predDrift(seed, base, range){
+  // Deterministic gentle drift through the day, anchored on `base` ± range/2
+  const tick = Math.floor(_now().getTime() / 3600000);  // hour ticks
+  const wob = Math.sin(tick * 0.21 + seed) * (range / 2);
+  return Math.max(2, Math.min(98, base + wob));
+}
+function signalPredTrump(){
+  const yes = Math.round(_predDrift(1, 62, 8));
+  const score = yes / 100;
+  return { key:'predtrump', title:'Trump 2028 GOP Nominee', icon:'🍊', live:false, modelled:true,
+    valueLabel: `${yes}% YES`,
+    subLabel: `Polymarket-style prediction · ${yes >= 60 ? 'leans yes' : 'a coin flip'} · NO ${100-yes}%`,
+    score };
+}
+function signalPredGovernor(){
+  const yes = Math.round(_predDrift(2, 38, 10));
+  const score = yes / 100;
+  return { key:'predgov', title:'Florida Governor · Dem Win 2026', icon:'🐘', live:false, modelled:true,
+    valueLabel: `${yes}% YES`,
+    subLabel: `Polymarket-style prediction · ${yes <= 40 ? 'leans no' : 'tightening'} · NO ${100-yes}%`,
+    score };
+}
+function signalPredDolphins(){
+  // Seasonal — score peaks Dec/Jan when playoffs are decided.
+  const m = _now().getMonth();
+  const baseline = m===11 || m<=0 ? 45 : m>=8 ? 38 : 32;
+  const yes = Math.round(_predDrift(3, baseline, 12));
+  const score = yes / 100;
+  return { key:'preddolphins', title:'Dolphins Make AFC Playoffs', icon:'🐬', live:false, modelled:true,
+    valueLabel: `${yes}% YES`,
+    subLabel: `Polymarket-style prediction · ${m===11 || m<=0 ? 'late season' : 'long way to go'} · NO ${100-yes}%`,
+    score };
+}
+function signalPredHurricane(){
+  // Hurricane season Jun-Nov. Probability of major landfall on Florida.
+  const m = _now().getMonth();
+  const inSeason = m>=5 && m<=10;
+  const baseline = inSeason ? 58 : 18;
+  const yes = Math.round(_predDrift(4, baseline, 8));
+  const score = yes / 100;
+  return { key:'predhurricane', title:'Major Hurricane Hits Florida This Year', icon:'🌀', live:false, modelled:true,
+    valueLabel: `${yes}% YES`,
+    subLabel: `Polymarket-style prediction · ${inSeason ? 'in-season' : 'pre-season pricing'} · NO ${100-yes}%`,
+    score };
+}
+
+/* ===========================================================
+   v3.3 — additional 4 Newswire crime/news modules to give the
+   group a complete second row (8 cards total = 2 clean rows of 4).
+   =========================================================== */
+
+function signalDUICheckpoint(){
+  // Florida Highway Patrol pattern — DUI checkpoints cluster Friday/Saturday
+  // late nights, holiday weekends, and during Bike Week / Spring Break.
+  const dow = _now().getDay();
+  const h = _now().getHours();
+  const m = _now().getMonth(), d = _now().getDate();
+  const weekendNight = (dow===5 || dow===6) && (h>=22 || h<3);
+  const holidayBoost = (m===2 && d>=20) || (m===6 && d>=2 && d<=7);  // Spring break + 4 July
+  const score = weekendNight ? (holidayBoost ? 0.85 : 0.72) : holidayBoost ? 0.55 : 0.25;
+  return { key:'duicheckpoint', title:'DUI Checkpoint Tonight', icon:'🚓', live:false, modelled:true,
+    valueLabel: weekendNight ? 'CHECKPOINT LIKELY' : score >= 0.5 ? 'elevated' : 'baseline',
+    subLabel: 'FHP / sheriff multi-agency operations · weekend-night peak · publicised in advance',
+    score };
+}
+
+function signalStolenBoat(){
+  // Florida leads the United States in boat thefts — FBI and Coast Guard data.
+  // Pattern: peaks summer (more boats on water, more out of marinas), full-moon
+  // nights (calmer water, easier theft), Memorial-Day-to-Labor-Day window.
+  const m = _now().getMonth();
+  const summer = m>=4 && m<=8;
+  const score = summer ? 0.65 : 0.32;
+  return { key:'stolenboat', title:'Stolen Boat Tracker', icon:'🛥️', live:false, modelled:true,
+    valueLabel: summer ? 'PEAK SEASON' : 'baseline',
+    subLabel: 'FL #1 US state for boat theft · USCG + FBI · Miami / Tampa / Keys hotspots',
+    score };
+}
+
+function signalInsuranceFraud(){
+  // Florida is one of the top US states for staged-accident insurance fraud.
+  // Tampa Bay corridor leads. Pattern is steady year-round with light weekend
+  // dip (fewer commuters to stage with).
+  const dow = _now().getDay();
+  const score = (dow >= 1 && dow <= 5) ? 0.62 : 0.40;
+  return { key:'insurancefraud', title:'Insurance Fraud Hotspot', icon:'💸', live:false, modelled:true,
+    valueLabel: 'Tampa Bay leading',
+    subLabel: 'FL top-3 US state for staged-accident fraud · NICB + state insurance commissioner',
+    score };
+}
+
+function signalBathSalts(){
+  // The Bath Salts Mention Tracker — a real Florida news meme from the early
+  // 2010s that refuses to die. Modelled as a slow background noise with
+  // occasional spikes when a fresh "deputies say bath salts may be involved"
+  // story enters the rotation.
+  const seed = (_now().getDate() + _now().getMonth() * 7) % 5;
+  const baselines = [0.32, 0.38, 0.45, 0.52, 0.40];
+  const score = baselines[seed];
+  const labels = ['quiet','low chatter','rumble','MENTIONS RISING','slow news week'];
+  return { key:'bathsalts', title:'Bath Salts Mention Tracker', icon:'🛁', live:false, modelled:true,
+    valueLabel: labels[seed],
+    subLabel: 'The Florida news meme that refuses to die · "deputies say it may be involved"',
+    score };
+}
+
+/* ===========================================================
+   Aggregator
+   =========================================================== */
+/* Each group holds exactly 4 cards so it fills a desktop row cleanly (the
+   .grid uses repeat(auto-fill, minmax(260px, 1fr)) which lays out 4 cards
+   per row at typical desktop widths). On narrower viewports the grid wraps
+   to 2 or 1 columns; either way every group has integer multiples of 2 so
+   nothing orphans. */
+const SIGNAL_GROUPS = [
+  { label:'Atmosphere & Time',     keys:['time','weather','daylight','moon'] },
+  { label:'Storm Watch',           keys:['hurricane','tornado','lightning','redtide'] },
+  { label:'Swamp Creatures',       keys:['gator','python','shark','mosquito'] },
+  { label:'More Wildlife',         keys:['iguana','manatee','seaturtle','raccoon'] },
+  { label:'Newswire',              keys:['flman','policechase','walmartbrawl','meth','duicheckpoint','stolenboat','insurancefraud','bathsalts','fbi','ice','dhs','donut'] },
+  { label:'Consumption',           keys:['waffle','publix','tacobell','wingstop'] },
+  { label:'Cars · Bikes · Trucks', keys:['trucknuts','bikeweek','nascar','cruise'] },
+  { label:'Sports',                keys:['nfl','nba','nhl','mlb'] },
+  { label:'Politics & Power',      keys:['desantis','trump','gunsales','lottery'] },
+  { label:'Predictions · Polymarket-style', keys:['predtrump','predgov','preddolphins','predhurricane'] },
+  { label:'Tourism & Beyond',      keys:['disney','spacex','snowbird','redfloridaman'] },
+];
+
+function aggregate(sigs){
+  let total = 0, weightSum = 0;
+  for (const k of Object.keys(WEIGHTS)){
+    if (sigs[k] && Number.isFinite(sigs[k].score)){
+      total     += sigs[k].score * WEIGHTS[k];
+      weightSum += WEIGHTS[k];
+    }
+  }
+  const raw = weightSum > 0 ? total / weightSum : 0;
+  return Math.round(raw * 100);
+}
+
+/* ===========================================================
+   Render
+   =========================================================== */
+function renderCard(sig){
+  if (!sig) return '';
+  const chip = sig.live ? '<span class="chip live">Live</span>' : '<span class="chip model">Modelled</span>';
+  const wide = sig.wide ? ' card-wide' : '';
+  const tip = SIGNAL_EXPLAINERS[sig.key];
+  const tipBtn = tip ? `<button class="tip-btn" type="button" aria-label="What is ${esc(sig.title)}?" data-tip="${esc(tip)}">?</button>` : '';
+  const contribution = sig.score * (WEIGHTS[sig.key] || 0) * 100;
+
+  let pills = '';
+  // Florida Man Daily — top headlines
+  if (sig.flmanHeadlines && sig.flmanHeadlines.length){
+    pills = `<div class="branches">` + sig.flmanHeadlines.map(h => `
+      <div class="branch warm">
+        <span class="branch-text">${esc(h.tag)} ${esc(h.txt)}<span class="loc">${esc(h.loc)}</span></span>
+      </div>`).join('') + `</div>`;
+  }
+  // Gator events
+  if (sig.gatorEvents && sig.gatorEvents.length){
+    pills = `<div class="branches">` + sig.gatorEvents.map(e => `
+      <div class="branch ${e.score >= 0.7 ? 'hot' : 'warm'}">
+        <span class="branch-text">${esc(e.label)}</span>
+        <span class="cap" style="color:${e.score >= 0.7 ? 'var(--red)' : 'var(--amber)'}">${esc(e.tag)}</span>
+      </div>`).join('') + `</div>`;
+  }
+  // FBI Florida — 4 rotating press-release-style items, federal-blue tag
+  if (sig.fbiItems && sig.fbiItems.length){
+    pills = `<div class="branches">` + sig.fbiItems.map(it => `
+      <div class="branch warm">
+        <span class="branch-text">${esc(it.tag)} ${esc(it.txt)}<span class="loc">${esc(it.office)}</span></span>
+      </div>`).join('') + `</div>`;
+  }
+  // ICE Florida — 4 enforcement-op rotation items
+  if (sig.iceItems && sig.iceItems.length){
+    pills = `<div class="branches">` + sig.iceItems.map(it => `
+      <div class="branch hot">
+        <span class="branch-text">${esc(it.tag)} ${esc(it.txt)}<span class="loc">${esc(it.office)}</span></span>
+      </div>`).join('') + `</div>`;
+  }
+  // DHS Florida — current bulletin level + 4 advisory rows
+  if (sig.dhsItems && sig.dhsItems.length){
+    pills = `<div class="branches">` + sig.dhsItems.map(it => {
+      const cls = it.level === 'IMMINENT' ? 'hot' : it.level === 'ELEVATED' ? 'warm' : '';
+      return `<div class="branch ${cls}">
+        <span class="branch-text">${esc(it.txt)}<span class="loc">${esc(it.loc)}</span></span>
+        <span class="cap" style="color:${it.level==='IMMINENT'?'var(--red)':it.level==='ELEVATED'?'var(--amber)':'var(--ink-faint)'};font-family:var(--mono);font-size:9px">${esc(it.level)}</span>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+  // Donut Index — actual SVG donut chart (meta joke)
+  if (Number.isFinite(sig.donutPct)){
+    const pct = sig.donutPct;
+    const C = 2 * Math.PI * 32;
+    const filled = (pct / 100) * C;
+    const ringColor = pct >= 70 ? 'var(--red)' : pct >= 50 ? 'var(--amber)' : 'var(--star)';
+    const hotPulse = sig.hotNow ? `<circle cx="40" cy="40" r="44" fill="none" stroke="var(--red)" stroke-width="1.5" opacity="0.5" style="animation:pulse 2s infinite"/>` : '';
+    pills = `
+      <div style="display:flex;align-items:center;gap:14px;margin-top:6px">
+        <svg viewBox="0 0 80 80" width="80" height="80" aria-label="Donut consumption ${pct}%" style="flex-shrink:0">
+          ${hotPulse}
+          <circle cx="40" cy="40" r="32" fill="none" stroke="var(--bg-3)" stroke-width="10"/>
+          <circle cx="40" cy="40" r="32" fill="none" stroke="${ringColor}" stroke-width="10"
+                  stroke-dasharray="${filled} ${C-filled}"
+                  stroke-dashoffset="${C/4}"
+                  transform="rotate(-90 40 40)"
+                  style="transition:stroke-dasharray .8s ease"/>
+          <text x="40" y="44" text-anchor="middle" fill="var(--ink)"
+                font-family="ui-monospace,monospace" font-size="14" font-weight="800">${pct}%</text>
+        </svg>
+        <div style="flex:1;min-width:0;font-family:var(--mono);font-size:11px;color:var(--ink-dim);line-height:1.5">
+          <div style="color:var(--ink);font-weight:700;font-size:12px;margin-bottom:4px">${sig.hotNow ? '🔴 HOT NOW · KRISPY KREME' : '🍩 Dunkin patrol drift'}</div>
+          ${sig.hotNow ? 'Pursuit suspended.<br/>Officers prioritising glaze.' : 'Standard patrol activity.<br/>Background donut consumption stable.'}
+        </div>
+      </div>
+    `;
+  }
+  // Reddit live feed — 5 hottest posts across 7 subs
+  if (sig.redditPosts && sig.redditPosts.length){
+    pills = `<div class="branches">` + sig.redditPosts.slice(0, 5).map(p => {
+      const trim = s => s && s.length > 70 ? s.slice(0,67) + '…' : s;
+      return `<a class="branch" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+        <span class="branch-text">${esc(trim(p.title))}<span class="loc">r/${esc(p.sub)} · ${p.score.toLocaleString()} ↑ · ${p.comments} comments</span></span>
+      </a>`;
+    }).join('') + `</div>`;
+  }
+
+  return `
+    <article class="card${wide}">
+      <div class="head">
+        <div class="head-left">
+          <span class="icon" aria-hidden="true">${sig.icon || '•'}</span>
+          <div class="title">${esc(sig.title)}</div>
+          ${tipBtn}
+        </div>
+        ${chip}
+      </div>
+      <div class="val">${esc(sig.valueLabel)}</div>
+      <div class="sub">${esc(sig.subLabel)}</div>
+      ${pills}
+      <div class="bar"><i style="width:${Math.round(sig.score*100)}%"></i></div>
+      <div class="foot">
+        <span>weight ${Math.round((WEIGHTS[sig.key]||0)*100)}%</span>
+        <span>+${contribution.toFixed(1)} pts</span>
+      </div>
+    </article>
+  `;
+}
+
+function setGauge(score){
+  const total = 283;
+  const arc = $('#arc');
+  const needle = $('#needle');
+  const num = $('#index-num');
+  const dash = (score / 100) * total;
+  arc.setAttribute('stroke-dasharray', `${dash} ${total - dash}`);
+  // Needle: 0 score → -90deg, 100 → +90deg
+  const angle = -90 + (score / 100) * 180;
+  needle.setAttribute('transform', `rotate(${angle} 110 120)`);
+  num.textContent = score;
+}
+
+/* ===========================================================
+   v3.4 — Live data layer + news ticker + new modules
+   ----------------------------------------------------------
+   The Florida page is independent of the UK gauge — it doesn't save to the
+   Supabase database, doesn't write to the CSV history, doesn't influence the
+   British model. So we're free to wire live data sources here that would
+   otherwise pollute the UK aggregation. Failure is silent — every fetch
+   falls back to modelled data on timeout/error.
+   =========================================================== */
+const LIVE = { reddit:null, spacex:null, hurricane:null, news:null };
+
+function _withTimeout(p, ms){ return Promise.race([p, new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')), ms))]); }
+
+/* Fetch Reddit hot posts across multiple Florida subreddits and merge.
+   reddit.com/r/{sub}/hot.json is browser-CORS-safe; auth not required. */
+async function fetchFloridaReddit(){
+  const subs = ['FloridaMan','Florida','Miami','Tampa','Orlando','jacksonville','FloridaKeys'];
+  const results = await Promise.allSettled(
+    subs.map(s => _withTimeout(fetch(`https://www.reddit.com/r/${s}/hot.json?limit=10&raw_json=1`).then(r=>r.json()), 5000))
+  );
+  const posts = [];
+  for (let i=0; i<subs.length; i++){
+    const r = results[i];
+    if (r.status === 'fulfilled' && r.value?.data?.children){
+      for (const c of r.value.data.children){
+        const d = c.data;
+        if (d.stickied || d.over_18) continue;
+        posts.push({
+          sub: subs[i], title: d.title, score: d.score || 0,
+          comments: d.num_comments || 0,
+          url: 'https://reddit.com' + (d.permalink || ''),
+          createdAt: d.created_utc * 1000,
+        });
+      }
+    }
+  }
+  if (!posts.length) return null;
+  posts.sort((a,b) => b.score - a.score);
+  return { posts: posts.slice(0, 8), live:true, subsHit: results.filter(r=>r.status==='fulfilled').length };
+}
+
+/* Fetch the next SpaceX launch from Cape Canaveral / KSC.
+   api.spacexdata.com — public, no auth, CORS-safe. */
+async function fetchNextSpaceX(){
+  try {
+    const r = await _withTimeout(fetch('https://api.spacexdata.com/v5/launches/upcoming').then(r=>r.json()), 5000);
+    if (!Array.isArray(r) || !r.length) return null;
+    // Filter to Florida launches only — launchpad IDs for KSC LC-39A and CCSFS.
+    // The API uses slugs/ids that have changed; the safest filter is "name doesn't mention Boca Chica/Vandenberg".
+    const florida = r.filter(l => {
+      const detail = (l.details || l.name || '').toLowerCase();
+      return !detail.includes('vandenberg') && !detail.includes('starbase') && !detail.includes('boca chica');
+    });
+    const next = florida[0] || r[0];
+    if (!next) return null;
+    return {
+      name: next.name, dateUtc: next.date_utc, dateLocal: next.date_local || next.date_utc,
+      details: next.details || '', live: true,
+    };
+  } catch(e){ return null; }
+}
+
+/* Fetch active NOAA NHC hurricane warnings via the public RSS feed proxied
+   through allorigins (CORS-friendly). Returns active named storms or null. */
+async function fetchNHCHurricane(){
+  try {
+    const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.nhc.noaa.gov/index-at.xml');
+    const r = await _withTimeout(fetch(url).then(r=>r.text()), 5000);
+    if (!r || r.length < 100) return null;
+    // Parse RSS for active storm <item> entries
+    const items = [...r.matchAll(/<title>(.*?)<\/title>/g)].map(m => m[1]).filter(t =>
+      /tropical|storm|hurricane|depression/i.test(t) && !/no tropical|no active|forecast graphic/i.test(t)
+    );
+    return { activeStorms: items.slice(0, 4), live: true };
+  } catch(e){ return null; }
+}
+
+/* Fetch Florida news via the GDELT Project Doc 2.0 API (no key required).
+   Returns recent articles mentioning Florida-relevant keywords for the
+   rolling-news ticker. */
+async function fetchFloridaNews(){
+  try {
+    const q = '(florida OR miami OR tampa OR orlando OR jacksonville) AND (arrested OR police OR storm OR alligator OR hurricane OR governor OR DeSantis)';
+    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q)}&format=json&maxrecords=20&sort=hybridrel&timespan=1d`;
+    const r = await _withTimeout(fetch(url).then(r=>r.json()), 6000);
+    if (!r?.articles?.length) return null;
+    const items = r.articles.slice(0, 12).map(a => ({
+      txt: a.title, src: a.domain || 'GDELT', url: a.url, tag: '🇺🇸',
+    }));
+    return { items, live: true };
+  } catch(e){ return null; }
+}
+
+/* Initialise live data — kicks off after the first sync render so the page
+   shows something immediately, then progressively enhances as data lands. */
+async function _initLiveData(){
+  // Reddit feed (single combined hot list across 7 subs)
+  fetchFloridaReddit().then(d => { if (d){ LIVE.reddit = d; renderAll(); }});
+  // SpaceX next launch
+  fetchNextSpaceX().then(d => { if (d){ LIVE.spacex = d; renderAll(); }});
+  // NHC hurricane RSS
+  fetchNHCHurricane().then(d => { if (d){ LIVE.hurricane = d; renderAll(); }});
+  // Florida news for the rolling ticker
+  fetchFloridaNews().then(d => { if (d){ LIVE.news = d; renderNewsBar(); }});
+}
+
+/* ===========================================================
+   Rolling-news ticker headlines (modelled fallback pool — used when the
+   GDELT live fetch returns nothing). Designed to read as a rapid-fire
+   real-news stream.
+   =========================================================== */
+const FALLBACK_NEWS = [
+  { txt:'Gator wanders into Naples library, denied a card',                  src:'WINK News',       tag:'🐊' },
+  { txt:'Tampa Bay area tornado watch in effect through evening',            src:'NWS Tampa Bay',   tag:'🌪️' },
+  { txt:'Miami-Dade deputies arrest man in Walmart parking lot rescue',      src:'Miami Herald',    tag:'🚓' },
+  { txt:'NHC tracking tropical wave moving toward Florida Keys',             src:'NOAA NHC',        tag:'🌀' },
+  { txt:'Polk County python challenge enters week three · 87 captured',      src:'FWC',             tag:'🐍' },
+  { txt:'Cape Canaveral SpaceX launch window opens at 21:14 ET',             src:'SpaceX',          tag:'🚀' },
+  { txt:'DeSantis signs bill restricting drone use in state parks',          src:'Florida Politics',tag:'🐘' },
+  { txt:'Daytona Bike Week attendance projected at 540K this year',          src:'Daytona Beach News',tag:'🏍️' },
+  { txt:'Orlando theme park lines top 4 hours · Magic Kingdom near capacity',src:'WESH 2',          tag:'🏰' },
+  { txt:'Tampa Bay Lightning sweep first round, advance to conference semi',src:'Tampa Bay Times', tag:'🏒' },
+  { txt:'FBI Miami announces $42M fraud-ring takedown',                      src:'FBI Miami',       tag:'⚖️' },
+  { txt:'Florida Lottery jackpot rolls past $410M for tomorrow night\'s draw',src:'FL Lottery',     tag:'🎰' },
+  { txt:'ICE Tampa operation removes 87 with criminal records this month',   src:'ICE',             tag:'🛂' },
+  { txt:'Red tide bloom intensifies along Pinellas and Sarasota beaches',    src:'FWC',             tag:'🟢' },
+  { txt:'Brevard County manatees return to Indian River springs',            src:'Florida Today',   tag:'🐚' },
+  { txt:'Jacksonville Sheriff\'s Office: shoplifter caught with live alligator',src:'First Coast News',tag:'🐊' },
+  { txt:'Hialeah man tries to register pet flamingo at Publix wedding',      src:'Local 10',        tag:'🦩' },
+  { txt:'Florida Highway Patrol pursuit on I-95 ends with golf cart on lawn',src:'FHP',             tag:'🚓' },
+  { txt:'Sarasota cold-snap warning: low of 41°F · iguana drop alert',       src:'NWS Tampa Bay',   tag:'❄️' },
+  { txt:'Mar-a-Lago security perimeter expanded ahead of weekend rally',     src:'Palm Beach Post', tag:'🍊' },
+];
+
+function renderNewsBar(){
+  const row = $('#news-row');
+  if (!row) return;
+  // Use live GDELT data if available, otherwise the curated fallback pool.
+  const items = (LIVE.news && LIVE.news.items.length >= 6) ? LIVE.news.items : FALLBACK_NEWS;
+  // Duplicate the items so the marquee loop appears seamless
+  const html = items.concat(items).map(it => {
+    const text = `<span class="news-item"><span class="icn">${it.tag||'🇺🇸'}</span><span>${esc(it.txt)}</span><span class="src">· ${esc(it.src)}</span></span>`;
+    return it.url
+      ? `<a href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${text}</a>`
+      : text;
+  }).join('');
+  row.innerHTML = html;
+}
+
+/* ===========================================================
+   New signal functions — Law & Order section
+   =========================================================== */
+
+function signalFBI(){
+  // Modelled FBI Florida field-office press-release pulse. The three FL field
+  // offices (Miami, Tampa, Jacksonville) collectively announce ~50-80 cases
+  // per year. Live upgrade: fbi.gov/news/press-releases RSS filtered for those
+  // three offices — same pattern we'd use for any government RSS feed.
+  const items = [
+    { txt:'Tampa fraud ring indicted · 14 charged in $42M scheme',     office:'FBI Tampa',        tag:'⚖️' },
+    { txt:'Miami narcotics task force seizes $3.8M in cash',           office:'FBI Miami',        tag:'💰' },
+    { txt:'Jacksonville cyber unit takes down ransomware operation',   office:'FBI Jacksonville', tag:'💻' },
+    { txt:'South Florida wire-fraud investigation: 6 arrests',         office:'FBI Miami',        tag:'📞' },
+    { txt:'Tampa Bay corruption probe: county official charged',       office:'FBI Tampa',        tag:'🏛️' },
+    { txt:'Miami art-theft case · $5M in stolen works recovered',      office:'FBI Miami',        tag:'🖼️' },
+    { txt:'FL field offices issue joint warning on romance scams',     office:'FBI FL',           tag:'⚠️' },
+    { txt:'Federal grand jury returns indictment in Pasco meth case',  office:'FBI Tampa',        tag:'💊' },
+  ];
+  const seed = _now().getDate() * 7 + _now().getHours();
+  const top4 = [0,2,5,7].map(o => items[(seed + o) % items.length]);
+  return { key:'fbi', title:'FBI Florida Field Office', icon:'🕴️', live:false, modelled:true,
+    valueLabel: '4 active matters',
+    subLabel: 'Miami · Tampa · Jacksonville · rotating press-release rotation',
+    score: 0.55, fbiItems: top4 };
+}
+
+function signalICE(){
+  // ICE Florida operations. Modelled rotation of representative real-style
+  // ICE press-release framings. ICE publishes ERO (removal) and HSI
+  // (homeland-security investigations) statistics monthly by AOR.
+  const items = [
+    { txt:'Tampa ERO removes 87 with criminal records this month',     office:'ICE Tampa',  tag:'🛂' },
+    { txt:'Miami HSI seizes $1.2M in counterfeit goods at PortMiami',  office:'ICE Miami',  tag:'🚢' },
+    { txt:'Jacksonville: 22 arrests in human-smuggling investigation', office:'ICE JAX',    tag:'🚐' },
+    { txt:'Orlando airport: 14 transit removals processed',            office:'ICE Orlando',tag:'✈️' },
+    { txt:'South FL detention: 1,247 currently in custody',            office:'ICE SFL',    tag:'🏢' },
+    { txt:'Miami HSI dismantles credit-card-skim operation',           office:'ICE Miami',  tag:'💳' },
+    { txt:'I-95 corridor enforcement op concludes — 31 arrests',       office:'ICE FL',     tag:'🛣️' },
+    { txt:'Sarasota HSI: child-exploitation investigation wraps',      office:'ICE Tampa',  tag:'⚠️' },
+  ];
+  const seed = _now().getDate() * 11;
+  const top4 = [0,2,4,6].map(o => items[(seed + o) % items.length]);
+  return { key:'ice', title:'ICE Florida Operations', icon:'🚨', live:false, modelled:true,
+    valueLabel: 'multi-AOR active',
+    subLabel: 'ERO + HSI · Miami / Tampa / JAX / Orlando areas of responsibility',
+    score: 0.60, iceItems: top4 };
+}
+
+function signalDHS(){
+  // Department of Homeland Security threat bulletins — a real DHS publication
+  // category (NTAS, National Terrorism Advisory System). Florida-relevant
+  // bulletins typically focus on PortMiami / cruise terminals / airports.
+  const colorByLevel = { 'GUIDANCE':'var(--star)', 'BULLETIN':'#fed46e', 'ELEVATED':'var(--amber)', 'IMMINENT':'var(--red)' };
+  const seed = _now().getDate() % 4;
+  const levels = ['BULLETIN','BULLETIN','GUIDANCE','ELEVATED'];
+  const level = levels[seed];
+  const items = [
+    { txt:'PortMiami cruise terminal · routine screening posture',     loc:'Miami',     level:'GUIDANCE' },
+    { txt:'Orlando International Airport · seasonal advisory',         loc:'Orlando',   level:'BULLETIN' },
+    { txt:'Florida Keys maritime watch · vessel intercept exercise',   loc:'Keys',      level:'GUIDANCE' },
+    { txt:'Statewide cybersecurity advisory · ransomware uptick',      loc:'Florida',   level:'ELEVATED' },
+  ];
+  return { key:'dhs', title:'DHS Florida Threat Bulletins', icon:'🛡️', live:false, modelled:true,
+    valueLabel: level,
+    subLabel: 'NTAS · National Terrorism Advisory System · current level',
+    score: level === 'IMMINENT' ? 0.90 : level === 'ELEVATED' ? 0.55 : level === 'BULLETIN' ? 0.30 : 0.15,
+    dhsLevel: level, dhsLevelColor: colorByLevel[level] || 'var(--ink-dim)',
+    dhsItems: items };
+}
+
+function signalDonut(){
+  // The Donut Index — a comedy metric tracking cop-eating-donut activity by
+  // hour of day. Calibrated to absolutely nothing. Renders as a ring / donut
+  // SVG chart (meta joke). Krispy Kreme HOT light status is the wildcard.
+  const h = _now().getHours();
+  // Peak hours: 06-09 morning shift change, 13-15 lunchtime, 21-23 night-shift handoff
+  let pct = 22;
+  if (h>=6 && h<10) pct = 78;
+  else if (h>=13 && h<15) pct = 65;
+  else if (h>=21 && h<24) pct = 70;
+  else if (h>=10 && h<13) pct = 45;
+  else if (h>=15 && h<19) pct = 40;
+  // Krispy Kreme HOT NOW light — pseudo-random by 4-hour blocks
+  const hotNowSeed = Math.floor(_now().getTime() / (4 * 3600 * 1000));
+  const hotNow = (hotNowSeed * 7) % 5 === 0;
+  return { key:'donut', title:'Donut Index · Police Consumption', icon:'🍩', live:false, modelled:true,
+    valueLabel: `${pct}% on duty`,
+    subLabel: hotNow ? 'KRISPY KREME HOT NOW · 🔴 light on · pursuit suspended' : 'Dunkin / Krispy Kreme average · normal patrol activity',
+    score: pct / 100, donutPct: pct, hotNow };
+}
+
+function signalFloridaReddit(){
+  // Aggregated Reddit feed across 7 Florida-related subreddits. Falls back to
+  // a curated rotation when live fetch fails or hasn't completed yet.
+  if (LIVE.reddit && LIVE.reddit.posts && LIVE.reddit.posts.length){
+    return {
+      key:'redfloridaman', title:'Florida Subreddits · Live', icon:'👽', live:true, modelled:false,
+      valueLabel: `${LIVE.reddit.posts.length} hot posts`,
+      subLabel: `r/FloridaMan + r/Florida + r/Miami + r/Tampa + r/Orlando + r/jacksonville + r/FloridaKeys · ${LIVE.reddit.subsHit}/7 subs responding`,
+      score: 0.65, redditPosts: LIVE.reddit.posts,
+    };
+  }
+  // Modelled fallback
+  return {
+    key:'redfloridaman', title:'Florida Subreddits · Loading', icon:'👽', live:false, modelled:true,
+    valueLabel: '~85 posts/hr est.',
+    subLabel: 'Aggregate of 7 FL subreddits · live fetch in progress',
+    score: 0.55, wide: true,
+  };
+}
+
+/* ===========================================================
+   Americana filler pool — Idiocracy + Back to the Future + classic
+   American chest-pounding. Used by the universal trailing-fill logic to
+   plug any incomplete grid row. Selection rotates daily so the same
+   filler doesn't sit in the same slot for weeks at a time.
+   =========================================================== */
+const AMERICANA_FILLERS = [
+  // Idiocracy
+  { icon:'🥤',  title:'BRAWNDO',          sub:"It's got electrolytes" },
+  { icon:'🌱',  title:"IT'S WHAT PLANTS CRAVE", sub:'Electrolytes, baby' },
+  { icon:'🏆',  title:"YOU'RE #1!",       sub:'Welcome to Costco. I love you.' },
+  { icon:'⚖️',  title:'CASE DISMISSED',   sub:"You talk like a fag · and your shit's all retarded".replace(/fag.*/, 'weirdo · case dismissed') },
+  { icon:'💧',  title:'WATER · LIKE FROM THE TOILET', sub:'But out the tap' },
+  { icon:'🪑',  title:'TIME-MASHEEN',     sub:'Bring back ye olde glaze' },
+  // Back to the Future
+  { icon:'⚡',  title:'1.21 GIGAWATTS!',  sub:'Great Scott' },
+  { icon:'🛹',  title:'HOVERBOARDS',      sub:'Where we\'re going we don\'t need roads' },
+  { icon:'🚗',  title:'88 MPH',           sub:'You\'re gonna see some serious shit' },
+  { icon:'⏰',  title:'OUTATIME',         sub:'License plate of the future · 2015 was supposed to be it' },
+  { icon:'🦟',  title:"DON'T MESS",       sub:'with the space-time continuum' },
+  // Florida-specific Americana
+  { icon:'🇺🇸',  title:"FREEDOM ROCK",    sub:'turn it up' },
+  { icon:'🦅',  title:'LIBERTY DELIVERED', sub:'🇺🇸 Same-day · Prime · Eagle approved' },
+  { icon:'🍔',  title:'FREEDOM FRIES',    sub:"don't call them anything else" },
+  { icon:'🎸',  title:'PLAY FREE BIRD',   sub:'every concert · every venue · every time' },
+  { icon:'🛻',  title:'GOT BIG TRUCK',    sub:"don't ask why" },
+  { icon:'🍺',  title:'BUDWEISER',        sub:'America in a can · since 1876' },
+  { icon:'🦮',  title:'EMOTIONAL SUPPORT', sub:'iguana · alligator · raccoon · whatever' },
+  { icon:'🎤',  title:"YEEHAW",           sub:'volume varies by county' },
+  { icon:'🏈',  title:'TOUCHDOWN',        sub:'spike that thing into the gulf' },
+  // General joke fillers
+  { icon:'🌴',  title:'IT IS WHAT IT IS', sub:'Florida cosmology · 101' },
+  { icon:'🎰',  title:"AIN'T MUCH",       sub:'but it\'s honest work' },
+  { icon:'🌭',  title:'LIVE LAUGH LOAD',  sub:'kitchen plaque · Tampa Walmart · $7.99' },
+  { icon:'🐊',  title:'HOLD MY BEER',     sub:"I've got an idea" },
+];
+
+/* Render a single filler card. The seed is the rotating index into the pool. */
+function _americanaFillerCard(seed){
+  const idx = ((seed | 0) % AMERICANA_FILLERS.length + AMERICANA_FILLERS.length) % AMERICANA_FILLERS.length;
+  const f = AMERICANA_FILLERS[idx];
+  return `<article class="filler-card" aria-hidden="true">
+    <div class="filler-icon">${f.icon}</div>
+    <div class="filler-title">${esc(f.title)}</div>
+    <div class="filler-sub">${esc(f.sub)}</div>
+  </article>`;
+}
+
+/* ===========================================================
+   Replacement renderTickers() — adds 2 more tickers to bring total to 4
+   =========================================================== */
+function renderTickers(){
+  // Margaritaville Index — modelled by hour
+  const h = _now().getHours();
+  const dow = _now().getDay();
+  let margaritaPerMin = 200;
+  if (h>=16 && h<19) margaritaPerMin = 850;          // happy hour
+  else if (h>=19 && h<23) margaritaPerMin = 1200;    // dinner
+  else if (h>=11 && h<14) margaritaPerMin = 450;     // lunch
+  if (dow===5||dow===6) margaritaPerMin = Math.round(margaritaPerMin*1.6);
+  $('#margarita-big').innerHTML = margaritaPerMin.toLocaleString() + '<span class="unit">/min</span>';
+  $('#margarita-rate').textContent = margaritaPerMin > 1000 ? 'salt-rim drinks pouring statewide · happy hour active'
+    : margaritaPerMin > 400 ? 'steady pour · Floridians in their natural state'
+    : 'morning lull · machines warming up';
+
+  // Slushie Tracker — Big Gulps + Slurpees
+  let slushiePerMin = 800;
+  if (h>=11 && h<15) slushiePerMin = 1800;
+  else if (h>=15 && h<19) slushiePerMin = 2200;
+  else if (h>=19 && h<23) slushiePerMin = 1100;
+  $('#slushie-big').innerHTML = slushiePerMin.toLocaleString() + '<span class="unit">/min</span>';
+  $('#slushie-rate').textContent = slushiePerMin > 1500 ? 'brain freezes statewide · gas station thermals strained'
+    : 'normal slushie volume · counter ice machines holding';
+
+  // Bath Salts Mentions — modelled daily count · local-news cycle quirk
+  // The 2010s "deputies say bath salts may be involved" framing has refused
+  // to die. Cycles tied to slow-news weekends + cold snaps + post-bar-close.
+  const bathSaltsBase = 8;
+  const bathSaltsBoost = (dow === 0 || dow === 6) ? 4 : 0;  // weekend papers
+  const bathSaltsMonthBoost = _now().getMonth() >= 5 && _now().getMonth() <= 8 ? 3 : 0;  // summer Florida
+  const bathSaltsTotal = bathSaltsBase + bathSaltsBoost + bathSaltsMonthBoost
+    + Math.floor(Math.sin(_now().getDate() * 0.7) * 2);
+  $('#bathsalts-big').innerHTML = bathSaltsTotal.toString() + '<span class="unit">/day</span>';
+  $('#bathsalts-rate').textContent = bathSaltsTotal >= 14 ? 'slow news week · sheriffs explaining everything'
+    : bathSaltsTotal >= 10 ? 'recurring framing · local-paper rotation steady'
+    : 'background rumble · bath salts taking a breather';
+
+  // Naked 911 Calls — FHP / sheriff dispatch logs · modelled
+  // Florida has more nakedness-related public 911 calls than any other state.
+  // Real anecdotal pattern from FHP/county comms transcripts.
+  const naked911Base = 22;
+  const naked911HotMonth = _now().getMonth() >= 5 && _now().getMonth() <= 8 ? 12 : 0;  // hot months
+  const naked911Spring = _now().getMonth() === 2 ? 18 : 0;  // Spring Break peak
+  const naked911Total = naked911Base + naked911HotMonth + naked911Spring
+    + Math.floor(Math.cos(_now().getDate() * 0.5) * 4);
+  $('#naked911-big').innerHTML = naked911Total.toString() + '<span class="unit">/day</span>';
+  $('#naked911-rate').textContent = naked911Total >= 45 ? 'PEAK SEASON · "sir please put the iguana down"'
+    : naked911Total >= 30 ? 'spring break / heatwave · standard chaos'
+    : 'baseline activity · clothing optional, evidently';
+}
+
+function renderClock(){
+  const d = _now();
+  const t = d.toLocaleTimeString('en-US', { timeZone:'America/New_York', hour12:false });
+  const dt = d.toLocaleDateString('en-US', { timeZone:'America/New_York', weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  $('#us-clock').textContent = t + ' ET';
+  $('#us-date').textContent = dt;
+  // Time pill on hero
+  $('#pill-time').textContent = t.slice(0,5) + ' ET';
+}
+
+function renderMethodology(){
+  // Methodology rows derive their weight % directly from the WEIGHTS map, so
+  // adding a signal in two places (function + WEIGHTS) automatically updates
+  // here. The order mirrors SIGNAL_GROUPS so the table reads in the same
+  // sequence as the on-page grid.
+  const ROWS = [
+    // Atmosphere & Time
+    ['time',        '🕓 Time of Day · Florida',          'Browser clock + Florida hour-curve. Spring Break afternoons peak; weekday 5am calmest.'],
+    ['weather',     '🌡️ Florida Weather',                 'Open-Meteo per-region. Heat + humidity + thunderstorm-season multiplier.'],
+    ['daylight',    '🌅 Daylight Window',                'Dusk amplifier. After-dark in Florida is structurally different.'],
+    ['moon',        '🌕 Lunacy Factor',                  'Pure astronomical maths. Full moon adds a small comedic bump.'],
+    // Storm Watch
+    ['hurricane',   '🌀 Hurricane Watch',                'Modelled by month. Live upgrade: NOAA NHC RSS. June-November = season.'],
+    ['tornado',     '🌪️ Tornado Watch',                   'NWS Storm Prediction Center curve. Florida is in the secondary tornado belt.'],
+    ['lightning',   '⚡ Lightning Capital Index',         'Florida is the lightning capital of the United States. Central FL I-4 corridor leads.'],
+    ['redtide',     '🟢 Red Tide Algae Bloom',           'Karenia brevis monitoring. FWC publishes weekly status maps. Gulf coast.'],
+    // Swamp Creatures
+    ['gator',       '🐊 Gator Incident Index',           'Modelled FWC nuisance hotline curve. ~1.3M alligators statewide. Mating season May-Jun. Wide card lists top 5 daily nuisance reports.'],
+    ['python',      '🐍 Python Hunt Status',             'Everglades python program. ~500k Burmese pythons est. invasive. Real ongoing thing.'],
+    ['shark',       '🦈 Shark Bite Tally',               'ISAF · University of Florida database. Volusia County leads worldwide.'],
+    ['mosquito',    '🦟 Mosquito Index',                 'CDC ArboNET monitoring. EEE/West Nile/Zika risk. Peaks Jul-Sep.'],
+    // More Wildlife
+    ['iguana',      '❄️ Frozen Iguana Forecast',          'NWS issues actual cold-snap warnings about falling reptiles. <45°F → torpor → drop.'],
+    ['manatee',     '🐚 Manatee Speed Zone Index',       'FWC enforcement. ~7,500 manatees statewide. Winter springs and power-plant outflows.'],
+    ['seaturtle',   '🐢 Sea Turtle Nest Status',         'FL hosts ~90% of US loggerhead nests. Nesting May-Oct, peak Jun-Jul.'],
+    ['raccoon',     '🦝 Trash Panda Index',              'Urban Miami/Tampa raccoon density. Bold, well-fed, balcony-capable.'],
+    // Florida Man
+    ['flman',       '📰 Florida Man Daily',              'Rotating real-style Florida news headlines (36-line pool). Live upgrade: Tampa Bay Times RSS.'],
+    ['policechase', '🚓 Police Chase Probability',       'FHP pursuit data curve. Late-night + weekend post-bar peaks.'],
+    ['walmartbrawl','🛍️ Walmart Brawl Index',             'Modelled day-of-week + post-EBT-payday curve. Saturday afternoon is peak.'],
+    ['meth',        '💊 Meth Lab Bust Tally',            'DEA + FDLE quarterly figures. Pasco/Polk/Marion lead. The "Florida Meth Belt."'],
+    ['duicheckpoint','🚓 DUI Checkpoint Tonight',         'FHP / sheriff multi-agency operations. Weekend-night peak. Spring Break + Bike Week amplifiers.'],
+    ['stolenboat',  '🛥️ Stolen Boat Tracker',             'FL #1 US state for boat theft (FBI + USCG). Miami / Tampa / Keys hotspots. Summer peak.'],
+    ['insurancefraud','💸 Insurance Fraud Hotspot',       'FL top-3 US state for staged-accident fraud (NICB). Tampa Bay corridor leads.'],
+    ['bathsalts',   '🛁 Bath Salts Mention Tracker',      'The Florida news meme that refuses to die. Modelled background with occasional spikes.'],
+    ['fbi',         '🕴️ FBI Florida Field Office',          'Modelled rotation of representative press releases · Miami / Tampa / Jacksonville. Live upgrade: fbi.gov/news RSS filtered for FL field offices.'],
+    ['ice',         '🚨 ICE Florida Operations',          'ERO + HSI rotation across Miami / Tampa / JAX / Orlando AORs. Modelled press-release framings.'],
+    ['dhs',         '🛡️ DHS Florida Threat Bulletins',      'NTAS levels (GUIDANCE → BULLETIN → ELEVATED → IMMINENT). PortMiami / MCO / Keys / statewide cyber.'],
+    ['donut',       '🍩 Donut Index · Police Consumption','Pure comedy SVG donut chart. Peaks at shift changes. Krispy Kreme HOT NOW light triggers pursuit-suspended state.'],
+    // Consumption
+    ['waffle',      '🍔 Waffle House Index',             'FEMA-recognised disaster proxy. ~140 FL Waffle Houses. Real framework.'],
+    ['publix',      '🥪 Publix Sub Run',                 'Lunchtime curve + Sunday-after-church + Wednesday Sub Sale (the holy day).'],
+    ['tacobell',    '🌮 Taco Bell · Late Night',         'Post-bar 11pm-2am peak. The Florida kebab equivalent.'],
+    ['wingstop',    '🍗 Wingstop Demand',                'Game-day amplifier (NFL/college Saturdays + Heat/Bucs nights). ~190 FL locations.'],
+    // Cars · Bikes · Trucks
+    ['trucknuts',   '🛻 Truck Nuts Density',             'Pure modelled comedy. Florida has tried to ban them three times. They remain.'],
+    ['bikeweek',    '🏍️ Bike Week Status',                'Daytona (March), Biketoberfest (Oct), Leesburg (April). ~500k riders per event.'],
+    ['nascar',      '🏎️ NASCAR · Daytona',                'Daytona International Speedway. Daytona 500 (Feb), Coke Zero 400 (Aug).'],
+    ['cruise',      '🚢 Cruise Ship Departures',         'Miami #1 cruise port worldwide. Port Canaveral #3. Sat embark + Sun return rhythm.'],
+    // Sports
+    ['nfl',         '🏈 NFL · Florida Teams',            'Dolphins · Buccaneers · Jaguars. Live upgrade: TheSportsDB fixture API.'],
+    ['nba',         '🏀 NBA · Heat & Magic',             'Miami Heat + Orlando Magic. Regular season Oct-Apr.'],
+    ['nhl',         '🏒 NHL · Lightning & Panthers',     'Multiple recent Stanley Cups. Florida is unironically a hockey state.'],
+    ['mlb',         '⚾ MLB · Marlins & Rays',           '~14 MLB camps in FL for spring training Feb-Mar (Grapefruit League).'],
+    // Politics & Power
+    ['desantis',    '🐘 DeSantis Drama Tracker',         'Modelled rotation of Florida Governor news themes. Live upgrade: Florida Politics RSS.'],
+    ['trump',       '🍊 Trump News Tension',             'Mar-a-Lago is in Palm Beach County. RSS keyword tally across major US feeds.'],
+    ['gunsales',    '🔫 Gun Sales Tracker',              'FBI NICS background checks · Florida ~150k/month. Election + holiday amplifiers.'],
+    ['lottery',     '🎰 Florida Lottery Tracker',        'Lotto + Powerball + Mega Millions + Cash4Life. ~$2bn/yr to FL public schools.'],
+    // Predictions
+    ['predtrump',   '🍊 Trump 2028 GOP Nominee',         'Polymarket-style prediction market. YES price = implied probability. Modelled placeholder; live upgrade: Polymarket Gamma API via Worker proxy.'],
+    ['predgov',     '🐘 Florida Governor · Dem Win 2026','Polymarket-style prediction. FL has trended Republican; market pricing reflects upset probability. Modelled placeholder.'],
+    ['preddolphins','🐬 Dolphins Make AFC Playoffs',     'Polymarket-style prediction. Seasonal pricing peaks Dec-Jan as divisional races decide. Modelled placeholder.'],
+    ['predhurricane','🌀 Major Hurricane Hits FL',        'Polymarket-style prediction on Cat 3+ landfall during current Atlantic season. Pre-season ~25%, in-season 55-70%. Modelled placeholder.'],
+    // Tourism & Beyond
+    ['disney',      '🏰 Disney Wait Times',              'Magic Kingdom + EPCOT + Hollywood Studios + Animal Kingdom. Live upgrade: queue-times.com API.'],
+    ['spacex',      '🚀 SpaceX · Cape Canaveral',        'Falcon 9 / Starship from KSC + LC-40. Live upgrade: api.spacexdata.com/v5/launches/upcoming.'],
+    ['snowbird',    '👴 Snowbird Migration Status',      '~1.5M annual migrants from Northeast/Midwest. Peak Nov-Mar.'],
+    ['redfloridaman','👽 Florida Subreddits · Live',      'LIVE — aggregator across 7 FL subreddits: r/FloridaMan + r/Florida + r/Miami + r/Tampa + r/Orlando + r/jacksonville + r/FloridaKeys. Top hot posts merged + scored.'],
+  ];
+  const fmtPct = key => Math.round((WEIGHTS[key] || 0) * 100) + '%';
+  $('#meth-rows').innerHTML = ROWS.map(r => `<tr><td>${r[1]}</td><td>${fmtPct(r[0])}</td><td>${r[2]}</td></tr>`).join('');
+}
+
+/* ===========================================================
+   Main render loop
+   =========================================================== */
+function renderAll(){
+  const sigs = {
+    // Atmosphere & Time
+    time:        signalTime(),
+    weather:     signalWeather(SELECTED_REGION),
+    daylight:    signalDaylight(),
+    moon:        signalMoon(),
+    // Storm Watch
+    hurricane:   signalHurricane(),
+    tornado:     signalTornado(),
+    lightning:   signalLightning(),
+    redtide:     signalRedTide(),
+    // Swamp Creatures
+    gator:       signalGator(),
+    python:      signalPython(),
+    shark:       signalShark(),
+    mosquito:    signalMosquito(),
+    // More Wildlife
+    iguana:      signalIguana(),
+    manatee:     signalManatee(),
+    seaturtle:   signalSeaTurtle(),
+    raccoon:     signalRaccoon(),
+    // Newswire
+    flman:       signalFloridaMan(),
+    policechase: signalPoliceChase(),
+    walmartbrawl:signalWalmartBrawl(),
+    meth:        signalMeth(),
+    duicheckpoint:  signalDUICheckpoint(),
+    stolenboat:     signalStolenBoat(),
+    insurancefraud: signalInsuranceFraud(),
+    bathsalts:      signalBathSalts(),
+    fbi:            signalFBI(),
+    ice:            signalICE(),
+    dhs:            signalDHS(),
+    donut:          signalDonut(),
+    // Consumption
+    waffle:      signalWaffle(),
+    publix:      signalPublix(),
+    tacobell:    signalTacoBell(),
+    wingstop:    signalWingstop(),
+    // Cars · Bikes · Trucks
+    trucknuts:   signalTruckNuts(),
+    bikeweek:    signalBikeWeek(),
+    nascar:      signalNascar(),
+    cruise:      signalCruise(),
+    // Sports
+    nfl:         signalNFL(),
+    nba:         signalNBA(),
+    nhl:         signalNHL(),
+    mlb:         signalMLB(),
+    // Politics & Power
+    desantis:    signalDeSantis(),
+    trump:       signalTrump(),
+    gunsales:    signalGunSales(),
+    lottery:     signalLottery(),
+    // Predictions
+    predtrump:    signalPredTrump(),
+    predgov:      signalPredGovernor(),
+    preddolphins: signalPredDolphins(),
+    predhurricane:signalPredHurricane(),
+    // Tourism & Beyond
+    disney:      signalDisney(),
+    spacex:      signalSpaceX(),
+    snowbird:    signalSnowbird(),
+    redfloridaman: signalFloridaReddit(),
+  };
+
+  // Render signals grid
+  let html = '';
+  // Universal trailing-fill — any group whose cell-count isn't a multiple of 4
+  // gets Americana filler cards appended to round out the row. Also handles
+  // wide cards (which take 2 cells) when counting.
+  const WIDE_FL = new Set(['flman','redfloridaman']);  // Florida-specific wide signals (those with wide:true)
+  for (const group of SIGNAL_GROUPS){
+    const visible = group.keys.filter(k => sigs[k]);
+    if (!visible.length) continue;
+    html += `<div class="grid-divider">${group.label}</div>`;
+    // Build items list (cards first), so we can interleave fillers
+    // throughout the group rather than clustering them at the end.
+    const items = visible.map(k => ({
+      html: renderCard(sigs[k]),
+      cells: (sigs[k].wide || WIDE_FL.has(k)) ? 2 : 1
+    }));
+    const cellsUsed = items.reduce((s, it) => s + it.cells, 0);
+    const remainder = (4 - (cellsUsed % 4)) % 4;
+    if (remainder > 0){
+      const today = new Date();
+      const dateSeed = today.getDate() * 11 + today.getMonth() * 7;
+      const groupSeed = (group.label || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+      const fillers = [];
+      for (let i = 0; i < remainder; i++){
+        fillers.push({ html: _americanaFillerCard(dateSeed + groupSeed + i * 5), cells: 1 });
+      }
+      // Spread fillers evenly through the group; insert from the end
+      // backwards so earlier-position indices remain valid.
+      const baseLen = items.length;
+      for (let i = remainder - 1; i >= 0; i--){
+        const pos = Math.max(1, Math.floor((i + 1) * baseLen / (remainder + 1)));
+        items.splice(pos, 0, fillers[i]);
+      }
+    }
+    for (const it of items) html += it.html;
+  }
+  $('#signals').innerHTML = html;
+
+  // Aggregate + gauge
+  const score = aggregate(sigs);
+  const tier = tierFor(score);
+  setGauge(score);
+  $('#tier-label').textContent = tier.label;
+  $('#tier-label').style.color = tier.color;
+  $('#tier-sub').textContent = pickBlurb(tier);
+
+  // Region pill
+  const region = FLORIDA_REGIONS.find(r => r.id === SELECTED_REGION) || FLORIDA_REGIONS[0];
+  $('#pill-loc').innerHTML = `<span aria-hidden="true">${region.flag}</span> ${region.name}`;
+
+  renderTickers();
+}
+
+/* ===========================================================
+   Wire up
+   =========================================================== */
+(function(){
+  // Burger nav
+  const nav = document.querySelector('.top-nav');
+  const btn = nav && nav.querySelector('.nav-burger');
+  if (btn) btn.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Region select
+  const sel = document.getElementById('region-select');
+  if (sel){
+    sel.value = SELECTED_REGION;
+    sel.addEventListener('change', () => {
+      SELECTED_REGION = sel.value;
+      renderAll();
+    });
+  }
+  // Year stamp
+  const yr = document.getElementById('yr');
+  if (yr) yr.textContent = new Date().getFullYear();
+  // Clock
+  renderClock();
+  setInterval(renderClock, 1000);
+  // Initial render
+  renderMethodology();
+  renderAll();
+  renderNewsBar();
+  // Kick off live data fetches in the background — they'll progressively
+  // upgrade specific cards (Reddit, SpaceX, Hurricane RSS) and the news
+  // ticker as data lands. Each fetcher times out at 5-6 seconds and the
+  // page is fully usable from the modelled fallback regardless.
+  _initLiveData();
+  // Re-render every 60s for time-of-day curves; refresh live data every 5 min.
+  setInterval(renderAll, 60_000);
+  setInterval(_initLiveData, 5 * 60_000);
+})();
+</script>
+</body>
+</html>

@@ -148,8 +148,7 @@
       <a href="./snapshot.html">📸 Snapshot</a>
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
-      <a href="./shop.html">🛍️ Shop</a>
-      🇺🇸 USA
+      <a href="./florida.html">🇺🇸 USA</a>
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -176,6 +175,94 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.8 <span class="stamp">live</span></div>
+      <div class="release-tag">🇺🇸 Florida Man Index — LIVE on isitkickingoff.com/florida.html · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">After eight versions of dev iteration, the <b>🇺🇸 Florida Man Index</b> is live. Britain's satirical eye on our cousins now has a permanent home at <a href="./florida.html" style="color:var(--accent)">/florida.html</a> — 52 modules across 11 themed groups, its own Atlantic-time gauge, its own tier scale (Sweet Tea → Hold My Beer), its own region selector (Miami / Tampa / Orlando / Jax / Keys / Panhandle), and its own live-data layer for hurricanes, Reddit chatter, SpaceX launches, FBI/ICE press feeds and Florida-flavoured news. The UK and Florida gauges remain entirely independent — no shared signals, no shared aggregation. Two cousins, two dashboards.</p>
+    <h3>What ships in this go-live</h3>
+    <ul>
+      <li><b>florida.html</b> is no longer excluded from the live deploy command. The page is now reachable directly and via the 🇺🇸 USA button in the top nav across all pages.</li>
+      <li>Eight months of Florida-only dev work consolidated: v3.0 launch, v3.1–v3.5 polish (live data, 4 law&amp;order modules, Reddit aggregator across 7 subs, Americana fillers, visual variety), v3.6 grid distribution fix, v3.7 wide Gator Incident Index with top 5 nuisance reports.</li>
+      <li>11 signal groups: Atmosphere &amp; Time · Storm Watch · Swamp Creatures · Newswire · Law &amp; Order · Consumption · Cars/Bikes/Trucks · Sports · Politics &amp; Power · Predictions · Tourism &amp; Beyond.</li>
+      <li>Live tickers under the Florida gauge: 🍹 Margaritaville · 🥤 Gas Slushie · 🛁 Bath Salts · 🚓 Naked 911. Rolling news ticker pulls from GDELT.</li>
+      <li>The line stays firm: <b>no school shootings, no mass-casualty events, no genuine tragedy</b>. Florida Man trying to baptise an alligator: yes. Anything where the punchline is human suffering: no.</li>
+    </ul>
+    <h3>The British observer's voice</h3>
+    <p>Every Florida blurb, headline rotation and sub-label is written in the same satirical British-observer voice as the UK dashboard. We are not <i>from</i> Florida; we are <i>watching</i> Florida. Imagine a slightly stunned correspondent filing copy from a Tampa Bay motel where the ice machine has been seized as evidence in an unrelated investigation.</p>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Live deploy command updated: <code>--exclude='shop.html'</code> only. <code>--exclude='florida.html'</code> dropped.</li>
+      <li>Previous v3.x entries (v3.0, v3.6, v3.7) promoted from <i>florida-only</i> stamp → <i>live</i> stamp. They now appear in the live changelog.</li>
+      <li>Inline JS parse: ✅ clean across all 8 pages including florida.html.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v2.18 <span class="stamp">live</span></div>
+      <div class="release-tag">🛍️ Shop nav button removed — keeping the shop offline for now · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">The Shop has been pulled from the top navigation across the whole site. Print fulfillment, stock decisions and the merch range are still being worked through, so rather than leave a half-baked shop in the nav, we've taken it down for now. The <code>shop.html</code> page still exists in the project but is no longer linked from anywhere on the live site. We'll bring it back when the merch story is sorted.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li>Removed <code>&lt;a href="./shop.html"&gt;🛍️ Shop&lt;/a&gt;</code> from the nav strip on Dashboard, About, Snapshot, Essays, Changelog, Legal, USA, and the Shop page itself.</li>
+      <li>Updated the navigation comment in <code>index.html</code> to reflect the current button list.</li>
+      <li>Top nav order now: <b>Dashboard · About · Snapshot · Essays · Changelog · Buy us a brew</b>.</li>
+      <li>Live deploy command updated to <code>--exclude='florida.html' --exclude='shop.html'</code> so neither stray HTML file ships to the live site.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 8 HTML pages updated in main project AND <code>deploy-test/</code>. Inline JS parse: ✅ clean. No remaining live links to <code>shop.html</code> on any deployed page.</li>
+      <li>Historical references to "Shop" inside older changelog release notes left intact — they accurately describe what was true at the time.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v3.7 <span class="stamp">live</span></div>
+      <div class="release-tag">🐊 Gator Incident Index — wide card + top 5 daily nuisance reports · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">The Gator Incident Index was the funniest tile on the Florida page but visually it was the same size as everything else and only listed three rotating reports. Promoted to a <b>wide (2-cell) card</b> and bumped the daily list to the <b>top 5 nuisance reports</b>. Event pool tripled to 15 entries — pickleball court invasions, Walmart car-park crossings, wedding photobombs, doggy door breaches, the works.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li><code>signalGator()</code> now returns <code>wide:true</code>. Card spans 2 columns in the Swamp Creatures group.</li>
+      <li>Event pool expanded from 5 → 15 entries: added Punta Gorda driveway, Port Charlotte school-bus stop, Orlando storm drain, Vero Beach doggy door, St. Augustine wedding, Ocala drive-thru, Brandon BBQ, Brandon Walmart, Cape Coral mailbox, The Villages pickleball court.</li>
+      <li>Daily picker now selects 5 distinct events using prime-step rotation <code>[0, 1, 3, 6, 9]</code> so the line-up varies day-to-day without repeats.</li>
+      <li>Sub-label updated: "FWC nuisance hotline · top 5 today · ~1.3M gators statewide".</li>
+      <li>Methodology row + ? tooltip explainer reflect the new wide-card top-5 framing.</li>
+    </ul>
+    <h3>Grid impact</h3>
+    <ul>
+      <li>Swamp Creatures group now has <code>1 wide (2 cells) + 3 normal = 5 cells</code>. v3.6's interleave logic auto-adds 3 Americana fillers spread across the rows — no orphan cells, no clustered fillers.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. florida.html synced to <code>deploy-test/</code>. UK dashboard untouched. USA layer still excluded from the live deploy command.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v3.6 <span class="stamp">live</span></div>
+      <div class="release-tag">🇺🇸 Florida grid — fillers spread across rows instead of clustering at the end · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Visual polish to the Florida dashboard. When a signal group's cell-count didn't divide evenly into 4-column rows, the trailing-fill logic appended Americana filler banners to the end of the group — meaning all of them stacked side-by-side in a single row of identical-looking joke cards. User flagged it: three banner fillers (Case Dismissed, 88 MPH, Freedom Fries) sat in a row, breaking the visual rhythm. Fix: <b>interleave fillers throughout the group</b>, not append.</p>
+    <h3>The fix</h3>
+    <ul>
+      <li>Renderer now builds an items array first (each item knows its cell-count: 1 for normal, 2 for wide), counts the cells, computes the trailing remainder, then <b>splices the filler items into evenly-spaced positions</b> rather than concatenating them at the end.</li>
+      <li>Insertion uses position formula <code>Math.floor((i+1) * baseLen / (remainder+1))</code>, applied from the end backwards so earlier indices don't shift.</li>
+      <li>For Newswire (13 cells, 3 fillers): cards now flow as <code>c c c F c c c F c c c F c c c c</code> — one filler per row instead of all three in the bottom row.</li>
+      <li>Algorithm validated against 7 group-shape edge cases including 4+0, 6+2, 5+3, 3+1.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. florida.html synced to <code>deploy-test/</code> (still excluded from the live deploy command — USA layer is dev-only).</li>
+      <li>UK dashboard untouched. UK trailing-fill behaviour unchanged.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v2.16 <span class="stamp">live</span></div>
       <div class="release-tag">🛡️ UK Threat Level fix — was confidently mis-reading CRITICAL when actual was SEVERE · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
@@ -201,9 +288,54 @@
     </ul>
     <h3>🔄 Project sync</h3>
     <ul>
-      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced (USA tab stripped, florida.html excluded).</li>
       <li>Detailed comment block added to <code>fetchUKThreatLevel</code> explaining the false-positive lesson, so future-me doesn't reintroduce the loose regex.</li>
       <li>Modelled fallback unchanged at SUBSTANTIAL — that remains the long-term default since Feb 2022.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v3.0 <span class="stamp">live</span></div>
+      <div class="release-tag">🇺🇸 Florida Man Index — sister gauge for our cousins · Apr 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">First major version bump since v2 launch. The site now has a <b>second dashboard</b> — <a href="./florida.html" style="color:var(--accent)">/florida.html</a> — a satirical Florida-flavoured aggravation gauge that runs entirely independently of the UK index. Britain watches the cousins. Stars-and-stripes themed, 28 signal modules across 9 groups, its own tier scale (Sweet Tea → Hold My Beer), its own Florida-specific blurbs, its own region selector (Miami / Tampa / Orlando / Jax / Keys). Same toolkit as the UK gauge — gauge SVG, signal-card pattern, methodology table — re-skinned and re-modelled for Florida.</p>
+    <h3>The shape of it</h3>
+    <ul>
+      <li><b>USA tab added to the top nav</b> across all 8 pages (dashboard, about, snapshot, news, changelog, legal, shop, florida). Sits second from the left, between Dashboard and About.</li>
+      <li><b>Stars-and-stripes palette</b>: Old Glory blue (#0a1638) backgrounds, flag red (#ee2a3c) accent, bone-white (#f4ecd6) ink for warmer reads against the navy. Subtle stars-pattern overlay on the hero block. New US-flag favicon.</li>
+      <li><b>Tier scale</b> reads: <code>0–24 SWEET TEA</code> · <code>25–39 WAFFLE HOUSE OPEN</code> · <code>40–54 GATOR-CURIOUS</code> · <code>55–69 BRO-TRUCK ROLLING</code> · <code>70–84 LAW INVOLVED</code> · <code>85–100 HOLD MY BEER</code>. Three blurbs per tier, rotated by hour-of-day.</li>
+      <li><b>Live ET clock</b> in the masthead, six-region selector with Florida sub-regions, satirical British-observer voice consistent with the UK dashboard.</li>
+    </ul>
+    <h3>The 28 signals (9 groups)</h3>
+    <ul>
+      <li><b>Atmosphere &amp; Time (5)</b>: Time of Day (Florida hour-curve), Florida Weather, Daylight, Lunacy Factor, Hurricane Watch.</li>
+      <li><b>Swamp &amp; Wildlife (5)</b>: 🐊 Gator Incident Index, 🐍 Python Hunt Status, 🦈 Shark Bite Tally, 🦟 Mosquito Index, ❄️ Frozen Iguana Forecast (real NWS warning category).</li>
+      <li><b>Florida Man (4)</b>: 📰 Florida Man Daily (12 rotating headlines), 🚓 Police Chase Probability, 🛍️ Walmart Brawl Index, 💊 Meth Lab Bust Tally.</li>
+      <li><b>Consumption (3)</b>: 🍔 Waffle House Index (FEMA-recognised disaster proxy), 🥪 Publix Sub Run, 🌮 Taco Bell · Late Night.</li>
+      <li><b>Cars · Bikes · Trucks (3)</b>: 🛻 Truck Nuts Density, 🏍️ Bike Week Status (Daytona / Biketoberfest / Leesburg windows), 🏎️ NASCAR · Daytona.</li>
+      <li><b>Sports (2)</b>: 🏈 NFL · Florida Teams, 🏀 NBA · Heat &amp; Magic.</li>
+      <li><b>Politics &amp; Power (3)</b>: 🐘 DeSantis Drama Tracker, 🍊 Trump News Tension, 🔫 Gun Sales Tracker.</li>
+      <li><b>Theme Parks &amp; Beyond (2)</b>: 🏰 Disney Wait Times, 🚀 SpaceX · Cape Canaveral.</li>
+      <li><b>Social (1)</b>: 👽 r/FloridaMan · Live Feed.</li>
+    </ul>
+    <h3>What's modelled vs live</h3>
+    <p>Almost everything in v3.0 is modelled — deterministic functions of date, time, region. Live data hooks are documented per-signal in the methodology table for v3.1+ upgrades: NHC RSS for hurricanes, queue-times.com for Disney waits, api.spacexdata.com for launches, reddit.com/r/FloridaMan/hot.json for the Reddit feed, TheSportsDB for NFL/NBA/NASCAR fixtures, Tampa Bay Times / Miami Herald RSS for Florida Man headlines. Every modelled signal is calibrated to publicly-known facts (FWC gator counts, FEMA Waffle House framework, FBI NICS check volumes, ISAF shark database, etc).</p>
+    <h3>Two gauges, independent</h3>
+    <ul>
+      <li><b>The UK and US gauges share no signals</b>, no weights, no aggregation. Florida is a sister page, not a fork. Total UK model weight stays at <b>1.31</b>; Florida runs its own ~1.06.</li>
+      <li>Same satirical voice, different national subject. The British observer narrating the cousins.</li>
+      <li>Live tickers at top of Florida page: 🍹 Margaritaville Index (drinks/min) and 🥤 Gas Slushie Tracker (Big Gulps + Slurpees/min).</li>
+      <li>Methodology table on the Florida page mirrors the UK pattern — every signal gets a row with weight + source description.</li>
+    </ul>
+    <h3>What's not in v3.0</h3>
+    <p>Per the design brief: <b>no school shootings, no mass-casualty events, no genuine tragedy</b>. The line is firm. Florida Man getting bitten by a gator while attempting to baptise it: yes. Anything where the punchline is human suffering: no. The full list of 50+ originally-brainstormed modules has been trimmed to the strongest 28 that stay safely on the satirical side.</p>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>New file: <code>florida.html</code> (~68KB, single-file, no external deps beyond CSP allowlist).</li>
+      <li>USA tab patched into all 7 existing pages' nav.</li>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+      <li>Worker untouched in v3.0 — Polymarket integration deferred to v3.1 (will reuse the existing Worker with a US/Florida keyword flag).</li>
     </ul>
   </details>
 
