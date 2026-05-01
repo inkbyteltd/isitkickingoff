@@ -175,6 +175,37 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.9 <span class="stamp">live</span></div>
+      <div class="release-tag">📝 Essay № 003 "What the Cousins Know" + changelog reorder + Florida Subreddits widened · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">A consolidated release covering three threads of work that should ship together: the third essay on the dashboard's premise (this one about Florida), a long-overdue cleanup of the changelog's version ordering, and a quick widen on the Florida Subreddits live card so it stops shrinking when the Reddit fetch lands.</p>
+    <h3>📝 Essay № 003 — "What the Cousins Know"</h3>
+    <ul>
+      <li>~7-minute read on why Britain — professionally interested in measuring its mood through chip-shop queues and Wetherspoons crowds — might do well to study what the cousins have accidentally built. Britain measures middles. Florida measures tails. There is, it turns out, a difference.</li>
+      <li>Four sections: <b>I.</b> The Centre of Gravity Has Gone South · <b>II.</b> The Gator Logic · <b>III.</b> Police Chases as Polling · <b>IV.</b> What the Cousins Know That We Don't.</li>
+      <li>Illustrated with live signal cards from the Florida dashboard: Gator Incident Index, Florida Man Daily, Police Chase Probability, Walmart Brawl Index, Bath Salts Live, Donut Consumption.</li>
+      <li>Lives at <code>news.html#post-003</code>. Sits above the Beans essay in the reading column. Pull-quote: <i>"The swamp has not been drained. It has just been zoned."</i></li>
+      <li>Supporting social-posts pack written for LinkedIn (long-form), X (5-tweet thread), Substack (note), Threads/Bluesky (single-post). LinkedIn banner generated at 1200×627 in field-cartography style — annotated survey plate of Florida with pin markers for Mar-a-Lago, the Everglades, The Villages, and St. Augustine.</li>
+    </ul>
+    <h3>🪵 Changelog reorder — single linear version sequence</h3>
+    <ul>
+      <li>Until this release, the changelog interleaved v3.x florida-only entries with v2.x UK live entries chronologically — meaning the order read v3.8 → v2.18 → v3.7 → v3.6 → v2.16 → v3.0 → v2.14, which was confusing. Reader feedback pointed it out.</li>
+      <li>All 84 release blocks now sorted strictly by semantic version descending. The timeline reads cleanly: v3.9 → v3.8 → v3.7 → v3.6 → v3.0 → v2.18 → v2.16 → v2.14 → v2.13 → v2.12 → ... → v0.13.</li>
+      <li>Going forward: <b>single linear version sequence.</b> No more parallel tracks. UK and Florida changes share the same numbering; tags in the entry indicate scope.</li>
+    </ul>
+    <h3>🐛 Florida Subreddits — fix card shrinkage on live data</h3>
+    <ul>
+      <li>The <code>signalFloridaReddit()</code> live branch was missing <code>wide:true</code> — only the modelled fallback had it. Result: the card was wide while loading, then shrank to single-width once Reddit data landed. Both branches now consistent.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>news.html</code>, <code>changelog.html</code>, <code>florida.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean across all 8 pages.</li>
+      <li>Banner + social-post copy live in <code>/social/</code> (kept out of the deploy bundle — they're authoring artefacts, not site content).</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.8 <span class="stamp">live</span></div>
       <div class="release-tag">🇺🇸 Florida Man Index — LIVE on isitkickingoff.com/florida.html · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
@@ -194,26 +225,6 @@
       <li>Live deploy command updated: <code>--exclude='shop.html'</code> only. <code>--exclude='florida.html'</code> dropped.</li>
       <li>Previous v3.x entries (v3.0, v3.6, v3.7) promoted from <i>florida-only</i> stamp → <i>live</i> stamp. They now appear in the live changelog.</li>
       <li>Inline JS parse: ✅ clean across all 8 pages including florida.html.</li>
-    </ul>
-  </details>
-
-  <details class="release">
-    <summary class="release-head">
-      <div class="release-ver">v2.18 <span class="stamp">live</span></div>
-      <div class="release-tag">🛍️ Shop nav button removed — keeping the shop offline for now · May 2026</div>
-    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
-    <p class="intro">The Shop has been pulled from the top navigation across the whole site. Print fulfillment, stock decisions and the merch range are still being worked through, so rather than leave a half-baked shop in the nav, we've taken it down for now. The <code>shop.html</code> page still exists in the project but is no longer linked from anywhere on the live site. We'll bring it back when the merch story is sorted.</p>
-    <h3>What changed</h3>
-    <ul>
-      <li>Removed <code>&lt;a href="./shop.html"&gt;🛍️ Shop&lt;/a&gt;</code> from the nav strip on Dashboard, About, Snapshot, Essays, Changelog, Legal, USA, and the Shop page itself.</li>
-      <li>Updated the navigation comment in <code>index.html</code> to reflect the current button list.</li>
-      <li>Top nav order now: <b>Dashboard · About · Snapshot · Essays · Changelog · Buy us a brew</b>.</li>
-      <li>Live deploy command updated to <code>--exclude='florida.html' --exclude='shop.html'</code> so neither stray HTML file ships to the live site.</li>
-    </ul>
-    <h3>🔄 Project sync</h3>
-    <ul>
-      <li>All 8 HTML pages updated in main project AND <code>deploy-test/</code>. Inline JS parse: ✅ clean. No remaining live links to <code>shop.html</code> on any deployed page.</li>
-      <li>Historical references to "Shop" inside older changelog release notes left intact — they accurately describe what was true at the time.</li>
     </ul>
   </details>
 
@@ -263,39 +274,6 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v2.16 <span class="stamp">live</span></div>
-      <div class="release-tag">🛡️ UK Threat Level fix — was confidently mis-reading CRITICAL when actual was SEVERE · Apr 2026</div>
-    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
-    <p class="intro">User caught a serious accuracy bug. Yesterday the UK national terrorism threat level was raised to <b>SEVERE</b> — but the dashboard's UK Threat Level module was confidently reporting <b>CRITICAL</b>. Over-reporting a security signal by one full tier is exactly the kind of mistake that erodes trust on a satirical-but-data-honest site. Investigated, fixed, regression-tested.</p>
-    <h3>What was happening</h3>
-    <ul>
-      <li>The gov.uk content API returns the official threat-levels page as a JSON blob containing the page HTML.</li>
-      <li>The previous regex was: <code>(?:current|now|raised to|lowered to)[^"]*?\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b</code> — match any of those four context phrases, then grab the nearest level word.</li>
-      <li>Sounds fine, but the gov.uk page contains <i>a lot</i> of historical text: <i>"On 14 May 2017, the threat level was raised to CRITICAL after the Manchester Arena attack"</i>, <i>"It was raised to CRITICAL again in September 2017 after Parsons Green"</i>, etc. Multiple "raised to CRITICAL" phrases scattered through the document.</li>
-      <li>With non-greedy matching plus several historical mentions, the regex was locking onto a <b>historical</b> CRITICAL event instead of the actual current-level statement. The module was correctly running the live fetch, parsing the response, and confidently returning the wrong answer.</li>
-    </ul>
-    <h3>The fix</h3>
-    <ul>
-      <li>New helper <code>_extractCurrentThreatLevel(blob)</code> with <b>tightly-anchored patterns</b> in priority order. Each pattern requires the word "is" to anchor on a statement-of-fact about the current level. None of them match "raised to" or "lowered to" — those phrases are now treated as historical noise, not current-state indicators.</li>
-      <li>The 4 priority patterns: <code>"current threat level [...] is X"</code>, <code>"threat level [...] is currently X"</code>, <code>"Current threat level: X"</code>, <code>"Threat level: X"</code>.</li>
-      <li>If no tight pattern matches with confidence, we <b>fall through to the next source rather than guessing</b>. Better to under-report from the modelled SUBSTANTIAL fallback than confidently mis-report CRITICAL.</li>
-      <li>Wikipedia parser also gets a tightening: if the tight patterns don't match the full article, it tries the lead paragraph only (everything before the first <code>&lt;h2&gt;</code> History heading), avoiding the historical wikitable that contributed to the same false positive.</li>
-    </ul>
-    <h3>Regression test</h3>
-    <ul>
-      <li>Built 7 representative test cases — including the exact bug scenario (blob with "current is SEVERE" PLUS multiple historical "raised to CRITICAL" phrases). All 7 pass.</li>
-      <li>Old phrasing-only inputs (historical references without a current-state statement) now correctly return <code>null</code>, triggering the next source rather than falsely matching.</li>
-    </ul>
-    <h3>🔄 Project sync</h3>
-    <ul>
-      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced (USA tab stripped, florida.html excluded).</li>
-      <li>Detailed comment block added to <code>fetchUKThreatLevel</code> explaining the false-positive lesson, so future-me doesn't reintroduce the loose regex.</li>
-      <li>Modelled fallback unchanged at SUBSTANTIAL — that remains the long-term default since Feb 2022.</li>
-    </ul>
-  </details>
-
-  <details class="release">
-    <summary class="release-head">
       <div class="release-ver">v3.0 <span class="stamp">live</span></div>
       <div class="release-tag">🇺🇸 Florida Man Index — sister gauge for our cousins · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
@@ -336,6 +314,59 @@
       <li>USA tab patched into all 7 existing pages' nav.</li>
       <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
       <li>Worker untouched in v3.0 — Polymarket integration deferred to v3.1 (will reuse the existing Worker with a US/Florida keyword flag).</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v2.18 <span class="stamp">live</span></div>
+      <div class="release-tag">🛍️ Shop nav button removed — keeping the shop offline for now · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">The Shop has been pulled from the top navigation across the whole site. Print fulfillment, stock decisions and the merch range are still being worked through, so rather than leave a half-baked shop in the nav, we've taken it down for now. The <code>shop.html</code> page still exists in the project but is no longer linked from anywhere on the live site. We'll bring it back when the merch story is sorted.</p>
+    <h3>What changed</h3>
+    <ul>
+      <li>Removed <code>&lt;a href="./shop.html"&gt;🛍️ Shop&lt;/a&gt;</code> from the nav strip on Dashboard, About, Snapshot, Essays, Changelog, Legal, USA, and the Shop page itself.</li>
+      <li>Updated the navigation comment in <code>index.html</code> to reflect the current button list.</li>
+      <li>Top nav order now: <b>Dashboard · About · Snapshot · Essays · Changelog · Buy us a brew</b>.</li>
+      <li>Live deploy command updated to <code>--exclude='florida.html' --exclude='shop.html'</code> so neither stray HTML file ships to the live site.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>All 8 HTML pages updated in main project AND <code>deploy-test/</code>. Inline JS parse: ✅ clean. No remaining live links to <code>shop.html</code> on any deployed page.</li>
+      <li>Historical references to "Shop" inside older changelog release notes left intact — they accurately describe what was true at the time.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v2.16 <span class="stamp">live</span></div>
+      <div class="release-tag">🛡️ UK Threat Level fix — was confidently mis-reading CRITICAL when actual was SEVERE · Apr 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">User caught a serious accuracy bug. Yesterday the UK national terrorism threat level was raised to <b>SEVERE</b> — but the dashboard's UK Threat Level module was confidently reporting <b>CRITICAL</b>. Over-reporting a security signal by one full tier is exactly the kind of mistake that erodes trust on a satirical-but-data-honest site. Investigated, fixed, regression-tested.</p>
+    <h3>What was happening</h3>
+    <ul>
+      <li>The gov.uk content API returns the official threat-levels page as a JSON blob containing the page HTML.</li>
+      <li>The previous regex was: <code>(?:current|now|raised to|lowered to)[^"]*?\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b</code> — match any of those four context phrases, then grab the nearest level word.</li>
+      <li>Sounds fine, but the gov.uk page contains <i>a lot</i> of historical text: <i>"On 14 May 2017, the threat level was raised to CRITICAL after the Manchester Arena attack"</i>, <i>"It was raised to CRITICAL again in September 2017 after Parsons Green"</i>, etc. Multiple "raised to CRITICAL" phrases scattered through the document.</li>
+      <li>With non-greedy matching plus several historical mentions, the regex was locking onto a <b>historical</b> CRITICAL event instead of the actual current-level statement. The module was correctly running the live fetch, parsing the response, and confidently returning the wrong answer.</li>
+    </ul>
+    <h3>The fix</h3>
+    <ul>
+      <li>New helper <code>_extractCurrentThreatLevel(blob)</code> with <b>tightly-anchored patterns</b> in priority order. Each pattern requires the word "is" to anchor on a statement-of-fact about the current level. None of them match "raised to" or "lowered to" — those phrases are now treated as historical noise, not current-state indicators.</li>
+      <li>The 4 priority patterns: <code>"current threat level [...] is X"</code>, <code>"threat level [...] is currently X"</code>, <code>"Current threat level: X"</code>, <code>"Threat level: X"</code>.</li>
+      <li>If no tight pattern matches with confidence, we <b>fall through to the next source rather than guessing</b>. Better to under-report from the modelled SUBSTANTIAL fallback than confidently mis-report CRITICAL.</li>
+      <li>Wikipedia parser also gets a tightening: if the tight patterns don't match the full article, it tries the lead paragraph only (everything before the first <code>&lt;h2&gt;</code> History heading), avoiding the historical wikitable that contributed to the same false positive.</li>
+    </ul>
+    <h3>Regression test</h3>
+    <ul>
+      <li>Built 7 representative test cases — including the exact bug scenario (blob with "current is SEVERE" PLUS multiple historical "raised to CRITICAL" phrases). All 7 pass.</li>
+      <li>Old phrasing-only inputs (historical references without a current-state statement) now correctly return <code>null</code>, triggering the next source rather than falsely matching.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced (USA tab stripped, florida.html excluded).</li>
+      <li>Detailed comment block added to <code>fetchUKThreatLevel</code> explaining the false-positive lesson, so future-me doesn't reintroduce the loose regex.</li>
+      <li>Modelled fallback unchanged at SUBSTANTIAL — that remains the long-term default since Feb 2022.</li>
     </ul>
   </details>
 
