@@ -149,6 +149,7 @@
       <a href="./news.html">📝 Essays</a>
       <a href="./changelog.html" class="active">🪵 Changelog</a>
       <a href="./shop.html">🛍️ Shop</a>
+      🇺🇸 USA
       <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" class="nav-bmc">🍵 Buy us a brew</a>
     </div>
   </nav>
@@ -175,7 +176,7 @@
 
   <details class="release" open>
     <summary class="release-head">
-      <div class="release-ver">v2.14 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.14</div>
       <div class="release-tag">🔧 Tooltip HTML strip · Polymarket UK filter broadened to 167 keywords · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Two small bugs from the v2.13 review. <b>(1)</b> Three signal-card tooltips (<code>shit</code>, <code>storm</code>, <code>fryup</code>) had embedded <code>&lt;b&gt;</code> tags from earlier copy edits. The tooltip is rendered via CSS <code>content: attr(data-tip)</code>, which displays the attribute value as <i>plain text</i> — so the tags were showing up as literal characters. Stripped. <b>(2)</b> Only 2 UK Polymarket markets were appearing instead of the usual 4. The Worker's UK keyword filter was too narrow for the current crop of Polymarket questions. Broadened from ~40 keywords to <b>167</b>, plus the upstream batch size bumped from 120 → 250 markets to widen the search pool.</p>

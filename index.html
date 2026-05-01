@@ -307,11 +307,13 @@
   .card .head-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
   .card .icon{font-size:20px;line-height:1;flex-shrink:0;filter:grayscale(.15) contrast(1.1)}
   .card .title{
+    /* Card title — wraps freely with NO truncation. Module names ARE the joke
+       (English Breakfast Index, Walmart Brawl Index, Frozen Iguana Forecast,
+       Cocaine in UK Waters) and must always read in full. The card height
+       absorbs the extra lines. Previously had -webkit-line-clamp:2 which was
+       still cutting off some signal names. */
     font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);
-    overflow:hidden;line-height:1.3;
-    /* Allow up to 2 lines instead of truncating long titles like "McFlurry Machine" */
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-    word-break:break-word;
+    line-height:1.35;word-break:break-word;hyphens:auto;min-width:0;
   }
   .card .val{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.01em}
   .card .sub{color:var(--ink-dim);font-size:13px;line-height:1.45}
@@ -472,17 +474,17 @@
      Renders as a full-width feature row inside the signals grid, immediately
      after the relevant signal group divider. */
   .grid-feature{grid-column:1 / -1;margin:8px 0 0}
+  /* Feature-row title — matches .grid-divider style so all section headers
+     across the dashboard read with the same weight and color. Previously this
+     was orange + decorative gradient lines, which made the "Environment & Energy"
+     row look like a different kind of heading from "Atmosphere & Time" etc.
+     Now it's muted-grey, 10px, same letter-spacing — consistent. */
   .grid-feature .feature-title{
-    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--accent);margin:0 0 12px;padding:0;font-weight:700;
-    display:flex;align-items:center;gap:8px;
-  }
-  .grid-feature .feature-title::before{
-    content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent);
-    max-width:24px;
-  }
-  .grid-feature .feature-title::after{
-    content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent);
+    font-family:var(--mono);font-weight:400;
+    font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:6px 0 -4px;padding:0;
+    display:block;
   }
   .env-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   @media (max-width:1100px){ .env-grid{grid-template-columns:repeat(2,1fr)} }
@@ -2769,6 +2771,90 @@ function signalBooze(weatherExtras){  // kept name 'booze' for downstream compat
     subLabel: dayTag ? `${headline} · ${dayTag}` : headline,
     score: cap,
     featuredBranches: featured,
+  };
+}
+
+/* =========================================================
+   Signal: 🍴 Spoons Menu Top 5 (modelled — sister card to Wetherspoons Live)
+   Real Wetherspoons menu, day/hour/event-weighted. Surfaces the 5 trending
+   menu items right now. The two cultural anchors of the Spoons week — Curry
+   Club Wednesdays and Steak Club Tuesdays — get explicit slot amplifiers,
+   plus the 7am-11am breakfast window, Sunday-roast hour, and post-pub
+   late-night chip burst.
+
+   Live upgrade path: Wetherspoons doesn't publish a public menu API, but
+   menu PDFs at jdwetherspoon.com/menus could be parsed quarterly to keep
+   the item list fresh. Prices and availability vary slightly by branch.
+   ========================================================= */
+const SPOONS_MENU_ITEMS = [
+  // Each item carries weights for: brk(7-11) lun(11-15) aft(15-18) eve(18-22) late(22+)
+  // and day-of-week amplifiers (Mon..Sun)
+  { name:'Small Breakfast',           icon:'🍳', brk:1.00, lun:0.30, aft:0.05, eve:0.05, late:0.10, dayMult:[1.0,1.0,1.0,1.0,1.0,1.1,1.2] },
+  { name:'Large Breakfast',           icon:'🥓', brk:0.95, lun:0.40, aft:0.10, eve:0.10, late:0.10, dayMult:[1.0,1.0,1.0,1.0,1.0,1.1,1.3] },
+  { name:'Vegan Breakfast',           icon:'🥑', brk:0.55, lun:0.20, aft:0.05, eve:0.05, late:0.05, dayMult:[1.0,1.0,1.0,1.0,1.0,1.1,1.2] },
+  { name:'Eggs Benedict',             icon:'🍳', brk:0.50, lun:0.25, aft:0.05, eve:0.05, late:0.05, dayMult:[0.9,0.9,0.9,0.9,1.0,1.2,1.3] },
+  { name:'Chicken Tikka Masala',      icon:'🍛', brk:0.05, lun:0.55, aft:0.50, eve:0.92, late:0.40, dayMult:[1.0,1.0,1.6,1.0,1.0,1.0,1.0] },  // Curry Club Wed
+  { name:'Lamb Rogan Josh',           icon:'🍛', brk:0.05, lun:0.40, aft:0.40, eve:0.85, late:0.35, dayMult:[1.0,1.0,1.6,1.0,1.0,1.0,1.0] },
+  { name:'Chicken Vindaloo',          icon:'🌶️', brk:0.05, lun:0.35, aft:0.35, eve:0.78, late:0.40, dayMult:[1.0,1.0,1.5,1.0,1.0,1.0,1.0] },
+  { name:'8oz Sirloin Steak',         icon:'🥩', brk:0.02, lun:0.45, aft:0.40, eve:0.92, late:0.30, dayMult:[1.0,1.6,1.0,1.0,1.0,1.0,1.0] },  // Steak Club Tue
+  { name:'Mixed Grill',               icon:'🥩', brk:0.02, lun:0.40, aft:0.40, eve:0.85, late:0.30, dayMult:[1.0,1.5,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Fish & Chips',              icon:'🐟', brk:0.05, lun:0.75, aft:0.65, eve:0.80, late:0.55, dayMult:[1.0,1.0,1.0,1.0,1.4,1.0,1.0] },  // Friday boost
+  { name:'Beef Burger',               icon:'🍔', brk:0.05, lun:0.75, aft:0.65, eve:0.78, late:0.55, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Chicken Burger',            icon:'🍔', brk:0.05, lun:0.65, aft:0.55, eve:0.70, late:0.50, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'BBQ Chicken Pizza',         icon:'🍕', brk:0.02, lun:0.55, aft:0.55, eve:0.72, late:0.65, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Sunday Roast Beef',         icon:'🍖', brk:0.05, lun:0.85, aft:0.60, eve:0.30, late:0.05, dayMult:[0.0,0.0,0.0,0.0,0.0,0.0,2.5] },  // Sunday only
+  { name:'Steak & Ale Pie',           icon:'🥧', brk:0.05, lun:0.65, aft:0.55, eve:0.70, late:0.30, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Chicken & Mushroom Pie',    icon:'🥧', brk:0.05, lun:0.55, aft:0.50, eve:0.65, late:0.30, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Chips & Curry Sauce',       icon:'🍟', brk:0.10, lun:0.55, aft:0.55, eve:0.60, late:0.85, dayMult:[1.0,1.0,1.0,1.0,1.1,1.2,1.0] },  // late-night
+  { name:'Nachos Sharer',             icon:'🥙', brk:0.05, lun:0.30, aft:0.45, eve:0.65, late:0.65, dayMult:[1.0,1.0,1.0,1.0,1.1,1.2,1.0] },
+  { name:'Sticky Toffee Pudding',     icon:'🍰', brk:0.10, lun:0.40, aft:0.45, eve:0.55, late:0.30, dayMult:[1.0,1.0,1.0,1.0,1.0,1.0,1.0] },
+  { name:'Pitcher of Cocktails',      icon:'🍸', brk:0.02, lun:0.20, aft:0.35, eve:0.70, late:0.85, dayMult:[1.0,1.0,1.0,1.0,1.4,1.5,1.0] },  // Fri/Sat
+];
+function _spoonsSlot(h){
+  if (h >= 7  && h < 11) return 'brk';
+  if (h >= 11 && h < 15) return 'lun';
+  if (h >= 15 && h < 18) return 'aft';
+  if (h >= 18 && h < 22) return 'eve';
+  return 'late';
+}
+function signalSpoonsMenu(){
+  const base = { key:'spoonsmenu', title:'Spoons Menu · Top 5 right now', icon:'🍴', live:false, modelled:true };
+  const d = new Date();
+  const h = d.getHours();
+  const dow = d.getDay();
+  const slot = _spoonsSlot(h);
+  // Compute current weight per item, ranked
+  const ranked = SPOONS_MENU_ITEMS.map((it, i) => {
+    const slotW = it[slot] || 0;
+    const dayW = it.dayMult[dow] || 1;
+    // Tiny daily-jitter so the order isn't identical every minute
+    const jitter = Math.sin((d.getDate()*7 + d.getHours() + i*3)) * 0.04;
+    return { ...it, weight: slotW * dayW + jitter };
+  }).sort((a, b) => b.weight - a.weight);
+  // Top 5 with normalised %
+  const top = ranked.slice(0, 5);
+  const sum = top.reduce((s, x) => s + Math.max(0.05, x.weight), 0);
+  const items = top.map(it => ({
+    name: it.name, icon: it.icon,
+    pct: Math.round((Math.max(0.05, it.weight) / sum) * 100),
+  }));
+  // Headline value: which "menu mode" is dominant
+  const event =
+    dow === 1 && h >= 17 && h < 22 ? 'STEAK CLUB TUESDAY' :
+    dow === 2 && h >= 17 && h < 22 ? 'CURRY CLUB WEDNESDAY' :
+    dow === 6 && h >= 11 && h < 17 ? 'SUNDAY ROAST WINDOW' :
+    h < 11 ? 'BREAKFAST SHIFT' :
+    h >= 22 ? 'LATE-NIGHT CHIPS' :
+    h >= 18 ? 'EVENING DINNER RUSH' :
+    'STANDARD MENU SHIFT';
+  // Score reflects how "active" the kitchen is right now
+  const kitchenLoad = h>=11 && h<14 ? 0.65 : h>=18 && h<21 ? 0.85 : h>=22 || h<7 ? 0.30 : 0.45;
+  return {
+    ...base,
+    valueLabel: items[0] ? items[0].name : 'menu',
+    subLabel: `${event} · top sellers right now · ${dow === 6 ? 'Sunday' : dow === 0 ? 'Monday' : ''}`,
+    score: kitchenLoad,
+    spoonsMenuItems: items,
   };
 }
 
@@ -8111,6 +8197,7 @@ function signalsForRegion(regionId, bulk){
   const time     = safe(()=>signalTime(), 'time');
   const daylight = safe(()=>signalDaylight(weather), 'daylight');
   const booze    = safe(()=>signalBooze(weather?.extras), 'booze');
+  const spoonsmenu = safe(()=>signalSpoonsMenu(), 'spoonsmenu');
   const moon     = safe(()=>signalMoon(), 'moon');
   const news     = bulk.news; // national
   const roadRage = safe(()=>signalRoadRage(news?.extras?.rawItems || []), 'roadRage');
@@ -8151,7 +8238,7 @@ function signalsForRegion(regionId, bulk){
   const storm    = _stormSignal(bulk.storm);
   const shit     = _shitSignal(bulk.weatherMap);
   // Search panic: needs peer signals as context (+ optional real trends)
-  const partial  = { time, football, news, weather, booze, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, breakfast, fryup, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
+  const partial  = { time, football, news, weather, booze, spoonsmenu, bh, transport, roadRage, daylight, england, moon, greggs, licensing, chippy, breakfast, fryup, vape, slang, betting, horses, lottery, royal, kettle, telly, checkout, petrol, protests, threat, aande, social, icecream, uber, delivery, patriot, pagan, folklore, storm, shit, crime, spotify, reddit };
   const search   = signalSearchPanic(partial, bulk.trends);
   return { ...partial, search, voting, leaders };
 }
@@ -9204,6 +9291,13 @@ function startTickerLoop(){
 /* =========================================================
    Aggregate & render
    ========================================================= */
+/* Wide-card key set — these signals render as `card-wide` (2 grid columns
+   instead of 1). Centralised here so the rendering loop and the trailing-
+   filler logic both use the same source of truth. */
+const WIDE_CARD_KEYS = new Set([
+  'search', 'petrol', 'protests', 'social', 'spotify', 'reddit',
+  'betting', 'horses', 'breakfast', 'fryup'
+]);
 const WEIGHTS = {
   time:      0.12,
   news:      0.07,
@@ -9248,6 +9342,7 @@ const WEIGHTS = {
   storm:     0.02,    // ⛈️ Met Office severe weather warnings (v2.3 promoted from ambient)
   shit:      0.01,    // 💩 sewage spill rage (v2.3 promoted from ambient)
   breakfast: 0.01,    // 🍳 English Breakfast Index — fry-up cost-of-living (v2.5)
+  spoonsmenu:0.02,    // 🍴 Spoons Menu Top 5 — sister card to Wetherspoons Live (v2.15)
 };
 
 /* =========================================================
@@ -9282,6 +9377,7 @@ const SIGNAL_EXPLAINERS = {
   daylight:   'Sunset proximity. Dusk and the dark hours score higher — the streets feel different after sundown.',
   moon:       'Pure astronomical moon-phase calculation. Full moon adds a small comedic bump (folkloric, not science).',
   booze:      'Wetherspoons Live — modelled UK Spoons capacity by hour-of-day with day-of-week, weather, payday and Curry/Steak Club modifiers. Plus 5 rotating featured branches from a 20-strong list.',
+  spoonsmenu: 'Spoons Menu Top 5 — modelled real Wetherspoons menu showing the 5 trending items right now, weighted by hour-of-day (breakfast 7-11, lunch 11-15, evening 18-22, late-night 22+) and day-of-week amplifiers. Tuesday Steak Club night surfaces sirloin and mixed grill; Wednesday Curry Club surfaces tikka masala / rogan josh / vindaloo; Sunday lunch surfaces Sunday Roast Beef. Friday evenings boost fish & chips. Live upgrade path: Wetherspoons doesn\'t publish a public menu API but PDFs at jdwetherspoon.com/menus could be parsed quarterly to keep the item list current.',
   licensing:  'Modelled UK on-licensed venue activity (~48,600 pubs + clubs, Statista 2024). Hourly venues-open curve tuned to UK licensing rules. Score peaks 22:00–02:00 around "kick-out time" with a countdown for the last 90 minutes.',
   kettle:     'Live UK National Grid demand from the Elexon BMRS API. Plus a modelled top-5 hot-drink ranking through the day — tea, instant coffee, hot choc, Horlicks, Pot Noodle.',
   greggs:     'Modelled sausage-roll dependency curve. Top 3 trending Greggs items by time-of-day from a 14-item pool (sausage roll, steak bake, yum yum, vegan sausage, etc.).',
@@ -9359,7 +9455,10 @@ function renderCard(sig){
     : '<span class="chip model" title="'+_escAttr(sig.err||'modelled')+'">Modelled</span>';
   const contribution = (sig.score * (WEIGHTS[sig.key]||0) * 100);
   const icon = sig.icon || '•';
-  const wide = (sig.key === 'search' || sig.key === 'booze' || sig.key === 'petrol' || sig.key === 'protests' || sig.key === 'social' || sig.key === 'spotify' || sig.key === 'reddit' || sig.key === 'betting' || sig.key === 'horses' || sig.key === 'breakfast' || sig.key === 'fryup') ? ' card-wide' : '';
+  // booze (Wetherspoons Live) was previously wide:true but has been narrowed
+  // to a single column in v2.15 — paired with a new 🍴 Spoons Menu Top 5 sister
+  // card next to it for clean two-card row.
+  const wide = WIDE_CARD_KEYS.has(sig.key) ? ' card-wide' : '';
   // Escape ALL HTML-significant chars — defence in depth for any field that
   // might carry third-party text (RSS titles, fixture team names, etc.)
   const esc = s => String(s == null ? '' : s)
@@ -9455,6 +9554,17 @@ function renderCard(sig){
       return `<div class="branch ${cls}">
         <span class="branch-text"><span style="margin-right:6px">${it.icon}</span>${esc(it.name)}</span>
         <span class="cap" style="color:${wColor}">${wPct}%</span>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+  // Spoons Menu Top 5 — sister card to Wetherspoons Live
+  if (sig.spoonsMenuItems && sig.spoonsMenuItems.length){
+    queryPills = `<div class="branches">` + sig.spoonsMenuItems.map((it, i) => {
+      const cls = i === 0 ? 'hot' : i === 1 ? 'warm' : '';
+      const wColor = i === 0 ? 'var(--red)' : i === 1 ? 'var(--amber)' : 'var(--ink-faint)';
+      return `<div class="branch ${cls}">
+        <span class="branch-text"><span style="margin-right:6px">${it.icon}</span>${esc(it.name)}</span>
+        <span class="cap" style="color:${wColor}">${it.pct}%</span>
       </div>`;
     }).join('') + `</div>`;
   }
@@ -11347,8 +11457,8 @@ function renderAll(bulk){
   const SIGNAL_GROUPS = [
     { label:'Atmosphere & Time',   keys:['time','weather','daylight','moon'] },
     { feature:'env' },             // 🌍 Environment & Energy — sits under Atmosphere & Time
-    { label:'Consumption',         keys:['booze','licensing','kettle','greggs','chippy','icecream','vape', ['breakfast','fryup']] },
-    { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','football','betting','horses','pagan','folklore'], pad:true },
+    { label:'Consumption',         keys:['booze','spoonsmenu','licensing','kettle','greggs','chippy','icecream','vape', ['breakfast','fryup']] },
+    { label:'Calendar & Sport',    keys:['bh','patriot','england','lottery','pagan','folklore','football','betting','horses'], pad:true },
     { label:'Mobility & Delivery', keys:['transport','roadRage','uber','delivery'] },
     { label:'Daily Pulse',         keys:['search','petrol'] },
     { feature:'finance' },         // 💷 Finance & Markets — sits under Daily Pulse
@@ -11407,14 +11517,32 @@ function renderAll(bulk){
       if (!sigs[k] || sigs[k].hide) continue;
       signalsHtml += renderCard(sigs[k]);
       orderedSignals.push(sigs[k]);
-      // For pad:true groups, insert ONE filler card immediately after the
-      // betting card (Last Results · Football, which is wide:true) so the
-      // trailing slot in that row is filled cleanly. No other fillers — keeps
-      // the design tight without a row of repeated KEEP CALMs.
-      if (group.pad && k === 'betting'){
-        const today = new Date();
-        const seed = today.getDate() * 11 + today.getMonth() * 7;
-        signalsHtml += _fillerCardHtml(seed).replace(
+    }
+    // Universal trailing-fill: compute how many grid cells this group used and
+    // append KEEP-CALM filler cards to round up to a multiple of 4. The grid
+    // is repeat(auto-fill, minmax(260px, 1fr)) which lays out 4 cards per row
+    // at typical desktop widths; rounding up to 4 prevents the trailing-row
+    // gap that would otherwise appear when a group's cell count isn't a
+    // multiple of 4 (e.g., Calendar & Sport's 11-cell tail).
+    let cellsUsed = 0;
+    for (const k of group.keys){
+      if (Array.isArray(k)){
+        // Card pair = full row (4 cells regardless of cards inside)
+        cellsUsed += 4;
+        continue;
+      }
+      if (!sigs[k] || sigs[k].hide) continue;
+      cellsUsed += WIDE_CARD_KEYS.has(k) ? 2 : 1;
+    }
+    const remainder = (4 - (cellsUsed % 4)) % 4;
+    if (remainder > 0){
+      const today = new Date();
+      const dateSeed = today.getDate() * 11 + today.getMonth() * 7;
+      // Use group label as part of the seed so different groups get different
+      // KEEP CALM messages (rather than all repeating the same one).
+      const groupSeed = (group.label || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+      for (let i = 0; i < remainder; i++){
+        signalsHtml += _fillerCardHtml(dateSeed + groupSeed + i * 5).replace(
           'filler-card',
           'filler-card filler-rotating'
         );
