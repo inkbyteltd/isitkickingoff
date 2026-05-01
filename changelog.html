@@ -176,6 +176,39 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v2.16 <span class="stamp">live</span></div>
+      <div class="release-tag">🛡️ UK Threat Level fix — was confidently mis-reading CRITICAL when actual was SEVERE · Apr 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">User caught a serious accuracy bug. Yesterday the UK national terrorism threat level was raised to <b>SEVERE</b> — but the dashboard's UK Threat Level module was confidently reporting <b>CRITICAL</b>. Over-reporting a security signal by one full tier is exactly the kind of mistake that erodes trust on a satirical-but-data-honest site. Investigated, fixed, regression-tested.</p>
+    <h3>What was happening</h3>
+    <ul>
+      <li>The gov.uk content API returns the official threat-levels page as a JSON blob containing the page HTML.</li>
+      <li>The previous regex was: <code>(?:current|now|raised to|lowered to)[^"]*?\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b</code> — match any of those four context phrases, then grab the nearest level word.</li>
+      <li>Sounds fine, but the gov.uk page contains <i>a lot</i> of historical text: <i>"On 14 May 2017, the threat level was raised to CRITICAL after the Manchester Arena attack"</i>, <i>"It was raised to CRITICAL again in September 2017 after Parsons Green"</i>, etc. Multiple "raised to CRITICAL" phrases scattered through the document.</li>
+      <li>With non-greedy matching plus several historical mentions, the regex was locking onto a <b>historical</b> CRITICAL event instead of the actual current-level statement. The module was correctly running the live fetch, parsing the response, and confidently returning the wrong answer.</li>
+    </ul>
+    <h3>The fix</h3>
+    <ul>
+      <li>New helper <code>_extractCurrentThreatLevel(blob)</code> with <b>tightly-anchored patterns</b> in priority order. Each pattern requires the word "is" to anchor on a statement-of-fact about the current level. None of them match "raised to" or "lowered to" — those phrases are now treated as historical noise, not current-state indicators.</li>
+      <li>The 4 priority patterns: <code>"current threat level [...] is X"</code>, <code>"threat level [...] is currently X"</code>, <code>"Current threat level: X"</code>, <code>"Threat level: X"</code>.</li>
+      <li>If no tight pattern matches with confidence, we <b>fall through to the next source rather than guessing</b>. Better to under-report from the modelled SUBSTANTIAL fallback than confidently mis-report CRITICAL.</li>
+      <li>Wikipedia parser also gets a tightening: if the tight patterns don't match the full article, it tries the lead paragraph only (everything before the first <code>&lt;h2&gt;</code> History heading), avoiding the historical wikitable that contributed to the same false positive.</li>
+    </ul>
+    <h3>Regression test</h3>
+    <ul>
+      <li>Built 7 representative test cases — including the exact bug scenario (blob with "current is SEVERE" PLUS multiple historical "raised to CRITICAL" phrases). All 7 pass.</li>
+      <li>Old phrasing-only inputs (historical references without a current-state statement) now correctly return <code>null</code>, triggering the next source rather than falsely matching.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li>Inline JS parse: ✅ clean. <code>deploy-test/</code> bundle synced.</li>
+      <li>Detailed comment block added to <code>fetchUKThreatLevel</code> explaining the false-positive lesson, so future-me doesn't reintroduce the loose regex.</li>
+      <li>Modelled fallback unchanged at SUBSTANTIAL — that remains the long-term default since Feb 2022.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v2.14</div>
       <div class="release-tag">🔧 Tooltip HTML strip · Polymarket UK filter broadened to 167 keywords · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

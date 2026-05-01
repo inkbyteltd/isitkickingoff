@@ -473,18 +473,27 @@
      2 on tablet, 1 on mobile. Reuses .ticker styling for visual consistency.
      Renders as a full-width feature row inside the signals grid, immediately
      after the relevant signal group divider. */
-  .grid-feature{grid-column:1 / -1;margin:8px 0 0}
-  /* Feature-row title — matches .grid-divider style so all section headers
-     across the dashboard read with the same weight and color. Previously this
-     was orange + decorative gradient lines, which made the "Environment & Energy"
-     row look like a different kind of heading from "Atmosphere & Time" etc.
-     Now it's muted-grey, 10px, same letter-spacing — consistent. */
-  .grid-feature .feature-title{
-    font-family:var(--mono);font-weight:400;
-    font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--ink-faint);
-    margin:6px 0 -4px;padding:0;
-    display:block;
+  .grid-feature{grid-column:1 / -1;margin:0}
+  /* Feature-row title — visually IDENTICAL to .grid-divider so all section
+     headers across the dashboard read with one consistent style. The h3
+     browser defaults are explicitly nuked (font-size 1.17em, font-weight
+     bold, ~21px top/bottom margin) so a feature-title h3 matches a div
+     grid-divider pixel-for-pixel: 4×13px orange accent bar before the text,
+     muted-grey 10px monospace body, gradient line after the text. */
+  .grid-feature .feature-title,
+  .grid-feature h3.feature-title{
+    display:flex;align-items:center;gap:12px;
+    color:var(--ink-faint);font-family:var(--mono);
+    font-size:10px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;
+    margin:6px 0 -4px;padding:0;line-height:1;
+  }
+  .grid-feature .feature-title::before{
+    content:"";width:4px;height:13px;background:var(--accent);
+    border-radius:2px;flex-shrink:0;
+  }
+  .grid-feature .feature-title::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(90deg,var(--line) 0%,transparent 100%);
   }
   .env-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   @media (max-width:1100px){ .env-grid{grid-template-columns:repeat(2,1fr)} }
@@ -3566,6 +3575,23 @@ const BREAKFAST_INGREDIENTS = [
   { key:'bread',    icon:'🍞', name:'White loaf',         pack:'800g sliced',
     packPrice:1.40, perPlate:0.18, yoyPct:+5.4, color:'#d4b483',
     histYoY: { 2021: 0.5, 2022: 12.0, 2023: 19.0, 2024: 4.0, 2025: 4.0, 2026: 5.4 } },
+  // The condiments + the brew — small per-plate cost each, but nobody serves a
+  // proper full English without them. Heinz Ketchup and HP Brown Sauce are the
+  // two unbreakable cultural laws. Salted butter goes on the toast. PG Tips
+  // (or any builders' tea) goes in the cup. ONS sub-categories: sauces &
+  // condiments, butter, hot beverages.
+  { key:'ketchup',  icon:'🍅', name:'Heinz Tomato Ketchup', pack:'460g squeezy',
+    packPrice:2.50, perPlate:0.13, yoyPct:+3.2, color:'#c92a2a',
+    histYoY: { 2021: 1.0, 2022: 8.0,  2023: 11.0, 2024: 4.0, 2025: 3.0, 2026: 3.2 } },
+  { key:'hpsauce',  icon:'🟤', name:'HP Brown Sauce',       pack:'255g',
+    packPrice:2.00, perPlate:0.12, yoyPct:+3.5, color:'#5d3a1a',
+    histYoY: { 2021: 1.0, 2022: 9.0,  2023: 12.0, 2024: 4.0, 2025: 3.0, 2026: 3.5 } },
+  { key:'butter',   icon:'🧈', name:'Salted butter',        pack:'250g block',
+    packPrice:2.40, perPlate:0.24, yoyPct:+4.6, color:'#f0c75e',
+    histYoY: { 2021: 1.0, 2022: 28.0, 2023: 13.0, 2024: 5.0, 2025: 4.0, 2026: 4.6 } },
+  { key:'tea',      icon:'☕', name:"Builders' Tea (PG Tips)", pack:'80 bags',
+    packPrice:3.50, perPlate:0.04, yoyPct:+5.0, color:'#7a5a3a',
+    histYoY: { 2021: 1.0, 2022: 10.0, 2023: 12.0, 2024: 5.0, 2025: 4.0, 2026: 5.0 } },
 ];
 
 function signalBreakfast(){
@@ -4559,7 +4585,50 @@ const THREAT_LEVELS = {
 const UK_THREAT_FALLBACK = 'SUBSTANTIAL'; // long-term default since Feb 2022
 
 /* Pull the current UK national terrorism threat level.
-   Returns { level, source, live, asOf? } — falls back gracefully on every error. */
+   Returns { level, source, live, asOf? } — falls back gracefully on every error.
+
+   IMPORTANT — false-positive lesson learned in v2.16:
+   The previous regex matched on "current|now|raised to|lowered to" then grabbed
+   the nearest LOW/MODERATE/SUBSTANTIAL/SEVERE/CRITICAL word. That sounded fine,
+   but the gov.uk page has historical sections like:
+     "On 14 May 2017, the threat level was raised to CRITICAL after the
+      Manchester Arena attack."
+   With non-greedy matching and several "raised to" phrases scattered through
+   the HTML, the regex was locking onto a HISTORICAL CRITICAL event instead of
+   the actual current level. So the module was confidently reporting CRITICAL
+   while the real level was SEVERE — over-reporting by one full tier.
+
+   The new approach uses a series of TIGHTLY-anchored patterns in priority
+   order, requiring phrases that only appear next to the live current-level
+   statement (e.g. "current threat level [...] is X", "is currently X").
+   We DO NOT match on "raised to" or "lowered to" anymore — those phrases
+   appear all over the historical record and are not reliable indicators of
+   the *current* level. If no tight pattern matches with confidence, we fall
+   through to the next source rather than guessing. Better to under-report
+   from the modelled fallback than over-report from a false match. */
+function _extractCurrentThreatLevel(blob){
+  if (!blob || typeof blob !== 'string') return null;
+  // Patterns in priority order — each must include "is" to anchor on a
+  // statement-of-fact about the current level. None match the "raised to"
+  // or "lowered to" historical phrasing.
+  const patterns = [
+    // "The current threat level (from international terrorism) to the UK is SEVERE"
+    /current\s+(?:national\s+)?threat\s+level[^.]{0,120}?\s+is\s+([A-Z]+)\b/i,
+    // "The threat to the UK [...] is currently SEVERE"
+    /threat\s+(?:to|in|for|level)[^.]{0,120}?\s+is\s+currently\s+([A-Z]+)\b/i,
+    // "Current threat level: SEVERE" (table/header form)
+    /current\s+threat\s+level\s*:\s*([A-Z]+)\b/i,
+    // Bare "Threat level: SEVERE" header form
+    /\bthreat\s+level\s*:\s*([A-Z]+)\b/i,
+  ];
+  const VALID = new Set(['LOW','MODERATE','SUBSTANTIAL','SEVERE','CRITICAL']);
+  for (const re of patterns){
+    const m = blob.match(re);
+    if (m && VALID.has(m[1].toUpperCase())) return m[1].toUpperCase();
+  }
+  return null;
+}
+
 async function fetchUKThreatLevel(){
   // Source 1 — gov.uk content API (official, JSON, supports CORS)
   try {
@@ -4567,12 +4636,11 @@ async function fetchUKThreatLevel(){
     const res = await fetch(url, { headers: { 'Accept': 'application/json' }});
     if (res.ok){
       const j = await res.json();
-      // The page body is HTML inside details.body — search for any of the 5 levels
       const blob = JSON.stringify(j);
-      const m = blob.match(/(?:current|now|raised to|lowered to)[^"]*?\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b/i);
-      if (m){
+      const level = _extractCurrentThreatLevel(blob);
+      if (level){
         return {
-          level: m[1].toUpperCase(),
+          level,
           source: 'gov.uk',
           live: true,
           asOf: j?.public_updated_at?.slice(0,10) || j?.updated_at?.slice(0,10) || null,
@@ -4588,26 +4656,20 @@ async function fetchUKThreatLevel(){
     if (res.ok){
       const j = await res.json();
       const html = j?.parse?.text?.['*'] || '';
-      // The article opens with "The current threat level [...] is [LEVEL]" — grab it
-      let m = html.match(/current[^<]{0,160}?\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b/i);
-      // Backup: most-recent row in the historical table — pick the first wikitable
-      // row whose date is newest (table is sorted descending). We look at the
-      // first <td> after the first <tr> in tables of class wikitable.
-      if (!m){
-        const tableMatch = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[\s\S]*?<\/table>/i);
-        if (tableMatch){
-          const rowMatch = tableMatch[0].match(/<tr[^>]*>[\s\S]*?<\/tr>([\s\S]*?<tr[^>]*>[\s\S]*?<\/tr>)/i);
-          if (rowMatch){
-            m = rowMatch[1].match(/\b(LOW|MODERATE|SUBSTANTIAL|SEVERE|CRITICAL)\b/i);
-          }
-        }
-      }
-      if (m){
-        return { level: m[1].toUpperCase(), source: 'Wikipedia', live: true };
-      }
+      // First try the tightly-anchored patterns
+      let level = _extractCurrentThreatLevel(html);
+      if (level) return { level, source: 'Wikipedia', live: true };
+      // Wikipedia-specific fallback: scan the infobox / lead paragraph only,
+      // avoiding the historical wikitable below. The lead is everything before
+      // the first <h2> heading (which typically marks the "History" section).
+      const lead = html.split(/<h2[\s>]/i)[0] || '';
+      level = _extractCurrentThreatLevel(lead);
+      if (level) return { level, source: 'Wikipedia', live: true };
     }
   } catch(e){ /* fall through */ }
 
+  // No confident live read — return modelled fallback. Better to under-report
+  // SUBSTANTIAL than confidently mis-report CRITICAL.
   return { level: UK_THREAT_FALLBACK, source: 'modelled', live: false };
 }
 
@@ -4872,7 +4934,7 @@ function _toXUrl(nitterLink){
 function _envFeatureHtml(){
   return `
     <div class="grid-feature">
-      <h3 class="feature-title">🌍 Environment &amp; Energy · Live context</h3>
+      <h3 class="feature-title">🌍 Environment &amp; Energy</h3>
       <div class="env-grid" id="env-tickers"></div>
     </div>
   `;
@@ -4916,7 +4978,7 @@ function _fillerCardHtml(absoluteIdx){
 function _financeFeatureHtml(){
   return `
     <div class="grid-feature">
-      <h3 class="feature-title">💷 Finance &amp; Markets · Live context</h3>
+      <h3 class="feature-title">💷 Finance &amp; Markets</h3>
       <div class="env-grid" id="finance-tickers"></div>
     </div>
   `;
