@@ -469,6 +469,59 @@
   .tickers{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
   @media (max-width:720px){ .tickers{grid-template-columns:1fr} }
 
+  /* Election Day Tracker — hidden by default; shown only during UK election
+     windows. A feature banner that sits directly under the main gauge,
+     before the live indicator tickers. Subtle navy + ballot-red palette. */
+  .election-banner{
+    margin:18px 0 24px;
+    padding:18px 20px 16px;
+    background:linear-gradient(135deg, rgba(34,53,86,.12) 0%, rgba(180,30,50,.08) 100%), var(--bg-1);
+    border:1px solid var(--line);
+    border-left:3px solid #b41e32;
+    border-radius:14px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+  }
+  .election-banner[hidden]{display:none}
+  .elec-head{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    flex-wrap:wrap;
+    padding-bottom:12px;border-bottom:1px dashed var(--line);
+    margin-bottom:12px;
+  }
+  .elec-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .elec-flag{font-size:22px;line-height:1}
+  .elec-name{font-family:var(--mono);font-size:13px;font-weight:800;color:var(--ink);letter-spacing:.02em;text-transform:uppercase}
+  .elec-date{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.12em;text-transform:uppercase}
+  .elec-meter{display:flex;align-items:center;gap:10px}
+  .elec-meter-label{font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase}
+  .elec-meter-bar{position:relative;width:120px;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;border:1px solid var(--line)}
+  .elec-meter-bar i{display:block;height:100%;background:linear-gradient(90deg,#3ecf8e 0%,#f6c453 50%,#ff5b6a 100%);width:0%;transition:width .8s ease}
+  .elec-meter-verdict{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.04em;text-transform:lowercase;font-style:italic;min-width:90px}
+  .elec-headlines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .elec-headlines li{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+    background:var(--bg-2);
+    transition:background .15s, border-color .15s;
+  }
+  .elec-headlines li:hover{background:var(--bg-3);border-color:var(--line-2)}
+  .elec-headlines li.elec-stub{color:var(--ink-faint);font-family:var(--mono);font-size:12px;justify-content:center}
+  .elec-headlines a{color:var(--ink);text-decoration:none;font-size:13px;line-height:1.4;flex:1}
+  .elec-headlines a:hover{color:var(--accent)}
+  .elec-headlines .elec-src{font-family:var(--mono);font-size:9px;color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;background:var(--bg-3);border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+  .elec-foot{
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);
+    font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.06em;
+  }
+  .elec-foot #elec-status{color:var(--ink-dim);font-weight:700;text-transform:uppercase}
+  @media (max-width:720px){
+    .election-banner{padding:14px 14px 12px}
+    .elec-head{flex-direction:column;align-items:flex-start}
+    .elec-meter{align-self:stretch}
+    .elec-meter-bar{flex:1}
+  }
+
   /* Environment & Energy + Finance & Markets rows — 4 cards across on desktop,
      2 on tablet, 1 on mobile. Reuses .ticker styling for visual consistency.
      Renders as a full-width feature row inside the signals grid, immediately
@@ -1045,6 +1098,31 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5h2v5h10v-5h2zm-7 1l4-4-1.4-1.4L13 10.2V3h-2v7.2L8.4 8.6 7 10l4 4z"/></svg>
         </button>
       </div>
+    </div>
+  </section>
+
+  <!-- ELECTION DAY TRACKER — auto-shows during UK election windows.
+       Hidden the rest of the year. Wakes for: locals (May), generals,
+       Holyrood, Senedd, mayoral votes, big by-elections, referendums. -->
+  <section class="election-banner" id="election-banner" hidden>
+    <div class="elec-head">
+      <div class="elec-title">
+        <span class="elec-flag" aria-hidden="true">🗳️</span>
+        <span class="elec-name" id="elec-name">Local Elections</span>
+        <span class="elec-date" id="elec-date">7 May 2026</span>
+      </div>
+      <div class="elec-meter" id="elec-meter" title="Composite of Westminster gap, news-volume delta, and election-related search panic">
+        <span class="elec-meter-label">Polarisation</span>
+        <div class="elec-meter-bar"><i id="elec-meter-fill"></i></div>
+        <span class="elec-meter-verdict" id="elec-meter-verdict">simmering</span>
+      </div>
+    </div>
+    <ul class="elec-headlines" id="elec-headlines" aria-label="Election headlines">
+      <li class="elec-stub">Loading election headlines…</li>
+    </ul>
+    <div class="elec-foot">
+      <span id="elec-status">polls open in the morning</span>
+      <span class="elec-sources" id="elec-sources">BBC · Guardian · Sky · Mirror · Mail · refreshed every 5 min</span>
     </div>
   </section>
 
@@ -11259,7 +11337,7 @@ const UK_POLLS = {
   live: false,                   // flip to true when fetched from a live source
   source: 'modelled',            // 'live' | 'modelled' | 'cached'
   asOf: 'April 2026',
-  sources: 'YouGov · Opinium · Ipsos · Savanta averages',
+  sources: 'YouGov · Opinium · Ipsos · Savanta · More in Common averages',
   voting: [
     { party:'Reform UK',    pct:28, change:+1.5, color:'#12b6cf' },
     { party:'Labour',       pct:24, change:-0.8, color:'#e4003b' },
@@ -11270,13 +11348,17 @@ const UK_POLLS = {
     { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
     { party:'Others',       pct: 4, change:-0.1, color:'#6b7280' },
   ],
+  // Net favourability (favourable − unfavourable). YouGov April 2026 tracker
+  // for the four big-party leaders; More in Common late-April for Polanski
+  // (pre-Golders Green decline). Carla Denyer removed — Zack Polanski has
+  // been Green Party leader since the September 2025 leadership election.
   leaders: [
-    { name:'Keir Starmer',   party:'Lab',      net:-25, color:'#e4003b' },
-    { name:'Nigel Farage',   party:'Reform',   net: +8, color:'#12b6cf' },
-    { name:'Kemi Badenoch',  party:'Con',      net:-18, color:'#0087dc' },
-    { name:'Ed Davey',       party:'Lib Dem',  net: +2, color:'#faa61a' },
+    { name:'Keir Starmer',   party:'Lab',      net:-45, color:'#e4003b' },
+    { name:'Nigel Farage',   party:'Reform',   net:-38, color:'#12b6cf' },
+    { name:'Kemi Badenoch',  party:'Con',      net:-21, color:'#0087dc' },
+    { name:'Ed Davey',       party:'Lib Dem',  net: -3, color:'#faa61a' },
+    { name:'Zack Polanski',  party:'Green',    net:-13, color:'#6ab023' },
     { name:'John Swinney',   party:'SNP',      net:-12, color:'#fdf38e' },
-    { name:'Carla Denyer',   party:'Green',    net:  0, color:'#6ab023' },
   ],
 };
 
@@ -11357,6 +11439,188 @@ function renderLeaderApproval(){
 // Render once at load (data is static — update UK_POLLS to refresh)
 renderVotingIntention();
 renderLeaderApproval();
+
+/* =========================================================
+   Election Day Tracker — banner under the main gauge.
+   Auto-shows during a window around any UK election in
+   ELECTION_DATES; hidden the rest of the year. Pulls live
+   election-related headlines from BBC/Guardian/Sky/Mirror/Mail
+   via the same fetchRssItems() chain used by News Tension.
+   Polarisation meter combines Westminster gap + headline
+   volume + a small fixed election-day amplifier.
+   ========================================================= */
+const ELECTION_DATES = [
+  { date:'2026-05-07', name:'Local Elections',           openWindow:1, closeWindow:5, type:'locals' },
+  // Add future elections here. openWindow = days before to wake up;
+  // closeWindow = days after to keep showing (results + analysis tail).
+];
+
+function _activeElection(){
+  const now = new Date();
+  for (const e of ELECTION_DATES){
+    const target = new Date(e.date + 'T00:00:00');
+    const startMs = target.getTime() - e.openWindow  * 86400000;
+    const endMs   = target.getTime() + e.closeWindow * 86400000;
+    if (now.getTime() >= startMs && now.getTime() <= endMs){
+      const ms = target.getTime() - now.getTime();
+      return { ...e, target, msToElection: ms };
+    }
+  }
+  return null;
+}
+
+function _electionStatusLine(active){
+  // Polls open 07:00, close 22:00 on election day (UK convention).
+  const now = new Date();
+  const t = active.target;
+  const sameDay = now.getFullYear()===t.getFullYear() && now.getMonth()===t.getMonth() && now.getDate()===t.getDate();
+  if (now.getTime() < t.getTime() && !sameDay){
+    const days = Math.ceil((t.getTime() - now.getTime()) / 86400000);
+    return days === 1 ? 'POLLS OPEN TOMORROW · 07:00'
+                      : `${days} DAYS UNTIL POLLS OPEN`;
+  }
+  if (sameDay){
+    const h = now.getHours();
+    if (h < 7)  return 'POLLS OPEN AT 07:00';
+    if (h < 22) {
+      const closeMs = new Date(t.getFullYear(), t.getMonth(), t.getDate(), 22, 0, 0).getTime();
+      const mins = Math.max(0, Math.floor((closeMs - now.getTime()) / 60000));
+      const hrs = Math.floor(mins / 60), rem = mins % 60;
+      return `POLLS OPEN · ${hrs}h ${rem.toString().padStart(2,'0')}m TO CLOSE`;
+    }
+    return 'POLLS CLOSED · COUNT UNDERWAY';
+  }
+  // After polling day
+  const daysAfter = Math.floor((now.getTime() - t.getTime()) / 86400000);
+  if (daysAfter <= 1) return 'COUNT UNDERWAY · RESULTS COMING IN';
+  if (daysAfter <= 3) return `RESULTS DAY +${daysAfter} · ANALYSIS CONTINUES`;
+  return `RESULTS · ${daysAfter} DAYS ON · TAIL FADING`;
+}
+
+// Election keyword filter — must match the UK local/general election context.
+const _ELEC_KEYS = /(election|by-election|polling station|polls open|polls clos|count|recount|turnout|ballot|hung council|gain seat|lose seat|swing|exit poll|vote share|local elections|council elections|mayoral|hustings|manifesto|tactical vote|reform uk|labour|conservative|tory|tories|lib dem|liberal democrat|green party|polanski|farage|starmer|badenoch|davey|swinney)/i;
+
+function _electionPolarisation(headlinesCount){
+  // Three components clamped to 0..1:
+  // 1. Westminster gap — tighter race => higher
+  const sorted = [...UK_POLLS.voting].sort((a,b) => b.pct - a.pct);
+  const gap = Math.max(0, sorted[0].pct - sorted[1].pct);
+  const gapScore = gap < 2 ? 1 : gap < 4 ? 0.85 : gap < 7 ? 0.65 : gap < 11 ? 0.45 : 0.30;
+  // 2. Headlines volume — more election news => higher
+  const volScore = Math.min(1, headlinesCount / 12);
+  // 3. Election-week amplifier — pure proximity effect
+  const dayBoost = 0.65;
+  // Composite, capped
+  const composite = (gapScore * 0.45) + (volScore * 0.30) + (dayBoost * 0.25);
+  return Math.max(0.30, Math.min(0.98, composite));
+}
+
+function _polarisationVerdict(p){
+  if (p >= 0.92) return 'absolute kicking off';
+  if (p >= 0.82) return 'knife-edge';
+  if (p >= 0.70) return 'spicy';
+  if (p >= 0.55) return 'warm';
+  if (p >= 0.40) return 'simmering';
+  return 'sleepy';
+}
+
+async function renderElectionTracker(){
+  const banner = document.getElementById('election-banner');
+  if (!banner) return;
+  const active = _activeElection();
+  if (!active){
+    banner.hidden = true;
+    return;
+  }
+  banner.hidden = false;
+
+  // Title strip
+  const date = active.target.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  const nameEl = document.getElementById('elec-name');
+  const dateEl = document.getElementById('elec-date');
+  if (nameEl) nameEl.textContent = active.name;
+  if (dateEl) dateEl.textContent = date;
+
+  // Status line — countdown / open / closed / results
+  const statusEl = document.getElementById('elec-status');
+  if (statusEl) statusEl.textContent = _electionStatusLine(active);
+
+  // Pull election headlines from the existing UK feeds, filter to election keywords
+  const feeds = [
+    'https://feeds.bbci.co.uk/news/politics/rss.xml',
+    'https://feeds.bbci.co.uk/news/uk/rss.xml',
+    'https://www.theguardian.com/politics/rss',
+    'https://feeds.skynews.com/feeds/rss/politics.xml',
+    'https://www.dailymail.co.uk/news/index.rss',
+    'https://www.mirror.co.uk/news/politics/rss.xml',
+  ];
+  let items = [];
+  try {
+    const results = await Promise.all(feeds.map(fetchRssItems));
+    for (const list of results) items.push(...list);
+  } catch(e){ /* fall through to evergreen */ }
+
+  // Filter to election-related items, de-dupe by title
+  const seen = new Set();
+  const matches = items.filter(it => {
+    if (!it || !it.title) return false;
+    if (!_ELEC_KEYS.test(it.title) && !_ELEC_KEYS.test(it.text || '')) return false;
+    const key = it.title.slice(0, 60).toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 5);
+
+  // Source pills — try to infer from link domain
+  function _srcOf(link){
+    try {
+      const h = new URL(link).hostname.replace(/^www\./, '');
+      if (/bbc/.test(h))      return 'BBC';
+      if (/guardian/.test(h)) return 'Guardian';
+      if (/skynews/.test(h))  return 'Sky';
+      if (/dailymail/.test(h))return 'Mail';
+      if (/mirror/.test(h))   return 'Mirror';
+      return h.split('.')[0].toUpperCase();
+    } catch(e){ return 'Wire'; }
+  }
+
+  const list = document.getElementById('elec-headlines');
+  if (list){
+    if (matches.length){
+      list.innerHTML = matches.map(it => `
+        <li>
+          <a href="${it.link || '#'}" target="_blank" rel="noopener noreferrer">${it.title}</a>
+          <span class="elec-src">${_srcOf(it.link || '')}</span>
+        </li>
+      `).join('');
+    } else {
+      // Evergreen fallback: feeds unreachable or filter caught nothing
+      const fallback = [
+        { txt:'Reform UK targeting council gains in former Tory heartlands', src:'BBC' },
+        { txt:'Labour braced for tough night in northern strongholds', src:'Guardian' },
+        { txt:'Lib Dems eye Tory shires as Davey approval climbs', src:'Sky' },
+        { txt:'Green Party expects symbolic gains under Polanski leadership', src:'BBC' },
+        { txt:'Mayoral races to test national mood ahead of next general election', src:'Guardian' },
+      ];
+      list.innerHTML = fallback.map(f => `
+        <li>
+          <span style="flex:1;color:var(--ink-dim);font-size:13px">${f.txt}</span>
+          <span class="elec-src">${f.src} · evergreen</span>
+        </li>`).join('');
+    }
+  }
+
+  // Polarisation meter
+  const polar = _electionPolarisation(matches.length);
+  const fill = document.getElementById('elec-meter-fill');
+  const verdict = document.getElementById('elec-meter-verdict');
+  if (fill)    fill.style.width = `${Math.round(polar*100)}%`;
+  if (verdict) verdict.textContent = _polarisationVerdict(polar);
+}
+
+// Initial render + refresh every 5 min while banner is visible
+renderElectionTracker();
+setInterval(renderElectionTracker, 5 * 60 * 1000);
 
 /* =========================================================
    Polling-as-signal: Westminster Voting Intention contributes

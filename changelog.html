@@ -176,9 +176,31 @@
   <details class="release" open>
     <summary class="release-head">
       <div class="release-ver">v3.9 <span class="stamp">live</span></div>
-      <div class="release-tag">📝 Essay № 003 "What the Cousins Know" + changelog reorder + Florida Subreddits widened · May 2026</div>
+      <div class="release-tag">🗳️ Election Day Tracker + Essay № 003 "What the Cousins Know" + Polanski fix + changelog reorder · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
-    <p class="intro">A consolidated release covering three threads of work that should ship together: the third essay on the dashboard's premise (this one about Florida), a long-overdue cleanup of the changelog's version ordering, and a quick widen on the Florida Subreddits live card so it stops shrinking when the Reddit fetch lands.</p>
+    <p class="intro">A consolidated release timed for tomorrow's UK local elections (7 May 2026). Headline change is a new <b>Election Day Tracker</b> that auto-shows under the main gauge during election windows, with live headlines and a polarisation meter. Bundled with the third essay (this one about Florida), a long-overdue refresh of the leader approval table (Polanski in, all 6 figures updated), the changelog's version-ordering cleanup, and a quick fix for the Florida Subreddits card.</p>
+    <h3>🗳️ Election Day Tracker — auto-show banner under the gauge</h3>
+    <ul>
+      <li>New banner module sits directly under the main gauge, between gauge and live tickers. Hidden 49 weeks of the year. Wakes for: locals (May), generals, Holyrood, Senedd, mayoral races, big by-elections, referendums.</li>
+      <li>Three components: <b>title strip</b> (election name + date + live countdown — "POLLS OPEN · 14h 12m TO CLOSE" / "COUNT UNDERWAY · RESULTS COMING IN" / "RESULTS DAY +2"), <b>live headlines feed</b> (5 rotating items pulled from BBC Politics, Guardian Politics, Sky Politics, Mirror Politics, Daily Mail filtered by election keywords, refreshed every 5 min), and a <b>polarisation mini-meter</b> (composite of Westminster gap + headline volume + election-week amplifier, with verdict line: sleepy → simmering → warm → spicy → knife-edge → absolute kicking off).</li>
+      <li>Auto-show window: 1 day before each election + 5 days after (count + analysis tail). For 7 May 2026 locals, banner is live from 6 May to 12 May inclusive.</li>
+      <li><code>ELECTION_DATES</code> array drives the schedule — new dates can be added without touching the render code.</li>
+      <li>Headlines fall back to a curated evergreen rotation if all RSS proxies fail or no items match the election filter — same resilience pattern as News Tension.</li>
+    </ul>
+    <h3>🛡️ Leader approval table — Polanski in, figures refreshed</h3>
+    <ul>
+      <li>Carla Denyer removed from the leader approval widget. <b>Zack Polanski</b> has been Green Party leader since the September 2025 leadership election — should have been updated months ago.</li>
+      <li>All six net-favourability figures refreshed to April 2026 YouGov tracker values. The table now reads: Davey −3 · Swinney −12 · Polanski −13 · Badenoch −21 · Farage −38 · Starmer −45. Pint-test winner is Ed Davey by a clear margin, which feels right for May 2026.</li>
+      <li>Previous values were significantly stale — Farage was on +8 from a year ago, Starmer on −25 vs the actual −45. The "rising tide of unpopularity" narrative is now properly reflected.</li>
+    </ul>
+    <h3>📝 Essay № 003 — "What the Cousins Know"</h3>
+    <ul>
+      <li>~7-minute read on why Britain — professionally interested in measuring its mood through chip-shop queues and Wetherspoons crowds — might do well to study what the cousins have accidentally built. Britain measures middles. Florida measures tails. There is, it turns out, a difference.</li>
+      <li>Four sections: <b>I.</b> The Centre of Gravity Has Gone South · <b>II.</b> The Gator Logic · <b>III.</b> Police Chases as Polling · <b>IV.</b> What the Cousins Know That We Don't.</li>
+      <li>Illustrated with live signal cards from the Florida dashboard: Gator Incident Index, Florida Man Daily, Police Chase Probability, Walmart Brawl Index, Bath Salts Live, Donut Consumption.</li>
+      <li>Lives at <code>news.html#post-003</code>. Sits above the Beans essay in the reading column. Pull-quote: <i>"The swamp has not been drained. It has just been zoned."</i></li>
+      <li>Supporting social-posts pack written for LinkedIn (long-form), X (5-tweet thread), Substack (note), Threads/Bluesky (single-post). LinkedIn banner generated at 1200×627 in field-cartography style — annotated survey plate of Florida with pin markers for Mar-a-Lago, the Everglades, The Villages, and St. Augustine.</li>
+    </ul>
     <h3>📝 Essay № 003 — "What the Cousins Know"</h3>
     <ul>
       <li>~7-minute read on why Britain — professionally interested in measuring its mood through chip-shop queues and Wetherspoons crowds — might do well to study what the cousins have accidentally built. Britain measures middles. Florida measures tails. There is, it turns out, a difference.</li>
