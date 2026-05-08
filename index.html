@@ -11336,28 +11336,33 @@ const IIKO_HOUSE_BANNERS = [
 const UK_POLLS = {
   live: false,                   // flip to true when fetched from a live source
   source: 'modelled',            // 'live' | 'modelled' | 'cached'
-  asOf: 'April 2026',
+  asOf: 'May 2026',
   sources: 'YouGov · Opinium · Ipsos · Savanta · More in Common averages',
+  // Polling-day refresh: YouGov 4-5 May had Reform 25 / Lab 18 / Con 17 /
+  // Grn 15 / LD 14. PolitPro and PollCheck aggregates lined up close.
+  // Headline shift since April: Greens have nearly doubled (8→16) and
+  // Labour has collapsed below the Conservatives. Reform's lead has
+  // narrowed slightly but is still the runaway story.
   voting: [
-    { party:'Reform UK',    pct:28, change:+1.5, color:'#12b6cf' },
-    { party:'Labour',       pct:24, change:-0.8, color:'#e4003b' },
-    { party:'Conservative', pct:19, change:+0.3, color:'#0087dc' },
-    { party:'Lib Dem',      pct:13, change:+0.2, color:'#faa61a' },
-    { party:'Green',        pct: 8, change:+0.1, color:'#6ab023' },
-    { party:'SNP',          pct: 3, change:-0.2, color:'#fdf38e' },
+    { party:'Reform UK',    pct:26, change:-2.0, color:'#12b6cf' },
+    { party:'Labour',       pct:18, change:-6.0, color:'#e4003b' },
+    { party:'Conservative', pct:18, change:-1.0, color:'#0087dc' },
+    { party:'Green',        pct:16, change:+8.0, color:'#6ab023' },
+    { party:'Lib Dem',      pct:13, change: 0.0, color:'#faa61a' },
+    { party:'SNP',          pct: 3, change: 0.0, color:'#fdf38e' },
     { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
-    { party:'Others',       pct: 4, change:-0.1, color:'#6b7280' },
+    { party:'Others',       pct: 5, change:+1.0, color:'#6b7280' },
   ],
-  // Net favourability (favourable − unfavourable). YouGov April 2026 tracker
-  // for the four big-party leaders; More in Common late-April for Polanski
-  // (pre-Golders Green decline). Carla Denyer removed — Zack Polanski has
-  // been Green Party leader since the September 2025 leadership election.
+  // Net favourability (favourable − unfavourable). YouGov April 2026
+  // tracker is the most recent unified source. Polanski now at his best
+  // recorded YouGov reading (-8). Badenoch and Farage both improved
+  // slightly. Starmer and Swinney essentially unchanged.
   leaders: [
-    { name:'Keir Starmer',   party:'Lab',      net:-45, color:'#e4003b' },
-    { name:'Nigel Farage',   party:'Reform',   net:-38, color:'#12b6cf' },
-    { name:'Kemi Badenoch',  party:'Con',      net:-21, color:'#0087dc' },
+    { name:'Keir Starmer',   party:'Lab',      net:-47, color:'#e4003b' },
+    { name:'Nigel Farage',   party:'Reform',   net:-36, color:'#12b6cf' },
+    { name:'Kemi Badenoch',  party:'Con',      net:-19, color:'#0087dc' },
     { name:'Ed Davey',       party:'Lib Dem',  net: -3, color:'#faa61a' },
-    { name:'Zack Polanski',  party:'Green',    net:-13, color:'#6ab023' },
+    { name:'Zack Polanski',  party:'Green',    net: -8, color:'#6ab023' },
     { name:'John Swinney',   party:'SNP',      net:-12, color:'#fdf38e' },
   ],
 };
@@ -11450,9 +11455,11 @@ renderLeaderApproval();
    volume + a small fixed election-day amplifier.
    ========================================================= */
 const ELECTION_DATES = [
-  { date:'2026-05-07', name:'Local Elections',           openWindow:1, closeWindow:5, type:'locals' },
+  { date:'2026-05-07', name:'Local Elections',           openWindow:1, closeWindow:2, type:'locals' },
   // Add future elections here. openWindow = days before to wake up;
   // closeWindow = days after to keep showing (results + analysis tail).
+  // closeWindow:2 means banner is visible election day + the morning after,
+  // then auto-hides. Adjust per-election if you want a longer results tail.
 ];
 
 function _activeElection(){

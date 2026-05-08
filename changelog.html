@@ -175,6 +175,47 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.10 <span class="stamp">live</span></div>
+      <div class="release-tag">📊 Polls refresh — Greens surge, Labour collapse · Election Tracker auto-hide tomorrow · 8 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Results-day refresh. Council counts have been coming in overnight, and the most recent national polling (YouGov 4-5 May 2026) is now in the dashboard. The headline isn't the Reform lead — that was already known. The headline is what's happened to the other parties: <b>Greens have nearly doubled (8% → 16%)</b> and <b>Labour has collapsed below the Conservatives (24% → 18%)</b>. Pulled the leader approval table to the same May 2026 reading at the same time. Election Day Tracker stays on for today only and auto-hides tomorrow morning.</p>
+    <h3>📊 Westminster Voting Intention — May 2026 averages</h3>
+    <ul>
+      <li>Reform UK <b>26%</b> (↓ 2 since April) — lead narrowed but still 8 pts clear of Labour</li>
+      <li>Labour <b>18%</b> (↓ 6) — has slipped below the Conservatives for the first time on this dashboard</li>
+      <li>Conservative <b>18%</b> (↓ 1) — flat at a low base</li>
+      <li>Green <b>16%</b> (<b>↑ 8</b>) — the story of the spring; nearly doubled in five weeks under Polanski</li>
+      <li>Liberal Democrat <b>13%</b> (flat) — third or fourth place depending on the poll</li>
+      <li>SNP <b>3</b> · Plaid <b>1</b> · Others <b>5</b></li>
+      <li>Source: YouGov 4-5 May 2026 single poll · cross-checked against PolitPro and PollCheck aggregates · all roughly within margin of error.</li>
+    </ul>
+    <h3>🛡️ Party Leader Approval — May 2026 net favourability</h3>
+    <ul>
+      <li>Ed Davey <b>−3</b> (flat) — pint-test winner extended.</li>
+      <li>Zack Polanski <b>−8</b> (↑ 5) — best YouGov reading since taking the leadership; offset by More in Common's lower post-Golders Green figure, hence the average.</li>
+      <li>John Swinney <b>−12</b> (flat).</li>
+      <li>Kemi Badenoch <b>−19</b> (↑ 2) — slow improvement off a low base.</li>
+      <li>Nigel Farage <b>−36</b> (↑ 2) — Reform's policy momentum is not translating to personal popularity.</li>
+      <li>Keir Starmer <b>−47</b> (↓ 2) — the abyss continues.</li>
+    </ul>
+    <h3>🗳️ Election Day Tracker — close window tightened</h3>
+    <ul>
+      <li><code>ELECTION_DATES[0].closeWindow</code> reduced from <b>5</b> → <b>2</b>. The banner is visible today (May 8 results day) and auto-hides tomorrow morning (May 9 onwards).</li>
+      <li>Status line is currently rendering as <i>"COUNT UNDERWAY · RESULTS COMING IN"</i>. By tomorrow it would have switched to <i>"RESULTS DAY +2 · ANALYSIS CONTINUES"</i> but it'll never get to display that — banner sleeps before the day rolls.</li>
+      <li>Default for future elections in the array is still 2 days. Override per-election if a longer results tail is needed (e.g., generals warrant a 7-day analysis window).</li>
+    </ul>
+    <h3>📝 Essay № 004 — signal cards refreshed</h3>
+    <ul>
+      <li>The two inline signal cards inside "It Used to Be About Bins" (Westminster Voting Intention + Party Leader Approval) updated to the May 2026 numbers so the live page is consistent with itself. Body text left as the snapshot of writing it on May 6.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code>, <code>news.html</code>, <code>changelog.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.9 <span class="stamp">live</span></div>
       <div class="release-tag">🗳️ Election Day Tracker + Essays № 003 "What the Cousins Know" & № 004 "It Used to Be About Bins" + Polanski fix + changelog reorder · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
