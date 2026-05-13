@@ -175,6 +175,47 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.11 <span class="stamp">live</span></div>
+      <div class="release-tag">🗳️ Post-election scan — Labour decimated, Reform clean up, Election Tracker stood down · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">The 7 May 2026 locals are done. <b>Labour got decimated to a historic low</b>, <b>Reform are the headline winners</b>, the <b>Greens held up better than expected</b>, the <b>Conservatives had an OK-not-great night</b>, and the <b>Lib Dems quietly hoovered up Tory shires</b>. Numbers updated, tracker stood down.</p>
+    <h3>🗳️ Election Day Tracker — removed from homepage</h3>
+    <ul>
+      <li><code>ELECTION_DATES</code> is now an empty array. The banner stays hidden until a new election is added back in (Senedd, Holyrood, mayoral, by-election, general, referendum).</li>
+      <li>All the rendering infrastructure remains intact in <code>index.html</code> — countdown logic, headline fetch + filter, polarisation meter, auto-show / auto-sleep. Re-activating is a one-line change: add the next election's date and window to the array and the banner wakes itself.</li>
+      <li>Sample entry kept as a comment in-source for quick re-use.</li>
+    </ul>
+    <h3>📊 Westminster Voting Intention — post-locals NEV blend</h3>
+    <ul>
+      <li><b>Reform UK 27%</b> (↑ 1) — the night's clear winner. Sky's National Equivalent Vote calculation puts them on 27%, a 7-pt lead over the Conservatives.</li>
+      <li><b>Conservative 20%</b> (↑ 2) — solid second place, better than the polls had them.</li>
+      <li><b>Labour 15%</b> (↓ 3) — historic low. Ipsos has Labour at the joint-lowest reading they've ever recorded for the party.</li>
+      <li><b>Green 14%</b> (↓ 2 from May pre-election peak of 16) — Polanski's Greens softened slightly from poll peak but had a strong night relative to history.</li>
+      <li><b>Lib Dem 14%</b> (↑ 1) — quiet competence. Picked up a number of Tory shire councils.</li>
+      <li><b>SNP 3</b> · <b>Plaid Cymru 1</b> · <b>Others 6</b> (Independents over-performed at 10% in NEV, blended down for Westminster equivalent).</li>
+      <li>Sources: Sky National Equivalent Vote (May 7 actual cast votes) blended with Ipsos Political Monitor (9-15 Apr) and YouGov/Opinium/Savanta May trackers.</li>
+    </ul>
+    <h3>🛡️ Party Leader Approval — post-result directional moves</h3>
+    <ul>
+      <li>Ed Davey <b>−2</b> (↑ 1) — pint-test winner extends his lead. Decent Lib Dem night.</li>
+      <li>Zack Polanski <b>−6</b> (↑ 2) — Greens did well, leader gets credit.</li>
+      <li>John Swinney <b>−12</b> (flat) — no English council interest.</li>
+      <li>Kemi Badenoch <b>−17</b> (↑ 2) — Tories survived; she gets a small bounce.</li>
+      <li>Nigel Farage <b>−32</b> (↑ 4) — winning a national election helps. His net is improving fastest of any leader in the table.</li>
+      <li>Keir Starmer <b>−50</b> (↓ 3) — the abyss continues. Slipped into −50s post-result.</li>
+    </ul>
+    <h3>📝 Essay № 004 inline cards — updated to post-result</h3>
+    <ul>
+      <li>The two signal cards inside "It Used to Be About Bins" refreshed to the post-locals numbers so the live page is internally consistent. The essay body text stays as the May 6 snapshot — that's how essays work.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code>, <code>news.html</code>, <code>changelog.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.10 <span class="stamp">live</span></div>
       <div class="release-tag">📊 Polls refresh — Greens surge, Labour collapse · Election Tracker auto-hide tomorrow · 8 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

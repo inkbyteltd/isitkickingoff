@@ -11336,33 +11336,36 @@ const IIKO_HOUSE_BANNERS = [
 const UK_POLLS = {
   live: false,                   // flip to true when fetched from a live source
   source: 'modelled',            // 'live' | 'modelled' | 'cached'
-  asOf: 'May 2026',
-  sources: 'YouGov · Opinium · Ipsos · Savanta · More in Common averages',
-  // Polling-day refresh: YouGov 4-5 May had Reform 25 / Lab 18 / Con 17 /
-  // Grn 15 / LD 14. PolitPro and PollCheck aggregates lined up close.
-  // Headline shift since April: Greens have nearly doubled (8→16) and
-  // Labour has collapsed below the Conservatives. Reform's lead has
-  // narrowed slightly but is still the runaway story.
+  asOf: 'May 2026 · post-locals',
+  sources: 'Sky National Equivalent Vote · Ipsos · YouGov · Opinium · Savanta averages',
+  // Post-election refresh: Sky NEV from the 7 May 2026 locals had Reform
+  // 27 / Con 20 / Lab 15 / Grn 14 / LD 14 / Ind 10. Latest Ipsos (9-15 Apr)
+  // had Reform on a 6-pt lead at 25%. We blend the NEV (actual vote cast)
+  // with the most recent Westminster polls. Headline: Labour has been
+  // decimated to its lowest Ipsos reading on record; Reform are the
+  // headline winners; Greens held up better than expected; Cons OK-not-
+  // great; Lib Dems quietly competent.
   voting: [
-    { party:'Reform UK',    pct:26, change:-2.0, color:'#12b6cf' },
-    { party:'Labour',       pct:18, change:-6.0, color:'#e4003b' },
-    { party:'Conservative', pct:18, change:-1.0, color:'#0087dc' },
-    { party:'Green',        pct:16, change:+8.0, color:'#6ab023' },
-    { party:'Lib Dem',      pct:13, change: 0.0, color:'#faa61a' },
+    { party:'Reform UK',    pct:27, change:+1.0, color:'#12b6cf' },
+    { party:'Conservative', pct:20, change:+2.0, color:'#0087dc' },
+    { party:'Labour',       pct:15, change:-3.0, color:'#e4003b' },
+    { party:'Green',        pct:14, change:-2.0, color:'#6ab023' },
+    { party:'Lib Dem',      pct:14, change:+1.0, color:'#faa61a' },
     { party:'SNP',          pct: 3, change: 0.0, color:'#fdf38e' },
     { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
-    { party:'Others',       pct: 5, change:+1.0, color:'#6b7280' },
+    { party:'Others',       pct: 6, change:+1.0, color:'#6b7280' },
   ],
-  // Net favourability (favourable − unfavourable). YouGov April 2026
-  // tracker is the most recent unified source. Polanski now at his best
-  // recorded YouGov reading (-8). Badenoch and Farage both improved
-  // slightly. Starmer and Swinney essentially unchanged.
+  // Net favourability (favourable − unfavourable). Directional moves
+  // following the 7 May result: Starmer worsened on a heavy defeat,
+  // Farage improved on a strong win, Badenoch and Polanski both improved
+  // modestly on solid results, Davey held steady (pint-test winner),
+  // Swinney unchanged (no English council interest).
   leaders: [
-    { name:'Keir Starmer',   party:'Lab',      net:-47, color:'#e4003b' },
-    { name:'Nigel Farage',   party:'Reform',   net:-36, color:'#12b6cf' },
-    { name:'Kemi Badenoch',  party:'Con',      net:-19, color:'#0087dc' },
-    { name:'Ed Davey',       party:'Lib Dem',  net: -3, color:'#faa61a' },
-    { name:'Zack Polanski',  party:'Green',    net: -8, color:'#6ab023' },
+    { name:'Keir Starmer',   party:'Lab',      net:-50, color:'#e4003b' },
+    { name:'Nigel Farage',   party:'Reform',   net:-32, color:'#12b6cf' },
+    { name:'Kemi Badenoch',  party:'Con',      net:-17, color:'#0087dc' },
+    { name:'Ed Davey',       party:'Lib Dem',  net: -2, color:'#faa61a' },
+    { name:'Zack Polanski',  party:'Green',    net: -6, color:'#6ab023' },
     { name:'John Swinney',   party:'SNP',      net:-12, color:'#fdf38e' },
   ],
 };
@@ -11455,11 +11458,16 @@ renderLeaderApproval();
    volume + a small fixed election-day amplifier.
    ========================================================= */
 const ELECTION_DATES = [
-  { date:'2026-05-07', name:'Local Elections',           openWindow:1, closeWindow:2, type:'locals' },
-  // Add future elections here. openWindow = days before to wake up;
-  // closeWindow = days after to keep showing (results + analysis tail).
-  // closeWindow:2 means banner is visible election day + the morning after,
-  // then auto-hides. Adjust per-election if you want a longer results tail.
+  // No active election. Banner stays hidden until an entry is added here.
+  // Infrastructure preserved for future elections — Senedd, Holyrood,
+  // mayoral votes, by-elections, generals, referendums.
+  //
+  // Example entry to re-activate for a future election:
+  //   { date:'YYYY-MM-DD', name:'Local Elections', openWindow:1, closeWindow:2, type:'locals' },
+  //
+  // openWindow = days before to wake up · closeWindow = days after to keep showing
+  // 2026 local elections (7 May) shipped at closeWindow:2 — removed here
+  // post-results once Labour had been decimated and Reform had cleaned up.
 ];
 
 function _activeElection(){
