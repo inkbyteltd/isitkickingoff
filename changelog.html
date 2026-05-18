@@ -175,6 +175,33 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.15 <span class="stamp">live</span></div>
+      <div class="release-tag">🐛 Filler bug — duplicate KEEP CALM cards side-by-side, fixed · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">User spotted two identical "KEEP CALM · and queue politely" filler cards sitting next to each other in a Sport &amp; Live Events row. Investigated and found a real bug in the filler-rotation logic — every 8 seconds the rotation interval was picking a single pool item and applying it to <i>every</i> <code>.filler-rotating</code> card on the page. So after the first rotation tick, all visible fillers became identical, regardless of where they were placed.</p>
+    <h3>🐛 Root cause</h3>
+    <ul>
+      <li>The rotation function maintained one shared <code>idx</code> across all cards. Per-tick: <code>idx = (idx + 1) % POOL.length</code>, then <code>const f = POOL[idx]</code>, then <code>cards.forEach(card =&gt; ...set every card to f)</code>. Every filler card on the page synced to the same pool item. That's the bug.</li>
+      <li>Separately, the initial render also used a step of <code>i * 5</code> when seeding fillers within a row. The pool length is 15. <code>gcd(5, 15) = 5</code>, so positions 0 and 3 produced the same card on first paint. Less visible than the rotation bug but the same family of issue.</li>
+    </ul>
+    <h3>✅ The fix</h3>
+    <ul>
+      <li><b>Per-card offset in rotation</b>: each card now computes its own index as <code>(tick + cardIdx * STEP) % POOL.length</code>, with <code>STEP = 4</code>. Adjacent cards differ by 4 positions in the pool on every tick.</li>
+      <li><b>Coprime step 4</b>: <code>gcd(4, 15) = 1</code>, so every row of up to 15 cards yields 15 distinct pool indices before any repetition. With a typical row of 4 trailing fillers, all four positions are guaranteed unique.</li>
+      <li><b>Initial render also bumped to step 4</b> for the same reason. Even before the first rotation tick fires, the page now never paints duplicate adjacent fillers.</li>
+    </ul>
+    <h3>🧪 Math verification</h3>
+    <ul>
+      <li>After any rotation tick T, a 4-card row displays pool positions <code>[T, T+4, T+8, T+12] mod 15</code>. Six sample ticks: <code>[0,4,8,12]</code> · <code>[1,5,9,13]</code> · <code>[2,6,10,14]</code> · <code>[3,7,11,0]</code> · <code>[4,8,12,1]</code> · <code>[5,9,13,2]</code>. Every row, every tick, 4 distinct items.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean. No other pages affected.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.14 <span class="stamp">live</span></div>
       <div class="release-tag">📝 Essays page — accordion + Expand/Collapse all + deep-link auto-open · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

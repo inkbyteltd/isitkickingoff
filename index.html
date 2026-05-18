@@ -10253,18 +10253,24 @@ function stopLoadingSweep(){
 startLoadingSweep();
 
 // Filler card quote rotation — every 8 seconds, cycle to the next item in
-// the KEEP_CALM_FILLERS pool with a soft fade. Targets any `.filler-rotating`
-// in the dashboard; runs once per page lifecycle.
+// the KEEP_CALM_FILLERS pool with a soft fade. Each card gets its OWN
+// per-position offset (step of 4, coprime with the 15-item pool) so adjacent
+// fillers never display the same content. Without this, every .filler-rotating
+// would sync to the same pool item on every tick and you'd see two identical
+// "KEEP CALM" cards side-by-side — which defeats the whole purpose.
 (function _startFillerRotation(){
-  let idx = 0;
+  const STEP = 4;  // coprime with KEEP_CALM_FILLERS.length (15) → no collisions
+  let tick = 0;
   setInterval(() => {
     const cards = document.querySelectorAll('.filler-rotating');
     if (!cards.length) return;
-    idx = (idx + 1) % KEEP_CALM_FILLERS.length;
-    const f = KEEP_CALM_FILLERS[idx];
-    cards.forEach(card => {
+    tick = (tick + 1) % KEEP_CALM_FILLERS.length;
+    cards.forEach((card, cardIdx) => {
       const inner = card.querySelector('.filler-inner');
       if (!inner) return;
+      // Per-card index: tick + cardIdx*STEP, mod pool size.
+      // Adjacent cards differ by STEP positions in the pool.
+      const f = KEEP_CALM_FILLERS[(tick + cardIdx * STEP) % KEEP_CALM_FILLERS.length];
       // Fade out → swap → fade in
       inner.style.transition = 'opacity .3s';
       inner.style.opacity = '0';
@@ -12095,8 +12101,11 @@ function renderAll(bulk){
       // Use group label as part of the seed so different groups get different
       // KEEP CALM messages (rather than all repeating the same one).
       const groupSeed = (group.label || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+      // Step of 4 is coprime with KEEP_CALM_FILLERS.length (15) so positions
+      // never collide within a row. Step 5 — the previous value — shares
+      // gcd 5 with 15, so position 0 and position 3 produced the same card.
       for (let i = 0; i < remainder; i++){
-        signalsHtml += _fillerCardHtml(dateSeed + groupSeed + i * 5).replace(
+        signalsHtml += _fillerCardHtml(dateSeed + groupSeed + i * 4).replace(
           'filler-card',
           'filler-card filler-rotating'
         );
