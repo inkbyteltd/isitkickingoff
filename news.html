@@ -174,6 +174,17 @@
   article.post .pull-quote::before{content:"\201C";color:var(--accent);margin-right:4px;font-size:24px}
   article.post .pull-quote::after{content:"\201D";color:var(--accent);margin-left:4px;font-size:24px}
 
+  /* Inline charts inside essays — gauge timelines, tier mixes, etc. */
+  article.post figure.gauge-chart{
+    margin:24px 0 8px;padding:18px 14px 12px;
+    background:var(--bg-2);border:1px solid var(--line);border-radius:12px;
+  }
+  article.post figure.gauge-chart svg{display:block;width:100%;height:auto;max-width:100%}
+  article.post figure.gauge-chart figcaption{
+    font-family:var(--mono);font-size:10px;color:var(--ink-faint);
+    margin-top:10px;line-height:1.55;letter-spacing:.04em;text-align:center;
+  }
+
   /* "More posts" placeholder for the next entries */
   .more-posts{
     background:var(--bg-1);border:1px dashed var(--line-2);border-radius:14px;
@@ -256,9 +267,13 @@
     <h2 class="title">Vote Burnham, Get Starmer Out</h2>
     <p class="deck">On the post-election clown show, the Makerfield paradox, and what the gauge actually saw the country do.</p>
 
-    <p>For about a year, the principal slogan of the Reform UK campaign — printed on billboards, painted on the side of a coach, repeated on hundreds of doorsteps and a great many GB News panels — was, in one form or another: <b>Vote Reform, get Starmer out.</b> It was a clean line. It was a stupid line. It was, like most of British politics this decade, the kind of line that turns out to be roughly true while being roughly incorrect.</p>
+    <p>For much of the past year, the Reform UK message — heard on a great many podcast appearances, conference stages, and GB News panels — has boiled down, in one form or another, to a single line: <b>Vote Reform, get Starmer out.</b> It was a clean line. It was a stupid line. It was, like most of British politics this decade, the kind of line that turns out to be roughly true while being roughly incorrect.</p>
 
-    <p>If you want to remove Sir Keir Starmer from the office of Prime Minister this June, you will not be voting Reform UK. You will not even be voting Conservative. You will be voting <b>Labour</b>, in a by-election in Makerfield, for Andy Burnham — who has emerged this week as the only sitting British politician with both a chance of unseating the man currently in Downing Street and a small army of Mancunians who actually like him.</p>
+    <p>Because here is the situation in May 2026, eleven days after Starmer's party was decimated in the locals. The next British Prime Minister will not be chosen by the British public in a general election. The next British Prime Minister will not be chosen by a Reform-led realignment, by a Tory revival, or by a coalition of the willing on the back benches. The next British Prime Minister will, in all likelihood, be chosen by approximately <b>seventy thousand registered voters in Makerfield, Greater Manchester</b>, in a Labour by-election to be held in June.</p>
+
+    <p>This is, of course, exactly the situation that the Labour Party — Andy Burnham personally not excluded — spent the entire 2022–2024 period describing as a <i>democratic outrage</i>. When the Conservative Party, in the course of three years, used its members and its MPs to install three Prime Ministers in succession without a general election, Labour called it <i>musical chairs</i>. They called it a constitutional disgrace. They called it the visible final stage of Tory entitlement. They called it, more than once, <i>"the Tories choosing their own Prime Minister instead of letting the country choose one."</i></p>
+
+    <p>The country, this time, has already chosen one. The country chose, on 7 May, <i>"not these people."</i> The response of the political system to the country having chosen "not these people" has been to begin a process by which seventy thousand registered voters in a single Greater Manchester constituency — turnout in by-elections being what it is, perhaps thirty thousand of them — will decide who runs the country instead.</p>
 
     <p>It is a <i>peculiar</i> moment.</p>
 
@@ -318,6 +333,73 @@
 
     <p>We pulled the last two weeks of snapshots from the gauge — about a thousand readings, captured roughly every twenty minutes between 5 and 18 May — and laid them next to the calendar.</p>
 
+    <figure class="gauge-chart" aria-label="Daily gauge score timeline, 5 to 18 May 2026, with event markers">
+      <svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet">
+        <!-- Tier band tints -->
+        <g opacity="0.06">
+          <rect x="60" y="60" width="640" height="60" fill="#ff5b6a"/>
+          <rect x="60" y="120" width="640" height="60" fill="#f6c453"/>
+          <rect x="60" y="180" width="640" height="60" fill="#3ecf8e"/>
+        </g>
+        <!-- Gridlines -->
+        <g stroke="#5f6b7d" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.45">
+          <line x1="60" x2="700" y1="60" y2="60"/>
+          <line x1="60" x2="700" y1="120" y2="120"/>
+          <line x1="60" x2="700" y1="180" y2="180"/>
+          <line x1="60" x2="700" y1="240" y2="240"/>
+        </g>
+        <!-- Y-axis labels -->
+        <g font-family="ui-monospace,monospace" font-size="10" fill="#9aa6b8">
+          <text x="52" y="244" text-anchor="end">0</text>
+          <text x="52" y="184" text-anchor="end">25</text>
+          <text x="52" y="124" text-anchor="end">50</text>
+          <text x="52" y="64" text-anchor="end">75</text>
+        </g>
+        <!-- Tier labels right -->
+        <g font-family="ui-monospace,monospace" font-size="8" letter-spacing="1.3" fill="#5f6b7d">
+          <text x="700" y="92" text-anchor="end" opacity="0.7">KICKING OFF</text>
+          <text x="700" y="152" text-anchor="end" opacity="0.7">GETTING LIPPY</text>
+          <text x="700" y="212" text-anchor="end" opacity="0.7">HAVING A BREW</text>
+        </g>
+        <!-- Daily mean area -->
+        <path d="M 60 141 L 109 148 L 158 171 L 208 159 L 257 152 L 306 169 L 355 173 L 404 179 L 453 171 L 502 178 L 552 162 L 601 158 L 650 172 L 700 190 L 700 240 L 60 240 Z" fill="#ff8a1f" opacity="0.18"/>
+        <!-- Daily mean line -->
+        <path d="M 60 141 L 109 148 L 158 171 L 208 159 L 257 152 L 306 169 L 355 173 L 404 179 L 453 171 L 502 178 L 552 162 L 601 158 L 650 172 L 700 190" stroke="#ff8a1f" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <!-- Daily max line -->
+        <path d="M 60 94 L 109 94 L 158 90 L 208 81 L 257 67 L 306 94 L 355 99 L 404 119 L 453 121 L 502 107 L 552 94 L 601 91 L 650 105 L 700 139" stroke="#ff5b6a" stroke-width="1.5" stroke-dasharray="4,3" fill="none" stroke-linejoin="round" opacity="0.85"/>
+        <!-- Event markers -->
+        <g stroke="#e8edf4" stroke-width="0.6" stroke-dasharray="2,4" opacity="0.5">
+          <line x1="158" x2="158" y1="40" y2="240"/>
+          <line x1="601" x2="601" y1="40" y2="240"/>
+        </g>
+        <!-- Event labels -->
+        <g font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#e8edf4">
+          <text x="158" y="30" text-anchor="middle">▼ 7 MAY · POLLS</text>
+          <text x="601" y="30" text-anchor="middle">▼ 16 MAY · UNITE RALLY</text>
+        </g>
+        <!-- Peak callout -->
+        <circle cx="257" cy="67" r="5" fill="#ff5b6a" stroke="#0d1117" stroke-width="2"/>
+        <text x="266" y="60" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#ff5b6a">▲ 77 · IT'S KICKING OFF</text>
+        <text x="266" y="74" font-family="ui-monospace,monospace" font-size="9" fill="#9aa6b8">Sat 9 May, 22:00</text>
+        <!-- X-axis date labels -->
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#9aa6b8">
+          <text x="60" y="260" text-anchor="middle">5 MAY</text>
+          <text x="208" y="260" text-anchor="middle">8 MAY</text>
+          <text x="355" y="260" text-anchor="middle">11 MAY</text>
+          <text x="502" y="260" text-anchor="middle">14 MAY</text>
+          <text x="650" y="260" text-anchor="middle">17 MAY</text>
+        </g>
+        <!-- Legend -->
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#9aa6b8">
+          <line x1="60" x2="80" y1="288" y2="288" stroke="#ff8a1f" stroke-width="2"/>
+          <text x="86" y="292">daily mean</text>
+          <line x1="180" x2="200" y1="288" y2="288" stroke="#ff5b6a" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="206" y="292">daily peak</text>
+        </g>
+      </svg>
+      <figcaption>Daily gauge score, 5–18 May 2026 · 1,000 dashboard snapshots · the Saturday-9-May peak of 77 was the only IT'S KICKING OFF reading of the fortnight.</figcaption>
+    </figure>
+
     <div class="sig-illust" aria-label="Gauge peak Saturday 9 May">
       <div class="sig">
         <div class="row1">
@@ -364,6 +446,52 @@
     <h3>V. Is It Kicking Off?</h3>
 
     <p>In the specific, dashboard-defined sense — is the country currently registering high aggravation? — the answer is <b>no</b>. Today's reading is sitting around 22, <b>HAVING A BREW</b>. Yesterday it was 30. The day before, 36. We are, as a nation, currently quite calm. We had our shout on the 7th, we got our protest in on the 16th, and the rest is for Westminster to sort out.</p>
+
+    <figure class="gauge-chart" aria-label="Tier distribution across 1000 readings, 5 to 18 May 2026">
+      <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet">
+        <!-- Stacked horizontal bar showing tier proportions -->
+        <!-- HANDBAGS 27.4% · A BIT TENSE 24.3% · HAVING A BREW 21.8% · GETTING LIPPY 19.5% · PROPER SIMMERING 6.9% · IT'S KICKING OFF 0.1% -->
+        <g>
+          <!-- HAVING A BREW 21.8% — width 139 -->
+          <rect x="60"  y="60" width="139" height="44" fill="#3ecf8e" opacity="0.85"/>
+          <!-- HANDBAGS 27.4% — width 175 -->
+          <rect x="199" y="60" width="175" height="44" fill="#9bd664" opacity="0.85"/>
+          <!-- A BIT TENSE 24.3% — width 155 -->
+          <rect x="374" y="60" width="155" height="44" fill="#f4c025" opacity="0.85"/>
+          <!-- GETTING LIPPY 19.5% — width 125 -->
+          <rect x="529" y="60" width="125" height="44" fill="#ff8a1f" opacity="0.85"/>
+          <!-- PROPER SIMMERING 6.9% — width 44 -->
+          <rect x="654" y="60" width="44"  height="44" fill="#ff5b6a" opacity="0.85"/>
+          <!-- IT'S KICKING OFF 0.1% — width 2 -->
+          <rect x="698" y="60" width="2"   height="44" fill="#b41e32"/>
+        </g>
+        <!-- Tier labels above -->
+        <g font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#e8edf4">
+          <text x="129" y="48" text-anchor="middle">HAVING A BREW · 22%</text>
+          <text x="287" y="48" text-anchor="middle">HANDBAGS · 27%</text>
+          <text x="451" y="48" text-anchor="middle">A BIT TENSE · 24%</text>
+          <text x="591" y="48" text-anchor="middle">GETTING LIPPY · 20%</text>
+        </g>
+        <!-- Right cluster annotations -->
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#ff5b6a" font-weight="700">
+          <line x1="676" x2="676" y1="105" y2="130" stroke="#ff5b6a" stroke-width="0.8"/>
+          <text x="676" y="146" text-anchor="middle">PROPER SIMMERING</text>
+          <text x="676" y="160" text-anchor="middle">6.9%</text>
+        </g>
+        <g font-family="ui-monospace,monospace" font-size="9" fill="#b41e32" font-weight="700">
+          <line x1="699" x2="699" y1="105" y2="180" stroke="#b41e32" stroke-width="0.8"/>
+          <text x="699" y="196" text-anchor="end">▲ IT'S KICKING OFF</text>
+          <text x="699" y="208" text-anchor="end">1 reading · 0.1%</text>
+        </g>
+        <!-- Summary line under bar -->
+        <text x="60" y="130" font-family="ui-monospace,monospace" font-size="10" fill="#9aa6b8">
+          <tspan font-weight="700" fill="#e8edf4">73%</tspan> of the fortnight was in the three calmest tiers · only <tspan font-weight="700" fill="#ff5b6a">7%</tspan> reached PROPER SIMMERING or above
+        </text>
+      </svg>
+      <figcaption>Tier distribution across 1,000 dashboard readings, 5–18 May 2026. The country spent nearly three-quarters of the fortnight in HANDBAGS, HAVING A BREW, or A BIT TENSE. The single IT'S KICKING OFF reading is barely visible as a sliver on the right.</figcaption>
+    </figure>
+
+
 
     <p>In the larger, allegorical sense — is <i>something</i> kicking off in Britain right now? — the answer is <b>obviously, yes, but quietly</b>. The clown show in the Labour Party is the surface manifestation of something deeper: the steady, almost geological decoupling of a political class from a country that has stopped recognising itself in it. Reform's 27%, Labour's 15%, the Lib Dems' Home Counties haul, the Greens' urban surge, and Andy Burnham's Wigan path-to-Number-10 are all symptoms of the same underlying thing — a country that no longer believes the Westminster theatre is the one running the show.</p>
 
