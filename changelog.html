@@ -175,6 +175,34 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.14 <span class="stamp">live</span></div>
+      <div class="release-tag">📝 Essays page — accordion + Expand/Collapse all + deep-link auto-open · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">As the essay count climbed past five, the Essays page was becoming a long scroll — Essay 005 alone is 1,300 words with two big inline SVG charts. Applied the same accordion pattern we use on the Changelog: each essay collapses into a preview card showing pills + title + deck + chevron, with one click to expand. Latest essay opens by default; older ones sit as cards beneath.</p>
+    <h3>📝 What changed on the Essays page</h3>
+    <ul>
+      <li>Every <code>&lt;article class="post"&gt;</code> wrapped in a native HTML <code>&lt;details class="essay"&gt;</code>. Each essay's meta pills, title, and deck were promoted out of the article body and into a <code>&lt;summary class="essay-head"&gt;</code> — that's the clickable preview card.</li>
+      <li>Only the most recent essay (currently <i>"Vote Burnham, Get Starmer Out"</i>, post-005) carries the <code>open</code> attribute. Essays 001–004 collapse into their summary cards.</li>
+      <li><b>Expand all / Collapse all</b> buttons at the top of the reading column, mirroring the changelog controls.</li>
+      <li><b>Deep-link auto-open</b>: a small inline script reads <code>location.hash</code> on page load. If the hash matches an essay id (e.g., <code>news.html#post-003</code>), that essay auto-opens and scrolls smoothly into view — regardless of which essay is the most recent. Hash changes during the session also re-trigger this. Means a shared link to "What the Cousins Know" always lands the reader in the right essay, expanded.</li>
+      <li>Pure HTML <code>&lt;details&gt;</code> for the collapse mechanic — accessible (keyboard + screen reader friendly), no framework, no JS dependency for the fundamental behaviour. The JS just handles the bulk controls and deep links.</li>
+    </ul>
+    <h3>🎨 Visual</h3>
+    <ul>
+      <li>Summary card layout: meta pills row → title (serif, slightly smaller than the open-essay h2) → italic deck → 14px chevron in the top-right that rotates 90° when the essay opens.</li>
+      <li>Hover state on each summary: faint orange wash + chevron tints to accent.</li>
+      <li>Open state: border tightens slightly (line-2 instead of line), thin separator between summary and body content.</li>
+      <li>Mobile-friendly: padding reduces below 680px, chevron repositions, body content reflows.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>news.html</code> and <code>changelog.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean. No other pages affected.</li>
+      <li>No content edits — every essay reads exactly the same as before. Only the page architecture changed.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.13 <span class="stamp">live</span></div>
       <div class="release-tag">🗳️ Makerfield By-Election Tracker + Burnham added to leader approval · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

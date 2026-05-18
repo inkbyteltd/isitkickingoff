@@ -174,6 +174,77 @@
   article.post .pull-quote::before{content:"\201C";color:var(--accent);margin-right:4px;font-size:24px}
   article.post .pull-quote::after{content:"\201D";color:var(--accent);margin-left:4px;font-size:24px}
 
+  /* Essay accordion — each essay collapsible like the changelog releases.
+     Latest essay opens by default; the rest sit as preview cards (pills +
+     title + deck + chevron). Pure HTML <details>/<summary>; the wee bit
+     of JS at the bottom of the page handles Expand-all / Collapse-all
+     and #post-N hash auto-open. */
+  details.essay{
+    background:var(--bg-1);border:1px solid var(--line);border-radius:14px;
+    margin-bottom:18px;overflow:hidden;
+    transition:border-color .15s;
+  }
+  details.essay[open]{border-color:var(--line-2)}
+  .essay-head{
+    display:block;position:relative;
+    padding:24px 28px 22px;cursor:pointer;list-style:none;
+    transition:background .12s;
+  }
+  .essay-head:hover{background:rgba(255,138,31,.04)}
+  .essay-head::-webkit-details-marker{display:none}
+  .essay-head::marker{display:none;content:''}
+  details.essay[open] > .essay-head{border-bottom:1px solid var(--line)}
+  .essay-head .meta{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:14px;padding-right:30px;
+  }
+  .essay-head .meta .pill{padding:4px 10px;border-radius:999px;background:var(--bg-3);border:1px solid var(--line-2)}
+  .essay-head .meta .pill.tag{color:var(--accent);border-color:var(--accent)}
+  .essay-head .title{
+    font-family:var(--serif);font-weight:700;
+    font-size:clamp(26px,4vw,36px);line-height:1.18;letter-spacing:-.01em;color:var(--ink);
+    margin:0 0 6px;padding-right:30px;
+  }
+  .essay-head .deck{
+    font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--ink-dim);
+    font-style:italic;margin:6px 0 0;padding-right:30px;
+  }
+  .essay-head .chev{
+    position:absolute;top:26px;right:24px;
+    width:14px;height:14px;color:var(--ink-faint);
+    transition:transform .22s ease, color .2s ease;
+  }
+  .essay-head:hover .chev{color:var(--accent)}
+  details.essay[open] > .essay-head .chev{transform:rotate(90deg);color:var(--accent)}
+
+  /* When the essay body opens, the inner <article> loses its outer chrome
+     (the <details> wrapper now provides it) and just becomes the body. */
+  details.essay > article.post{
+    background:transparent;border:none;border-radius:0;
+    padding:22px 28px 28px;margin:0;
+  }
+  @media (max-width:680px){
+    details.essay > article.post{padding:18px 20px 22px}
+    .essay-head{padding:20px 20px 18px}
+    .essay-head .chev{top:22px;right:18px}
+    .essay-head .meta,.essay-head .title,.essay-head .deck{padding-right:24px}
+  }
+
+  /* Expand-all / Collapse-all controls sitting above the essay list */
+  .essay-controls{
+    display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  }
+  .essay-controls button{
+    background:transparent;border:1px solid var(--line);color:var(--ink-dim);
+    padding:6px 12px;border-radius:999px;cursor:pointer;
+    font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;
+    transition:all .15s;
+  }
+  .essay-controls button:hover{border-color:var(--accent);color:var(--accent)}
+  .essay-controls button:active{transform:translateY(1px)}
+
   /* Inline charts inside essays — gauge timelines, tier mixes, etc. */
   article.post figure.gauge-chart{
     margin:24px 0 8px;padding:18px 14px 12px;
@@ -255,19 +326,26 @@
 
   <div class="reading-col">
 
+  <div class="essay-controls">
+    <button type="button" data-essay-action="expand">Expand all</button>
+    <button type="button" data-essay-action="collapse">Collapse all</button>
+  </div>
+
   <!-- ESSAY 005 — Vote Burnham, Get Starmer Out -->
-  <article class="post" id="post-005">
-    <div class="meta">
+  <details class="essay" id="post-005" open>
+    <summary class="essay-head">
+      <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg>
+      <div class="meta">
       <span class="pill tag">Essay</span>
       <span class="pill">Vol. 1 · Issue 5</span>
       <span class="pill">~8 min read</span>
       <span class="pill">May 2026</span>
     </div>
-
-    <h2 class="title">Vote Burnham, Get Starmer Out</h2>
-    <p class="deck">On the post-election clown show, the Makerfield paradox, and what the gauge actually saw the country do.</p>
-
-    <p>For much of the past year, the Reform UK message — heard on a great many podcast appearances, conference stages, and GB News panels — has boiled down, in one form or another, to a single line: <b>Vote Reform, get Starmer out.</b> It was a clean line. It was a stupid line. It was, like most of British politics this decade, the kind of line that turns out to be roughly true while being roughly incorrect.</p>
+      <h2 class="title">Vote Burnham, Get Starmer Out</h2>
+      <p class="deck">On the post-election clown show, the Makerfield paradox, and what the gauge actually saw the country do.</p>
+    </summary>
+    <article class="post">
+      <p>For much of the past year, the Reform UK message — heard on a great many podcast appearances, conference stages, and GB News panels — has boiled down, in one form or another, to a single line: <b>Vote Reform, get Starmer out.</b> It was a clean line. It was a stupid line. It was, like most of British politics this decade, the kind of line that turns out to be roughly true while being roughly incorrect.</p>
 
     <p>Because here is the situation in May 2026, eleven days after Starmer's party was decimated in the locals. The next British Prime Minister will not be chosen by the British public in a general election. The next British Prime Minister will not be chosen by a Reform-led realignment, by a Tory revival, or by a coalition of the willing on the back benches. The next British Prime Minister will, in all likelihood, be chosen by approximately <b>seventy thousand registered voters in Makerfield, Greater Manchester</b>, in a Labour by-election to be held in June.</p>
 
@@ -532,21 +610,24 @@
       </span><br/>
       <span style="display:inline-block;margin-top:4px">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
     </div>
-  </article>
+    </article>
+  </details>
 
   <!-- ESSAY 004 — It Used to Be About Bins -->
-  <article class="post" id="post-004">
-    <div class="meta">
+  <details class="essay" id="post-004">
+    <summary class="essay-head">
+      <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg>
+      <div class="meta">
       <span class="pill tag">Essay</span>
       <span class="pill">Vol. 1 · Issue 4</span>
       <span class="pill">~7 min read</span>
       <span class="pill">May 2026</span>
     </div>
-
-    <h2 class="title">It Used to Be About Bins</h2>
-    <p class="deck">On the new election tracker under the gauge, the uni-party, voter apathy, the Greens, Reform's surge, and what Yes Minister got right about polling day.</p>
-
-    <p>Today, we added a new module under the main gauge: an Election Day Tracker. It is — for the next week, at least — the noisiest thing on the page. It pulls live election headlines from the BBC, the Guardian, Sky, and the Mirror; filters them for the keywords any sensible British citizen now scrolls past with a sigh (<i>uni-party, swing, vote share, manifesto, Polanski, Farage, Starmer</i>); and runs a small polarisation meter against the lot. It does not, deliberately, contribute to the main aggravation score. It is an observer, not a participant. We did not want a polling-day spike to flatter or punish the gauge in either direction. We just wanted to watch.</p>
+      <h2 class="title">It Used to Be About Bins</h2>
+      <p class="deck">On the new election tracker under the gauge, the uni-party, voter apathy, the Greens, Reform's surge, and what Yes Minister got right about polling day.</p>
+    </summary>
+    <article class="post">
+      <p>Today, we added a new module under the main gauge: an Election Day Tracker. It is — for the next week, at least — the noisiest thing on the page. It pulls live election headlines from the BBC, the Guardian, Sky, and the Mirror; filters them for the keywords any sensible British citizen now scrolls past with a sigh (<i>uni-party, swing, vote share, manifesto, Polanski, Farage, Starmer</i>); and runs a small polarisation meter against the lot. It does not, deliberately, contribute to the main aggravation score. It is an observer, not a participant. We did not want a polling-day spike to flatter or punish the gauge in either direction. We just wanted to watch.</p>
 
     <p>Specifically, we wanted to watch the next seven days. Polls open tomorrow at 7am, and somewhere in the small hours of Friday morning the country will discover that several of its municipal councils have flipped — some to Reform, some to the Greens, some to nobody very much in particular. The dashboard's job, this week, is to register the quiet bit. The bit between the headline and the result. The bit where a country that thinks of itself as moderate slowly notices, in the texture of its own news cycle, that it isn't moderate any more. We are watching for polarisation. We are watching, frankly, to see whether the country still pretends it isn't divided.</p>
 
@@ -697,21 +778,24 @@
       </span><br/>
       <span style="display:inline-block;margin-top:4px">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
     </div>
-  </article>
+    </article>
+  </details>
 
   <!-- ESSAY 003 — What the Cousins Know -->
-  <article class="post" id="post-003">
-    <div class="meta">
+  <details class="essay" id="post-003">
+    <summary class="essay-head">
+      <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg>
+      <div class="meta">
       <span class="pill tag">Essay</span>
       <span class="pill">Vol. 1 · Issue 3</span>
       <span class="pill">~7 min read</span>
       <span class="pill">May 2026</span>
     </div>
-
-    <h2 class="title">What the Cousins Know</h2>
-    <p class="deck">On Mar-a-Lago, the gator hotline, and why the United States is best read at swamp level.</p>
-
-    <p>There is a particular thing that happens to a country's political centre when the air conditioning gets too good. It drifts. New York had it for a while. Washington has it on paper. London, briefly, had it on the South Bank. But the actual centre — the place where willpower sits, where the people who make decisions go on Wednesdays in February — has, for the second time in a decade, settled on a pink stucco resort with a flagpole and a buffet, a few miles from a stretch of beach where a man was last week arrested for trying to baptise a small alligator.</p>
+      <h2 class="title">What the Cousins Know</h2>
+      <p class="deck">On Mar-a-Lago, the gator hotline, and why the United States is best read at swamp level.</p>
+    </summary>
+    <article class="post">
+      <p>There is a particular thing that happens to a country's political centre when the air conditioning gets too good. It drifts. New York had it for a while. Washington has it on paper. London, briefly, had it on the South Bank. But the actual centre — the place where willpower sits, where the people who make decisions go on Wednesdays in February — has, for the second time in a decade, settled on a pink stucco resort with a flagpole and a buffet, a few miles from a stretch of beach where a man was last week arrested for trying to baptise a small alligator.</p>
 
     <p>The <a href="./florida.html" style="color:var(--accent)">Florida Man Index</a>, which has now joined the dashboard as a sister gauge to the British one, was originally a joke. Britain measures itself by the volume of activity in the chip shop queue at half eleven on a Saturday. America, increasingly, measures itself by what gets posted to r/FloridaMan at half eleven on a Tuesday. The two indicators are not the same kind. Britain's signal is class-mediated, ambient, and largely about volume. America's signal is climate-mediated, theatrical, and largely about deviation from the median. The British metric tells you whether things are going. The Florida metric tells you whether anyone is still in charge.</p>
 
@@ -842,21 +926,24 @@
       </span><br/>
       <span style="display:inline-block;margin-top:4px">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
     </div>
-  </article>
+    </article>
+  </details>
 
   <!-- ESSAY 002 — They're Coming for the Beans -->
-  <article class="post" id="post-002">
-    <div class="meta">
+  <details class="essay" id="post-002">
+    <summary class="essay-head">
+      <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg>
+      <div class="meta">
       <span class="pill tag">Essay</span>
       <span class="pill">Vol. 1 · Issue 2</span>
       <span class="pill">~6 min read</span>
       <span class="pill">April 2026</span>
     </div>
-
-    <h2 class="title">They're Coming for the Beans</h2>
-    <p class="deck">On the price of a fry-up, the egg cliff of 2023, and what gets measured when nobody's officially watching.</p>
-
-    <p>There is a particular cafe — you know the one — where the man behind the counter says nothing as he places it in front of you. Two eggs, two sausages, two rashers, mushrooms, beans, fried bread, slice of black pudding, grilled tomato, brown sauce on the side, fork already on the table. The cup of tea is automatic. The price, until quite recently, was somewhere between £6 and £7, and felt like one of the unbreakable laws of British economics — a reliable line, like cricket in the summer, or the rain in Manchester. Then it became £8. Then £8.50. And in some places that I will not name out of professional charity, £10.</p>
+      <h2 class="title">They're Coming for the Beans</h2>
+      <p class="deck">On the price of a fry-up, the egg cliff of 2023, and what gets measured when nobody's officially watching.</p>
+    </summary>
+    <article class="post">
+      <p>There is a particular cafe — you know the one — where the man behind the counter says nothing as he places it in front of you. Two eggs, two sausages, two rashers, mushrooms, beans, fried bread, slice of black pudding, grilled tomato, brown sauce on the side, fork already on the table. The cup of tea is automatic. The price, until quite recently, was somewhere between £6 and £7, and felt like one of the unbreakable laws of British economics — a reliable line, like cricket in the summer, or the rain in Manchester. Then it became £8. Then £8.50. And in some places that I will not name out of professional charity, £10.</p>
 
     <p>The fry-up has been silently inflating for five years and almost nobody has been writing it up. The Office for National Statistics has been reporting on "food and non-alcoholic beverages" with great honesty and great regularity. They have not been reporting on <i>the plate</i>, because the plate is not their unit of measurement. Nobody's is. So we built one.</p>
 
@@ -993,21 +1080,24 @@
       </span><br/>
       <span style="display:inline-block;margin-top:4px">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
     </div>
-  </article>
+    </article>
+  </details>
 
   <!-- HERO BLOG POST -->
-  <article class="post" id="post-001">
-    <div class="meta">
+  <details class="essay" id="post-001">
+    <summary class="essay-head">
+      <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg>
+      <div class="meta">
       <span class="pill tag">Essay</span>
       <span class="pill">Vol. 1 · Issue 1</span>
       <span class="pill">~7 min read</span>
       <span class="pill">April 2026</span>
     </div>
-
-    <h2 class="title">The Stella Index, the Cocaine in the Thames, and Why I Built a Dashboard for the Vibe</h2>
-    <p class="deck">A short defence of measuring the unmeasurable — and a longer one of why every nation should have a national mood-ring, ideally one calibrated to whether its corner shop has run out of curry sauce.</p>
-
-    <p>There is a particular feeling, familiar to anyone raised in this country, that arrives somewhere between half-five and seven o'clock on a Friday in late summer. It is the feeling that something is, technically, about to happen. The street has more people on it than usual. Two of them are walking abreast. There are bags. Someone is on the phone in a tone that is louder than it needs to be, and a third party — let's call him Lee — has not yet arrived but has texted "5 mins" a quarter of an hour ago. The pubs are at that very specific stage of fullness: not <i>busy</i>, exactly, but you'd struggle to find a chair without making a friend. A police van has just been parked, casually, somewhere it didn't need to be. And the thing is, you can <i>feel</i> all of this without registering any of it. You just walk into a Sainsbury's Local for a Fanta and emerge muttering, "It's a bit kicking off out there, isn't it."</p>
+      <h2 class="title">The Stella Index, the Cocaine in the Thames, and Why I Built a Dashboard for the Vibe</h2>
+      <p class="deck">A short defence of measuring the unmeasurable — and a longer one of why every nation should have a national mood-ring, ideally one calibrated to whether its corner shop has run out of curry sauce.</p>
+    </summary>
+    <article class="post">
+      <p>There is a particular feeling, familiar to anyone raised in this country, that arrives somewhere between half-five and seven o'clock on a Friday in late summer. It is the feeling that something is, technically, about to happen. The street has more people on it than usual. Two of them are walking abreast. There are bags. Someone is on the phone in a tone that is louder than it needs to be, and a third party — let's call him Lee — has not yet arrived but has texted "5 mins" a quarter of an hour ago. The pubs are at that very specific stage of fullness: not <i>busy</i>, exactly, but you'd struggle to find a chair without making a friend. A police van has just been parked, casually, somewhere it didn't need to be. And the thing is, you can <i>feel</i> all of this without registering any of it. You just walk into a Sainsbury's Local for a Fanta and emerge muttering, "It's a bit kicking off out there, isn't it."</p>
 
     <p>I have spent some years professionally interested in this exact threshold — the moment when a city, a town, a nation, decides that today is going to be a day. Most countries don't really have it, or have it at a much higher amplitude. America has riots; we have <i>"a few of them have got their tops off near the bus station, lock the door."</i> Italy has politics; we have a man with a Stella who has decided the council are not going to get away with this any longer. The British register of impending disorder is a permanent low hum, almost beneath conscious perception, and every English person carries a small and very accurate detector for it that they do not know they are carrying. We pretend it is just intuition. It is not. It is data — about a hundred ambient signals fused together, processed in milliseconds, and reported as a feeling.</p>
 
@@ -1154,7 +1244,8 @@
       </span><br/>
       <span style="display:inline-block;margin-top:4px">If this made you smile, the kettle's on the gauge — <a href="https://buymeacoffee.com/isitkickingoff" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border:none">🍵 buy us a brew</a></span>
     </div>
-  </article>
+    </article>
+  </details>
 
   <!-- More-posts placeholder -->
   <div class="more-posts">
@@ -1262,6 +1353,33 @@
     });
   });
 })();
+</script>
+
+<script>
+  // Essay accordion — Expand-all / Collapse-all buttons + deep-link auto-open.
+  // Latest essay is `open` by default in markup; hash navigation forces a
+  // specific essay open on load and scrolls it into view.
+  (function(){
+    const essays = document.querySelectorAll('details.essay');
+    document.querySelectorAll('.essay-controls [data-essay-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wantOpen = btn.getAttribute('data-essay-action') === 'expand';
+        essays.forEach(e => { wantOpen ? e.setAttribute('open','') : e.removeAttribute('open'); });
+      });
+    });
+    // If the URL has #post-N — open that essay and scroll to it
+    function _openFromHash(){
+      if (!location.hash) return;
+      const target = document.querySelector(location.hash);
+      if (target && target.tagName === 'DETAILS' && target.classList.contains('essay')){
+        target.setAttribute('open','');
+        setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 80);
+      }
+    }
+    _openFromHash();
+    // Also respond to hash changes (e.g., clicking nav links within page)
+    window.addEventListener('hashchange', _openFromHash);
+  })();
 </script>
 </body>
 </html>
