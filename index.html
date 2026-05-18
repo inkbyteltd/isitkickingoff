@@ -887,6 +887,39 @@
     .hist .legend{font-size:9px;gap:8px}
   }
 
+  /* Makerfield By-Election Tracker — sits above the Westminster Polling
+     section. Auto-hides when the by-election window has passed. */
+  .byelection-wrap{
+    background:linear-gradient(135deg,rgba(34,53,86,.10) 0%,rgba(180,30,50,.06) 100%),var(--bg-1);
+    border:1px solid var(--line);border-left:3px solid #b41e32;
+    border-radius:14px;padding:18px;margin-top:0;
+  }
+  .byelection-wrap[hidden]{display:none}
+  .be-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-bottom:14px;border-bottom:1px dashed var(--line);margin-bottom:14px}
+  .be-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .be-icon{font-size:20px;line-height:1}
+  .be-name{font-family:var(--mono);font-size:13px;font-weight:800;color:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+  .be-date{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.12em;text-transform:uppercase}
+  .be-countdown{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+  .be-stake{font-family:var(--sans);font-size:13px;color:var(--ink-dim);line-height:1.6;margin-bottom:14px;padding:12px 14px;background:var(--bg-2);border-radius:8px;border:1px solid var(--line)}
+  .be-stake b{color:var(--ink);font-weight:700}
+  .be-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:18px;margin-bottom:14px}
+  @media (max-width:720px){ .be-grid{grid-template-columns:1fr;gap:14px} }
+  .be-candidates h4,
+  .be-headlines h4{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px;font-weight:700}
+  .be-cand{display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--bg-2);border:1px solid var(--line);border-radius:6px;margin-bottom:5px;font-family:var(--mono);font-size:12px}
+  .be-cand .party-dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .be-cand .cand-name{color:var(--ink);font-weight:700}
+  .be-cand .cand-party{color:var(--ink-dim);font-size:10px;letter-spacing:.06em;margin-left:auto;text-align:right}
+  .be-headlines ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px}
+  .be-headlines li{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--line);border-radius:6px;font-size:12px;line-height:1.45;transition:border-color .15s, background .15s}
+  .be-headlines li:hover{border-color:var(--line-2);background:var(--bg-3)}
+  .be-headlines li.be-stub{color:var(--ink-faint);justify-content:center}
+  .be-headlines a{color:var(--ink);text-decoration:none;flex:1}
+  .be-headlines a:hover{color:var(--accent)}
+  .be-headlines .be-src{font-family:var(--mono);font-size:9px;color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;background:var(--bg-3);border-radius:3px;flex-shrink:0;margin-top:1px;white-space:nowrap}
+  .be-foot{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.06em;padding-top:10px;border-top:1px dashed var(--line);text-align:center}
+
   /* Polling widgets */
   .polling-wrap{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:0}
   .poll-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:8px}
@@ -1217,6 +1250,61 @@
         <span class="narrative-title">Trend read-out</span>
       </div>
       <div class="narrative-body" id="narrative-body">Reading the line…</div>
+    </div>
+  </section>
+
+  <!-- MAKERFIELD BY-ELECTION TRACKER — auto-hides on/after polling day -->
+  <h2 class="section">🗳️ Makerfield By-Election · The Seat That Decides The PM</h2>
+  <section class="byelection-wrap" id="byelection-makerfield">
+    <div class="be-head">
+      <div class="be-title">
+        <span class="be-icon" aria-hidden="true">🗳️</span>
+        <span class="be-name">Makerfield · Greater Manchester</span>
+        <span class="be-date">Thursday 18 June 2026</span>
+      </div>
+      <div class="be-countdown" id="be-countdown">— days to go</div>
+    </div>
+    <div class="be-stake">
+      <b>The seat that may decide who replaces Starmer.</b> Held by Labour MP Josh Simons, who resigned on 14 May 2026 to clear the way for Mayor of Greater Manchester <b>Andy Burnham</b> to enter Parliament and mount a Labour leadership challenge. Reform UK won every council ward in Makerfield in the May locals with roughly 50% of the vote; Labour came second on 27%. By-election turnout typically 30–40%. The result is genuinely uncertain.
+    </div>
+    <div class="be-grid">
+      <div class="be-candidates">
+        <h4>Candidates — declared / expected</h4>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Andy Burnham</span>
+          <span class="cand-party">Lab · NEC approved 15 May</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#12b6cf"></span>
+          <span class="cand-name">Robert Kenyon</span>
+          <span class="cand-party">Reform UK · rumoured</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#0087dc"></span>
+          <span class="cand-name">TBD</span>
+          <span class="cand-party">Con · standing confirmed</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#faa61a"></span>
+          <span class="cand-name">TBD</span>
+          <span class="cand-party">Lib Dem</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#6ab023"></span>
+          <span class="cand-name">TBD</span>
+          <span class="cand-party">Green · selecting</span>
+        </div>
+      </div>
+      <div class="be-headlines">
+        <h4>Latest headlines · Makerfield / Burnham / leadership</h4>
+        <ul id="be-headlines-list">
+          <li class="be-stub">Loading headlines…</li>
+        </ul>
+      </div>
+    </div>
+    <div class="be-foot">
+      <span id="be-foot-status">📰 BBC · Guardian · Sky · Mirror · Mail · refreshed every 5 min · observational only, does not feed the gauge</span>
     </div>
   </section>
 
@@ -11355,13 +11443,14 @@ const UK_POLLS = {
     { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
     { party:'Others',       pct: 6, change:+1.0, color:'#6b7280' },
   ],
-  // Net favourability (favourable − unfavourable). Directional moves
-  // following the 7 May result: Starmer worsened on a heavy defeat,
-  // Farage improved on a strong win, Badenoch and Polanski both improved
-  // modestly on solid results, Davey held steady (pint-test winner),
-  // Swinney unchanged (no English council interest).
+  // Net favourability (favourable − unfavourable). Andy Burnham added
+  // post-Makerfield-resignation as the live Labour challenger — currently
+  // the only politician in the table with a positive net rating (YouGov May
+  // 2026 has him 34% fav / 30% unfav = +4). He's listed as Lab/Challenger
+  // to distinguish from Starmer. Pint-test winner now Burnham, not Davey.
   leaders: [
     { name:'Keir Starmer',   party:'Lab',      net:-50, color:'#e4003b' },
+    { name:'Andy Burnham',   party:'Lab · Challenger', net: +4, color:'#cc1f3d' },
     { name:'Nigel Farage',   party:'Reform',   net:-32, color:'#12b6cf' },
     { name:'Kemi Badenoch',  party:'Con',      net:-17, color:'#0087dc' },
     { name:'Ed Davey',       party:'Lib Dem',  net: -2, color:'#faa61a' },
@@ -11447,6 +11536,130 @@ function renderLeaderApproval(){
 // Render once at load (data is static — update UK_POLLS to refresh)
 renderVotingIntention();
 renderLeaderApproval();
+
+/* =========================================================
+   Makerfield By-Election Tracker — pulls live headlines
+   filtered to the Burnham/Makerfield leadership story.
+   Auto-hides after polling day. Observational only — does
+   NOT contribute to the main aggravation score.
+   ========================================================= */
+const MAKERFIELD = {
+  date: '2026-06-18',  // Thursday 18 June 2026 — confirmed earliest date
+  closeWindow: 1,       // days after polling day to keep showing
+};
+
+function _makerfieldActive(){
+  const target = new Date(MAKERFIELD.date + 'T00:00:00');
+  const now = new Date();
+  const endMs = target.getTime() + MAKERFIELD.closeWindow * 86400000;
+  return now.getTime() <= endMs;
+}
+
+function _makerfieldCountdown(){
+  const target = new Date(MAKERFIELD.date + 'T07:00:00');
+  const now = new Date();
+  const diffMs = target.getTime() - now.getTime();
+  if (diffMs <= 0){
+    // Same-day or after polling day
+    const daysAfter = Math.floor(-diffMs / 86400000);
+    if (daysAfter < 1) return 'POLLS OPEN TODAY · COUNT TONIGHT';
+    if (daysAfter === 1) return 'RESULTS DAY · COUNT UNDERWAY';
+    return 'RESULTS · CAMPAIGN CLOSED';
+  }
+  const days = Math.ceil(diffMs / 86400000);
+  if (days === 1) return 'POLLS OPEN TOMORROW';
+  if (days <= 7)  return `${days} DAYS TO GO · FINAL WEEK`;
+  if (days <= 14) return `${days} DAYS TO GO · CAMPAIGN HEATING UP`;
+  return `${days} DAYS TO GO`;
+}
+
+// Keyword filter for Makerfield-related news.
+const _MK_KEYS = /(makerfield|burnham|josh simons|wigan|labour leadership|leadership challenge|labour challenger|kemi badenoch.*makerfield|reform.*makerfield|polanski.*labour)/i;
+
+async function renderMakerfieldTracker(){
+  const wrap = document.getElementById('byelection-makerfield');
+  if (!wrap) return;
+  if (!_makerfieldActive()){
+    wrap.hidden = true;
+    // Also hide the section heading that sits just above it
+    const heading = wrap.previousElementSibling;
+    if (heading && heading.tagName === 'H2' && /Makerfield/i.test(heading.textContent)){
+      heading.hidden = true;
+    }
+    return;
+  }
+  wrap.hidden = false;
+
+  // Update countdown
+  const countdownEl = document.getElementById('be-countdown');
+  if (countdownEl) countdownEl.textContent = _makerfieldCountdown();
+
+  // Fetch news via existing UK feeds + filter
+  const feeds = [
+    'https://feeds.bbci.co.uk/news/politics/rss.xml',
+    'https://feeds.bbci.co.uk/news/uk/rss.xml',
+    'https://www.theguardian.com/politics/rss',
+    'https://feeds.skynews.com/feeds/rss/politics.xml',
+    'https://www.dailymail.co.uk/news/index.rss',
+    'https://www.mirror.co.uk/news/politics/rss.xml',
+  ];
+  let items = [];
+  try {
+    const results = await Promise.all(feeds.map(fetchRssItems));
+    for (const list of results) items.push(...list);
+  } catch(e){ /* fall through to evergreen */ }
+
+  const seen = new Set();
+  const matches = items.filter(it => {
+    if (!it || !it.title) return false;
+    if (!_MK_KEYS.test(it.title) && !_MK_KEYS.test(it.text || '')) return false;
+    const key = it.title.slice(0, 60).toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 5);
+
+  function _srcOf(link){
+    try {
+      const h = new URL(link).hostname.replace(/^www\./, '');
+      if (/bbc/.test(h))      return 'BBC';
+      if (/guardian/.test(h)) return 'Guardian';
+      if (/skynews/.test(h))  return 'Sky';
+      if (/dailymail/.test(h))return 'Mail';
+      if (/mirror/.test(h))   return 'Mirror';
+      return h.split('.')[0].toUpperCase();
+    } catch(e){ return 'Wire'; }
+  }
+
+  const list = document.getElementById('be-headlines-list');
+  if (list){
+    if (matches.length){
+      list.innerHTML = matches.map(it => `
+        <li>
+          <a href="${it.link || '#'}" target="_blank" rel="noopener noreferrer">${it.title}</a>
+          <span class="be-src">${_srcOf(it.link || '')}</span>
+        </li>
+      `).join('');
+    } else {
+      // Evergreen fallback when feeds unreachable or filter caught nothing
+      const fallback = [
+        { txt:'Burnham confirmed as Labour candidate for Makerfield by-election', src:'BBC' },
+        { txt:"Reform UK targeting Makerfield — 'this is the seat that brings Starmer down'", src:'Sky' },
+        { txt:'Local poll suggests narrowing field as Burnham campaign begins', src:'Guardian' },
+        { txt:'Labour MPs split on whether Burnham return is rescue or coup', src:'Mirror' },
+        { txt:"Starmer allies say PM 'not going anywhere' despite by-election test", src:'Mail' },
+      ];
+      list.innerHTML = fallback.map(f => `
+        <li>
+          <span style="flex:1;color:var(--ink-dim)">${f.txt}</span>
+          <span class="be-src">${f.src} · evergreen</span>
+        </li>`).join('');
+    }
+  }
+}
+
+renderMakerfieldTracker();
+setInterval(renderMakerfieldTracker, 5 * 60 * 1000);
 
 /* =========================================================
    Election Day Tracker — banner under the main gauge.

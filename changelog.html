@@ -175,6 +175,35 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.13 <span class="stamp">live</span></div>
+      <div class="release-tag">🗳️ Makerfield By-Election Tracker + Burnham added to leader approval · May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Two changes to capture the moment. The leadership-challenge story was largely missed by the gauge during 12–15 May (we wrote about why in <a href="./news.html#post-005" style="color:var(--accent)">Essay 005</a>) — this release adds dedicated infrastructure so the next month of the Makerfield campaign gets properly tracked, and adds Andy Burnham to the leader approval module so the only politician in net-positive territory is no longer missing from the chart.</p>
+    <h3>🗳️ Makerfield By-Election Tracker — new module</h3>
+    <ul>
+      <li>New banner module sitting <b>above</b> the Westminster Voting Intention and Party Leader Approval sections — visually grouped with the polling stack but with its own card style (navy + ballot-red gradient, left-edge accent stripe to differentiate from polling).</li>
+      <li>Confirmed by-election date: <b>Thursday 18 June 2026</b>, the earliest the writ allows. Module shows a live countdown that walks through three phases: <i>N DAYS TO GO</i> → <i>FINAL WEEK</i> → <i>POLLS OPEN TOMORROW</i> → <i>POLLS OPEN TODAY · COUNT TONIGHT</i> → <i>RESULTS DAY · COUNT UNDERWAY</i> → auto-hides on 19 June.</li>
+      <li><b>Why it matters</b> framing right at the top: this is the seat that, if won by Burnham, hands him the parliamentary credentials to mount a Labour leadership challenge. Reform won the Makerfield wards with ~50% in the May locals; Labour came second on 27%. Not a foregone conclusion.</li>
+      <li><b>Candidates panel</b>: Andy Burnham (Lab · NEC approved 15 May), Robert Kenyon (Reform UK · rumoured), Con (TBD, standing confirmed by Badenoch), Lib Dem (TBD), Green (TBD, selecting). Party colours per the dashboard's existing palette.</li>
+      <li><b>Live headlines feed</b>: pulls from BBC Politics, Guardian Politics, Sky Politics, Mirror Politics, Daily Mail RSS via the existing <code>fetchRssItems()</code> infrastructure (same chain as News Tension). Keyword filter: <code>/(makerfield|burnham|josh simons|wigan|labour leadership|leadership challenge|reform.*makerfield|polanski.*labour)/i</code>. De-duped, top 5 shown with source pills. Refreshes every 5 min. Evergreen fallback rotation if all feeds fail.</li>
+      <li>Marked clearly as <b>observational only — does not feed the gauge</b>. Same architectural decision as the original Election Day Tracker: news-of-the-moment shouldn't move the satirical aggravation index.</li>
+      <li><code>MAKERFIELD</code> config constant is one object — change the date or close window and the whole module follows.</li>
+    </ul>
+    <h3>👔 Andy Burnham added to Party Leader Approval</h3>
+    <ul>
+      <li>Burnham at <b>+4</b> net favourability (YouGov May 2026: 34% favourable, 30% unfavourable). He's the <b>only senior politician in the table with a positive net rating</b>, which is in itself the story — the most popular Labour-aligned politician currently sits outside Parliament.</li>
+      <li>Listed with party as <i>Lab · Challenger</i> to distinguish him from Starmer. Uses a slightly redder Labour shade (<code>#cc1f3d</code> vs Starmer's <code>#e4003b</code>) so the two reds don't read as identical.</li>
+      <li>Pint-test winner is now <b>Andy Burnham</b> instead of Ed Davey. The signalLeaders helper picks him up automatically — <code>liked === 1 leader</code>, sub-label reads <i>"only 1 leader liked · most fuel debate"</i>.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> and <code>changelog.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean.</li>
+      <li>No structural changes to the gauge or aggregation math. New module is purely additive and observational.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.12 <span class="stamp">live</span></div>
       <div class="release-tag">📝 Essay № 005 "Vote Burnham, Get Starmer Out" — Makerfield paradox + gauge post-mortem · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
