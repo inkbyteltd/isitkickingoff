@@ -4895,18 +4895,21 @@ function _envFeatureHtml(){
 }
 
 function _financeFeatureHtml(){
+  // v3.19: combined header for the whole Money + Predictions row. The Polymarket
+  // grid is rendered just below with no second header — visually one section.
   return `
     <div class="grid-feature">
-      <h3 class="feature-title">💷 Finance &amp; Markets</h3>
+      <h3 class="feature-title">💷 Money &amp; 🎯 Predictions</h3>
       <div class="env-grid" id="finance-tickers"></div>
     </div>
   `;
 }
 
 function _polymarketFeatureHtml(){
+  // v3.19: no second header — the combined header above covers both grids.
+  // The Polymarket cards still render into their own grid below the finance grid.
   return `
-    <div class="grid-feature">
-      <h3 class="feature-title">🎯 Polymarket · UK Predictions</h3>
+    <div class="grid-feature" style="margin-top:-8px">
       <div class="env-grid" id="polymarket-tickers"></div>
     </div>
   `;
@@ -6610,9 +6613,11 @@ async function fetchExchangeRates(){
 // UK-related markets and returns top-N by 24h volume). Always returns
 // { live, markets, count } even on failure.
 async function fetchPolymarketUK(){
+  // v3.19: bumped limit 4 → 6 so we can fill the Money & Predictions row out to
+  // 8 cards total (2 finance + 6 polymarket = perfect 4x2 grid at desktop width).
   const out = { live:false, markets:[] };
   try {
-    const r = await fetch('/api/polymarket?limit=4');
+    const r = await fetch('/api/polymarket?limit=6');
     if (r.ok){
       const j = await r.json();
       if (j && Array.isArray(j.markets) && j.markets.length){
@@ -8942,21 +8947,10 @@ function renderFinanceCards(fin){
     ? `${topMover.name} ${topMover.dayChangePct >= 0 ? '+' : ''}${topMover.dayChangePct.toFixed(1)}%`
     : 'Movers…';
 
+  // v3.19: Stock Indices and Tech & Pharma Movers cards dropped — both were
+  // permanently "Modelled" and added little signal. Kept Crypto (live, GBP) +
+  // FX (live, pound-in-your-pocket). Polymarket below now does the heavy lifting.
   const html = `
-    <article class="ticker" id="fin-stocks">
-      <div class="head">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="emoji" aria-hidden="true">📈</span>
-          <div class="title">Stock Indices · Today's Moves</div>
-          ${tipFor('stocks', 'Stock Indices')}
-        </div>
-        ${stockChip}
-      </div>
-      <div class="big" style="font-size:20px;line-height:1.2">${stocksHeadline}</div>
-      <div style="margin-top:6px">${idxRows}</div>
-      <div class="foot"><span>Stooq + Yahoo Finance</span><span>4 indices · day %</span></div>
-    </article>
-
     <article class="ticker" id="fin-crypto">
       <div class="head">
         <div style="display:flex;align-items:center;gap:10px">
@@ -8983,20 +8977,6 @@ function renderFinanceCards(fin){
       <div class="big" style="font-size:22px;line-height:1.2">${fxHeadline}</div>
       <div style="margin-top:6px">${fxRows}</div>
       <div class="foot"><span>Frankfurter · ECB rates</span><span>${fx.date || 'today'}</span></div>
-    </article>
-
-    <article class="ticker" id="fin-pharmatech">
-      <div class="head">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="emoji" aria-hidden="true">💊</span>
-          <div class="title">Tech &amp; Pharma Movers</div>
-          ${tipFor('pharmatech', 'Tech and Pharma Movers')}
-        </div>
-        ${tpChip}
-      </div>
-      <div class="big" style="font-size:20px;line-height:1.2">${tpHeadline}</div>
-      <div style="margin-top:6px">${moverRows}</div>
-      <div class="foot"><span>Yahoo Finance · 5 stocks</span><span>day %</span></div>
     </article>
   `;
   const target = document.getElementById('finance-tickers');
@@ -9080,14 +9060,16 @@ function renderPolymarketCards(poly){
     const t = _polymarketTipText(m);
     return `<button class="tip-btn" type="button" aria-label="About this market" data-tip="${_escAttr(t)}">?</button>`;
   };
-  const markets = (poly.markets || []).slice(0, 4);
+  // v3.19: 6 markets instead of 4 — fills the Money & Predictions row out to a
+  // clean 8-card 4x2 grid (2 finance + 6 polymarket).
+  const markets = (poly.markets || []).slice(0, 6);
   const fmtVol = v => v >= 1_000_000 ? '$' + (v/1_000_000).toFixed(1) + 'M'
                     : v >= 1_000     ? '$' + (v/1_000).toFixed(0) + 'k'
                     : '$' + Math.round(v || 0);
   const liveChip = poly.live ? `<span class="chip live">Live</span>` : `<span class="chip model">Modelled</span>`;
 
-  // If we got no markets back, render 4 placeholder cards so the layout doesn't collapse.
-  const cards = markets.length ? markets : [null, null, null, null];
+  // If we got no markets back, render 6 placeholder cards so the layout doesn't collapse.
+  const cards = markets.length ? markets : [null, null, null, null, null, null];
 
   const html = cards.map((m, i) => {
     if (!m){

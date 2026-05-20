@@ -175,6 +175,33 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.19 <span class="stamp">live</span></div>
+      <div class="release-tag">💷 Money &amp; Predictions reshape — drop Stocks/Pharma, bump Polymarket to 6, single combined header · 20 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Reshaping the Finance &amp; Markets row. Two of the four finance cards (Stock Indices · Today's Moves, Tech &amp; Pharma Movers) were permanently <i>Modelled</i> and offered weak signal — dropped them. Bumped the Polymarket section from 4 to 6 live UK prediction markets to fill the space. Combined the two clipping section headers into a single cleaner <b>"💷 Money &amp; 🎯 Predictions"</b> banner.</p>
+    <h3>🪓 Dropped</h3>
+    <ul>
+      <li><b>📈 Stock Indices · Today's Moves</b> — FTSE / Dow / NASDAQ / S&amp;P quotes. Live-data fetch was unreliable through public proxies; card was almost always "Modelled". Removed from <code>renderFinanceCards()</code>. Fetcher (<code>fetchStockIndices</code>) and bulk-fetch entry retained for now in case we revive it via a proper API later.</li>
+      <li><b>💊 Tech &amp; Pharma Movers</b> — AAPL / NVDA / GOOGL / AZN / GSK. Same story — Modelled most of the time. Removed from the rendered HTML. Fetcher retained.</li>
+    </ul>
+    <h3>🎯 Bumped</h3>
+    <ul>
+      <li><b>Polymarket UK Predictions</b> goes from <b>4 → 6 markets</b>. Worker <code>/api/polymarket?limit=N</code> already accepted up to 20 — just bumped the call to <code>limit=6</code> and the render slice to <code>.slice(0, 6)</code>. Fallback placeholder count also bumped to 6 so the grid never collapses.</li>
+    </ul>
+    <h3>📐 Section header — combined</h3>
+    <ul>
+      <li>Was: <i>"💷 Finance &amp; Markets"</i> header → 4 cards → <i>"🎯 Polymarket · UK Predictions"</i> header → 4 cards. Both were clipping at the top edge of their respective rows, and the redundancy was unnecessary.</li>
+      <li>Now: single <b>"💷 Money &amp; 🎯 Predictions"</b> header, then 2 finance cards (Crypto + FX), then 6 Polymarket cards — visually one row of 8 in a clean 4×2 grid at desktop width.</li>
+      <li><code>_polymarketFeatureHtml()</code> now returns just the grid container with a small negative top margin (<code>-8px</code>) so the Polymarket grid flows directly below the finance grid without visual gap.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean. Worker untouched (already supported <code>limit=6</code>).</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.18 <span class="stamp">live</span></div>
       <div class="release-tag">🚑 HOTFIX — gauge offline after v3.17; restored swallowed feature-row + filler functions · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
