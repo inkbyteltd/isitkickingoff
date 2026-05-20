@@ -175,6 +175,31 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.17 <span class="stamp">live</span></div>
+      <div class="release-tag">🪓 Killed NCB Zeitgeist module + Makerfield candidates locked in · 20 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Two changes. (1) Killed the <b>Zeitgeist · No Context Brits Pulse</b> module entirely — it's been silently falling back to modelled mode for over a year because Nitter (the X mirror we relied on) was effectively destroyed by X's auth crackdown in 2024. A module that promises live data and never delivers it is worse than no module. Stripped it cleanly. (2) <b>Makerfield candidates panel</b> refreshed — Burnham and Kenyon were both officially confirmed yesterday (19 May).</p>
+    <h3>🪓 NCB Zeitgeist — removed</h3>
+    <ul>
+      <li><b>Root cause</b>: the module fetched tweets from <code>@NoContextBrits</code> via <b>Nitter</b> (the open-source X mirror). Most public Nitter instances died after X's January 2024 auth crackdown — <code>nitter.net</code> itself shut down, and the remaining handful are intermittent at best. The module was honestly flipping its chip from "Live" to "Modelled" on fallback, but the user-facing pitch ("live British zeitgeist from X") was a promise we couldn't keep.</li>
+      <li><b>Surgery</b>: removed the SIGNAL_GROUPS feature entry, the render branch, the post-render <code>_zeitgeistMountWidget()</code> call, the <code>ncb</code> entry in the bulk fetch (Promise.all + return object), the X widgets.js comment in <code>&lt;head&gt;</code>, the <code>.zeitgeist</code> / <code>.zg-*</code> CSS rules (~80 lines), the methodology table row, and the entire ~363-line NCB JS code block (<code>NCB_HANDLE</code>, <code>SAMPLE_NCB_TWEETS</code>, <code>NCB_HOUR_CURVE</code>, <code>fetchNoContextBrits</code>, <code>_ncbActivitySpark</code>, <code>UNION_JACK_SVG</code>, <code>_toXUrl</code>, <code>_zeitgeistHtml</code>, <code>_zeitgeistMountWidget</code>). <b>16KB of dead code gone</b>. Removal-comments left at each site so the rationale is preserved in-source.</li>
+      <li><b>Page-load benefit</b>: one less bulk-fetch attempt, no more lazy-loading <code>platform.twitter.com/widgets.js</code>, no more Nitter timeout waiting.</li>
+      <li>Future direction (if we revisit): the cleanest replacement source would be Reddit's r/CasualUK / r/britishproblems via the JSON API — same tonal range, free, reliable. Same pattern we already use successfully on the Florida page's Subreddits card. Not for this release.</li>
+    </ul>
+    <h3>🗳️ Makerfield candidates — Burnham &amp; Kenyon officially confirmed (19 May)</h3>
+    <ul>
+      <li><b>Andy Burnham (Lab)</b>: status now reads <i>"Lab · candidate confirmed 19 May"</i>. Labour NEC bypassed the local 21 May selection meeting after no other names were submitted — Burnham was simply confirmed.</li>
+      <li><b>Robert Kenyon (Reform UK)</b>: promoted from <i>"rumoured"</i> to <i>"candidate confirmed 19 May"</i>. Local plumber and recently-elected Wigan councillor; came second in Makerfield at GE2024.</li>
+      <li>Order updated so the two confirmed front-runners sit at the top, with Howling Laud Hope (OMRLP) and the still-TBDs (Con / Lib Dem / Green) beneath. Nominations close Thursday 28 May.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev and synced to <code>deploy-test/</code>. Inline JS clean. File is now <b>16KB lighter</b>.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.16 <span class="stamp">live</span></div>
       <div class="release-tag">🗳️ Makerfield candidates refresh — Monster Raving Loony confirmed · 18 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

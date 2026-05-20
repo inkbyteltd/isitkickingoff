@@ -69,9 +69,9 @@
 <!-- AdSense loader placeholder — paste your ca-pub code before launch:
      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 -->
-<!-- X (Twitter) widgets.js is now lazy-loaded by _zeitgeistMountWidget() only
-     when we have a confirmed live tweet URL to embed.  Loading it eagerly
-     here was making the page feel slow even when there was nothing to render. -->
+<!-- X (Twitter) widgets.js removed in v3.17 along with the NCB Zeitgeist module —
+     Nitter mirrors that fed the tweet URLs were killed by X's auth crackdown
+     in 2024, making the embed impossible to source reliably. -->
 
 <style>
   :root {
@@ -673,76 +673,9 @@
   }
   .region-select-wrap select:focus{outline:2px solid var(--accent);outline-offset:1px}
 
-  /* Zeitgeist · No Context Brits Pulse — full-width feature row inside the signals grid */
-  .zeitgeist{
-    grid-column: 1 / -1;
-    background:
-      radial-gradient(circle at 12% 30%, rgba(0,82,164,.22), transparent 55%),
-      radial-gradient(circle at 90% 70%, rgba(200,16,46,.18), transparent 50%),
-      var(--bg-1);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:20px 22px;
-    margin:6px 0 6px;
-    position:relative;
-    overflow:hidden;
-  }
-  .zg-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
-  .zg-header h2{margin:0;font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
-  .zg-header h2 .zg-emoji{margin-right:8px;font-size:18px}
-  .zg-link{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);text-decoration:none;border:1px solid var(--line);padding:5px 9px;border-radius:6px;transition:color .15s,border-color .15s}
-  .zg-link:hover{color:#C8102E;border-color:rgba(200,16,46,.5)}
-  .zg-card{
-    display:grid;
-    grid-template-columns:minmax(180px,210px) 1fr minmax(280px,340px);
-    gap:18px;
-    align-items:stretch;
-  }
-  @media (max-width:880px){ .zg-card{grid-template-columns:1fr} }
-  .zg-profile{
-    display:flex;flex-direction:column;align-items:flex-start;gap:6px;
-    background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:14px;
-  }
-  .zg-avatar{
-    width:54px;height:54px;border-radius:50%;
-    overflow:hidden;
-    box-shadow:0 2px 12px rgba(0,82,164,.35);
-    margin-bottom:4px;
-    background:#012169;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .zg-avatar svg{display:block;width:100%;height:100%}
-  .zg-name{font-weight:800;font-size:14px;color:var(--ink);line-height:1.2}
-  .zg-handle{font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
-  .zg-followers{font-family:var(--mono);font-size:11px;color:#C8102E;margin-top:2px;font-weight:700;letter-spacing:.05em}
-  .zg-tweet{
-    background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:12px;
-    display:flex;flex-direction:column;gap:8px;min-height:120px;
-    overflow:hidden;
-  }
-  .zg-tweet-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .zg-tweet-label .zg-tweet-source{font-size:9px;letter-spacing:.1em}
-  .zg-tweet-embed{margin:0;background:transparent;max-height:280px;overflow:hidden}
-  .zg-tweet-embed .twitter-tweet{margin:0 !important;max-width:100% !important}
-  /* Show a small "loading…" placeholder while the X widget initialises */
-  .zg-tweet-embed:not(.twitter-tweet-rendered){min-height:40px;font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
-  .zg-tweet-fallback{font-size:14px;color:var(--ink);line-height:1.45;font-style:italic;padding:4px 0}
-  .zg-tweet-fallback::before{content:'"';color:#C8102E;font-size:18px;margin-right:2px;font-style:normal;font-weight:700}
-  .zg-tweet-fallback::after{content:'"';color:#C8102E;font-size:18px;margin-left:2px;font-style:normal;font-weight:700}
-  .zg-tweet-meta{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:auto}
-  .zg-stats{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start;
-  }
-  .zg-stat{
-    background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
-    display:flex;flex-direction:column;gap:2px;
-  }
-  .zg-stat-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
-  .zg-stat-value{font-family:var(--mono);font-weight:800;font-size:20px;color:var(--ink);line-height:1.1}
-  .zg-stat-value .unit{font-size:11px;color:var(--ink-dim);font-weight:600;margin-left:3px}
-  .zg-spark{margin-top:14px}
-  .zg-spark-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;display:flex;justify-content:space-between}
-  .zg-spark svg{display:block;width:100%;height:42px}
+  /* Zeitgeist · No Context Brits Pulse CSS removed in v3.17 — module killed
+     because Nitter mirrors (which fed the tweet URLs) were taken down by X's
+     auth crackdown in 2024. ~80 lines of .zeitgeist / .zg-* rules removed. */
 
   /* Heat map */
   .heatmap-wrap{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:20px;align-items:start}
@@ -1273,17 +1206,17 @@
         <div class="be-cand">
           <span class="party-dot" style="background:#e4003b"></span>
           <span class="cand-name">Andy Burnham</span>
-          <span class="cand-party">Lab · NEC approved · selection 21 May</span>
+          <span class="cand-party">Lab · candidate confirmed 19 May</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#12b6cf"></span>
+          <span class="cand-name">Robert Kenyon</span>
+          <span class="cand-party">Reform UK · candidate confirmed 19 May</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#fdd835"></span>
           <span class="cand-name">Howling "Laud" Hope</span>
           <span class="cand-party">Monster Raving Loony · confirmed</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#12b6cf"></span>
-          <span class="cand-name">Robert Kenyon</span>
-          <span class="cand-party">Reform UK · rumoured</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#0087dc"></span>
@@ -1387,7 +1320,6 @@
         <tr><td>📱 Social Media Mania</td><td>2%</td><td>UK chatter tracker spanning all 24 hours. Modelled message-rate curve grounded in published figures (Ofcom 2024 + WhatsApp/SMS volumes ≈ 1.8–2.2B msgs/day UK-wide → ~75M/hour daily average, ~135M/hour Fri/Sat peak). Live overlay: r/unitedkingdom comment velocity (comments/min) fetched from reddit.com/r/unitedkingdom/comments.json — when it succeeds the card flips to <span class="chip live" style="display:inline-block;vertical-align:middle">Live</span>. Behaviour list rotates through 20 UK posting/messaging behaviours each with their own peak-hour and span (commute rage tweets, Slack rants, lunchtime hot takes, school-gate drama, evening doomscroll, drunk DMs)</td></tr>
         <tr><td>🎵 UK Top Tracks · Music Charts</td><td>1%</td><td>Renamed from "Spotify UK Top Tracks" to be source-agnostic. <b>5-source fallback chain</b>: (1) <code>rss.applemarketingtools.com /most-played GB</code>, (2) <code>/top-songs GB</code>, (3) <code>/hot-tracks GB</code>, (4) legacy <code>itunes.apple.com/gb/rss/topsongs</code>, (5) <b>Wikipedia MediaWiki API</b> parse of the <i>UK Singles Chart</i> article (Official Charts Company top 10 in current week's wikitable) — uses whichever returns first. Both Apple Marketing Tools shape (<code>feed.results</code>) and legacy iTunes RSS shape (<code>feed.entry</code>) are parsed. Spotify's UK Top 50 endpoint requires OAuth so it can't run client-side, but Apple/Wikipedia together give a reliable mirror. Hardcoded chart fallback kicks in only when all 5 live feeds are blocked. Card shows the current #1 plus the top 5 as clickable cards (links to Apple Music or Wikipedia). 1-hour client-side cache.</td></tr>
         <tr><td>👽 Reddit UK Trending</td><td>2%</td><td><b>LIVE — multi-subreddit feed</b>. Replaces the previous YouTube card (Piped instances are notoriously rate-limited / blocked by YouTube). Pulls hot posts from <code>r/unitedkingdom</code> + <code>r/CasualUK</code> + <code>r/AskUK</code> + <code>r/britishproblems</code> + <code>r/london</code> via reliable <code>www.reddit.com/r/{sub}/hot.json</code> endpoints (the same reliable feed we already use for Social Media Mania). Skips mod-pinned posts, merges all subs, ranks by score, surfaces top 5 as clickable cards (links direct to the Reddit thread). Each row shows subreddit + upvote score + comment count. Sub-line includes a "<b>~X posts/hr</b>" worm rate computed from posts created in the last 6 hours. 20-min client-side cache.</td></tr>
-        <tr><td>🎭 Zeitgeist · No Context Brits</td><td>0%</td><td>Special <b>full-width feature row</b> sitting in the signals grid <b>between Daily Pulse and Sentiment</b> — tracks <a href="https://x.com/NoContextBrits" target="_blank" rel="noopener noreferrer" style="color:#C8102E">@NoContextBrits</a> as a UK cultural barometer. Avatar is the proper <b>Union Jack SVG</b> (matches NCB's actual X profile pic). <b>Latest post is a real X embed</b> — uses the X (Twitter) widgets.js script (<code>platform.twitter.com/widgets.js</code>) loaded once in <code>&lt;head&gt;</code>; we render <code>&lt;blockquote class="twitter-tweet"&gt;</code> with the tweet URL pulled from Nitter, and call <code>twttr.widgets.load()</code> after injection — full media (images, video, polls) renders inline. <b>Tweet URL pipeline</b>: <code>fetchNoContextBrits()</code> hits a chain of public Nitter RSS mirrors, parses out the <code>&lt;link&gt;</code>, transforms <code>nitter.{instance}/...</code> → <code>x.com/...</code>, hands it to the embed widget. Falls back to a styled-quote sample post when all mirrors are blocked. <b>Engagements + impressions are owner-only API data</b> — estimated from tweet count × industry averages for a 2.4M-follower account (~12-15k engagements, ~150-300k impressions per tweet, per Hootsuite/Sprout 2024). UK Pulse score (0-100) is a heuristic blend of post count + time-of-day curve. Display-only — does NOT feed the kick-off index.</td></tr>
         <tr><td>🚗 Uber Surge &amp; Demand</td><td>2%</td><td>Modelled UK ride-hail demand curve grounded in published Uber UK figures (~70k drivers · ~6M monthly users · ~8M trips/month · avg fare £8.50). Hour-of-day curve with weekday rush amplifiers (07-09, 17-19), Friday/Saturday post-bar spike (22-02), Sunday-morning airport rush, and live-weather rain amplifier (+0.18 for any rain, +0.10 more for heavy). Surge multiplier derived from demand (1.0× baseline up to 2.6× peak), £/mile derived from surge, drivers-online estimated from 70k pool × hourly demand fraction. Card shows current surge multiplier as the value, sub-line shows £/mile + driver count. Inline 24-hour sparkline shows demand worm.</td></tr>
         <tr><td>🛵 Delivery Apps Demand</td><td>2%</td><td>Combined modelled demand for Uber Eats + Deliveroo + Just Eat. Grounded in published volumes (Uber Eats UK ~30M monthly orders · Just Eat ~280M annual UK orders · Deliveroo UK ~30k riders · combined daily UK orders ≈ 1.4–1.8M, peak hour ~150–200k). Hour-of-day curve with lunch peak (12-14), dinner peak (18-21), weekend-evening bump, Sunday-roast-at-home spike, and live-weather rain amplifier. Card value is orders/min UK-wide, sub-line shows riders out across the road. Inline 24-hour sparkline.</td></tr>
         <tr><td>🛒 Checkout Rage</td><td>1%</td><td>Modelled "unexpected item in bagging area" frustration peaking at lunchtime weekdays and Saturday shopping rush</td></tr>
@@ -4939,370 +4871,11 @@ const SPOTIFY_FALLBACK_TRACKS = [
   { title:'Birds of a Feather',     artist:'Billie Eilish',    url:'https://music.apple.com/gb/album/birds-of-a-feather/' },
 ];
 
-/* =========================================================
-   🎭 Zeitgeist · No Context Brits Pulse
-   X/Twitter's official API is paid + auth-only, so we use Nitter
-   (the open-source Twitter front-end) which exposes RSS feeds
-   for any account.  Public Nitter instances are flaky, so we fall
-   through a chain of mirrors via allorigins/corsproxy where needed.
-
-   Engagements + impressions are owner-only API data we cannot
-   access — we estimate them from tweet count × industry averages
-   for a 2.4M-follower account: ~12-15k engagements per tweet,
-   ~150-300k impressions per tweet (Hootsuite/Sprout 2024 averages).
-   ========================================================= */
-const NCB_HANDLE = 'NoContextBrits';
-const NCB_FOLLOWER_COUNT = 2_400_000;   // approx, updated per release
-
-// Rotating sample-tweets pool — used as fallback when Nitter is blocked.
-// These mimic the actual NCB voice: observational, dry, very British.
-const SAMPLE_NCB_TWEETS = [
-  "guy in pub: 'I'll just have a quick one'",
-  'British weather warning: it\'s going to be a bit shit',
-  'British Asian aunty seasoning the fish',
-  'the vibe at a British wedding when the DJ drops Mr Brightside',
-  'every British train: this is the train to…',
-  'British pub on a sunny Saturday at 2pm',
-  'walking past a Greggs and pretending you weren\'t going in',
-  'queueing politely while internally screaming',
-  '"sorry, do you have the time?" "yeah, no worries"',
-  'British dad watching the football: making a noise no human should',
-  'school WhatsApp group at 8.47am',
-  '"alright?" — the British 3-word emotional checkup',
-  'British Sunday at 4pm in February: the saddest hour known to man',
-  'when the chip shop runs out of chicken nuggets at 11.45pm',
-  'British uni house at 3am: someone is making toast',
-  'when nan asks if you want a brew (you cannot say no)',
-  'British seaside town in October: stunning, devastating, freezing',
-  'the man at every BBQ holding a beer and turning the sausages',
-  'British optimism: "the rain is easing off"',
-  '"do you mind?" — the British declaration of war',
-  'M25 on a Sunday afternoon: humanity\'s great equaliser',
-  'when the bus driver says cheers and you say cheers back',
-  'the British reaction to anything mildly inconvenient: a long sigh',
-  'British Asian grandma picking the biggest fish from the freezer',
-  'British hen-do at a Wetherspoons on a Friday at 3pm',
-];
-function _rotatingNCBTweet(){
-  const d = new Date();
-  const h = d.getHours();
-  const idx = (d.getDate() * 7 + h * 3) % SAMPLE_NCB_TWEETS.length;
-  return SAMPLE_NCB_TWEETS[idx];
-}
-
-// Plausible posting curve — NCB peaks evenings UK time
-const NCB_HOUR_CURVE = [
-  0.10,0.05,0.05,0.05,0.05,0.10,  // 00-05 (low)
-  0.20,0.30,0.35,0.40,0.45,0.50,  // 06-11 (rising)
-  0.55,0.55,0.50,0.55,0.65,0.75,  // 12-17 (afternoon climb)
-  0.85,0.95,1.00,0.95,0.80,0.50,  // 18-23 (evening peak)
-];
-
-// Per-attempt fetch with explicit AbortController — never hangs longer than ms.
-// Defensive: if AbortController is unavailable in the browser, falls back to
-// plain fetch (no timeout) but still catches errors.
-async function _fetchWithAbort(url, ms){
-  let ctrl = null, t = null;
-  try {
-    if (typeof AbortController !== 'undefined'){
-      ctrl = new AbortController();
-      t = setTimeout(() => { try { ctrl.abort(); } catch(_){} }, ms);
-    }
-    const r = await fetch(url, ctrl ? { signal: ctrl.signal } : undefined);
-    if (t) clearTimeout(t);
-    return r;
-  } catch(e){
-    if (t) clearTimeout(t);
-    return null;
-  }
-}
-
-async function fetchNoContextBrits(){
-  if (window.__ncbCache && (Date.now() - window.__ncbCache.ts < 30*60*1000)){
-    return window.__ncbCache.data;
-  }
-  const out = { live:false, posts: [], postsLast24h: 0 };
-  // Two instances only — public Nitter mirrors are flaky, no point hammering.
-  // Each attempt aborts at 3s so we don't burn the 8s bulk budget.
-  const instances = [
-    `https://nitter.net/${NCB_HANDLE}/rss`,
-    `https://nitter.privacydev.net/${NCB_HANDLE}/rss`,
-  ];
-  for (const direct of instances){
-    let xml = null;
-    const r = await _fetchWithAbort(direct, 3000);
-    if (r && r.ok){
-      try { xml = await r.text(); } catch(_){}
-    }
-    if (!xml || !xml.includes('<item')) continue;
-
-    try {
-      const dom = new DOMParser().parseFromString(xml, 'application/xml');
-      const items = [...dom.querySelectorAll('item')];
-      if (!items.length) continue;
-      const now = Date.now();
-      const cutoff = now - 24*3600*1000;
-      const parsed = items.map(it => ({
-        title:   it.querySelector('title')?.textContent || '',
-        pubDate: it.querySelector('pubDate')?.textContent || '',
-        link:    it.querySelector('link')?.textContent || '',
-        ts:      Date.parse(it.querySelector('pubDate')?.textContent || ''),
-      })).filter(x => Number.isFinite(x.ts));
-
-      if (!parsed.length) continue;
-      parsed.sort((a,b) => b.ts - a.ts);
-      out.posts = parsed.slice(0, 10);
-      out.postsLast24h = parsed.filter(p => p.ts >= cutoff).length;
-      out.live = true;
-      out.source = 'Nitter · ' + direct.split('/')[2];
-      break;
-    } catch(_){ /* try next */ }
-  }
-  return (window.__ncbCache = { ts: Date.now(), data: out }).data;
-}
-
-function _ncbActivitySpark(){
-  // 24-hour modelled activity worm anchored to current hour
-  const d = new Date();
-  const h = d.getHours();
-  const out = [];
-  for (let back = 23; back >= 0; back--){
-    const hh = (h - back + 24) % 24;
-    // Slight randomness based on date+hour for realism
-    const jitter = Math.sin((d.getDate()*7 + hh*3) * 0.7) * 0.05;
-    out.push(Math.max(0.05, Math.min(1, NCB_HOUR_CURVE[hh] + jitter)));
-  }
-  return out;
-}
-
-/* Proper Union Jack inline SVG — used as the NCB avatar (his actual X profile pic). */
-const UNION_JACK_SVG = `<svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-  <clipPath id="zg-uj-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
-  <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-  <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-  <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#zg-uj-t)" stroke="#C8102E" stroke-width="4"/>
-  <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-  <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
-</svg>`;
-
-function _toXUrl(nitterLink){
-  // Convert e.g. https://nitter.net/NoContextBrits/status/123 → https://x.com/NoContextBrits/status/123
-  return (nitterLink || '').replace(/^https?:\/\/[^/]+/, 'https://x.com').replace(/#.*$/, '');
-}
-
-/* Build the Zeitgeist HTML.  Returns a string so it can be injected into the
-   signals grid via innerHTML.  Live data renders the X embed blockquote;
-   fallback renders the styled quote with a sample post.  Twitter widgets.js
-   (loaded in <head>) auto-renders any <blockquote class="twitter-tweet">. */
-/* =========================================================
-   Feature-row HTML wrappers — these render INSIDE the signals
-   grid as full-width rows (grid-column: 1 / -1), positioned
-   between specific signal groups via SIGNAL_GROUPS.
-   The inner ticker cards are populated separately after the
-   signals innerHTML is set, by their dedicated render functions
-   (renderEnvCards etc).
-   ========================================================= */
-function _envFeatureHtml(){
-  return `
-    <div class="grid-feature">
-      <h3 class="feature-title">🌍 Environment &amp; Energy</h3>
-      <div class="env-grid" id="env-tickers"></div>
-    </div>
-  `;
-}
-
-/* "Keep Calm" filler cards — render at the end of any signal group whose
-   visible card count isn't a multiple of 4 (the desktop column count). They
-   round out the trailing partial row so the design doesn't leave dead space.
-   Content rotates daily so it doesn't go stale. */
-const KEEP_CALM_FILLERS = [
-  { icon:'🇬🇧', title:'KEEP CALM',     sub:'and carry on'              },
-  { icon:'☕',  title:'KEEP CALM',     sub:'and put the kettle on'     },
-  { icon:'🚏', title:'KEEP CALM',     sub:'and queue politely'         },
-  { icon:'☔', title:'KEEP CALM',     sub:'and blame the weather'      },
-  { icon:'😤', title:'KEEP CALM',     sub:'and tut quietly'            },
-  { icon:'🚆', title:'KEEP CALM',     sub:'and blame the trains'       },
-  { icon:'🥙', title:'KEEP CALM',     sub:'and order a kebab'          },
-  { icon:'🚇', title:'MIND',          sub:'the gap'                    },
-  { icon:'🍻', title:'KEEP CALM',     sub:"it's nearly Friday"         },
-  { icon:'🌧️', title:'KEEP CALM',     sub:"it's only drizzle"          },
-  { icon:'🛒', title:'KEEP CALM',     sub:'and avoid the bagging area' },
-  { icon:'📺', title:'KEEP CALM',     sub:"and put EastEnders on"      },
-  { icon:'🇬🇧', title:'CARRY ON',     sub:'regardless'                 },
-  { icon:'🫖', title:'PROPER BREW',   sub:'first, decisions later'     },
-  { icon:'⛅', title:"IT'S BRIGHT",  sub:'somewhere in the country'   },
-];
-function _fillerCardHtml(absoluteIdx){
-  // absoluteIdx is the pool index already shifted by day-seed + filler position.
-  // Caller is responsible for ensuring different idx per filler within a render.
-  const idx = ((absoluteIdx | 0) % KEEP_CALM_FILLERS.length + KEEP_CALM_FILLERS.length) % KEEP_CALM_FILLERS.length;
-  const f = KEEP_CALM_FILLERS[idx];
-  return `<article class="card filler-card" aria-hidden="true">
-    <div class="filler-inner">
-      <div class="filler-icon">${f.icon}</div>
-      <div class="filler-title">${f.title}</div>
-      <div class="filler-sub">${f.sub}</div>
-    </div>
-  </article>`;
-}
-
-function _financeFeatureHtml(){
-  return `
-    <div class="grid-feature">
-      <h3 class="feature-title">💷 Finance &amp; Markets</h3>
-      <div class="env-grid" id="finance-tickers"></div>
-    </div>
-  `;
-}
-
-function _polymarketFeatureHtml(){
-  return `
-    <div class="grid-feature">
-      <h3 class="feature-title">🎯 Polymarket · UK Predictions</h3>
-      <div class="env-grid" id="polymarket-tickers"></div>
-    </div>
-  `;
-}
-
-function _zeitgeistHtml(ncbData){
-  // ----- Numbers (live + modelled) -----
-  let postsToday;
-  if (ncbData && ncbData.live){
-    postsToday = ncbData.postsLast24h || ncbData.posts.length || 8;
-  } else {
-    const d = new Date();
-    postsToday = 5 + (d.getDate() % 6) + (d.getHours() >= 18 ? 2 : 0);
-  }
-  const avgEng = 12500;
-  const engagement = postsToday * avgEng;
-  const avgImp = 200_000;
-  const impressions = postsToday * avgImp;
-  const hourMul = NCB_HOUR_CURVE[new Date().getHours()];
-  const pulse = Math.round(Math.min(1, (postsToday / 12) * 0.6 + hourMul * 0.4) * 100);
-  const fmtBig = n => n >= 1e6 ? `${(n/1e6).toFixed(1)}M` : n >= 1e3 ? `${Math.round(n/1e3)}k` : String(n);
-
-  // ----- Tweet rendering — three fallback tiers -----
-  // 1. Specific tweet from Nitter RSS → render that exact tweet via X embed
-  // 2. Nitter dead → render X's official Timeline widget (shows latest 1 tweet
-  //    direct from x.com/NoContextBrits via widgets.js — no Nitter needed,
-  //    no API key, fully live).
-  // 3. Both unavailable → styled-quote rotation.
-  let tweetBlockHtml, tweetMeta, tweetSource;
-  if (ncbData && ncbData.live && ncbData.posts.length && ncbData.posts[0].link){
-    const latest = ncbData.posts[0];
-    const xUrl = _toXUrl(latest.link);
-    const ageMs = Date.now() - latest.ts;
-    const ageMin = Math.round(ageMs / 60000);
-    const ageStr = ageMin < 1 ? 'just now'
-                  : ageMin < 60   ? `${ageMin}m ago`
-                  : ageMin < 1440 ? `${Math.round(ageMin/60)}h ago`
-                  :                 `${Math.round(ageMin/1440)}d ago`;
-    tweetBlockHtml = `<blockquote class="twitter-tweet zg-tweet-embed" data-theme="dark" data-conversation="none" data-dnt="true">
-      <a href="${xUrl}"></a>
-    </blockquote>`;
-    tweetMeta = `posted ${ageStr} · ${ncbData.source || 'Nitter'}`;
-    tweetSource = 'live · X embed';
-  } else {
-    // Tier 2 — X Timeline embed widget. widgets.js (already in <head>) sees
-    // any <a class="twitter-timeline"> and replaces it with a live render of
-    // that user's most recent tweet(s). data-tweet-limit=1 keeps it compact.
-    // Works without Nitter, without an API key, and updates whenever the user
-    // posts. Falls back gracefully if widgets.js can't load (tier 3 below).
-    tweetBlockHtml = `<a class="twitter-timeline zg-tweet-embed"
-        data-theme="dark"
-        data-tweet-limit="1"
-        data-chrome="noheader nofooter noborders transparent"
-        data-dnt="true"
-        href="https://twitter.com/NoContextBrits">@NoContextBrits</a>
-      <noscript><div class="zg-tweet-fallback">${_rotatingNCBTweet().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}</div></noscript>`;
-    tweetMeta = 'live · X timeline widget';
-    tweetSource = 'live · X timeline';
-  }
-
-  const sparkHtml = _renderSparkline({ values: _ncbActivitySpark(), label:'NCB activity 24h', color:'#C8102E' });
-  const sparkSourceLabel = (ncbData && ncbData.live) ? 'live · Nitter' : 'modelled curve';
-
-  return `<section class="zeitgeist" id="zeitgeist">
-    <div class="zg-header">
-      <h2><span class="zg-emoji">🎭</span>Zeitgeist · No Context Brits Pulse</h2>
-      <a class="zg-link" href="https://x.com/NoContextBrits" target="_blank" rel="noopener noreferrer">@NoContextBrits ↗</a>
-    </div>
-    <div class="zg-card">
-      <div class="zg-profile">
-        <div class="zg-avatar" aria-label="No Context Brits — Union Jack avatar">${UNION_JACK_SVG}</div>
-        <div class="zg-name">No Context Brits</div>
-        <div class="zg-handle">@NoContextBrits</div>
-        <div class="zg-followers">${fmtBig(NCB_FOLLOWER_COUNT)} followers</div>
-      </div>
-      <div class="zg-tweet">
-        <div class="zg-tweet-label"><span>Latest post</span><span class="zg-tweet-source">${tweetSource}</span></div>
-        ${tweetBlockHtml}
-        <div class="zg-tweet-meta">${tweetMeta}</div>
-      </div>
-      <div class="zg-stats">
-        <div class="zg-stat">
-          <div class="zg-stat-label">Posts (24h)</div>
-          <div class="zg-stat-value">${postsToday}</div>
-        </div>
-        <div class="zg-stat">
-          <div class="zg-stat-label">Est. engagement</div>
-          <div class="zg-stat-value">${fmtBig(engagement)}</div>
-        </div>
-        <div class="zg-stat">
-          <div class="zg-stat-label">Est. impressions</div>
-          <div class="zg-stat-value">${fmtBig(impressions)}</div>
-        </div>
-        <div class="zg-stat">
-          <div class="zg-stat-label">UK Pulse</div>
-          <div class="zg-stat-value">${pulse}<span class="unit">/100</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="zg-spark">
-      <div class="zg-spark-label"><span>Posting activity · last 24h</span><span>${sparkSourceLabel}</span></div>
-      <div>${sparkHtml}</div>
-    </div>
-  </section>`;
-}
-
-/* Lazy-load X widgets.js ONLY when there's a blockquote.twitter-tweet to render.
-   This avoids loading platform.twitter.com on every page visit when we have
-   no live data — that was making the page feel slow / unresponsive. */
-function _zeitgeistMountWidget(){
-  const node = document.getElementById('zeitgeist');
-  if (!node) return;
-  // Bail early ONLY if there's nothing for X widgets.js to render.
-  // We support both: <blockquote class="twitter-tweet"> (specific tweet embed,
-  // when Nitter gave us a tweet URL) AND <a class="twitter-timeline">
-  // (latest-tweet timeline, when Nitter is down and we fall back to live X).
-  const hasBlockquote = node.querySelector('blockquote.twitter-tweet');
-  const hasTimeline   = node.querySelector('a.twitter-timeline');
-  if (!hasBlockquote && !hasTimeline) return;
-
-  // If widgets.js is already loaded, just call load(). Otherwise inject once.
-  if (window.twttr && window.twttr.widgets){
-    try { window.twttr.widgets.load(node); } catch(_){}
-    return;
-  }
-  if (window.__twttrLoading) return;
-  const target = document.head || document.body || document.documentElement;
-  if (!target || !document.createElement) return;
-  window.__twttrLoading = true;
-  try {
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://platform.twitter.com/widgets.js';
-    s.charset = 'utf-8';
-    s.onload = () => {
-      try {
-        if (window.twttr && window.twttr.widgets){
-          window.twttr.widgets.load(document.getElementById('zeitgeist'));
-        }
-      } catch(_){}
-    };
-    target.appendChild(s);
-  } catch(_){ window.__twttrLoading = false; }
-}
+/* NCB Zeitgeist module removed in v3.17 — ~363 lines of dead code (NCB_HANDLE,
+   SAMPLE_NCB_TWEETS, NCB_HOUR_CURVE, fetchNoContextBrits, _ncbActivitySpark,
+   UNION_JACK_SVG, _toXUrl, _zeitgeistHtml, _zeitgeistMountWidget). Nitter
+   mirrors were killed by X auth crackdown in 2024 — module could not go live
+   reliably, so killed rather than left as fake-live shell. */
 
 async function fetchSpotifyUKTop(){
   if (window.__spotifyUKCache && (Date.now() - window.__spotifyUKCache.ts < 60*60*1000)){
@@ -11925,7 +11498,7 @@ function withTimeout(promise, ms, name){
 
 async function fetchBulk(){
   const T = 8000; // 8-second timeout per fetcher
-  const [weatherMap, bhData, football, tfl, news, trends, fuel, protests, tv, redditUK, threat, grid, nhs, sports, crime, metPolice, lotto, spotify, redditTrend, ncb, storm, power, oil] = await Promise.all([
+  const [weatherMap, bhData, football, tfl, news, trends, fuel, protests, tv, redditUK, threat, grid, nhs, sports, crime, metPolice, lotto, spotify, redditTrend, storm, power, oil] = await Promise.all([
     withTimeout(fetchAllRegionsWeather(),    T, 'weather'),
     withTimeout(fetchAllBankHolidays(),      T, 'bh'),
     withTimeout(fetchAllFootballEvents(),    T, 'football'),
@@ -11945,7 +11518,7 @@ async function fetchBulk(){
     withTimeout(fetchNationalLottery(),      T, 'lotto'),    // national-lottery.co.uk jackpot scrape
     withTimeout(fetchSpotifyUKTop(),         T, 'spotify'),  // Apple Music UK chart (Spotify proxy)
     withTimeout(fetchRedditUKTrending(),     T, 'redditTrend'), // Reddit UK multi-sub hot feed
-    withTimeout(fetchNoContextBrits(),       T, 'ncb'),      // @NoContextBrits Nitter RSS
+    // NCB Zeitgeist fetch removed in v3.17 — Nitter mirrors no longer working
     // v1.3 — Environment & Energy row (ambient, not scored)
     withTimeout(fetchStormAlerts(),          T, 'storm'),    // Met Office severe-weather warnings RSS
     withTimeout(fetchPowerMix(),             T, 'power'),    // Elexon BMRS FUELHH live fuel mix
@@ -11987,7 +11560,6 @@ async function fetchBulk(){
     lotto:       lotto,
     spotify:     spotify,
     redditTrend: redditTrend,
-    ncb:         ncb,
     // v1.3 — Environment & Energy row (ambient, not scored)
     storm:       storm,
     power:       power,
@@ -12028,7 +11600,8 @@ function renderAll(bulk){
     { label:'Daily Pulse',         keys:['search','petrol'] },
     { feature:'finance' },         // 💷 Finance & Markets — sits under Daily Pulse
     { feature:'polymarket' },      // 🎯 Polymarket UK — directly below Finance
-    { feature:'zeitgeist' },
+    // NCB Zeitgeist feature removed in v3.17 — Nitter mirrors X killed in 2024, module
+    // could not reliably go live. Killed rather than left as fake-live shell.
     { label:'Sentiment',           keys:['royal','telly','news','slang'] },
     { label:'Rage & Disorder',     keys:['crime','threat','checkout','aande'] },
     { label:'Street & Chatter',    keys:['protests','social'] },
@@ -12037,11 +11610,6 @@ function renderAll(bulk){
   let signalsHtml = '';
   const orderedSignals = []; // flat list — used for live/modelled chip + ticker context
   for (const group of SIGNAL_GROUPS){
-    if (group.feature === 'zeitgeist'){
-      try { signalsHtml += _zeitgeistHtml(bulk.ncb); }
-      catch(e){ console.warn('[zeitgeist] render threw, skipping:', e.message); }
-      continue;
-    }
     if (group.feature === 'env'){
       try { signalsHtml += _envFeatureHtml(); }
       catch(e){ console.warn('[env feature] render threw, skipping:', e.message); }
@@ -12118,8 +11686,6 @@ function renderAll(bulk){
     }
   }
   $('#signals').innerHTML = signalsHtml;
-  // Ask the X widget script to render the embedded tweet inside the Zeitgeist row
-  _zeitgeistMountWidget();
 
   // Tickers
   renderTickers({
