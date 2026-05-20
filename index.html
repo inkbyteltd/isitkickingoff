@@ -4871,11 +4871,82 @@ const SPOTIFY_FALLBACK_TRACKS = [
   { title:'Birds of a Feather',     artist:'Billie Eilish',    url:'https://music.apple.com/gb/album/birds-of-a-feather/' },
 ];
 
-/* NCB Zeitgeist module removed in v3.17 — ~363 lines of dead code (NCB_HANDLE,
-   SAMPLE_NCB_TWEETS, NCB_HOUR_CURVE, fetchNoContextBrits, _ncbActivitySpark,
-   UNION_JACK_SVG, _toXUrl, _zeitgeistHtml, _zeitgeistMountWidget). Nitter
-   mirrors were killed by X auth crackdown in 2024 — module could not go live
-   reliably, so killed rather than left as fake-live shell. */
+/* NCB Zeitgeist module removed in v3.17 — Nitter mirrors were killed by X
+   auth crackdown in 2024, module could not go live reliably. v3.18 hotfix:
+   restored the feature-row wrappers + KEEP_CALM filler that lived in the
+   same code region — they got accidentally swallowed by the v3.17 regex
+   removal, which is what crashed the gauge. */
+
+/* =========================================================
+   Feature-row HTML wrappers — these render INSIDE the signals
+   grid as full-width rows (grid-column: 1 / -1), positioned
+   between specific signal groups via SIGNAL_GROUPS.
+   The inner ticker cards are populated separately after the
+   signals innerHTML is set, by their dedicated render functions
+   (renderEnvCards etc).
+   ========================================================= */
+function _envFeatureHtml(){
+  return `
+    <div class="grid-feature">
+      <h3 class="feature-title">🌍 Environment &amp; Energy</h3>
+      <div class="env-grid" id="env-tickers"></div>
+    </div>
+  `;
+}
+
+function _financeFeatureHtml(){
+  return `
+    <div class="grid-feature">
+      <h3 class="feature-title">💷 Finance &amp; Markets</h3>
+      <div class="env-grid" id="finance-tickers"></div>
+    </div>
+  `;
+}
+
+function _polymarketFeatureHtml(){
+  return `
+    <div class="grid-feature">
+      <h3 class="feature-title">🎯 Polymarket · UK Predictions</h3>
+      <div class="env-grid" id="polymarket-tickers"></div>
+    </div>
+  `;
+}
+
+/* "Keep Calm" filler cards — render at the end of any signal group whose
+   visible card count isn't a multiple of 4 (the desktop column count). They
+   round out the trailing partial row so the design doesn't leave dead space.
+   Content rotates daily so it doesn't go stale. */
+const KEEP_CALM_FILLERS = [
+  { icon:'🇬🇧', title:'KEEP CALM',     sub:'and carry on'              },
+  { icon:'☕',  title:'KEEP CALM',     sub:'and put the kettle on'     },
+  { icon:'🚏', title:'KEEP CALM',     sub:'and queue politely'         },
+  { icon:'☔', title:'KEEP CALM',     sub:'and blame the weather'      },
+  { icon:'😤', title:'KEEP CALM',     sub:'and tut quietly'            },
+  { icon:'🚆', title:'KEEP CALM',     sub:'and blame the trains'       },
+  { icon:'🥙', title:'KEEP CALM',     sub:'and order a kebab'          },
+  { icon:'🚇', title:'MIND',          sub:'the gap'                    },
+  { icon:'🍻', title:'KEEP CALM',     sub:"it's nearly Friday"         },
+  { icon:'🌧️', title:'KEEP CALM',     sub:"it's only drizzle"          },
+  { icon:'🛒', title:'KEEP CALM',     sub:'and avoid the bagging area' },
+  { icon:'📺', title:'KEEP CALM',     sub:"and put EastEnders on"      },
+  { icon:'🇬🇧', title:'CARRY ON',     sub:'regardless'                 },
+  { icon:'🫖', title:'PROPER BREW',   sub:'first, decisions later'     },
+  { icon:'⛅', title:"IT'S BRIGHT",  sub:'somewhere in the country'   },
+];
+
+function _fillerCardHtml(absoluteIdx){
+  // absoluteIdx is the pool index already shifted by day-seed + filler position.
+  // Caller is responsible for ensuring different idx per filler within a render.
+  const idx = ((absoluteIdx | 0) % KEEP_CALM_FILLERS.length + KEEP_CALM_FILLERS.length) % KEEP_CALM_FILLERS.length;
+  const f = KEEP_CALM_FILLERS[idx];
+  return `<article class="card filler-card" aria-hidden="true">
+    <div class="filler-inner">
+      <div class="filler-icon">${f.icon}</div>
+      <div class="filler-title">${f.title}</div>
+      <div class="filler-sub">${f.sub}</div>
+    </div>
+  </article>`;
+}
 
 async function fetchSpotifyUKTop(){
   if (window.__spotifyUKCache && (Date.now() - window.__spotifyUKCache.ts < 60*60*1000)){

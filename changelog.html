@@ -175,6 +175,29 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.18 <span class="stamp">live</span></div>
+      <div class="release-tag">🚑 HOTFIX — gauge offline after v3.17; restored swallowed feature-row + filler functions · 20 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Hotfix to restore the gauge after v3.17 took it offline. The NCB removal regex used a greedy non-greedy <code>.*?</code> between the NCB header comment and the closing brace of <code>_zeitgeistMountWidget</code> — which inadvertently swallowed <b>five completely unrelated functions</b> that happened to be code-positioned in the same region: <code>_envFeatureHtml</code>, <code>_financeFeatureHtml</code>, <code>_polymarketFeatureHtml</code>, <code>KEEP_CALM_FILLERS</code>, and <code>_fillerCardHtml</code>. The render loop calls all five — they were missing → silent ReferenceError → render aborted → gauge never appeared.</p>
+    <h3>🚑 The fix</h3>
+    <ul>
+      <li>Restored the five swallowed feature-row + filler definitions verbatim. JS parses clean. All five definitions now match their existing callers in the render loop.</li>
+      <li>NCB code itself stays removed — the actual zeitgeist module (<code>NCB_HANDLE</code>, <code>fetchNoContextBrits</code>, <code>_zeitgeistHtml</code>, etc.) does not come back. That part of v3.17 was the intended change.</li>
+      <li>Makerfield candidates panel changes from v3.17 also preserved (Burnham/Kenyon confirmed 19 May).</li>
+    </ul>
+    <h3>🪦 Lesson learned</h3>
+    <ul>
+      <li>Bulk regex removal across a multi-hundred-line region is fragile when functions of different purposes share code positioning. <b>Going forward</b>: when removing a module, individually delete each known function/constant by name rather than using a span-based regex that can swallow neighbours.</li>
+      <li>The v3.17 forensic write-up listed "~363 lines" of NCB code removed. The actual removed span was wider — included the feature-row wrappers and KEEP CALM fillers which were never NCB. That mismatch is what broke the gauge.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> restored to a working state in dev and synced to <code>deploy-test/</code>. Inline JS clean. Gauge restored.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.17 <span class="stamp">live</span></div>
       <div class="release-tag">🪓 Killed NCB Zeitgeist module + Makerfield candidates locked in · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
