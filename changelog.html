@@ -175,6 +175,33 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.21 <span class="stamp">live</span></div>
+      <div class="release-tag">📐 Money &amp; Predictions polish — fix section-title overlap, fill 4 grid gaps (Polymarket 6 → 8 + 2 KEEP CALM fillers) · 27 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Two visual snags in the v3.19 Money &amp; Predictions reshape needed sorting. First, the combined <i>"💷 Money &amp; 🎯 Predictions"</i> section title was clipping into the top edge of the first card — caused by a negative <code>-4px</code> bottom margin on <code>.feature-title</code> plus a <code>-8px</code> top margin on the polymarket wrap. Second, the layout had <b>4 visible empty slots</b>: 2 in the finance row (Crypto + FX in a 4-column grid) and 2 in the polymarket row (6 cards in a 4-column grid trails off in row 2).</p>
+    <h3>📐 Section-title overlap — fixed</h3>
+    <ul>
+      <li><code>.feature-title</code> margin was <code>6px 0 -4px</code> (negative bottom margin pulled the title onto the cards). Now <code>22px 0 12px</code> with <code>line-height:1.2</code> — proper breathing room above and below the divider.</li>
+      <li>Polymarket wrap had <code>margin-top:-8px</code> pulling its grid up into the finance grid. Replaced with <code>margin-top:8px</code> so the two grids read as one visual block without crashing into each other.</li>
+    </ul>
+    <h3>🃏 Grid gaps — filled, both rows</h3>
+    <ul>
+      <li><b>Finance row (2 cards → 4 cards)</b>. Added 2 KEEP CALM filler tickers next to Crypto + Pound In Your Pocket. New helper <code>_envFillerTicker(offset)</code> picks from the existing <code>KEEP_CALM_FILLERS</code> pool with a daily seed + per-card offset (5-step coprime stride) so the two cards rotate daily and are always different from each other within a single render. Styled with a dashed border + faint gradient so they read as obviously decorative (no live data implied).</li>
+      <li><b>Polymarket grid (6 → 8 cards)</b>. Worker <code>/api/polymarket?limit=N</code> already accepted up to 20 — bumped the call to <code>limit=8</code>, the render slice to <code>.slice(0, 8)</code>, and the placeholder fallback count to 8 so the grid never collapses.</li>
+      <li>Net layout: clean 4×3 = <b>12 cards</b> in the Money &amp; Predictions block. Row 1: Crypto · FX · Filler · Filler. Rows 2–3: 8 Polymarket UK markets.</li>
+    </ul>
+    <h3>🎨 New CSS — env-grid filler styling</h3>
+    <ul>
+      <li>New <code>.env-grid .ticker.env-filler</code> rule — same ticker shell + min-height as the live cards, but with a dashed border, faint linear-gradient background, and centred icon/title/sub block (33px icon, mono uppercase title, soft-ink subtitle). Visually quiet but spatially identical to its neighbours, so the grid feels filled rather than padded.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. Worker untouched (the cap was already 20). No schema changes, no signal weight changes.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.20 <span class="stamp">live</span></div>
       <div class="release-tag">🗳️ Makerfield full ballot · 🔍 Search Panic pool 37 → ~70 with dynamic seasonal/shopping gates · 27 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

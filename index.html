@@ -538,7 +538,25 @@
     display:flex;align-items:center;gap:12px;
     color:var(--ink-faint);font-family:var(--mono);
     font-size:10px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;
-    margin:6px 0 -4px;padding:0;line-height:1;
+    margin:22px 0 12px;padding:0;line-height:1.2;
+  }
+  /* v3.21: subtle "fake ad" filler inside finance row so the 4-col grid never
+     leaves dead space. Visual is a quiet KEEP CALM card; clearly non-data. */
+  .env-grid .ticker.env-filler{
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015) 0%, rgba(255,255,255,0) 100%);
+    border-style:dashed;
+  }
+  .env-grid .ticker.env-filler .filler-inner{
+    text-align:center;padding:12px 8px;
+  }
+  .env-grid .ticker.env-filler .filler-icon{ font-size:30px;line-height:1;margin-bottom:8px; }
+  .env-grid .ticker.env-filler .filler-title{
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+    color:var(--ink-faint);text-transform:uppercase;margin-bottom:4px;
+  }
+  .env-grid .ticker.env-filler .filler-sub{
+    font-size:13px;color:var(--ink);opacity:.7;
   }
   .grid-feature .feature-title::before{
     content:"";width:4px;height:13px;background:var(--accent);
@@ -4933,8 +4951,12 @@ function _financeFeatureHtml(){
 function _polymarketFeatureHtml(){
   // v3.19: no second header — the combined header above covers both grids.
   // The Polymarket cards still render into their own grid below the finance grid.
+  // v3.21: dropped the negative top margin that was contributing to the section-
+  // title overlap; spacing now comes from the env-grid gap (14px) plus a small
+  // breath of margin so the two grids read as one visual block without crashing
+  // into each other.
   return `
-    <div class="grid-feature" style="margin-top:-8px">
+    <div class="grid-feature" style="margin-top:8px">
       <div class="env-grid" id="polymarket-tickers"></div>
     </div>
   `;
@@ -6638,11 +6660,12 @@ async function fetchExchangeRates(){
 // UK-related markets and returns top-N by 24h volume). Always returns
 // { live, markets, count } even on failure.
 async function fetchPolymarketUK(){
-  // v3.19: bumped limit 4 → 6 so we can fill the Money & Predictions row out to
-  // 8 cards total (2 finance + 6 polymarket = perfect 4x2 grid at desktop width).
+  // v3.21: bumped limit 6 → 8 so the polymarket grid is a clean 4x2 (no
+  // trailing empty slots). Finance row now sits above as 2 cards + 2 fillers,
+  // total layout is 4x3 = 12 cards across the Money & Predictions section.
   const out = { live:false, markets:[] };
   try {
-    const r = await fetch('/api/polymarket?limit=6');
+    const r = await fetch('/api/polymarket?limit=8');
     if (r.ok){
       const j = await r.json();
       if (j && Array.isArray(j.markets) && j.markets.length){
@@ -9054,9 +9077,30 @@ function renderFinanceCards(fin){
       <div style="margin-top:6px">${fxRows}</div>
       <div class="foot"><span>Frankfurter · ECB rates</span><span>${fx.date || 'today'}</span></div>
     </article>
+    ${_envFillerTicker(0)}
+    ${_envFillerTicker(1)}
   `;
   const target = document.getElementById('finance-tickers');
   if (target) target.innerHTML = html;
+}
+
+/* v3.21: env-grid styled KEEP CALM filler card. Renders inside the finance
+   row's 4-column grid so the two remaining slots (after Crypto + FX) aren't
+   empty space. Daily rotation matches the rest of the dashboard. */
+function _envFillerTicker(offset){
+  // Day-of-year seed + caller offset (so the two fillers in a single row are
+  // always different items, and the pair rotates daily).
+  const d = new Date();
+  const dayOfYear = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000);
+  const idx = ((dayOfYear * 7) + (offset|0) * 5) % KEEP_CALM_FILLERS.length;
+  const f = KEEP_CALM_FILLERS[idx];
+  return `<article class="ticker env-filler" aria-hidden="true">
+    <div class="filler-inner">
+      <div class="filler-icon">${f.icon}</div>
+      <div class="filler-title">${f.title}</div>
+      <div class="filler-sub">${f.sub}</div>
+    </div>
+  </article>`;
 }
 
 /* =========================================================
@@ -9136,16 +9180,18 @@ function renderPolymarketCards(poly){
     const t = _polymarketTipText(m);
     return `<button class="tip-btn" type="button" aria-label="About this market" data-tip="${_escAttr(t)}">?</button>`;
   };
-  // v3.19: 6 markets instead of 4 — fills the Money & Predictions row out to a
-  // clean 8-card 4x2 grid (2 finance + 6 polymarket).
-  const markets = (poly.markets || []).slice(0, 6);
+  // v3.21: 8 markets — fills the polymarket sub-grid out to a clean 4x2 with
+  // no trailing empty slots. Finance row above is 2 cards + 2 KEEP CALM filler
+  // tickers, so the whole Money & Predictions section now reads as a clean
+  // 4x3 (12 cards) without gaps.
+  const markets = (poly.markets || []).slice(0, 8);
   const fmtVol = v => v >= 1_000_000 ? '$' + (v/1_000_000).toFixed(1) + 'M'
                     : v >= 1_000     ? '$' + (v/1_000).toFixed(0) + 'k'
                     : '$' + Math.round(v || 0);
   const liveChip = poly.live ? `<span class="chip live">Live</span>` : `<span class="chip model">Modelled</span>`;
 
-  // If we got no markets back, render 6 placeholder cards so the layout doesn't collapse.
-  const cards = markets.length ? markets : [null, null, null, null, null, null];
+  // If we got no markets back, render 8 placeholder cards so the layout doesn't collapse.
+  const cards = markets.length ? markets : [null, null, null, null, null, null, null, null];
 
   const html = cards.map((m, i) => {
     if (!m){
