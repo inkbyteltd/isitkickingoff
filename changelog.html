@@ -175,6 +175,41 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.20 <span class="stamp">live</span></div>
+      <div class="release-tag">🗳️ Makerfield full ballot · 🔍 Search Panic pool 37 → ~70 with dynamic seasonal/shopping gates · 27 May 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Two-part refresh. Wigan Council has now published the statement of persons nominated for the Makerfield by-election — <b>11 candidates standing</b>, including <b>Count Binface</b> entering the race — so the candidates panel has been updated from a 6-row "declared / expected" sketch to the final ballot. And the Search Panic Index has been visibly broken for weeks (same five generic queries no matter the weather), so the query pool has been roughly doubled with proper temperature, calendar and day-of-week gates so it actually reflects what the country is typing.</p>
+    <h3>🗳️ Makerfield candidates — final ballot</h3>
+    <ul>
+      <li>Nominations have closed. Wigan Council's official statement of persons nominated carries <b>11 candidates</b>. Replaced the 6-row "declared / expected" panel with the full ballot, ordered: serious front-runners (Burnham · Lab, Kenyon · Reform, Winstanley · Con, Austin · Lib Dem, Wakefield · Green), then notable / satirical (Count Binface, Hope · Loony), then minor parties (Clarke · Libertarian, Pownall · Protect The Wild, Ward · Rejoin EU, Shepherd · Restore Britain).</li>
+      <li><b>Count Binface</b> joining the race is the headline curio — last seen contesting Rishi Sunak's Richmond seat. His entry was confirmed during the nomination window.</li>
+      <li>Updated the stake paragraph from "Nominations close Thursday 28 May" to "Nominations have closed. The final ballot carries 11 candidates."</li>
+      <li>Trimmed each row to <i>Name · Party</i> — dropped the "confirmed 19 May" timestamps now the field is locked in.</li>
+    </ul>
+    <h3>🔍 Search Panic Index — pool roughly doubled with proper gates</h3>
+    <ul>
+      <li><b>Why this needed doing:</b> the top 5 surfaced queries were stale and generic — five fixed weather entries, five booze entries, five football entries, and the rest. The temperature gate fired on a single hot-weather string ("where to buy a fan"), so a 28°C bank holiday weekend looked identical to a wet Tuesday in February. User flagged: <i>"Surely, we're going for a heat wave. People would be searching for things, like after-sun cream, air conditioners, fans, ice packs."</i> Fair point.</li>
+      <li><b>Pool expanded from ~37 → ~70 queries.</b> New themes: <code>heatwave</code>, <code>shopping</code>, <code>seasonal</code>, <code>cost</code>, <code>utility</code>. Each new query carries a tighter <code>fires(ctx)</code> function so it only surfaces when the live conditions match.</li>
+      <li><b>Heatwave shopping (temp ≥ 22°C):</b> "where to buy a fan", "argos fan in stock", "portable air conditioner UK", "after sun aloe vera", "sun cream factor 50 boots", "ice packs delivery tomorrow", "paddling pool b&amp;q", "ice lolly multipack asda", "mr whippy ice cream van", "BBQ charcoal asda", "best beer garden near me", "how to cool a room down", "why is my flat so hot", "is it too hot to work".</li>
+      <li><b>Cold-snap shopping (temp ≤ 5°C):</b> "snow warning UK", "hot water bottle dunelm", "electric blanket cheap", "thermal leggings marks", "snow boots size 9", "rock salt for driveway", "how to defrost windscreen", "boiler not working british gas".</li>
+      <li><b>Rain / damp / grey (8–16°C):</b> "waterproof jacket sale", "umbrella for sale near me".</li>
+      <li><b>Calendar-locked seasonal:</b> Easter eggs in March, fireworks in October/November, pumpkin patches in October, Christmas trees in November/December, turkey orders by 22 Dec, school uniform deals August, mother's day flowers mid-March. Each gated by <code>c.month</code> + <code>c.dayOfMonth</code> so they vanish out of season instead of cluttering the top 5 year-round.</li>
+      <li><b>Cost of living:</b> "tesco clubcard prices this week", "aldi price match", "cheapest energy supplier" (winter-amplified).</li>
+      <li><code>fires()</code> functions across the existing pool also tightened — most off-context multipliers reduced from 0.2-0.4 down to 0.05 so seasonally-specific queries genuinely vanish when not in season, leaving room for the relevant ones.</li>
+    </ul>
+    <h3>📐 Methodology + tooltip</h3>
+    <ul>
+      <li>Updated the Search Panic Index row in the <i>How is this calculated?</i> table to spell out the new themes, the gating variables, and the example new queries (so curious readers can map a hot afternoon's top 5 to the pool that produced it).</li>
+      <li>Refreshed the hover-tooltip line on the Search Panic signal card to match — was a stale "curfew, train strike, school closed, riot" example; now reflects the actual themed pool.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker / no schema changes. Search Panic still weighted at 2% — pool expansion increases relevance, not gauge contribution.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.19 <span class="stamp">live</span></div>
       <div class="release-tag">💷 Money &amp; Predictions reshape — drop Stocks/Pharma, bump Polymarket to 6, single combined header · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
