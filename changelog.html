@@ -175,6 +175,52 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.22 <span class="stamp">live</span></div>
+      <div class="release-tag">📊 Data refresh — Makerfield 11→14 final ballot · YouGov 31 May–1 Jun polls · May 2026 leader approval · gauge audit fixes · 4 Jun 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Mid-campaign refresh ahead of the 18 June Makerfield by-election. The full statement of persons nominated is now published — <b>14 candidates standing</b>, three more than we previously listed (we'd missed Ed Gemmell · Climate Party, John Alfred Dyer · Independent, Paul Richard Gould · Independent — and Robert Pownall stood as an Independent, not for Protect The Wild). Westminster voting intention and leader approval refreshed to the latest YouGov / PollCheck numbers. While we were in there, ran a quick sanity sweep across the live data pipelines and fixed four pieces of dead weight that were quietly misleading or wasting fetch budget.</p>
+    <h3>🗳️ Makerfield candidates — 11 → 14, final ballot</h3>
+    <ul>
+      <li><b>Added:</b> Ed Gemmell (Climate Party 🌍), John Alfred Dyer (Independent), Paul Richard Gould (Independent) — none had been confirmed at the v3.20 cut.</li>
+      <li><b>Reclassified:</b> Robert Neil Pownall standing as Independent (we had him as Protect The Wild — the council's published statement clarifies he's standing on his own).</li>
+      <li><b>Tidied:</b> Burnham relabelled <i>Labour &amp; Co-operative</i> (the formal description on the nomination paper) and Winstanley relabelled <i>Conservative &amp; Unionist</i> for accuracy.</li>
+      <li>Stake paragraph now reflects the 14-candidate field (six establishment parties + Restore Britain + Rejoin EU + Climate + Libertarian + Loonies + Count Binface + three independents) and the corrected nomination-close date (Tuesday 26 May 2026).</li>
+    </ul>
+    <h3>🗳️ Westminster voting intention — refreshed</h3>
+    <ul>
+      <li><b>YouGov 31 May–1 Jun 2026</b> (Times/Sky News): Reform 27 / Con 18 / Lab 18 / Grn 15 / LD 13. <b>PollCheck 7-poll moving average</b> (3 Jun): Ref 27.6 / Lab 19.3 / Con 18.7 / Grn 13.9 / LD 12.4.</li>
+      <li><b>Labour:</b> 15 → 18 (+3). Some bounce back from the post-locals low — partly Burnham-challenge oxygen, partly Tory slide.</li>
+      <li><b>Conservative:</b> 20 → 18 (−2). Bled to Reform AND back to Labour.</li>
+      <li><b>Green:</b> 14 → 15 (+1). Lib Dem 14 → 13 (−1). Roughly swapped places.</li>
+      <li><b>Reform:</b> 27 → 27 (0). Holding the 9-point lead.</li>
+      <li><b>Others:</b> 6 → 5. <code>asOf</code> updated from "May 2026 · post-locals" to "early Jun 2026 · pre-Makerfield".</li>
+    </ul>
+    <h3>👔 Leader approval — YouGov May 2026</h3>
+    <ul>
+      <li><b>Burnham +4</b> (held — only senior politician YouGov polled with a positive net rating; 34% fav / 30% unfav).</li>
+      <li><b>Starmer −46</b> (was −50 — slight thaw; 23% fav / 69% unfav).</li>
+      <li><b>Farage −37</b> (was −32 — five points worse; 27% fav / 64% unfav).</li>
+      <li><b>Badenoch −17</b> (held — her highest net of any Tory leader in five years).</li>
+      <li><b>Davey −3</b> (was −2 — basically flat; 34% don't-know is still the headline).</li>
+      <li><b>Polanski −25</b> (was −6 — sharp drop; 50% now hold a negative opinion, up 16 points since April).</li>
+      <li><b>Swinney −12</b> (held — no fresh data).</li>
+      <li>Reordered the table to <b>net-favourability descending</b> (Burnham at the top, Starmer at the bottom) so the pint-test winner is the first row eyes hit.</li>
+    </ul>
+    <h3>🩺 Gauge sanity sweep — fixes applied</h3>
+    <ul>
+      <li><b>Dead fetchers stripped from the parallel batch.</b> <code>fetchStockIndices()</code> and <code>fetchTechPharma()</code> were still being called every page load even though v3.19 removed their rendered cards. Each was a doomed Yahoo-proxy chain that burned ~1.5s of timeout budget for nothing. Pulled from the <code>Promise.all</code> in <code>fetchBulk</code>. Functions kept in source in case we revive them via a paid API later. Methodology table rows for <i>Stock Indices</i> and <i>Tech &amp; Pharma Movers</i> also removed — they were promising live data that didn't exist.</li>
+      <li><b>Spotify fallback honesty.</b> The hardcoded <code>SPOTIFY_FALLBACK_TRACKS</code> list was 18 months out of date (2024 chart). Refreshed to a 2026 evergreen set (Sabrina Carpenter "Manchild", Chappell Roan, Billie Eilish, Tate McRae "Sports car", "Defying Gravity"). The "Modelled" chip still flips on when it fires — these are explicitly NOT presented as "today's chart".</li>
+      <li><b>Fuel fallback refreshed.</b> <code>UK_FUEL_FALLBACK.asOf</code> bumped from "late April 2026" to "early June 2026", values nudged closer to current RAC averages (unleaded 155.4p, diesel 187.2p). Only surfaces when all 14 retailer JSON endpoints fail — should be rare.</li>
+      <li><b>Audit findings worth knowing (no action this release):</b> Google Trends RSS still nerfed by Google as expected (Search Panic Index ~95% modelled, which the chip honestly reflects); GDELT protest feed stable; Polymarket Worker proxy healthy; data.police.uk has its usual ~2-month lag (fine — the modelled fallback handles it).</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. Inline JS parses clean (538KB). No worker changes. Makerfield auto-hide remains wired (1 day after polling day) — section will vanish on 20 June 2026.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.21 <span class="stamp">live</span></div>
       <div class="release-tag">📐 Money &amp; Predictions polish — fix section-title overlap, fill 4 grid gaps (Polymarket 6 → 8 + 2 KEEP CALM fillers) · 27 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
