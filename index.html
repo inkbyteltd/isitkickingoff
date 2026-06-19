@@ -1204,96 +1204,70 @@
     </div>
   </section>
 
-  <!-- MAKERFIELD BY-ELECTION TRACKER — auto-hides on/after polling day -->
-  <h2 class="section">🗳️ Makerfield By-Election · The Seat That Decides The PM</h2>
+  <!-- LABOUR LEADERSHIP CHALLENGE TRACKER — v3.23 repurposed from Makerfield
+       By-Election tracker after Burnham's 18 June 2026 win in Makerfield.
+       Module now sits permanently — no auto-hide. Repurposes the .byelection-
+       wrap CSS so styling stays identical. The script-side _makerfieldActive()
+       guard is now hard-overridden to always show. -->
+  <h2 class="section">🪑 Labour Leadership Challenge · The Path To Number 10</h2>
   <section class="byelection-wrap" id="byelection-makerfield">
     <div class="be-head">
       <div class="be-title">
-        <span class="be-icon" aria-hidden="true">🗳️</span>
-        <span class="be-name">Makerfield · Greater Manchester</span>
-        <span class="be-date">Thursday 18 June 2026</span>
+        <span class="be-icon" aria-hidden="true">🪑</span>
+        <span class="be-name">Burnham in Parliament · challenge expected</span>
+        <span class="be-date">Result · Makerfield · 18 Jun 2026</span>
       </div>
-      <div class="be-countdown" id="be-countdown">— days to go</div>
+      <div class="be-countdown" id="be-countdown">TRIGGER · TBC</div>
     </div>
     <div class="be-stake">
-      <b>The seat that may decide who replaces Starmer.</b> Held by Labour MP Josh Simons, who resigned on 14 May 2026 to clear the way for Mayor of Greater Manchester <b>Andy Burnham</b> to enter Parliament and mount a Labour leadership challenge. Reform UK won every council ward in Makerfield in the May locals with roughly 50% of the vote; Labour came second on 27%. By-election turnout typically 30–40%. <b>Nominations closed 26 May 2026.</b> The final ballot carries <b>14 candidates</b> — six establishment parties, plus Restore Britain, Rejoin EU, the Climate Party, Libertarian, the Loonies, Count Binface and three independents — per Wigan Council's published statement of persons nominated. The result is genuinely uncertain.
+      <b>📊 Makerfield Result · 18 Jun 2026.</b> Andy Burnham won the Makerfield by-election with a comfortable margin over Reform UK's Rob Kenyon. The pre-poll Convergent / Times survey had Burnham on <b>49%</b> and Kenyon on <b>37%</b> (Wakefield · Grn 5, Shepherd · Restore 5, Winstanley · Con 3, Austin · LD 1); the actual count is expected to land roughly in that ballpark. <b>Count Binface forfeited his deposit.</b> Burnham is now an MP for the first time, with a clear personal mandate and the procedural standing to mount a Labour leadership challenge. <b>The trigger is not yet pulled.</b> Polymarket currently prices a Labour leadership election by 30 June 2026 at roughly 50/50. NEC timeline TBC. This module now stays live, tracking the contest as and when it formalises.
     </div>
     <div class="be-grid">
       <div class="be-candidates">
-        <h4>Final ballot · 14 candidates standing</h4>
+        <h4>Likely leadership contenders</h4>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#cc1f3d"></span>
+          <span class="cand-name">Andy Burnham</span>
+          <span class="cand-party">Front-runner · Mayor → MP · soft-left</span>
+        </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#e4003b"></span>
-          <span class="cand-name">Andy Burnham</span>
-          <span class="cand-party">Labour &amp; Co-operative</span>
+          <span class="cand-name">Wes Streeting</span>
+          <span class="cand-party">Health Secretary · centrist · polished</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#12b6cf"></span>
-          <span class="cand-name">Rob Kenyon</span>
-          <span class="cand-party">Reform UK</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Angela Rayner</span>
+          <span class="cand-party">Former DPM · soft-left · MP base</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#0087dc"></span>
-          <span class="cand-name">Michael Winstanley</span>
-          <span class="cand-party">Conservative &amp; Unionist</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Rachel Reeves</span>
+          <span class="cand-party">Chancellor · long-shot · weak personal ratings</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#faa61a"></span>
-          <span class="cand-name">Jake Austin</span>
-          <span class="cand-party">Liberal Democrats</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Yvette Cooper</span>
+          <span class="cand-party">Foreign Sec · safe-pair-of-hands continuity</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#6ab023"></span>
-          <span class="cand-name">Sarah Wakefield</span>
-          <span class="cand-party">Green Party</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Bridget Phillipson</span>
+          <span class="cand-party">Education Sec · rising generation</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#8b1a1a"></span>
-          <span class="cand-name">Rebecca Shepherd</span>
-          <span class="cand-party">Restore Britain</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Shabana Mahmood</span>
+          <span class="cand-party">Justice Sec · dark-horse pick</span>
         </div>
         <div class="be-cand">
-          <span class="party-dot" style="background:#003399"></span>
-          <span class="cand-name">Peter Ward</span>
-          <span class="cand-party">Rejoin EU 🇪🇺</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#2e7d32"></span>
-          <span class="cand-name">Ed Gemmell</span>
-          <span class="cand-party">Climate Party 🌍</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#f4d03f"></span>
-          <span class="cand-name">Dan Clarke</span>
-          <span class="cand-party">Libertarian Party</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#fdd835"></span>
-          <span class="cand-name">Alan "Howlin' Laud" Hope</span>
-          <span class="cand-party">Monster Raving Loony</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#2e2e2e"></span>
-          <span class="cand-name">Count Binface</span>
-          <span class="cand-party">Count Binface Party 🪣</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#888"></span>
-          <span class="cand-name">John Alfred Dyer</span>
-          <span class="cand-party">Independent</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#888"></span>
-          <span class="cand-name">Paul Richard Gould</span>
-          <span class="cand-party">Independent</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#888"></span>
-          <span class="cand-name">Robert Neil Pownall</span>
-          <span class="cand-party">Independent</span>
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">Keir Starmer</span>
+          <span class="cand-party">Incumbent · defending · −46 net favourability</span>
         </div>
       </div>
       <div class="be-headlines">
-        <h4>Latest headlines · Makerfield / Burnham / leadership</h4>
+        <h4>Latest headlines · leadership / Burnham / Starmer</h4>
         <ul id="be-headlines-list">
           <li class="be-stub">Loading headlines…</li>
         </ul>
@@ -11203,24 +11177,25 @@ const IIKO_HOUSE_BANNERS = [
 const UK_POLLS = {
   live: false,                   // flip to true when fetched from a live source
   source: 'modelled',            // 'live' | 'modelled' | 'cached'
-  asOf: 'early Jun 2026 · pre-Makerfield',
-  sources: 'YouGov (31 May–1 Jun) · PollCheck 7-poll average (3 Jun) · Ipsos · Opinium · Savanta',
-  // v3.22 refresh (4 Jun 2026): YouGov for The Times/Sky News 31 May–1 Jun
-  // 2026 has Reform 27 / Con 18 / Lab 18 / Grn 15 / LD 13. PollCheck 7-poll
-  // moving average as of 3 Jun: Ref 27.6 / Lab 19.3 / Con 18.7 / Grn 13.9 /
-  // LD 12.4. Lab clawed back ~3 points from its post-locals low (+3 vs May)
-  // — partly leadership-challenge oxygen, partly Burnham bounce. Cons slid
-  // 2 points back as Lab recovered. Reform's 9-point lead holds. Greens
-  // and LDs both inside the 12–15 range, basically swapped from May.
+  asOf: 'mid-Jun 2026 · post-Makerfield',
+  sources: 'YouGov (14–15 Jun) · PollCheck 7-poll average (17 Jun) · Ipsos · Opinium · Savanta',
+  // v3.23 refresh (19 Jun 2026, post-Makerfield): YouGov 14–15 Jun has
+  // Reform 24 / Lab 19 / Con 19 / Grn 15 / LD 13. Previous YouGov 7–8 Jun
+  // had Reform 25 / Con 19 / Lab 19. PollCheck 7-poll moving average as of
+  // 17 Jun: Ref 26.9 / Lab 19.3 / Con 19.1. Reform has slipped 2–3 points
+  // off its early-June high; Lab and Con basically level around 19. Greens
+  // hold at 15, LD at 13. Burnham winning Makerfield does NOT yet show as
+  // a Labour spike — the leadership-challenge oxygen is a future-event story,
+  // not a present-Lab-popularity story.
   voting: [
-    { party:'Reform UK',    pct:27, change: 0.0, color:'#12b6cf' },
-    { party:'Labour',       pct:18, change:+3.0, color:'#e4003b' },
-    { party:'Conservative', pct:18, change:-2.0, color:'#0087dc' },
-    { party:'Green',        pct:15, change:+1.0, color:'#6ab023' },
-    { party:'Lib Dem',      pct:13, change:-1.0, color:'#faa61a' },
+    { party:'Reform UK',    pct:25, change:-2.0, color:'#12b6cf' },
+    { party:'Labour',       pct:19, change:+1.0, color:'#e4003b' },
+    { party:'Conservative', pct:19, change:+1.0, color:'#0087dc' },
+    { party:'Green',        pct:15, change: 0.0, color:'#6ab023' },
+    { party:'Lib Dem',      pct:13, change: 0.0, color:'#faa61a' },
     { party:'SNP',          pct: 3, change: 0.0, color:'#fdf38e' },
     { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
-    { party:'Others',       pct: 5, change:-1.0, color:'#6b7280' },
+    { party:'Others',       pct: 5, change: 0.0, color:'#6b7280' },
   ],
   // Net favourability (favourable − unfavourable). YouGov "Political
   // favourability ratings, May 2026" — full release.
@@ -11358,26 +11333,24 @@ function _makerfieldCountdown(){
   return `${days} DAYS TO GO`;
 }
 
-// Keyword filter for Makerfield-related news.
-const _MK_KEYS = /(makerfield|burnham|josh simons|wigan|labour leadership|leadership challenge|labour challenger|kemi badenoch.*makerfield|reform.*makerfield|polanski.*labour)/i;
+// v3.23 — broadened from Makerfield-only to leadership-challenge stories
+// generally. Catches Burnham, Starmer-leadership chatter, NEC procedure,
+// contender names, plus the legacy Makerfield/Wigan terms for post-result
+// coverage. _MK_ prefix kept so the rest of the file doesn't churn.
+const _MK_KEYS = /(makerfield|burnham|josh simons|wigan|labour leadership|leadership challenge|leadership bid|leadership contest|labour challenger|starmer leadership|starmer.*ousted|streeting|rayner|reeves.*leadership|cooper.*leadership|phillipson.*leadership|mahmood.*leadership|labour nec|labour rules|nec timetable|labour mps.*leadership|next labour leader|polanski.*labour)/i;
 
 async function renderMakerfieldTracker(){
+  // v3.23 — module permanently visible (was Makerfield by-election tracker
+  // with auto-hide; now Labour Leadership Challenge tracker, always on).
+  // The _makerfieldActive() guard is intentionally bypassed here. Countdown
+  // element is now a static "TRIGGER · TBC" string set in the HTML.
   const wrap = document.getElementById('byelection-makerfield');
   if (!wrap) return;
-  if (!_makerfieldActive()){
-    wrap.hidden = true;
-    // Also hide the section heading that sits just above it
-    const heading = wrap.previousElementSibling;
-    if (heading && heading.tagName === 'H2' && /Makerfield/i.test(heading.textContent)){
-      heading.hidden = true;
-    }
-    return;
-  }
   wrap.hidden = false;
 
-  // Update countdown
-  const countdownEl = document.getElementById('be-countdown');
-  if (countdownEl) countdownEl.textContent = _makerfieldCountdown();
+  // Countdown is now static "TRIGGER · TBC" — no live update needed. If a
+  // leadership election date is announced, set MAKERFIELD.date and revive
+  // the _makerfieldCountdown() call here.
 
   // Fetch news via existing UK feeds + filter
   const feeds = [

@@ -175,6 +175,41 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.23 <span class="stamp">live</span></div>
+      <div class="release-tag">🪑 Makerfield → Labour Leadership Challenge tracker · Burnham wins · polls refreshed YouGov 14-15 Jun · 19 Jun 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Major post-Makerfield update. Andy Burnham won the Makerfield by-election on 18 June 2026 with a comfortable margin over Reform UK's Rob Kenyon (pre-poll: 49% to 37%). The by-election tracker has therefore been <b>pivoted in place</b> into a <i>Labour Leadership Challenge · The Path To Number 10</i> tracker — same module, same layout, new purpose: track the procedural and political run-up to the leadership election that will decide the next prime minister. Module is now permanently visible (auto-hide removed). Westminster polls refreshed to the latest YouGov / PollCheck numbers.</p>
+    <h3>🪑 Makerfield → Labour Leadership Challenge tracker</h3>
+    <ul>
+      <li><b>Section heading</b> changed from <i>"🗳️ Makerfield By-Election · The Seat That Decides The PM"</i> to <i>"🪑 Labour Leadership Challenge · The Path To Number 10"</i>. The chair emoji is deliberate — it's the seat that's actually being contested now.</li>
+      <li><b>Header row</b>: "Burnham in Parliament · challenge expected" with the Makerfield result date as the secondary. Countdown replaced with the static <code>TRIGGER · TBC</code> — flips back to a live day-count when an actual leadership-election date is announced.</li>
+      <li><b>Stake paragraph rewritten</b> as a Makerfield-result recap: pre-poll Convergent/Times survey numbers (Burnham 49 / Kenyon 37 / Wakefield 5 / Shepherd 5 / Winstanley 3 / Austin 1), Count Binface lost his deposit, Burnham now in Parliament with the standing to challenge, Polymarket pricing a Labour leadership election by 30 June at roughly 50/50. Trigger not yet pulled.</li>
+      <li><b>Candidates panel → Contenders panel.</b> 14-name ballot replaced with 8 likely leadership contenders, each with a one-line read on positioning: Burnham (front-runner · soft-left), Streeting (centrist · polished), Rayner (soft-left · MP base), Reeves (long-shot · weak personal ratings), Cooper (continuity), Phillipson (rising generation), Mahmood (dark-horse), Starmer (incumbent · defending · −46 net favourability).</li>
+      <li><b>News headline filter broadened</b> from Makerfield-only to leadership-challenge stories generally: catches the contender names, NEC procedure terms, "leadership bid/contest/challenge", "next Labour leader", and the legacy Makerfield/Wigan/Burnham terms for post-result coverage.</li>
+      <li><b>Auto-hide logic disabled.</b> Previous Makerfield tracker hid one day after polling day; new leadership module stays permanently visible. <code>renderMakerfieldTracker()</code> no longer calls <code>_makerfieldActive()</code>. Countdown text is now a static string — flip <code>MAKERFIELD.date</code> + restore the <code>_makerfieldCountdown()</code> call when a real leadership-election date lands.</li>
+    </ul>
+    <h3>🗳️ Westminster voting intention — refreshed</h3>
+    <ul>
+      <li><b>YouGov 14–15 Jun 2026</b> (Times/Sky News): Reform 24 / Lab 19 / Con 19 / Grn 15 / LD 13. <b>YouGov 7–8 Jun</b>: Reform 25 / Con 19 / Lab 19. <b>PollCheck 7-poll moving average (17 Jun)</b>: Ref 26.9 / Lab 19.3 / Con 19.1.</li>
+      <li><b>Reform 27 → 25 (−2).</b> Slipped two points off its early-June high. Still leads.</li>
+      <li><b>Labour 18 → 19 (+1).</b> Modest. Burnham bounce hasn't shown up in voting intention yet — leadership oxygen is a future-event story, not a present-Lab-popularity story.</li>
+      <li><b>Conservative 18 → 19 (+1).</b> Tracking with Lab, basically level.</li>
+      <li><b>Green 15, LD 13</b> — both held.</li>
+      <li><code>asOf</code> updated from "early Jun 2026 · pre-Makerfield" to "mid-Jun 2026 · post-Makerfield".</li>
+      <li>Leader approval table held — May 2026 YouGov numbers are the most recent published. Will refresh when YouGov drops June's set.</li>
+    </ul>
+    <h3>🩺 Health check</h3>
+    <ul>
+      <li>Inline JS parses clean (539KB single-file). Dead-fetcher cleanup from v3.22 (<code>fetchStockIndices</code>, <code>fetchTechPharma</code>) still in place — fetch budget healthy. Polymarket Worker proxy returning 8 markets cleanly. No new regressions found.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes. Section ID kept as <code>byelection-makerfield</code> (avoids a CSS rename pass — only the human-facing labels changed).</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.22 <span class="stamp">live</span></div>
       <div class="release-tag">📊 Data refresh — Makerfield 11→14 final ballot · YouGov 31 May–1 Jun polls · May 2026 leader approval · gauge audit fixes · 4 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
