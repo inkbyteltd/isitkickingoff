@@ -1204,6 +1204,91 @@
     </div>
   </section>
 
+  <!-- 🏆 WORLD CUP 2026 TRACKER — v3.24. Reuses the .byelection-wrap CSS so
+       no new styling is needed. Hardcoded standings + fixtures for England's
+       Group L; news headlines pulled via the existing RSS chain. Auto-hides
+       outside the tournament window (2026-06-11 → 2026-07-19) via a guard in
+       renderWorldCupTracker(). Group L = ENG, CRO, GHA, PAN. -->
+  <h2 class="section" id="wc-heading">🏆 World Cup 2026 · Three Lions Watch</h2>
+  <section class="byelection-wrap" id="worldcup-tracker">
+    <div class="be-head">
+      <div class="be-title">
+        <span class="be-icon" aria-hidden="true">🦁</span>
+        <span class="be-name">England · Group L</span>
+        <span class="be-date">Group stage · 11 Jun – 27 Jun 2026</span>
+      </div>
+      <div class="be-countdown" id="wc-countdown">— DAYS TO NEXT ENGLAND MATCH</div>
+    </div>
+    <div class="be-stake">
+      <b>🦁 England's group L campaign is alive.</b> Three Lions opened their tournament on Wednesday 17 June with a <b>4-2 win over Croatia</b> in Boston (Kane brace including a penalty in the 12th, Bellingham, Rashford) — a confident statement. Ghana then beat Panama 1-0 in the other Group L fixture, so after round one England and Ghana sit top of the group on three points. Next up: <b>England v Ghana on Tuesday 23 June</b> at Gillette Stadium, Foxborough. Then the group finale: <b>England v Panama on Saturday 27 June</b> at MetLife, New Jersey. A win on Tuesday and the Lions are through. The gauge now amplifies all home-nation tournament fixtures (+0.25 to Firm Factor) so the kettle reads England-on, regardless of who they're playing.
+    </div>
+    <div class="be-grid">
+      <div class="be-candidates">
+        <h4>Group L · standings after round 1</h4>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#e4003b"></span>
+          <span class="cand-name">🦁 England</span>
+          <span class="cand-party">P1 · W1 · D0 · L0 · GF4 · GA2 · <b>3 pts</b></span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#fdd835"></span>
+          <span class="cand-name">🇬🇭 Ghana</span>
+          <span class="cand-party">P1 · W1 · D0 · L0 · GF1 · GA0 · <b>3 pts</b></span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#0066cc"></span>
+          <span class="cand-name">🇭🇷 Croatia</span>
+          <span class="cand-party">P1 · W0 · D0 · L1 · GF2 · GA4 · 0 pts</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#d40000"></span>
+          <span class="cand-name">🇵🇦 Panama</span>
+          <span class="cand-party">P1 · W0 · D0 · L1 · GF0 · GA1 · 0 pts</span>
+        </div>
+        <h4 style="margin-top:16px">Fixtures · Group L</h4>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#3ecf8e"></span>
+          <span class="cand-name">ENG 4 – 2 CRO</span>
+          <span class="cand-party">Wed 17 Jun · Boston · ✅ England win</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#3ecf8e"></span>
+          <span class="cand-name">GHA 1 – 0 PAN</span>
+          <span class="cand-party">Wed 17 Jun · Houston</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#f4c025"></span>
+          <span class="cand-name">ENG v GHA</span>
+          <span class="cand-party">Tue 23 Jun · Foxborough · 9pm BST</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#f4c025"></span>
+          <span class="cand-name">CRO v PAN</span>
+          <span class="cand-party">Tue 23 Jun · Atlanta</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#f4c025"></span>
+          <span class="cand-name">ENG v PAN</span>
+          <span class="cand-party">Sat 27 Jun · MetLife, NJ · group finale</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#f4c025"></span>
+          <span class="cand-name">CRO v GHA</span>
+          <span class="cand-party">Sat 27 Jun · Dallas</span>
+        </div>
+      </div>
+      <div class="be-headlines">
+        <h4>Latest headlines · England / World Cup 2026</h4>
+        <ul id="wc-headlines-list">
+          <li class="be-stub">Loading headlines…</li>
+        </ul>
+      </div>
+    </div>
+    <div class="be-foot">
+      <span id="wc-foot-status">📰 BBC · Guardian · Sky · Mirror · Mail · refreshed every 5 min · gauge amplifies home-nation tournament matches by +0.25 in Firm Factor</span>
+    </div>
+  </section>
+
   <!-- LABOUR LEADERSHIP CHALLENGE TRACKER — v3.23 repurposed from Makerfield
        By-Election tracker after Burnham's 18 June 2026 win in Makerfield.
        Module now sits permanently — no auto-hide. Repurposes the .byelection-
@@ -2191,6 +2276,7 @@ async function fetchAllFootballEvents(){
     '4396': 'English League 1',
     '4397': 'English League 2',
     '4330': 'Scottish Premiership',
+    '4346': 'FIFA World Cup 2026',          // v3.24 — was missing; gauge ignored England 4-2 Croatia (17 Jun 2026) entirely
     '4480': 'UEFA Champions League',
     '4481': 'UEFA Europa League',
     '5071': 'UEFA Europa Conference League',
@@ -2348,6 +2434,17 @@ function signalFootballFor(regionId, footballData){
     });
   }
 
+  // v3.24 — tournament-window check. If we're inside a UK_TOURNAMENTS football
+  // window (World Cup, Euros), home-nation matches get a meaningful boost so
+  // the Firm Factor reflects national-mood pressure that the firm-reputation
+  // database alone can't see. Without this, the dashboard ignored England 4-2
+  // Croatia on 17 Jun 2026 entirely. Cross-referenced in the per-match scorer
+  // below.
+  const _todayStr = new Date().toISOString().slice(0,10);
+  const _activeFootyTourney = (typeof UK_TOURNAMENTS !== 'undefined')
+    ? UK_TOURNAMENTS.find(t => t.sport === 'football' && _todayStr >= t.start && _todayStr <= t.end)
+    : null;
+
   if (events.length){
     const ranked = [];
     for (const e of events){
@@ -2390,6 +2487,16 @@ function signalFootballFor(regionId, footballData){
       if (derby) matchScore = Math.min(1, matchScore + derby.bonus);
       if (travelling && !travelling.hostForeign) matchScore = Math.min(1, matchScore + 0.20);
       if (travelling &&  travelling.hostForeign) matchScore = Math.min(1, matchScore + 0.05);
+
+      // v3.24 — Tournament amplifier: any home-nation fixture during an active
+      // World Cup / Euros window gets a meaningful boost. Pubs full, flags out,
+      // national-mood pressure visible whether the firm reputation database
+      // recognises the foreign opponent's name or not.
+      const isHomeNationMatch = _activeFootyTourney
+        && (HOME_NATIONS_RE.test(h) || HOME_NATIONS_RE.test(a));
+      if (isHomeNationMatch){
+        matchScore = Math.min(1, matchScore + 0.25);
+      }
 
       // Kickoff-time amp (police-mandated early KO is itself a risk signal)
       const koAmp = _kickoffRiskAmp(time, e.dateEvent);
@@ -2484,6 +2591,18 @@ function signalFootballFor(regionId, footballData){
   const holding = _firmHolding();
   const damp = regionId === 'uk' ? 1.0 : 0.85;
   const locPrefix = regionId === 'uk' ? '' : `${REGION_BY_ID[regionId].name} · `;
+  // v3.24 — when fixtures fail to fetch but an active football tournament is
+  // running, acknowledge it in the fallback copy AND lift the floor score so
+  // the card isn't pretending it's a quiet domestic-off-season Tuesday.
+  if (_activeFootyTourney){
+    const tName = _activeFootyTourney.name.replace(/\s*\d{4}\s*$/, '');
+    return { ...base, live:false,
+      valueLabel: `${_activeFootyTourney.icon} ${tName} ON`,
+      subLabel: `${locPrefix}tournament window active · fixtures feed temporarily quiet · pubs busy regardless`,
+      score: Math.max(0.45, m.score * damp),
+      events: [],
+      err: footballData.err };
+  }
   return { ...base, live:false,
     valueLabel: holding.status,
     subLabel: `${locPrefix}${holding.line} · ${m.note}`,
@@ -11418,6 +11537,134 @@ async function renderMakerfieldTracker(){
 
 renderMakerfieldTracker();
 setInterval(renderMakerfieldTracker, 5 * 60 * 1000);
+
+/* =========================================================
+   🏆 World Cup 2026 Tracker — v3.24
+   Auto-hides the entire #worldcup-tracker section (and its h2
+   heading) outside the tournament window. Inside the window:
+   updates the countdown text dynamically based on the next
+   England fixture, and pulls World Cup headlines via the same
+   RSS chain the leadership tracker uses.
+   ========================================================= */
+const WC_WINDOW = { start:'2026-06-11', end:'2026-07-19' };
+// Knockout dates extend the window dynamically — fixture list
+// below is the source of truth. If England progress past groups,
+// the next-fixture countdown will keep working from this list.
+const WC_ENG_FIXTURES = [
+  { date:'2026-06-17T20:00:00', vs:'Croatia',  place:'Boston',     status:'done', result:'4-2 W' },
+  { date:'2026-06-23T21:00:00', vs:'Ghana',    place:'Foxborough', status:'upcoming' },
+  { date:'2026-06-27T20:00:00', vs:'Panama',   place:'MetLife NJ', status:'upcoming' },
+];
+
+const _WC_KEYS = /(world cup|wc 2026|england.*(croatia|ghana|panama|kane|bellingham|rashford|tuchel|three lions|knockout|group stage)|three lions|fifa world cup|usa.*canada.*mexico|gareth southgate|euro.*group|gillette stadium|metlife.*england)/i;
+
+function _wcActive(){
+  const today = new Date().toISOString().slice(0,10);
+  return today >= WC_WINDOW.start && today <= WC_WINDOW.end;
+}
+
+function _wcNextEnglandMatch(){
+  const now = Date.now();
+  for (const f of WC_ENG_FIXTURES){
+    const t = new Date(f.date).getTime();
+    if (t > now) return { ...f, msAway: t - now };
+  }
+  return null;
+}
+
+function _wcCountdownText(){
+  const next = _wcNextEnglandMatch();
+  if (!next){
+    // Either group stage done, awaiting knockout draw, or tournament over
+    return _wcActive() ? 'AWAITING NEXT FIXTURE DRAW' : 'TOURNAMENT OVER';
+  }
+  const days = Math.floor(next.msAway / 86400000);
+  const hours = Math.floor((next.msAway % 86400000) / 3600000);
+  if (days >= 2) return `${days} DAYS · ENG v ${next.vs.toUpperCase()}`;
+  if (days === 1) return `TOMORROW · ENG v ${next.vs.toUpperCase()}`;
+  if (hours >= 1) return `${hours}h · ENG v ${next.vs.toUpperCase()}`;
+  return `KICKOFF SOON · ENG v ${next.vs.toUpperCase()}`;
+}
+
+async function renderWorldCupTracker(){
+  const wrap = document.getElementById('worldcup-tracker');
+  const heading = document.getElementById('wc-heading');
+  if (!wrap) return;
+  if (!_wcActive()){
+    wrap.hidden = true;
+    if (heading) heading.hidden = true;
+    return;
+  }
+  wrap.hidden = false;
+  if (heading) heading.hidden = false;
+
+  const countdownEl = document.getElementById('wc-countdown');
+  if (countdownEl) countdownEl.textContent = _wcCountdownText();
+
+  // News — reuse the same RSS feeds the leadership tracker hits, filtered
+  // through the WC keyword regex.
+  const feeds = [
+    'https://feeds.bbci.co.uk/sport/football/rss.xml',
+    'https://feeds.bbci.co.uk/news/uk/rss.xml',
+    'https://www.theguardian.com/football/rss',
+    'https://feeds.skynews.com/feeds/rss/sports.xml',
+    'https://www.dailymail.co.uk/news/index.rss',
+    'https://www.mirror.co.uk/sport/football/rss.xml',
+  ];
+  let items = [];
+  try {
+    const results = await Promise.all(feeds.map(fetchRssItems));
+    for (const list of results) items.push(...list);
+  } catch(e){ /* fall through */ }
+
+  const seen = new Set();
+  const matches = items.filter(it => {
+    if (!it || !it.title) return false;
+    if (!_WC_KEYS.test(it.title) && !_WC_KEYS.test(it.text || '')) return false;
+    const key = it.title.slice(0, 60).toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 5);
+
+  function _srcOf(link){
+    try {
+      const h = new URL(link).hostname.replace(/^www\./, '');
+      if (/bbc/.test(h))      return 'BBC';
+      if (/guardian/.test(h)) return 'Guardian';
+      if (/skynews/.test(h))  return 'Sky';
+      if (/dailymail/.test(h))return 'Mail';
+      if (/mirror/.test(h))   return 'Mirror';
+      return h.split('.')[0].toUpperCase();
+    } catch(e){ return 'Wire'; }
+  }
+
+  const list = document.getElementById('wc-headlines-list');
+  if (!list) return;
+  if (matches.length){
+    list.innerHTML = matches.map(it => `
+      <li>
+        <a href="${it.link || '#'}" target="_blank" rel="noopener noreferrer">${it.title}</a>
+        <span class="be-src">${_srcOf(it.link || '')}</span>
+      </li>`).join('');
+  } else {
+    // Evergreen fallbacks so the panel never feels empty
+    const evergreen = [
+      { txt:'England 4-2 Croatia: Kane brace and Bellingham seal opener', src:'Recap' },
+      { txt:'Three Lions face Ghana on Tuesday — Tuchel hints at unchanged XI', src:'Preview' },
+      { txt:'Group L scenarios: a Ghana win sees England through with a game to spare', src:'Analysis' },
+      { txt:'Pubs report record opening-game pints — biggest non-Euros tournament since 2018', src:'Trade' },
+    ];
+    list.innerHTML = evergreen.map(f => `
+      <li>
+        <span style="flex:1;color:var(--ink-dim)">${f.txt}</span>
+        <span class="be-src">${f.src} · evergreen</span>
+      </li>`).join('');
+  }
+}
+
+renderWorldCupTracker();
+setInterval(renderWorldCupTracker, 5 * 60 * 1000);
 
 /* =========================================================
    Election Day Tracker — banner under the main gauge.

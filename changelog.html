@@ -175,6 +175,38 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.24 <span class="stamp">live</span></div>
+      <div class="release-tag">⚽ Firm Factor fix (was blind to World Cup) · 🏆 new World Cup 2026 tracker module · 19 Jun 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro"><b>Significant bug fix + new module.</b> The user flagged that the Firm Factor card has been flatlining around zero for days, despite the 2026 FIFA World Cup being in full swing. Audit confirmed: <code>fetchAllFootballEvents()</code>'s league-ID list was missing <b>4346 (FIFA World Cup)</b> entirely, so the gauge was completely blind to the tournament — England's 4-2 opener against Croatia on 17 June didn't move the needle by a single point. Three surgical fixes to Firm Factor, plus a new dedicated World Cup tracker module sitting above the Labour Leadership section.</p>
+    <h3>⚽ Firm Factor — three fixes</h3>
+    <ul>
+      <li><b>League ID 4346 added.</b> <code>LEAGUE_IDS</code> in <code>fetchAllFootballEvents()</code> now includes FIFA World Cup 2026 alongside the domestic leagues. World Cup fixtures now flow into the same scoring pipeline as Premier League / Championship / EFL.</li>
+      <li><b>Home-nation tournament amplifier (+0.25).</b> New check in <code>signalFootballFor()</code> cross-references <code>UK_TOURNAMENTS</code> (which already had the World Cup window 11 Jun–19 Jul set with weight 1.00) against each match. Any fixture during an active football-tournament window where one side matches <code>HOME_NATIONS_RE</code> (England / Scotland / Wales / NI / Ireland) gets a +0.25 boost to its match score. Pubs full, flags out — the gauge now sees it regardless of whether the firm-reputation database recognises the foreign opponent.</li>
+      <li><b>Tournament-aware fallback.</b> When the fixtures fetch fails BUT we're inside an active football tournament window, the card no longer falls through to a quiet "no fixtures returned" line. Instead the headline flips to <i>"⚽ FIFA World Cup ON"</i> with a min score of 0.45, acknowledging the national-mood pressure that's clearly happening regardless of what TheSportsDB returned.</li>
+    </ul>
+    <h3>🏆 New module — World Cup 2026 · Three Lions Watch</h3>
+    <ul>
+      <li><b>Lives between the trend chart and the Labour Leadership tracker.</b> Reuses the same <code>.byelection-wrap</code> styling so no CSS additions needed — visually consistent with the other "current event" trackers.</li>
+      <li><b>Header:</b> "🦁 England · Group L" / "Group stage · 11 Jun – 27 Jun 2026" with a dynamic countdown to the next England fixture (currently shows <code>4 DAYS · ENG v GHANA</code>, will update hourly).</li>
+      <li><b>Stake paragraph:</b> recap of the Croatia opener (Kane brace, Bellingham, Rashford), the Ghana 1-0 Panama parallel fixture, then the next two: ENG v GHA (Tue 23 Jun, Foxborough) and ENG v PAN (Sat 27 Jun, MetLife).</li>
+      <li><b>Left column:</b> Group L standings after round 1 (ENG 3, GHA 3, CRO 0, PAN 0 — with GF/GA) + the complete six-fixture group schedule with results.</li>
+      <li><b>Right column:</b> Live RSS news pulled from BBC Sport, Guardian Football, Sky Sports, Mail, Mirror, filtered through a World-Cup-aware keyword regex (catches "world cup", "england" + opponent name, "three lions", "kane/bellingham/rashford/tuchel" + tournament context). Evergreen fallback line if no fresh headlines match.</li>
+      <li><b>Auto-hides outside the tournament window</b> (2026-06-11 → 2026-07-19). When the tournament ends, the entire section and its <code>h2</code> heading vanish via <code>_wcActive()</code> guard in <code>renderWorldCupTracker()</code>. To revive for Euro 2028 or the next World Cup, just update <code>WC_WINDOW</code> + <code>WC_ENG_FIXTURES</code>.</li>
+      <li><b>Refresh cadence:</b> renderer called on load + every 5 minutes (same as the leadership tracker).</li>
+    </ul>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>JS parses clean (546KB single-file, up from 539KB pre-edit). Section <code>id="worldcup-tracker"</code> is unique. <code>_WC_KEYS</code> regex compiled. Countdown logic verified against today's 19 Jun simulation — correctly identifies 23 Jun Ghana fixture as next.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no schema changes, no signal-weight changes. Firm Factor weight stays at 9%.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.23 <span class="stamp">live</span></div>
       <div class="release-tag">🪑 Makerfield → Labour Leadership Challenge tracker · Burnham wins · polls refreshed YouGov 14-15 Jun · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
