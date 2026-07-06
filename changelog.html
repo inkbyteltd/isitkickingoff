@@ -175,6 +175,42 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.25 <span class="stamp">live</span></div>
+      <div class="release-tag">🪑 Labour Leadership Challenge tracker removed — Burnham coronation, no contest · 19 Jun 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Political-desk clarity update. It's now clear there won't be a Labour leadership contest — Burnham is expected to be crowned rather than face a race. So the <i>Labour Leadership Challenge · The Path To Number 10</i> tracker (v3.23) is redundant and has been binned in one clean cut. The dashboard now sits quieter on the politics side: polls + leader-approval widgets remain, and Burnham's row in the leader-approval table has been relabelled to reflect his new standing.</p>
+    <h3>🪑 Removed — Labour Leadership Challenge tracker</h3>
+    <ul>
+      <li><b>HTML section binned.</b> The <code>&lt;h2 class="section"&gt;🪑 Labour Leadership Challenge · The Path To Number 10&lt;/h2&gt;</code> heading + the entire <code>&lt;section class="byelection-wrap" id="byelection-makerfield"&gt;</code> block (74 lines: stake paragraph, 8-contender panel, headlines column, foot status) — all gone.</li>
+      <li><b>JS chain binned.</b> Removed <code>MAKERFIELD</code> constant, <code>_makerfieldActive()</code>, <code>_makerfieldCountdown()</code>, the broadened <code>_MK_KEYS</code> regex, the entire <code>renderMakerfieldTracker()</code> async function, plus the load-time call and 5-minute <code>setInterval</code>. No orphan references remain.</li>
+      <li><b>Byelection-wrap CSS retained</b> — the <code>.byelection-wrap</code>, <code>.be-head</code>, <code>.be-grid</code>, <code>.be-candidates</code>, <code>.be-headlines</code>, <code>.be-cand</code>, <code>.be-foot</code> rules stay in the stylesheet. They're still in use by the <b>World Cup 2026 tracker</b> (v3.24) which sits above where the leadership section used to. Also gives us a ready-made design system if we need another current-event tracker later.</li>
+    </ul>
+    <h3>👔 Burnham relabelled in leader approval</h3>
+    <ul>
+      <li>Was: <code>party: 'Lab · Challenger'</code>. Now: <code>party: 'Lab · Presumed next PM'</code>. His +4 net favourability holds (only positive net rating in the table) — that's now interpreted through the coronation lens rather than the challenge lens.</li>
+    </ul>
+    <h3>📐 Section order after the cut</h3>
+    <ol>
+      <li>Live Indicators · Modelled in real time</li>
+      <li>Signals (main grid)</li>
+      <li>UK Heat Map · Kick-off by region</li>
+      <li>Kick-Off Trend</li>
+      <li>🏆 World Cup 2026 · Three Lions Watch</li>
+      <li>🗳️ Westminster Voting Intention · Poll of Polls</li>
+      <li>👔 Party Leader Approval · Net Favourability</li>
+    </ol>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>Inline JS parses clean (541KB, down from 546KB pre-cut). Section balance 10 open / 10 close. No orphan references to any of the removed identifiers in executable code (only inside the removal-note comments). World Cup tracker + Firm Factor World Cup fix from v3.24 both intact. No grid gaps.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no signal weight changes, no methodology-table changes. If a leadership contest is ever actually triggered, the v3.23 tracker code is preserved in git history — can be revived in a couple of hours.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.24 <span class="stamp">live</span></div>
       <div class="release-tag">⚽ Firm Factor fix (was blind to World Cup) · 🏆 new World Cup 2026 tracker module · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
