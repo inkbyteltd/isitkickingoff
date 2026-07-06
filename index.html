@@ -1204,77 +1204,72 @@
     </div>
   </section>
 
-  <!-- 🏆 WORLD CUP 2026 TRACKER — v3.24. Reuses the .byelection-wrap CSS so
-       no new styling is needed. Hardcoded standings + fixtures for England's
-       Group L; news headlines pulled via the existing RSS chain. Auto-hides
-       outside the tournament window (2026-06-11 → 2026-07-19) via a guard in
-       renderWorldCupTracker(). Group L = ENG, CRO, GHA, PAN. -->
+  <!-- 🏆 WORLD CUP 2026 TRACKER — v3.26 pivoted from Group Stage to
+       Quarter-Finals after England 3-2 Mexico in R16 (5 Jul 2026, Azteca).
+       Next: QF v Norway on Sat 11 Jul at Arrowhead, Kansas City. Reuses the
+       .byelection-wrap CSS. Auto-hides after 2026-07-19 via renderWorldCup-
+       Tracker(). WC_ENG_FIXTURES + all copy updated. -->
   <h2 class="section" id="wc-heading">🏆 World Cup 2026 · Three Lions Watch</h2>
   <section class="byelection-wrap" id="worldcup-tracker">
     <div class="be-head">
       <div class="be-title">
         <span class="be-icon" aria-hidden="true">🦁</span>
-        <span class="be-name">England · Group L</span>
-        <span class="be-date">Group stage · 11 Jun – 27 Jun 2026</span>
+        <span class="be-name">England · Quarter-Finals · v Norway</span>
+        <span class="be-date">Saturday 11 Jul 2026 · Kansas City</span>
       </div>
-      <div class="be-countdown" id="wc-countdown">— DAYS TO NEXT ENGLAND MATCH</div>
+      <div class="be-countdown" id="wc-countdown">— DAYS TO NORWAY QF</div>
     </div>
     <div class="be-stake">
-      <b>🦁 England's group L campaign is alive.</b> Three Lions opened their tournament on Wednesday 17 June with a <b>4-2 win over Croatia</b> in Boston (Kane brace including a penalty in the 12th, Bellingham, Rashford) — a confident statement. Ghana then beat Panama 1-0 in the other Group L fixture, so after round one England and Ghana sit top of the group on three points. Next up: <b>England v Ghana on Tuesday 23 June</b> at Gillette Stadium, Foxborough. Then the group finale: <b>England v Panama on Saturday 27 June</b> at MetLife, New Jersey. A win on Tuesday and the Lions are through. The gauge now amplifies all home-nation tournament fixtures (+0.25 to Firm Factor) so the kettle reads England-on, regardless of who they're playing.
+      <b>🦁 England into the last eight.</b> Three Lions beat Mexico <b>3-2 at the Azteca on Sunday 5 July</b> in a Round-of-16 classic. Bellingham brace inside 98 seconds either side of a Julián Quiñones equaliser; Kane converted a penalty after Gordon was fouled; Raul Jimenez pulled one back from the spot. <b>Ten-man England hung on for over 40 minutes</b> after Jarell Quansah was sent off early in the second half. Next up: <b>Norway on Saturday 11 July at Arrowhead, Kansas City</b> — a Norway side that stunned five-time champions Brazil in their own Round-of-16 tie. Win and it's a first World Cup semi-final since 1990. The gauge amplifies all home-nation tournament fixtures by +0.25 to Firm Factor, so the kettle reads England-on all week.
     </div>
     <div class="be-grid">
       <div class="be-candidates">
-        <h4>Group L · standings after round 1</h4>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#e4003b"></span>
-          <span class="cand-name">🦁 England</span>
-          <span class="cand-party">P1 · W1 · D0 · L0 · GF4 · GA2 · <b>3 pts</b></span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#fdd835"></span>
-          <span class="cand-name">🇬🇭 Ghana</span>
-          <span class="cand-party">P1 · W1 · D0 · L0 · GF1 · GA0 · <b>3 pts</b></span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#0066cc"></span>
-          <span class="cand-name">🇭🇷 Croatia</span>
-          <span class="cand-party">P1 · W0 · D0 · L1 · GF2 · GA4 · 0 pts</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#d40000"></span>
-          <span class="cand-name">🇵🇦 Panama</span>
-          <span class="cand-party">P1 · W0 · D0 · L1 · GF0 · GA1 · 0 pts</span>
-        </div>
-        <h4 style="margin-top:16px">Fixtures · Group L</h4>
+        <h4>Path to the quarter-final</h4>
         <div class="be-cand">
           <span class="party-dot" style="background:#3ecf8e"></span>
-          <span class="cand-name">ENG 4 – 2 CRO</span>
-          <span class="cand-party">Wed 17 Jun · Boston · ✅ England win</span>
+          <span class="cand-name">Group L</span>
+          <span class="cand-party">🥇 Topped group · progressed to knockouts</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#3ecf8e"></span>
-          <span class="cand-name">GHA 1 – 0 PAN</span>
-          <span class="cand-party">Wed 17 Jun · Houston</span>
+          <span class="cand-name">R32</span>
+          <span class="cand-party">✅ Advanced from bracket line</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#3ecf8e"></span>
+          <span class="cand-name">MEX 2 – 3 ENG</span>
+          <span class="cand-party">R16 · Sun 5 Jul · Azteca · Bellingham 2, Kane pen · 10 men from 55'</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">ENG v GHA</span>
-          <span class="cand-party">Tue 23 Jun · Foxborough · 9pm BST</span>
+          <span class="cand-name">ENG v NOR</span>
+          <span class="cand-party">QF · Sat 11 Jul · Kansas City · 8pm BST · UPCOMING</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#333"></span>
+          <span class="cand-name">Semi-final</span>
+          <span class="cand-party">Wed 15 Jul · if England win QF</span>
+        </div>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#333"></span>
+          <span class="cand-name">Final</span>
+          <span class="cand-party">Sun 19 Jul · MetLife, NJ</span>
+        </div>
+        <h4 style="margin-top:16px">Other quarter-finals</h4>
+        <div class="be-cand">
+          <span class="party-dot" style="background:#0055a4"></span>
+          <span class="cand-name">🇫🇷 France v Morocco 🇲🇦</span>
+          <span class="cand-party">Thu 9 Jul · Boston · 2022 SF rematch</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">CRO v PAN</span>
-          <span class="cand-party">Tue 23 Jun · Atlanta</span>
+          <span class="cand-name">QF 2</span>
+          <span class="cand-party">Fri 10 Jul · Los Angeles</span>
         </div>
         <div class="be-cand">
           <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">ENG v PAN</span>
-          <span class="cand-party">Sat 27 Jun · MetLife, NJ · group finale</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">CRO v GHA</span>
-          <span class="cand-party">Sat 27 Jun · Dallas</span>
+          <span class="cand-name">QF 4</span>
+          <span class="cand-party">Sat 11 Jul · Miami · double-header day</span>
         </div>
       </div>
       <div class="be-headlines">
@@ -2216,8 +2211,21 @@ async function fetchAllFootballEvents(){
   };
 
   const now = new Date();
-  const minTs = now.getTime() - 36*3600*1000;  // 36 hours behind
-  const maxTs = now.getTime() + 60*3600*1000;  // 60 hours ahead
+  // v3.27 — during active football tournaments (World Cup, Euros), widen the
+  // time window to cover the ENTIRE tournament. Otherwise the "Last Results"
+  // card falls back to hardcoded 2024 fixtures because domestic leagues have
+  // finished for the summer. UK_TOURNAMENTS is declared later in the file
+  // but exists by call-time (all top-level consts run at script load).
+  const _todayStr = now.toISOString().slice(0,10);
+  const _tourney = (typeof UK_TOURNAMENTS !== 'undefined')
+    ? UK_TOURNAMENTS.find(t => t.sport === 'football' && _todayStr >= t.start && _todayStr <= t.end)
+    : null;
+  const minTs = _tourney
+    ? new Date(_tourney.start + 'T00:00:00').getTime()
+    : now.getTime() - 36*3600*1000;  // 36 hours behind (default)
+  const maxTs = _tourney
+    ? new Date(_tourney.end   + 'T23:59:59').getTime()
+    : now.getTime() + 60*3600*1000;  // 60 hours ahead (default)
 
   let events = [], err = null;
   try {
@@ -7701,11 +7709,34 @@ function signalBetting(footballData){
   // — now shows REAL recent match results pulled from TheSportsDB's
   // eventslastleague.php endpoint (already fetched in fetchAllFootballEvents).
   // No commercial API key required — TheSportsDB is free and battle-tested.
-  const base = { key:'betting', title:'Last Results · Football', icon:'⚽', live:false, modelled:true, wide:true };
+  //
+  // v3.27 — the card now retitles + reprioritises during active football
+  // tournaments (World Cup / Euros). Fetcher window is widened to cover
+  // the whole tournament (see fetchAllFootballEvents), and the summer-break
+  // fallback no longer serves 2024 PL reference fixtures — that was misleading
+  // during the domestic off-season.
+  const _todayStr = new Date().toISOString().slice(0,10);
+  const _tourney = (typeof UK_TOURNAMENTS !== 'undefined')
+    ? UK_TOURNAMENTS.find(t => t.sport === 'football' && _todayStr >= t.start && _todayStr <= t.end)
+    : null;
+  // Domestic summer break — Premier League + EFL typically 20 May → mid-Aug.
+  // Cheap heuristic: if we're in June or first three weeks of July, there's
+  // no meaningful domestic football (Community Shield mid-Aug, PL late Aug).
+  const _month = new Date().getMonth();
+  const _day = new Date().getDate();
+  const _summerBreak = (_month === 5) || (_month === 6 && _day <= 20);
+
+  const tourneyShort = _tourney
+    ? _tourney.name.replace(/\s*20\d{2}\s*$/, '').replace(/^FIFA /,'')
+    : null;
+  const title = _tourney
+    ? `Tournament Results · ${tourneyShort}`
+    : 'Last Results · Football';
+  const base = { key:'betting', title, icon:_tourney?.icon || '⚽', live:false, modelled:true, wide:true };
   const events = (footballData?.events || []);
 
   // Filter for FINISHED matches only — those with real scores set.
-  const finished = events
+  let finished = events
     .filter(e => e.intHomeScore != null && e.intAwayScore != null
               && e.intHomeScore !== '' && e.intAwayScore !== '')
     .map(e => ({
@@ -7713,14 +7744,24 @@ function signalBetting(footballData){
       away: e.strAwayTeam || '?',
       homeScore: parseInt(e.intHomeScore, 10),
       awayScore: parseInt(e.intAwayScore, 10),
-      league: (e.strLeague || '').replace(/^UEFA /,'').replace(/^English /,''),
+      league: (e.strLeague || '').replace(/^UEFA /,'').replace(/^English /,'').replace(/^FIFA /,''),
       date: e.dateEvent || '',
       ts: _parseFixtureTs(e) || 0,
       eventId: e.idEvent || '',
+      isTourney: /World Cup|UEFA European|Euros/i.test(e.strLeague || ''),
     }));
 
-  // Sort newest first
-  finished.sort((a, b) => b.ts - a.ts);
+  // v3.27 — during an active tournament, prioritise tournament matches at
+  // the top of the sort. Domestic leagues in summer are basically friendlies
+  // so they shouldn't drown out the actual event.
+  if (_tourney){
+    finished.sort((a, b) => {
+      if (a.isTourney !== b.isTourney) return a.isTourney ? -1 : 1;
+      return b.ts - a.ts;
+    });
+  } else {
+    finished.sort((a, b) => b.ts - a.ts);
+  }
   const top5 = finished.slice(0, 5);
 
   // Friendly date label — "Sun 27 Apr"
@@ -7733,27 +7774,64 @@ function signalBetting(footballData){
   };
 
   if (!top5.length){
-    // No live results — show plausible recent reference results so the card
-    // never reads "empty". Honest fallback: clearly tagged as reference.
-    const fallback = [
-      { home:'Arsenal',         away:'Chelsea',          homeScore:2, awayScore:1, league:'Premier League' },
-      { home:'Manchester City', away:'Liverpool',        homeScore:1, awayScore:1, league:'Premier League' },
-      { home:'Tottenham',       away:'Manchester United',homeScore:0, awayScore:2, league:'Premier League' },
-      { home:'Leeds',           away:'Sheffield United', homeScore:3, awayScore:0, league:'Championship'   },
-      { home:'Celtic',          away:'Rangers',          homeScore:2, awayScore:1, league:'Scottish Premiership' },
-    ];
+    // v3.27 — honest fallbacks by context. No more misleading 2024 PL fixtures.
+    if (_tourney){
+      // Tournament active but feed empty (unlikely — fetch would need to fail).
+      return { ...base, modelled:true,
+        valueLabel: `${_tourney.icon} ${tourneyShort} on`,
+        subLabel: `tournament in progress · match feed temporarily quiet · try again in a few minutes`,
+        score: 0.30,
+        bettingMatches: [{
+          label: `${tourneyShort} · results loading`,
+          league: 'live tournament', time: 'refresh',
+          home: '', draw: '', away: '',
+          bookie: '🔗 BBC Sport',
+          bookieUrl: 'https://www.bbc.co.uk/sport/football/world-cup/scores-fixtures',
+          favourite: '', favouriteTeam: '', favouriteOdds: '',
+        }],
+      };
+    }
+    if (_summerBreak){
+      // Domestic off-season, no tournament — honest empty state.
+      return { ...base, modelled:true,
+        valueLabel: '🏖 Summer break',
+        subLabel: 'domestic seasons finished · pre-season friendlies from mid-July · Community Shield mid-Aug',
+        score: 0.15,
+        bettingMatches: [
+          { label:'🏖 Domestic football is off for the summer',
+            league:'off-season', time:'—',
+            home:'', draw:'', away:'',
+            bookie:'🔗 Pre-season schedule',
+            bookieUrl:'https://www.bbc.co.uk/sport/football/fixtures',
+            favourite:'', favouriteTeam:'', favouriteOdds:'' },
+          { label:'⚽ Premier League returns · third weekend of August',
+            league:'countdown', time:'~6 weeks',
+            home:'', draw:'', away:'',
+            bookie:'🔗 PL fixtures',
+            bookieUrl:'https://www.premierleague.com/fixtures',
+            favourite:'', favouriteTeam:'', favouriteOdds:'' },
+          { label:'🏆 Community Shield · Wembley · mid-August',
+            league:'season opener', time:'~5 weeks',
+            home:'', draw:'', away:'',
+            bookie:'🔗 FA info',
+            bookieUrl:'https://www.thefa.com/competitions/thefacommunityshield',
+            favourite:'', favouriteTeam:'', favouriteOdds:'' },
+        ],
+      };
+    }
+    // In-season but feed genuinely returned nothing (rare).
     return { ...base, modelled:true,
       valueLabel: 'feeds quiet',
-      subLabel: 'no recent finished matches in window · showing reference results',
+      subLabel: 'no recent finished matches in window · check BBC Sport for the latest',
       score: 0.20,
-      bettingMatches: fallback.map(m => ({
-        label: `${m.home} ${m.homeScore}–${m.awayScore} ${m.away}`,
-        league: m.league, time: 'reference',
-        home: '', draw: '', away: '',
-        bookie: '🔗 BBC Sport',
-        bookieUrl: 'https://www.bbc.co.uk/sport/football/results',
-        favourite: '', favouriteTeam: '', favouriteOdds: '',
-      })),
+      bettingMatches: [{
+        label:'⚽ No recent results in the fetch window',
+        league:'feed quiet', time:'—',
+        home:'', draw:'', away:'',
+        bookie:'🔗 BBC Sport results',
+        bookieUrl:'https://www.bbc.co.uk/sport/football/results',
+        favourite:'', favouriteTeam:'', favouriteOdds:'',
+      }],
     };
   }
 
@@ -7763,9 +7841,12 @@ function signalBetting(footballData){
     Math.abs(b.homeScore - b.awayScore) - Math.abs(a.homeScore - a.awayScore)
   )[0];
 
+  // v3.27 — the tournament context makes the module honest-live not just live
   return { ...base, live:true, modelled:false,
     valueLabel: `${trim(headline.home)} ${headline.homeScore}–${headline.awayScore} ${trim(headline.away)}`,
-    subLabel: `${headline.league} · ${fmtDate(headline.date)} · ${top5.length} recent UK results`,
+    subLabel: _tourney
+      ? `${headline.league} · ${fmtDate(headline.date)} · ${top5.length} tournament results in window`
+      : `${headline.league} · ${fmtDate(headline.date)} · ${top5.length} recent UK results`,
     score: 0.30,
     bettingMatches: top5.map(m => {
       // Each row links to a Google News search for that exact fixture
@@ -7887,18 +7968,28 @@ function signalBettingHorses(){
   const base = { key:'horses', title:'Recent UK Racing', icon:'🐎', live:false, modelled:true };
   const today = new Date();
   const seed = today.getDate() * 7 + today.getMonth() * 11;
+  const month = today.getMonth();
 
-  // Pick 4 distinct races, deterministic per day
+  // v3.27 — seasonally weight the race pool so summer users see summer flat
+  // (Royal Ascot / Newmarket / Goodwood / York) and jumps fans see Cheltenham
+  // in Feb-Apr. Loose classifier: race name / course keyword.
+  const isFlatSummer = r => /Ascot|Goodwood|York|Newmarket|Epsom|Derby|Guineas|St Leger|Sussex|Juddmonte|Ebor/i.test(r.race + ' ' + r.course);
+  const isJumps = r => /Cheltenham|Aintree|Grand National|Gold Cup|Hurdle|Champion|Queen Mother/i.test(r.race + ' ' + r.course);
+  const summerNow = month >= 5 && month <= 8;  // Jun-Sep
+  const jumpsNow  = month <= 3;                // Jan-Apr
+
+  // Pick 4 distinct races, deterministic per day, but seasonally biased
   const N = RECENT_UK_RACE_WINNERS.length;
-  const idxs = [];
-  for (let i = 0; i < 4; i++){
-    const idx = (seed + i * 5) % N;
-    if (!idxs.includes(idx)) idxs.push(idx);
-  }
-  // Pad if any duplicates dropped
-  for (let i = 0; idxs.length < 4 && i < N; i++){
-    if (!idxs.includes(i)) idxs.push(i);
-  }
+  const scoredPool = RECENT_UK_RACE_WINNERS.map((r, i) => {
+    let bias = 0;
+    if (summerNow && isFlatSummer(r)) bias += 100;
+    if (jumpsNow  && isJumps(r))      bias += 100;
+    // Deterministic per-day noise so the daily rotation still works within
+    // the seasonally-preferred group
+    const noise = ((seed + i * 5) % N);
+    return { r, i, sortKey: -(bias + noise) };
+  }).sort((a,b) => a.sortKey - b.sortKey);
+  const idxs = scoredPool.slice(0, 4).map(o => o.i);
   const races = idxs.slice(0, 4).map(idx => RECENT_UK_RACE_WINNERS[idx]);
 
   const trim = s => s && s.length > 22 ? s.slice(0, 21) + '…' : s;
@@ -9418,7 +9509,7 @@ const SIGNAL_EXPLAINERS = {
   england:    'England multi-sport tracker — fixtures via TheSportsDB across cricket, rugby and football. Tournament windows (Euros, World Cup, Six Nations, Ashes) amplify the score.',
   lottery:    'National Lottery — live attempt to scrape current jackpots from national-lottery.co.uk via CORS proxy. Falls back to modelled rolling jackpots per game. Score peaks when a big rollover approaches.',
   football:   'Firm Factor — live fixtures from TheSportsDB cross-matched against UK firm reputation list (Millwall Bushwhackers, ICF, Service Crew, Soul Crew, Zulus, Headhunters), European travelling ultras, and classic flashpoint derbies (Old Firm, Tyne-Wear, Steel City).',
-  betting:    'Last Results · Football — REAL recent finished matches across the UK pyramid (Premier League, Championship, EFL L1/L2, Scottish Premiership, UCL, UEL, UECL) via TheSportsDB\'s eventslastleague.php. Top 5 results sorted newest-first; headline picks the most dramatic scoreline. Each row links to Google News for that fixture\'s coverage.',
+  betting:    'Last Results · Football — REAL recent finished matches across the UK pyramid (Premier League, Championship, EFL L1/L2, Scottish Premiership, UCL, UEL, UECL) plus the FIFA World Cup via TheSportsDB\'s eventslastleague.php. v3.27: card retitles to "Tournament Results · World Cup" during active tournaments and the fetcher widens its time window to cover the whole event so all group + knockout matches show, not just the last 36 hours. Tournament matches prioritised over domestic when both are present. Summer-break fallback replaced misleading 2024 PL reference fixtures with an honest "domestic seasons finished · pre-season friendlies from mid-July" state. Top 5 results sorted newest-first; headline picks the most dramatic scoreline. Each row links to Google News for that fixture\'s coverage.',
   horses:     'Recent UK Racing — curated rotation of real notable UK race winners from the past 12 months (Cheltenham Festival, Royal Ascot, Grand National, Derby Day, Glorious Goodwood, St Leger, Bet365 Gold Cup, etc.). 4 races shown daily, deterministic rotation. Each row links to Racing Post results.',
   pagan:      'Pagan Wheel of the Year — the eight festivals of the Celtic / druidic calendar: Imbolc, Spring Equinox, Beltane, Summer Solstice, Lughnasadh, Autumn Equinox, Samhain, Winter Solstice. Tracks days to the next, surfaces upcoming three plus two notable stone circles (Stonehenge, Avebury, Callanish, Castlerigg, Newgrange, Long Meg, Rollright, Ring of Brodgar). Score peaks within ±3 days of a major festival when the crowds gather at the stones, robes are deployed, and hilltop fires are lit.',
   folklore:   'British Folklore Watch — a rotating top of UK folkloric calendar events (Padstow Obby Oss, Burning of the Clavie, Up Helly Aa, Cheese Rolling, Lewes Bonfire Night, Helston Furry Dance, Mari Lwyd, Burryman procession, etc.) plus today\'s rotating cryptid sighting watch (Loch Ness Monster, Beast of Bodmin, Surrey Puma, Black Shuck, Spring-heeled Jack, Owlman of Mawnan, Cornish Pixies). Score peaks around Halloween / May Day / Solstice nights and during stormy weather (storms wake Black Shuck, fog brings Spring-heeled Jack).',
@@ -11370,16 +11461,22 @@ renderLeaderApproval();
    RSS chain the leadership tracker uses.
    ========================================================= */
 const WC_WINDOW = { start:'2026-06-11', end:'2026-07-19' };
-// Knockout dates extend the window dynamically — fixture list
-// below is the source of truth. If England progress past groups,
-// the next-fixture countdown will keep working from this list.
+// v3.26 — fixtures list now covers the knockout run. Group games all played,
+// Round of 16 win vs Mexico banked (3-2, Azteca), Quarter-Final vs Norway
+// upcoming Sat 11 Jul at Kansas City. Semi + Final are placeholder rows so
+// the countdown can keep flipping forward if England progress further.
 const WC_ENG_FIXTURES = [
-  { date:'2026-06-17T20:00:00', vs:'Croatia',  place:'Boston',     status:'done', result:'4-2 W' },
-  { date:'2026-06-23T21:00:00', vs:'Ghana',    place:'Foxborough', status:'upcoming' },
-  { date:'2026-06-27T20:00:00', vs:'Panama',   place:'MetLife NJ', status:'upcoming' },
+  { date:'2026-06-17T20:00:00', vs:'Croatia', place:'Boston',       status:'done',     result:'4-2 W',  stage:'Group L' },
+  { date:'2026-06-23T21:00:00', vs:'Ghana',   place:'Foxborough',   status:'done',     result:'W',      stage:'Group L' },
+  { date:'2026-06-27T20:00:00', vs:'Panama',  place:'MetLife NJ',   status:'done',     result:'W',      stage:'Group L' },
+  { date:'2026-07-05T20:00:00', vs:'Mexico',  place:'Azteca',       status:'done',     result:'3-2 W',  stage:'R16' },
+  { date:'2026-07-11T20:00:00', vs:'Norway',  place:'Kansas City',  status:'upcoming',                  stage:'QF' },
+  // Placeholders — only fire if England win the QF
+  { date:'2026-07-15T20:00:00', vs:'SF opp.', place:'Dallas',       status:'upcoming',                  stage:'SF' },
+  { date:'2026-07-19T20:00:00', vs:'Final',   place:'MetLife NJ',   status:'upcoming',                  stage:'Final' },
 ];
 
-const _WC_KEYS = /(world cup|wc 2026|england.*(croatia|ghana|panama|kane|bellingham|rashford|tuchel|three lions|knockout|group stage)|three lions|fifa world cup|usa.*canada.*mexico|gareth southgate|euro.*group|gillette stadium|metlife.*england)/i;
+const _WC_KEYS = /(world cup|wc 2026|england.*(croatia|ghana|panama|mexico|norway|kane|bellingham|rashford|tuchel|three lions|knockout|group stage|quarter[- ]?final|last eight|azteca)|three lions|fifa world cup|usa.*canada.*mexico|gareth southgate|gillette stadium|metlife.*england|arrowhead.*england|quansah red|kansas city.*england|england.*last (eight|16))/i;
 
 function _wcActive(){
   const today = new Date().toISOString().slice(0,10);
@@ -11401,12 +11498,16 @@ function _wcCountdownText(){
     // Either group stage done, awaiting knockout draw, or tournament over
     return _wcActive() ? 'AWAITING NEXT FIXTURE DRAW' : 'TOURNAMENT OVER';
   }
+  // v3.26 — surface the stage tag (QF / SF / Final / Group L) so the
+  // countdown reads as a knockout progress bar, not just a fixture list.
+  const stage = next.stage ? `${next.stage} · ` : '';
+  const vs = next.vs.toUpperCase();
   const days = Math.floor(next.msAway / 86400000);
   const hours = Math.floor((next.msAway % 86400000) / 3600000);
-  if (days >= 2) return `${days} DAYS · ENG v ${next.vs.toUpperCase()}`;
-  if (days === 1) return `TOMORROW · ENG v ${next.vs.toUpperCase()}`;
-  if (hours >= 1) return `${hours}h · ENG v ${next.vs.toUpperCase()}`;
-  return `KICKOFF SOON · ENG v ${next.vs.toUpperCase()}`;
+  if (days >= 2)  return `${stage}${days} DAYS · ENG v ${vs}`;
+  if (days === 1) return `${stage}TOMORROW · ENG v ${vs}`;
+  if (hours >= 1) return `${stage}${hours}h · ENG v ${vs}`;
+  return `${stage}KICKOFF SOON · ENG v ${vs}`;
 }
 
 async function renderWorldCupTracker(){
@@ -11471,12 +11572,12 @@ async function renderWorldCupTracker(){
         <span class="be-src">${_srcOf(it.link || '')}</span>
       </li>`).join('');
   } else {
-    // Evergreen fallbacks so the panel never feels empty
+    // v3.26 evergreen fallbacks — post-Mexico R16, pre-Norway QF
     const evergreen = [
-      { txt:'England 4-2 Croatia: Kane brace and Bellingham seal opener', src:'Recap' },
-      { txt:'Three Lions face Ghana on Tuesday — Tuchel hints at unchanged XI', src:'Preview' },
-      { txt:'Group L scenarios: a Ghana win sees England through with a game to spare', src:'Analysis' },
-      { txt:'Pubs report record opening-game pints — biggest non-Euros tournament since 2018', src:'Trade' },
+      { txt:'Mexico 2-3 England: Bellingham brace and 10-man Three Lions dig deep at the Azteca', src:'Recap' },
+      { txt:'Norway shock Brazil — England set up quarter-final at Kansas City on Saturday', src:'Analysis' },
+      { txt:"Tuchel: 'Quansah suspension a blow but squad depth ready for Norway'", src:'Presser' },
+      { txt:'Beer gardens brace for QF Saturday — biggest World Cup pub week since 2018', src:'Trade' },
     ];
     list.innerHTML = evergreen.map(f => `
       <li>

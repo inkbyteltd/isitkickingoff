@@ -175,6 +175,74 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.27 <span class="stamp">live</span></div>
+      <div class="release-tag">⚽ "Last Results · Football" fixed for summer / tournament · 🐎 horses now leans summer-flat · 6 Jul 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">User flagged the Calendar &amp; Sport row was serving stale nonsense: the "Last Results · Football" card was quietly falling through to a <b>hardcoded fallback of five 2024 Premier League fixtures</b> (Arsenal 2-1 Chelsea, Man City 1-1 Liverpool, etc.) because the domestic season ended in May and the fetch window was too narrow to catch any of the World Cup that's actually on. And the "Recent UK Racing" card was rotating through the whole pool without seasonal awareness — showing Cheltenham Gold Cup (March) in the middle of Ascot / Newmarket July Festival. Fixed both.</p>
+    <h3>⚽ "Last Results · Football" — tournament-aware overhaul</h3>
+    <ul>
+      <li><b>Root cause diagnosed.</b> <code>fetchAllFootballEvents()</code> filters TheSportsDB results to a ±36h / +60h window around "now". Fine during the domestic season — problematic in summer because (a) PL/EFL/Scottish/UEFA competitions have all wrapped and (b) most World Cup matches sit hours-to-weeks outside that narrow window. So the card was consistently getting zero events and falling through to a hardcoded 2024 fixture list.</li>
+      <li><b>Fetcher window widens during football tournaments.</b> When today's date falls inside a <code>UK_TOURNAMENTS</code> football window (World Cup, Euros), the fetch time window expands to cover the ENTIRE tournament — group stage through final. All results become visible.</li>
+      <li><b>Card retitles dynamically.</b> Was: static <i>"Last Results · Football"</i>. Now: <i>"Tournament Results · World Cup"</i> during the 2026 FIFA World Cup window (and <i>"Tournament Results · Euro"</i> during Euro 2028 when we get there). Reverts to <i>"Last Results · Football"</i> the rest of the year.</li>
+      <li><b>Tournament matches prioritised over domestic.</b> Even if a stray friendly slips into the fetch, the sort now floats tournament fixtures (World Cup / UEFA European) to the top of the list.</li>
+      <li><b>Fallback replaced.</b> The 2024 PL hardcoded reference fixtures are gone. Three honest empty-state variants take their place:
+        <ul>
+          <li><b>Tournament active but feed empty:</b> <i>"⚽ World Cup on · tournament in progress · match feed temporarily quiet"</i> with a link to BBC Sport's World Cup scores.</li>
+          <li><b>Domestic summer break (Jun / early Jul, no tournament):</b> <i>"🏖 Summer break · domestic seasons finished · pre-season friendlies from mid-July · Community Shield mid-Aug"</i>, plus row links to the PL fixture page and FA Community Shield info.</li>
+          <li><b>In-season but feed truly quiet:</b> plain "check BBC Sport for the latest" — no fake fixtures.</li>
+        </ul>
+      </li>
+    </ul>
+    <h3>🐎 "Recent UK Racing" — seasonal bias</h3>
+    <ul>
+      <li>Same curated pool of real notable UK race winners (Cheltenham Gold Cup, Grand National, Royal Ascot, Newmarket Guineas, Goodwood Sussex Stakes, etc.), but the daily rotation is now <b>seasonally weighted</b>.</li>
+      <li><b>Summer months (Jun-Sep)</b> now surface flat racing at Ascot / Newmarket / Goodwood / York / Epsom / Doncaster — the courses actually holding meetings.</li>
+      <li><b>Jumps season (Jan-Apr)</b> now surfaces Cheltenham + Aintree.</li>
+      <li>Deterministic per-day noise kicks in within the seasonally-preferred group so the four displayed races still rotate day-to-day.</li>
+      <li>Verified simulation: on today's date (6 July) the top four picks are Ascot, Newmarket, Goodwood, York — all flat, all in-season.</li>
+    </ul>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>JS parses clean (547KB). Simulation confirms: today's card retitles to <i>"Tournament Results · World Cup"</i>, fetcher pulls the whole 11 Jun – 19 Jul window, horses show summer flat only. Firm Factor's own tournament amp (v3.24) is untouched — still fires on the Norway QF. No grid gaps.</li>
+    </ul>
+    <h3>📖 Methodology</h3>
+    <ul>
+      <li>Updated the Search-Panic-style tooltip on the football-results card to reflect the new tournament-aware behaviour + honest summer-break fallback.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no schema changes, no signal weight changes.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v3.26 <span class="stamp">live</span></div>
+      <div class="release-tag">🦁 World Cup tracker → Quarter-Finals · England 3-2 Mexico R16 · v Norway Sat 11 Jul · 6 Jul 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Post-Mexico refresh. England beat Mexico <b>3-2 at the Azteca yesterday</b> in a Round-of-16 classic — Bellingham brace inside 98 seconds, Kane penalty, then hung on for 40+ minutes with 10 men after Quansah's second-half red. Now in the quarter-final v <b>Norway on Saturday 11 July at Arrowhead, Kansas City</b>. The World Cup tracker was still frozen on the group stage — pivoted the whole module to a knockout view, updated the fixture list, and broadened the news keyword filter for Norway / quarter-final / last-eight stories.</p>
+    <h3>🦁 Tracker overhaul — group stage → quarter-finals</h3>
+    <ul>
+      <li><b>Header row.</b> Was: <i>"England · Group L"</i> / "Group stage · 11 Jun – 27 Jun 2026". Now: <i>"England · Quarter-Finals · v Norway"</i> / "Saturday 11 Jul 2026 · Kansas City". Countdown label switched to <code>DAYS TO NORWAY QF</code>.</li>
+      <li><b>Stake paragraph rewritten.</b> New copy leads with the Azteca R16 win — Bellingham brace, Kane pen, Quansah red, 10-man dig — then previews the Norway QF (Norway having stunned Brazil in their own R16). Notes a semi-final would be England's first since 1990.</li>
+      <li><b>Left panel: standings → knockout path.</b> The Group L standings table and six-fixture group schedule are replaced with a <i>"Path to the quarter-final"</i> summary: Group L topped → R32 advanced → R16 win vs Mexico (3-2) → QF v Norway (UPCOMING) → SF placeholder → Final placeholder. Followed by an <i>"Other quarter-finals"</i> mini-panel with the confirmed France v Morocco Boston tie on 9 Jul plus placeholders for QF 2 (Fri LA) and QF 4 (Sat Miami).</li>
+      <li><b>Countdown text now stage-tagged.</b> <code>_wcCountdownText()</code> prefixes the countdown with the stage label so it reads <code>QF · 5 DAYS · ENG v NORWAY</code> today, then <code>SF · N DAYS ·</code> if England win, etc. — reads as a knockout progress bar rather than just a fixture list.</li>
+      <li><b><code>WC_ENG_FIXTURES</code> array rebuilt.</b> Group games marked <code>status:'done'</code> with the Croatia result baked in and Ghana/Panama marked as generic wins (specific scores weren't verified so we don't invent them). Added the Mexico R16 (Sun 5 Jul, Azteca, 3-2 W) and Norway QF (Sat 11 Jul, Kansas City, upcoming). Placeholder SF (Wed 15 Jul, Dallas) and Final (Sun 19 Jul, MetLife) rows sit at the end so the countdown keeps flipping forward if England progress.</li>
+      <li><b>News regex broadened.</b> <code>_WC_KEYS</code> now catches Mexico, Norway, quarter-final / last eight variants, Azteca, Arrowhead, Kansas City tie-ins, plus "Quansah red" as a specific news hook.</li>
+      <li><b>Evergreen fallback headlines refreshed.</b> Old group-stage stubs replaced with post-Mexico / pre-Norway lines (Azteca recap, Norway shocking Brazil, Tuchel presser on Quansah suspension, pub-trade brace for QF Saturday).</li>
+    </ul>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>Inline JS parses clean (542KB). Countdown simulation for today (Mon 6 Jul 2026, 08:00 BST) returns <code>QF · 5 DAYS · ENG v NORWAY</code> — correct. Firm Factor World Cup fix from v3.24 still intact — home-nation tournament amp of +0.25 will fire on the Norway QF too. No grid gaps.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no schema changes, no signal weight changes.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.25 <span class="stamp">live</span></div>
       <div class="release-tag">🪑 Labour Leadership Challenge tracker removed — Burnham coronation, no contest · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
