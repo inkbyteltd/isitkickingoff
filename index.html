@@ -1204,85 +1204,67 @@
     </div>
   </section>
 
-  <!-- 🏆 WORLD CUP 2026 TRACKER — v3.26 pivoted from Group Stage to
-       Quarter-Finals after England 3-2 Mexico in R16 (5 Jul 2026, Azteca).
-       Next: QF v Norway on Sat 11 Jul at Arrowhead, Kansas City. Reuses the
-       .byelection-wrap CSS. Auto-hides after 2026-07-19 via renderWorldCup-
-       Tracker(). WC_ENG_FIXTURES + all copy updated. -->
-  <h2 class="section" id="wc-heading">🏆 World Cup 2026 · Three Lions Watch</h2>
-  <section class="byelection-wrap" id="worldcup-tracker">
-    <div class="be-head">
-      <div class="be-title">
-        <span class="be-icon" aria-hidden="true">🦁</span>
-        <span class="be-name">England · Quarter-Finals · v Norway</span>
-        <span class="be-date">Saturday 11 Jul 2026 · Kansas City</span>
+  <!-- 💔 IT'S NOT COMING HOME BANNER — v3.28. Replaces the World Cup 2026
+       tracker (v3.24-v3.26) after England 1-2 Argentina in the semi-final
+       (15 Jul 2026, Gordon opener, Fernández + Martínez late). Full-width
+       banner styled in mourning-red on kraft cream. Auto-hides after
+       2026-07-31 via renderNotComingHome() — the tournament's over 19 Jul
+       and the joke has a short half-life. Firm Factor World Cup ID 4346 +
+       tournament amp stay wired (v3.24) — the Final on Sun 19 Jul is still
+       inside the tournament window even if England aren't in it. -->
+  <section class="ncoming-wrap" id="not-coming-home">
+    <div class="ncoming-inner">
+      <div class="ncoming-ribbon">💔 SEMI-FINAL · WED 15 JULY 2026 · KNOCKED OUT</div>
+      <div class="ncoming-headline">IT'S NOT COMING HOME</div>
+      <div class="ncoming-sub">
+        <b>England 1&ndash;2 Argentina.</b> Anthony Gordon opened the scoring;
+        Enzo Fern&aacute;ndez levelled from range; Lautaro Mart&iacute;nez headed
+        the winner in the third minute of injury time. First England World Cup
+        Final since 1966 was <b>90 seconds away</b>.
       </div>
-      <div class="be-countdown" id="wc-countdown">— DAYS TO NORWAY QF</div>
-    </div>
-    <div class="be-stake">
-      <b>🦁 England into the last eight.</b> Three Lions beat Mexico <b>3-2 at the Azteca on Sunday 5 July</b> in a Round-of-16 classic. Bellingham brace inside 98 seconds either side of a Julián Quiñones equaliser; Kane converted a penalty after Gordon was fouled; Raul Jimenez pulled one back from the spot. <b>Ten-man England hung on for over 40 minutes</b> after Jarell Quansah was sent off early in the second half. Next up: <b>Norway on Saturday 11 July at Arrowhead, Kansas City</b> — a Norway side that stunned five-time champions Brazil in their own Round-of-16 tie. Win and it's a first World Cup semi-final since 1990. The gauge amplifies all home-nation tournament fixtures by +0.25 to Firm Factor, so the kettle reads England-on all week.
-    </div>
-    <div class="be-grid">
-      <div class="be-candidates">
-        <h4>Path to the quarter-final</h4>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#3ecf8e"></span>
-          <span class="cand-name">Group L</span>
-          <span class="cand-party">🥇 Topped group · progressed to knockouts</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#3ecf8e"></span>
-          <span class="cand-name">R32</span>
-          <span class="cand-party">✅ Advanced from bracket line</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#3ecf8e"></span>
-          <span class="cand-name">MEX 2 – 3 ENG</span>
-          <span class="cand-party">R16 · Sun 5 Jul · Azteca · Bellingham 2, Kane pen · 10 men from 55'</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">ENG v NOR</span>
-          <span class="cand-party">QF · Sat 11 Jul · Kansas City · 8pm BST · UPCOMING</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#333"></span>
-          <span class="cand-name">Semi-final</span>
-          <span class="cand-party">Wed 15 Jul · if England win QF</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#333"></span>
-          <span class="cand-name">Final</span>
-          <span class="cand-party">Sun 19 Jul · MetLife, NJ</span>
-        </div>
-        <h4 style="margin-top:16px">Other quarter-finals</h4>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#0055a4"></span>
-          <span class="cand-name">🇫🇷 France v Morocco 🇲🇦</span>
-          <span class="cand-party">Thu 9 Jul · Boston · 2022 SF rematch</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">QF 2</span>
-          <span class="cand-party">Fri 10 Jul · Los Angeles</span>
-        </div>
-        <div class="be-cand">
-          <span class="party-dot" style="background:#f4c025"></span>
-          <span class="cand-name">QF 4</span>
-          <span class="cand-party">Sat 11 Jul · Miami · double-header day</span>
-        </div>
+      <div class="ncoming-foot">
+        <span>🏆 Argentina v Spain · Final · Sun 19 Jul · MetLife, NJ</span>
+        <span class="ncoming-copes">1990 · 1996 · 2018 · 2020 · 2024 · 2026 &nbsp;·&nbsp; the wait continues</span>
       </div>
-      <div class="be-headlines">
-        <h4>Latest headlines · England / World Cup 2026</h4>
-        <ul id="wc-headlines-list">
-          <li class="be-stub">Loading headlines…</li>
-        </ul>
-      </div>
-    </div>
-    <div class="be-foot">
-      <span id="wc-foot-status">📰 BBC · Guardian · Sky · Mirror · Mail · refreshed every 5 min · gauge amplifies home-nation tournament matches by +0.25 in Firm Factor</span>
     </div>
   </section>
+  <style>
+    /* IT'S NOT COMING HOME banner — one-file inline CSS, only used by this section. */
+    .ncoming-wrap{grid-column:1 / -1;margin:22px 0;padding:0;background:linear-gradient(180deg,#1a0a0e 0%,#2a0d13 100%);
+      border:1px solid #4a1620;border-radius:14px;position:relative;overflow:hidden;
+      box-shadow:0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);}
+    .ncoming-wrap::before{content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(228,0,59,0.15) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(228,0,59,0.10) 0%, transparent 45%);}
+    .ncoming-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background-image:
+        linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px),
+        linear-gradient(0deg,  rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px);
+      mix-blend-mode:overlay;opacity:.5;}
+    .ncoming-inner{position:relative;z-index:1;padding:36px 40px;text-align:center;
+      display:flex;flex-direction:column;align-items:center;gap:14px}
+    .ncoming-ribbon{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.24em;
+      color:#f4c8cf;text-transform:uppercase;padding:6px 14px;
+      background:rgba(228,0,59,0.16);border:1px solid rgba(228,0,59,0.35);border-radius:999px}
+    .ncoming-headline{font-family:var(--sans);font-weight:900;letter-spacing:.03em;
+      font-size:clamp(38px, 8vw, 88px);line-height:1;color:#f7d7dc;
+      text-transform:uppercase;text-shadow:0 4px 16px rgba(228,0,59,0.35);
+      margin:6px 0 2px;padding:0 6px}
+    .ncoming-sub{font-family:var(--sans);font-size:15px;line-height:1.65;color:#e7d0d4;max-width:720px;margin:0 auto}
+    .ncoming-sub b{color:#ffffff;font-weight:700}
+    .ncoming-foot{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:center;align-items:center;
+      margin-top:10px;padding-top:14px;border-top:1px dashed rgba(228,0,59,0.28);width:100%;max-width:720px;
+      font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c2a4a9}
+    .ncoming-foot span:first-child{color:#f4c8cf}
+    .ncoming-copes{opacity:.75}
+    .ncoming-wrap[hidden]{display:none}
+    @media (max-width:640px){
+      .ncoming-inner{padding:26px 22px}
+      .ncoming-headline{letter-spacing:.02em}
+      .ncoming-sub{font-size:13.5px}
+    }
+  </style>
 
   <!-- v3.25 — Labour Leadership Challenge tracker REMOVED. Burnham confirmed
        as coronation candidate (no contest). Section binned in one clean cut;
@@ -5861,7 +5843,10 @@ const UK_SLANG_PHRASES = [
   { phrase:'me babber',            region:'Bristolian',            usage:0.50, icon:'🌾' },
 ];
 function signalSlang(){
-  const base = { key:'slang', title:'UK Slang Tracker', icon:'💬', live:true, modelled:true };
+  // v3.28 — chip was falsely reading "Live" (live:true + modelled:true — the
+  // renderer picks live over modelled). Corrected to live:false so the card
+  // shows the honest "Modelled" chip, matching Vape / Chippy / etc.
+  const base = { key:'slang', title:'UK Slang Tracker', icon:'💬', live:false, modelled:true };
   const d = new Date();
   // Daily rotation — pick 5 deterministically by date
   const seed = d.getDate() * 11 + d.getMonth() * 7;
@@ -7229,15 +7214,15 @@ function signalCheckout(){
    Hardcoded fallback values supplied by the user (late Apr 2026).
    ========================================================= */
 const UK_FUEL_FALLBACK = {
-  // v3.22 refresh — RAC Foundation national averages, early Jun 2026. Real
+  // v3.28 refresh — RAC Foundation national averages, early Jul 2026. Real
   // pump-watch CMA feed (fetchUKFuelPrices below) hits 14 retailer JSON
   // endpoints in parallel and should provide live numbers. These values only
   // surface when every retailer endpoint blocks/fails.
-  asOf:           'early June 2026',
-  unleaded:       155.4,
-  diesel:         187.2,
-  superUnleaded:  171.8,
-  premiumDiesel:  205.1,
+  asOf:           'early July 2026',
+  unleaded:       154.9,
+  diesel:         186.4,
+  superUnleaded:  171.1,
+  premiumDiesel:  204.3,
   source:         'RAC Foundation UK averages (hardcoded fallback)',
   live:           false,
 };
@@ -7445,6 +7430,21 @@ const PREMIER_LEAGUE_TABLE = [
 ];
 function signalPLTable(){
   const base = { key:'pltable', title:'Premier League Table', icon:'🏆', live:false, modelled:true };
+  // v3.28 — detect the domestic off-season and show honest empty state
+  // instead of a stale mid-season snapshot. PL runs mid-Aug → late May.
+  // Between end of May and start of Aug there IS no live table.
+  const now = new Date();
+  const month = now.getMonth();
+  const day = now.getDate();
+  const inOffSeason = (month === 5) || (month === 6) || (month === 7 && day < 15);
+  if (inOffSeason){
+    return { ...base,
+      valueLabel: '🏖 Off-season',
+      subLabel: 'Premier League returns mid-August · Community Shield mid-Aug · fixtures released mid-Jun',
+      score: 0.10,
+      plTable: [],  // renderer will fall through to a summer-break note
+    };
+  }
   const top = PREMIER_LEAGUE_TABLE[0];
   const second = PREMIER_LEAGUE_TABLE[1];
   const gap = top.pts - second.pts;
@@ -7507,52 +7507,62 @@ function _fmtJackpot(m){
   if (m >= 1)   return `£${m.toFixed(1)}M`;
   return `£${Math.round(m * 1000)}k`;
 }
-/* Try to scrape current National Lottery jackpot values from the official site
-   via a CORS proxy.  national-lottery.co.uk renders jackpots in plain HTML on
-   the homepage — we look for £XXM patterns in the page body and match them
-   against game keywords nearby. */
+/* v3.28 — swapped scrape target from the JS-rendered national-lottery.co.uk
+   SPA (which almost never returned jackpot figures in the initial HTML) to
+   lottery.co.uk's per-game pages. Those are plain server-rendered HTML with
+   "Estimated Jackpot £Xm" strings in the markup — proxies can actually parse
+   them. Fetches all four games in parallel via corsproxy.io / allorigins,
+   caches 30 min, and grades the whole card as `live:true` if any two games
+   returned a number.
+   Fallback: if the scrape fails entirely, we DON'T pretend to be live —
+   the card falls to _modelJackpot() with the honest "Modelled" chip. */
 async function fetchNationalLottery(){
   if (window.__lottoCache && (Date.now() - window.__lottoCache.ts < 30*60*1000)){
     return window.__lottoCache.data;
   }
-  const out = { live:false, jackpots: {} };
-  const proxies = [
-    'https://corsproxy.io/?https://www.national-lottery.co.uk/',
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.national-lottery.co.uk/'),
+  const out = { live:false, jackpots: {}, source: '' };
+  const games = [
+    { key:'lotto',      url:'https://www.lottery.co.uk/lotto',          re:/estimated jackpot[^£]*£\s*([\d.,]+)\s*(million|m)?/i },
+    { key:'euromill',   url:'https://www.lottery.co.uk/euromillions',   re:/estimated jackpot[^£]*£\s*([\d.,]+)\s*(million|m)?/i },
+    { key:'setforlife', url:'https://www.lottery.co.uk/set-for-life',   re:/estimated jackpot[^£]*£\s*([\d.,]+)\s*(million|m|k)?/i },
+    { key:'thunder',    url:'https://www.lottery.co.uk/thunderball',    re:/(top prize|jackpot)[^£]*£\s*([\d.,]+)\s*(million|m|k)?/i },
   ];
-  for (const url of proxies){
-    try {
-      const r = await fetch(url);
-      if (!r.ok) continue;
-      const html = await r.text();
-      if (html.length < 1000) continue;
-      // Find £XXM or £XXXm patterns near game names (Lotto, EuroMillions, etc.)
-      // The site uses headings like "EuroMillions £100 Million Jackpot" or
-      // "Lotto £4.4 Million Jackpot". Regex-scan for the pattern.
-      const grab = (gameName) => {
-        // Look for game name followed by a £ value within ~120 chars
-        const re = new RegExp(`${gameName}[\\s\\S]{0,150}?£([\\d.,]+)\\s*(million|m|M)?`, 'i');
-        const m = html.match(re);
-        if (!m) return null;
-        const num = parseFloat(m[1].replace(/,/g, ''));
-        if (!Number.isFinite(num)) return null;
-        // If the matched number is small (e.g. <100), assume millions
-        return num < 1000 ? num : num / 1_000_000;
-      };
-      const lotto      = grab('Lotto');
-      const euromill   = grab('EuroMillions');
-      const setforlife = grab('Set For Life');
-      const thunder    = grab('Thunderball');
-      if (lotto || euromill){
-        out.live = true;
-        out.source = 'national-lottery.co.uk (scraped)';
-        if (lotto)      out.jackpots.lotto      = lotto;
-        if (euromill)   out.jackpots.euromill   = euromill;
-        if (setforlife) out.jackpots.setforlife = setforlife;
-        if (thunder)    out.jackpots.thunder    = thunder;
-        break;
-      }
-    } catch(_){ /* try next */ }
+  const proxy = (u) => 'https://corsproxy.io/?' + encodeURIComponent(u);
+  const proxyAlt = (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u);
+
+  const tryFetch = async (u) => {
+    for (const p of [proxy(u), proxyAlt(u)]){
+      try {
+        const r = await fetch(p, { cache:'no-store' });
+        if (!r.ok) continue;
+        const html = await r.text();
+        if (html.length > 800) return html;
+      } catch(_){ /* try next proxy */ }
+    }
+    return null;
+  };
+
+  const results = await Promise.all(games.map(async g => {
+    const html = await tryFetch(g.url);
+    if (!html) return { key:g.key, jackpot:null };
+    // Both regex shapes yield (num, unit) at positions 1,2 OR 2,3 depending on group count
+    const m = html.match(g.re);
+    if (!m) return { key:g.key, jackpot:null };
+    const numStr = (m.length >= 4 ? m[2] : m[1]) || m[1];
+    const unit   = (m.length >= 4 ? m[3] : m[2]) || '';
+    const num = parseFloat(String(numStr).replace(/,/g, ''));
+    if (!Number.isFinite(num)) return { key:g.key, jackpot:null };
+    // Interpret units: 'k' → /1000 (Set For Life monthly instalments not applicable
+    // for jackpot line; Thunderball top prize is 500k). Otherwise assume millions.
+    const inM = /k/i.test(unit) ? num / 1000 : num;
+    return { key:g.key, jackpot: inM };
+  }));
+
+  const hit = results.filter(r => r.jackpot != null);
+  if (hit.length >= 2){
+    out.live = true;
+    out.source = 'lottery.co.uk (scraped)';
+    hit.forEach(r => { out.jackpots[r.key] = r.jackpot; });
   }
   return (window.__lottoCache = { ts: Date.now(), data: out }).data;
 }
@@ -11320,45 +11330,43 @@ const IIKO_HOUSE_BANNERS = [
 const UK_POLLS = {
   live: false,                   // flip to true when fetched from a live source
   source: 'modelled',            // 'live' | 'modelled' | 'cached'
-  asOf: 'mid-Jun 2026 · post-Makerfield',
-  sources: 'YouGov (14–15 Jun) · PollCheck 7-poll average (17 Jun) · Ipsos · Opinium · Savanta',
-  // v3.23 refresh (19 Jun 2026, post-Makerfield): YouGov 14–15 Jun has
-  // Reform 24 / Lab 19 / Con 19 / Grn 15 / LD 13. Previous YouGov 7–8 Jun
-  // had Reform 25 / Con 19 / Lab 19. PollCheck 7-poll moving average as of
-  // 17 Jun: Ref 26.9 / Lab 19.3 / Con 19.1. Reform has slipped 2–3 points
-  // off its early-June high; Lab and Con basically level around 19. Greens
-  // hold at 15, LD at 13. Burnham winning Makerfield does NOT yet show as
-  // a Labour spike — the leadership-challenge oxygen is a future-event story,
-  // not a present-Lab-popularity story.
+  asOf: 'early Jul 2026 · post-tournament',
+  sources: 'YouGov (5–6 Jul) · PollCheck 7-poll average · Ipsos · Opinium · Savanta',
+  // v3.28 refresh (Jul 2026): YouGov 5–6 Jul 2026 (Times/Sky News) has
+  // Reform 25 / Con 21 / Lab 20 / Grn 13 / LD 12 / Restore Britain 3 /
+  // SNP 3 / Plaid 2. Conservatives at 21% is their highest recorded since
+  // Apr 2025. Labour edged up +2. Reform slipped 2 further off their high
+  // but still lead. Restore Britain now a persistent 3% presence — folded
+  // into "Others" here rather than breaking out a new row.
   voting: [
-    { party:'Reform UK',    pct:25, change:-2.0, color:'#12b6cf' },
-    { party:'Labour',       pct:19, change:+1.0, color:'#e4003b' },
-    { party:'Conservative', pct:19, change:+1.0, color:'#0087dc' },
-    { party:'Green',        pct:15, change: 0.0, color:'#6ab023' },
-    { party:'Lib Dem',      pct:13, change: 0.0, color:'#faa61a' },
+    { party:'Reform UK',    pct:25, change: 0.0, color:'#12b6cf' },
+    { party:'Conservative', pct:21, change:+2.0, color:'#0087dc' },
+    { party:'Labour',       pct:20, change:+1.0, color:'#e4003b' },
+    { party:'Green',        pct:13, change:-2.0, color:'#6ab023' },
+    { party:'Lib Dem',      pct:12, change:-1.0, color:'#faa61a' },
     { party:'SNP',          pct: 3, change: 0.0, color:'#fdf38e' },
-    { party:'Plaid Cymru',  pct: 1, change: 0.0, color:'#005b54' },
-    { party:'Others',       pct: 5, change: 0.0, color:'#6b7280' },
+    { party:'Plaid Cymru',  pct: 2, change:+1.0, color:'#005b54' },
+    { party:'Others',       pct: 4, change:-1.0, color:'#6b7280' },  // incl. Restore Britain 3%
   ],
   // Net favourability (favourable − unfavourable). YouGov "Political
-  // favourability ratings, May 2026" — full release.
-  //   Starmer  23% fav / 69% unfav → −46
-  //   Burnham  34% fav / 30% unfav → +4  (only positive net rating of any
-  //                                       senior politician YouGov polled)
-  //   Farage   27% fav / 64% unfav → −37
-  //   Badenoch 30% fav / 47% unfav → −17 (highest net for any Tory leader in 5y)
-  //   Davey    likely −3 (improved Apr); ~34% don't-know — held at −3 for May
-  //   Polanski 25% fav / 50% unfav → −25 (50% unfav up 16pt since Apr)
-  //   Swinney  no fresh polling — held at −12
-  // Pint-test winner is still Burnham (only positive net rating).
+  // favourability ratings, July 2026" — refreshed v3.28.
+  //   Starmer  −36  (up 10 from −46 in May — post-Makerfield reprieve)
+  //   Burnham  −4   (dropped from +4 in May — public souring; still highest net)
+  //   Farage   −40  (down 3 — 25% fav / 65% unfav; joint-lowest since 2024 GE)
+  //   Badenoch −15  (her highest to date, up 2 from May)
+  //   Davey    −3   (held; no fresh reading)
+  //   Polanski −25  (held; no fresh reading)
+  //   Swinney  −12  (held; no fresh reading)
+  // Burnham STILL top of the pint test but only fractionally now — the
+  // Makerfield bounce has gone flat as expectations of a coronation set in.
   leaders: [
-    { name:'Andy Burnham',   party:'Lab · Presumed next PM', net: +4, color:'#cc1f3d' },
-    { name:'Ed Davey',       party:'Lib Dem',  net: -3, color:'#faa61a' },
-    { name:'John Swinney',   party:'SNP',      net:-12, color:'#fdf38e' },
-    { name:'Kemi Badenoch',  party:'Con',      net:-17, color:'#0087dc' },
-    { name:'Zack Polanski',  party:'Green',    net:-25, color:'#6ab023' },
-    { name:'Nigel Farage',   party:'Reform',   net:-37, color:'#12b6cf' },
-    { name:'Keir Starmer',   party:'Lab',      net:-46, color:'#e4003b' },
+    { name:'Ed Davey',       party:'Lib Dem',              net: -3, color:'#faa61a' },
+    { name:'Andy Burnham',   party:'Lab · Presumed next PM', net: -4, color:'#cc1f3d' },
+    { name:'John Swinney',   party:'SNP',                  net:-12, color:'#fdf38e' },
+    { name:'Kemi Badenoch',  party:'Con',                  net:-15, color:'#0087dc' },
+    { name:'Zack Polanski',  party:'Green',                net:-25, color:'#6ab023' },
+    { name:'Keir Starmer',   party:'Lab',                  net:-36, color:'#e4003b' },
+    { name:'Nigel Farage',   party:'Reform',               net:-40, color:'#12b6cf' },
   ],
 };
 
@@ -11453,143 +11461,31 @@ renderLeaderApproval();
    ========================================================= */
 
 /* =========================================================
-   🏆 World Cup 2026 Tracker — v3.24
-   Auto-hides the entire #worldcup-tracker section (and its h2
-   heading) outside the tournament window. Inside the window:
-   updates the countdown text dynamically based on the next
-   England fixture, and pulls World Cup headlines via the same
-   RSS chain the leadership tracker uses.
+   💔 IT'S NOT COMING HOME banner — v3.28
+   Full World Cup 2026 tracker (v3.24-v3.26) has been ripped out
+   after England 1-2 Argentina in the semi-final on 15 Jul 2026.
+   All that remains is a small auto-hide guard so the mourning
+   banner disappears after the Final (Sun 19 Jul) — the joke has
+   a short half-life. Set NCH_END to a later date if you want to
+   keep it visible longer.
    ========================================================= */
-const WC_WINDOW = { start:'2026-06-11', end:'2026-07-19' };
-// v3.26 — fixtures list now covers the knockout run. Group games all played,
-// Round of 16 win vs Mexico banked (3-2, Azteca), Quarter-Final vs Norway
-// upcoming Sat 11 Jul at Kansas City. Semi + Final are placeholder rows so
-// the countdown can keep flipping forward if England progress further.
-const WC_ENG_FIXTURES = [
-  { date:'2026-06-17T20:00:00', vs:'Croatia', place:'Boston',       status:'done',     result:'4-2 W',  stage:'Group L' },
-  { date:'2026-06-23T21:00:00', vs:'Ghana',   place:'Foxborough',   status:'done',     result:'W',      stage:'Group L' },
-  { date:'2026-06-27T20:00:00', vs:'Panama',  place:'MetLife NJ',   status:'done',     result:'W',      stage:'Group L' },
-  { date:'2026-07-05T20:00:00', vs:'Mexico',  place:'Azteca',       status:'done',     result:'3-2 W',  stage:'R16' },
-  { date:'2026-07-11T20:00:00', vs:'Norway',  place:'Kansas City',  status:'upcoming',                  stage:'QF' },
-  // Placeholders — only fire if England win the QF
-  { date:'2026-07-15T20:00:00', vs:'SF opp.', place:'Dallas',       status:'upcoming',                  stage:'SF' },
-  { date:'2026-07-19T20:00:00', vs:'Final',   place:'MetLife NJ',   status:'upcoming',                  stage:'Final' },
-];
-
-const _WC_KEYS = /(world cup|wc 2026|england.*(croatia|ghana|panama|mexico|norway|kane|bellingham|rashford|tuchel|three lions|knockout|group stage|quarter[- ]?final|last eight|azteca)|three lions|fifa world cup|usa.*canada.*mexico|gareth southgate|gillette stadium|metlife.*england|arrowhead.*england|quansah red|kansas city.*england|england.*last (eight|16))/i;
-
-function _wcActive(){
+const NCH_END = '2026-07-31';
+function renderNotComingHome(){
+  const el = document.getElementById('not-coming-home');
+  if (!el) return;
   const today = new Date().toISOString().slice(0,10);
-  return today >= WC_WINDOW.start && today <= WC_WINDOW.end;
+  el.hidden = (today > NCH_END);
 }
+renderNotComingHome();
+setInterval(renderNotComingHome, 60 * 60 * 1000);
 
-function _wcNextEnglandMatch(){
-  const now = Date.now();
-  for (const f of WC_ENG_FIXTURES){
-    const t = new Date(f.date).getTime();
-    if (t > now) return { ...f, msAway: t - now };
-  }
-  return null;
-}
-
-function _wcCountdownText(){
-  const next = _wcNextEnglandMatch();
-  if (!next){
-    // Either group stage done, awaiting knockout draw, or tournament over
-    return _wcActive() ? 'AWAITING NEXT FIXTURE DRAW' : 'TOURNAMENT OVER';
-  }
-  // v3.26 — surface the stage tag (QF / SF / Final / Group L) so the
-  // countdown reads as a knockout progress bar, not just a fixture list.
-  const stage = next.stage ? `${next.stage} · ` : '';
-  const vs = next.vs.toUpperCase();
-  const days = Math.floor(next.msAway / 86400000);
-  const hours = Math.floor((next.msAway % 86400000) / 3600000);
-  if (days >= 2)  return `${stage}${days} DAYS · ENG v ${vs}`;
-  if (days === 1) return `${stage}TOMORROW · ENG v ${vs}`;
-  if (hours >= 1) return `${stage}${hours}h · ENG v ${vs}`;
-  return `${stage}KICKOFF SOON · ENG v ${vs}`;
-}
-
-async function renderWorldCupTracker(){
-  const wrap = document.getElementById('worldcup-tracker');
-  const heading = document.getElementById('wc-heading');
-  if (!wrap) return;
-  if (!_wcActive()){
-    wrap.hidden = true;
-    if (heading) heading.hidden = true;
-    return;
-  }
-  wrap.hidden = false;
-  if (heading) heading.hidden = false;
-
-  const countdownEl = document.getElementById('wc-countdown');
-  if (countdownEl) countdownEl.textContent = _wcCountdownText();
-
-  // News — reuse the same RSS feeds the leadership tracker hits, filtered
-  // through the WC keyword regex.
-  const feeds = [
-    'https://feeds.bbci.co.uk/sport/football/rss.xml',
-    'https://feeds.bbci.co.uk/news/uk/rss.xml',
-    'https://www.theguardian.com/football/rss',
-    'https://feeds.skynews.com/feeds/rss/sports.xml',
-    'https://www.dailymail.co.uk/news/index.rss',
-    'https://www.mirror.co.uk/sport/football/rss.xml',
-  ];
-  let items = [];
-  try {
-    const results = await Promise.all(feeds.map(fetchRssItems));
-    for (const list of results) items.push(...list);
-  } catch(e){ /* fall through */ }
-
-  const seen = new Set();
-  const matches = items.filter(it => {
-    if (!it || !it.title) return false;
-    if (!_WC_KEYS.test(it.title) && !_WC_KEYS.test(it.text || '')) return false;
-    const key = it.title.slice(0, 60).toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).slice(0, 5);
-
-  function _srcOf(link){
-    try {
-      const h = new URL(link).hostname.replace(/^www\./, '');
-      if (/bbc/.test(h))      return 'BBC';
-      if (/guardian/.test(h)) return 'Guardian';
-      if (/skynews/.test(h))  return 'Sky';
-      if (/dailymail/.test(h))return 'Mail';
-      if (/mirror/.test(h))   return 'Mirror';
-      return h.split('.')[0].toUpperCase();
-    } catch(e){ return 'Wire'; }
-  }
-
-  const list = document.getElementById('wc-headlines-list');
-  if (!list) return;
-  if (matches.length){
-    list.innerHTML = matches.map(it => `
-      <li>
-        <a href="${it.link || '#'}" target="_blank" rel="noopener noreferrer">${it.title}</a>
-        <span class="be-src">${_srcOf(it.link || '')}</span>
-      </li>`).join('');
-  } else {
-    // v3.26 evergreen fallbacks — post-Mexico R16, pre-Norway QF
-    const evergreen = [
-      { txt:'Mexico 2-3 England: Bellingham brace and 10-man Three Lions dig deep at the Azteca', src:'Recap' },
-      { txt:'Norway shock Brazil — England set up quarter-final at Kansas City on Saturday', src:'Analysis' },
-      { txt:"Tuchel: 'Quansah suspension a blow but squad depth ready for Norway'", src:'Presser' },
-      { txt:'Beer gardens brace for QF Saturday — biggest World Cup pub week since 2018', src:'Trade' },
-    ];
-    list.innerHTML = evergreen.map(f => `
-      <li>
-        <span style="flex:1;color:var(--ink-dim)">${f.txt}</span>
-        <span class="be-src">${f.src} · evergreen</span>
-      </li>`).join('');
-  }
-}
-
-renderWorldCupTracker();
-setInterval(renderWorldCupTracker, 5 * 60 * 1000);
-
+/* Legacy WC tracker removed — 2024-hardcoded WC_WINDOW / WC_ENG_FIXTURES /
+   _WC_KEYS / _wcActive / _wcNextEnglandMatch / _wcCountdownText /
+   renderWorldCupTracker + its 5-minute interval are all gone. The Firm
+   Factor amp for home-nation tournament fixtures (v3.24) stays wired — the
+   Final on Sun 19 Jul is still inside the FIFA World Cup UK_TOURNAMENTS
+   window even if England aren't in it.
+   ========================================================= */
 /* =========================================================
    Election Day Tracker — banner under the main gauge.
    Auto-shows during a window around any UK election in

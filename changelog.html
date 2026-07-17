@@ -175,6 +175,53 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.28 <span class="stamp">live</span></div>
+      <div class="release-tag">💔 World Cup tracker → "IT'S NOT COMING HOME" banner · polls refreshed · Lottery now live · summer-break fixes · 16 Jul 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Post-semi-final release. England lost <b>1-2 to Argentina on Wednesday 15 July</b> — Anthony Gordon opened, Enzo Fernández equalised from range, Lautaro Martínez headed the winner in the third minute of injury time. First England World Cup Final since 1966 was 90 seconds away. The entire World Cup 2026 tracker (v3.24–v3.26) has been ripped out and replaced with a long mourning-red <b>"IT'S NOT COMING HOME"</b> banner. Also refreshed Westminster polls + leader approval to the latest YouGov numbers, and finally fixed the National Lottery module which had been a modelled fake for months.</p>
+    <h3>💔 World Cup tracker → "It's not coming home" banner</h3>
+    <ul>
+      <li><b>HTML section replaced.</b> The <code>&lt;section id="worldcup-tracker"&gt;</code> and its <code>&lt;h2 id="wc-heading"&gt;</code> are gone. A new <code>&lt;section class="ncoming-wrap" id="not-coming-home"&gt;</code> sits in the same slot — full-width, grid-column 1/-1, mourning red on kraft cream. Headline in clamped 38-88px black caps ("IT'S NOT COMING HOME"), subheading with the specific match summary, dashed-underline footer noting Argentina v Spain on Sun 19 Jul, and the "1990 · 1996 · 2018 · 2020 · 2024 · 2026 · the wait continues" copes strip.</li>
+      <li><b>JS chain binned.</b> Removed <code>WC_WINDOW</code>, <code>WC_ENG_FIXTURES</code>, <code>_WC_KEYS</code> regex, <code>_wcActive</code>, <code>_wcNextEnglandMatch</code>, <code>_wcCountdownText</code>, the entire <code>renderWorldCupTracker</code> async function, and its 5-minute interval. Replaced with a tiny <code>renderNotComingHome()</code> that hides the banner after <code>NCH_END = '2026-07-31'</code> — the joke has a short half-life.</li>
+      <li><b>Firm Factor +0.25 tournament amp stays wired.</b> The Final on Sun 19 Jul is still inside the FIFA World Cup UK_TOURNAMENTS window even if England aren't in it — the amp still fires on any home-nation match (there are none left) and the fetcher window (v3.27) still catches remaining tournament matches.</li>
+    </ul>
+    <h3>🗳️ Westminster voting intention — refreshed to YouGov 5–6 Jul</h3>
+    <ul>
+      <li><b>Reform 25</b> (0 change — still leading). <b>Con 21</b> (+2 — highest for the Tories since April 2025). <b>Lab 20</b> (+1). <b>Grn 13</b> (-2). <b>LD 12</b> (-1). SNP 3, Plaid 2, Others 4 (Restore Britain 3% + rest).</li>
+      <li><code>asOf</code> updated from "mid-Jun 2026 · post-Makerfield" to "early Jul 2026 · post-tournament" (dropped the stale Makerfield tag).</li>
+    </ul>
+    <h3>👔 Party leader approval — refreshed to YouGov July 2026</h3>
+    <ul>
+      <li><b>Starmer −36</b> (was −46 — up 10; post-Makerfield reprieve).</li>
+      <li><b>Burnham −4</b> (was +4 — dropped from positive; public souring as the coronation looks inevitable). Still the pint-test winner though — highest net of any senior politician polled.</li>
+      <li><b>Farage −40</b> (was −37 — down 3; 25% fav / 65% unfav is joint-lowest since the 2024 GE).</li>
+      <li><b>Badenoch −15</b> (was −17 — up 2; her highest to date).</li>
+      <li><b>Davey −3, Polanski −25, Swinney −12</b> — held (no fresh polling).</li>
+    </ul>
+    <h3>🎲 National Lottery — actually live now</h3>
+    <ul>
+      <li><b>Root cause:</b> the previous fetcher scraped <code>national-lottery.co.uk</code>, which is a JS SPA. Initial HTML never contains jackpot figures. Scrape always failed silently → card was 100% modelled with the honest "Modelled" chip.</li>
+      <li><b>Fix:</b> swapped the target to <code>lottery.co.uk</code>'s per-game pages (<code>/lotto</code>, <code>/euromillions</code>, <code>/set-for-life</code>, <code>/thunderball</code>), which are plain server-rendered HTML with "Estimated Jackpot £Xm" strings in the markup. Fetches all four in parallel via corsproxy.io / allorigins, caches 30 min. Card is graded as live if at least two of the four games returned a number.</li>
+      <li><b>Fallback stays honest:</b> if the scrape fails entirely, we don't pretend to be live — the card still falls through to <code>_modelJackpot()</code> with the "Modelled" chip. No fake "live" claim.</li>
+    </ul>
+    <h3>🩺 Health-check fixes flagged in the audit</h3>
+    <ul>
+      <li><b>Premier League Table.</b> Was serving a hardcoded mid-2024 snapshot (Arsenal 77pts, "played:34, title race ALIVE") on 16 July 2026 — 8 weeks after the season ended. Added off-season detection (Jun / early-Aug window) so the card now shows <b>"🏖 Off-season · Premier League returns mid-August · Community Shield mid-Aug · fixtures released mid-Jun"</b> instead of a stale table.</li>
+      <li><b>UK Slang Tracker chip.</b> Was flagged with contradictory <code>live:true, modelled:true</code> — renderer picked "Live" for hardcoded content. Corrected to <code>live:false, modelled:true</code> so the card matches Vape / Chippy / other honestly-modelled cards.</li>
+      <li><b>UK_FUEL_FALLBACK.asOf</b> bumped from "early June 2026" → "early July 2026" with slightly refreshed pence values. Only surfaces when all 14 CMA retailer feeds fail, so mostly cosmetic — but the date stamp was 6 weeks stale.</li>
+    </ul>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>JS parses clean (545KB). Section balance 10 open / 10 close. Every getElementById reference has a matching id in HTML. Banner correctly shows today, auto-hides after 31 Jul. Section order: Live Indicators → Signals → Heat Map → Trend → Voting → Leader Approval — clean, no orphan headings from the WC removal.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no schema changes, no signal weight changes.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.27 <span class="stamp">live</span></div>
       <div class="release-tag">⚽ "Last Results · Football" fixed for summer / tournament · 🐎 horses now leans summer-flat · 6 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
