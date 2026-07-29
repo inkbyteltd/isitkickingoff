@@ -175,6 +175,34 @@
 
   <details class="release" open>
     <summary class="release-head">
+      <div class="release-ver">v3.29 <span class="stamp">live</span></div>
+      <div class="release-tag">🗑 Delete "It's not coming home" banner — World Cup 2026 fully off the site · 20 Jul 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">Tournament's over — Argentina beat Spain in the Final yesterday. The v3.28 mourning banner has served its purpose. Ripped it out entirely. World Cup 2026 is now fully off the visible dashboard.</p>
+    <h3>🗑 Removed</h3>
+    <ul>
+      <li><b>HTML section</b> — the entire <code>&lt;section class="ncoming-wrap" id="not-coming-home"&gt;</code> block (ribbon, headline, subheading with match summary, footer copes strip) is gone.</li>
+      <li><b>Inline CSS</b> — the <code>.ncoming-wrap</code>, <code>.ncoming-inner</code>, <code>.ncoming-ribbon</code>, <code>.ncoming-headline</code>, <code>.ncoming-sub</code>, <code>.ncoming-foot</code>, <code>.ncoming-copes</code> rules + mobile media query — all binned.</li>
+      <li><b>JS chain</b> — <code>NCH_END</code> constant, <code>renderNotComingHome()</code> function, load-time call, hourly interval — all gone.</li>
+    </ul>
+    <h3>🧠 What stays</h3>
+    <ul>
+      <li><b><code>UK_TOURNAMENTS</code> data</b> stays intact — including the FIFA World Cup 2026 entry (11 Jun–19 Jul). That window is now in the past so it naturally will not fire the Firm Factor +0.25 home-nation amp (v3.24). No visible impact on the dashboard, but the history is preserved for any future retrospective use.</li>
+      <li><b>Rugby World Cup 2027, Cricket World Cup 2027, T20 World Cup 2026</b> also stay in <code>UK_TOURNAMENTS</code> — these are legitimate future / past tournament windows the England multi-sport tracker uses.</li>
+      <li><b>Methodology tooltips</b> that mention "Tournament Results · World Cup" as an example of how the Last Results card retitles during tournaments — kept, because they describe the code's behaviour, not a currently-visible module. When Euro 2028 arrives the card will retitle exactly as advertised.</li>
+    </ul>
+    <h3>🩺 Sanity check</h3>
+    <ul>
+      <li>JS parses clean (497KB, down from 545KB — largest single delete since v3.25). Section balance 9 open / 9 close. Zero "World Cup" strings in visible rendered HTML body. Section order is now: Live Indicators → Signals → Heat Map → Trend → Westminster Voting → Leader Approval — nothing tournament-y left on screen.</li>
+    </ul>
+    <h3>🔄 Project sync</h3>
+    <ul>
+      <li><code>index.html</code> updated in dev, synced to <code>deploy-test/</code>. No worker changes, no schema changes, no signal weight changes.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
       <div class="release-ver">v3.28 <span class="stamp">live</span></div>
       <div class="release-tag">💔 World Cup tracker → "IT'S NOT COMING HOME" banner · polls refreshed · Lottery now live · summer-break fixes · 16 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>

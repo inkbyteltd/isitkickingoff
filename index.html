@@ -1204,67 +1204,13 @@
     </div>
   </section>
 
-  <!-- 💔 IT'S NOT COMING HOME BANNER — v3.28. Replaces the World Cup 2026
-       tracker (v3.24-v3.26) after England 1-2 Argentina in the semi-final
-       (15 Jul 2026, Gordon opener, Fernández + Martínez late). Full-width
-       banner styled in mourning-red on kraft cream. Auto-hides after
-       2026-07-31 via renderNotComingHome() — the tournament's over 19 Jul
-       and the joke has a short half-life. Firm Factor World Cup ID 4346 +
-       tournament amp stay wired (v3.24) — the Final on Sun 19 Jul is still
-       inside the tournament window even if England aren't in it. -->
-  <section class="ncoming-wrap" id="not-coming-home">
-    <div class="ncoming-inner">
-      <div class="ncoming-ribbon">💔 SEMI-FINAL · WED 15 JULY 2026 · KNOCKED OUT</div>
-      <div class="ncoming-headline">IT'S NOT COMING HOME</div>
-      <div class="ncoming-sub">
-        <b>England 1&ndash;2 Argentina.</b> Anthony Gordon opened the scoring;
-        Enzo Fern&aacute;ndez levelled from range; Lautaro Mart&iacute;nez headed
-        the winner in the third minute of injury time. First England World Cup
-        Final since 1966 was <b>90 seconds away</b>.
-      </div>
-      <div class="ncoming-foot">
-        <span>🏆 Argentina v Spain · Final · Sun 19 Jul · MetLife, NJ</span>
-        <span class="ncoming-copes">1990 · 1996 · 2018 · 2020 · 2024 · 2026 &nbsp;·&nbsp; the wait continues</span>
-      </div>
-    </div>
-  </section>
-  <style>
-    /* IT'S NOT COMING HOME banner — one-file inline CSS, only used by this section. */
-    .ncoming-wrap{grid-column:1 / -1;margin:22px 0;padding:0;background:linear-gradient(180deg,#1a0a0e 0%,#2a0d13 100%);
-      border:1px solid #4a1620;border-radius:14px;position:relative;overflow:hidden;
-      box-shadow:0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);}
-    .ncoming-wrap::before{content:"";position:absolute;inset:0;pointer-events:none;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(228,0,59,0.15) 0%, transparent 45%),
-        radial-gradient(circle at 80% 70%, rgba(228,0,59,0.10) 0%, transparent 45%);}
-    .ncoming-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background-image:
-        linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px),
-        linear-gradient(0deg,  rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px);
-      mix-blend-mode:overlay;opacity:.5;}
-    .ncoming-inner{position:relative;z-index:1;padding:36px 40px;text-align:center;
-      display:flex;flex-direction:column;align-items:center;gap:14px}
-    .ncoming-ribbon{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.24em;
-      color:#f4c8cf;text-transform:uppercase;padding:6px 14px;
-      background:rgba(228,0,59,0.16);border:1px solid rgba(228,0,59,0.35);border-radius:999px}
-    .ncoming-headline{font-family:var(--sans);font-weight:900;letter-spacing:.03em;
-      font-size:clamp(38px, 8vw, 88px);line-height:1;color:#f7d7dc;
-      text-transform:uppercase;text-shadow:0 4px 16px rgba(228,0,59,0.35);
-      margin:6px 0 2px;padding:0 6px}
-    .ncoming-sub{font-family:var(--sans);font-size:15px;line-height:1.65;color:#e7d0d4;max-width:720px;margin:0 auto}
-    .ncoming-sub b{color:#ffffff;font-weight:700}
-    .ncoming-foot{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:center;align-items:center;
-      margin-top:10px;padding-top:14px;border-top:1px dashed rgba(228,0,59,0.28);width:100%;max-width:720px;
-      font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c2a4a9}
-    .ncoming-foot span:first-child{color:#f4c8cf}
-    .ncoming-copes{opacity:.75}
-    .ncoming-wrap[hidden]{display:none}
-    @media (max-width:640px){
-      .ncoming-inner{padding:26px 22px}
-      .ncoming-headline{letter-spacing:.02em}
-      .ncoming-sub{font-size:13.5px}
-    }
-  </style>
+  <!-- v3.29 — World Cup 2026 fully removed from the site. The v3.28 "It's not
+       coming home" banner + its CSS + its JS are all gone. The tournament is
+       over (Argentina beat Spain in the Final, 19 Jul 2026), England exited
+       at the semi-final, and politics/domestic-season stories are the next
+       chapter. Firm Factor's UK_TOURNAMENTS-driven amp is untouched — the
+       World Cup window is now in the past and will naturally not fire. -->
+
 
   <!-- v3.25 — Labour Leadership Challenge tracker REMOVED. Burnham confirmed
        as coronation candidate (no contest). Section binned in one clean cut;
@@ -11461,31 +11407,16 @@ renderLeaderApproval();
    ========================================================= */
 
 /* =========================================================
-   💔 IT'S NOT COMING HOME banner — v3.28
-   Full World Cup 2026 tracker (v3.24-v3.26) has been ripped out
-   after England 1-2 Argentina in the semi-final on 15 Jul 2026.
-   All that remains is a small auto-hide guard so the mourning
-   banner disappears after the Final (Sun 19 Jul) — the joke has
-   a short half-life. Set NCH_END to a later date if you want to
-   keep it visible longer.
+   v3.29 — All World Cup 2026 code fully removed. Previous versions
+   here carried: v3.24-v3.26 WC tracker (WC_WINDOW, WC_ENG_FIXTURES,
+   _WC_KEYS, _wcActive, _wcNextEnglandMatch, _wcCountdownText,
+   renderWorldCupTracker, 5-min interval); v3.28 "It's not coming
+   home" banner (NCH_END, renderNotComingHome, hourly interval).
+   All binned. Firm Factor's UK_TOURNAMENTS amp is untouched —
+   the FIFA World Cup 2026 window is now in the past and will
+   naturally not fire.
    ========================================================= */
-const NCH_END = '2026-07-31';
-function renderNotComingHome(){
-  const el = document.getElementById('not-coming-home');
-  if (!el) return;
-  const today = new Date().toISOString().slice(0,10);
-  el.hidden = (today > NCH_END);
-}
-renderNotComingHome();
-setInterval(renderNotComingHome, 60 * 60 * 1000);
 
-/* Legacy WC tracker removed — 2024-hardcoded WC_WINDOW / WC_ENG_FIXTURES /
-   _WC_KEYS / _wcActive / _wcNextEnglandMatch / _wcCountdownText /
-   renderWorldCupTracker + its 5-minute interval are all gone. The Firm
-   Factor amp for home-nation tournament fixtures (v3.24) stays wired — the
-   Final on Sun 19 Jul is still inside the FIFA World Cup UK_TOURNAMENTS
-   window even if England aren't in it.
-   ========================================================= */
 /* =========================================================
    Election Day Tracker — banner under the main gauge.
    Auto-shows during a window around any UK election in
