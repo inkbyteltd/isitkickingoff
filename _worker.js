@@ -12,9 +12,10 @@
  *      exactly as before.
  *
  * Secrets: one. /api/football needs FOOTBALL_DATA_TOKEN, set in the Cloudflare
- * dashboard (Pages project → Settings → Variables and Secrets, type "Secret").
- * Never commit the token. Without it /api/football returns 503 and the page
- * falls back to TheSportsDB.
+ * dashboard: Workers & Pages → isitkickingoff → Settings → Variables and
+ * Secrets → Add, type "Secret". (This project deploys via Workers Builds, not
+ * Pages.) Never commit the token. Without it /api/football returns 503 and the
+ * page falls back to TheSportsDB.
  */
 
 const YAHOO_QUOTE = 'https://query1.finance.yahoo.com/v7/finance/quote';
@@ -65,7 +66,7 @@ export default {
 
     const res = await env.ASSETS.fetch(request);
     // v3.30 — only isitkickingoff.com should appear in search. Preview
-    // deployments and the *.pages.dev / *.workers.dev aliases get noindex.
+    // versions and the *.workers.dev / *.pages.dev aliases get noindex.
     if (/\.(pages|workers)\.dev$/i.test(url.hostname)) {
       const r = new Response(res.body, res);
       r.headers.set('X-Robots-Tag', 'noindex, nofollow');

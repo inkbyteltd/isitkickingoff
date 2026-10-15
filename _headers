@@ -1,11 +1,12 @@
-# Cloudflare Pages reads this file at deploy time and applies the listed
-# headers to matching paths. Defence-in-depth on top of the CSP / X-Content
+# Cloudflare (Workers static assets; this project deploys via Workers Builds)
+# reads this file at deploy time and applies the listed headers to matching
+# asset paths. Defence-in-depth on top of the CSP / X-Content
 # meta tags already in each page.
 #
 # v3.30: the site-wide "X-Robots-Tag: noindex, nofollow" from the test-deploy
 # days is gone, so Google can index the site. Only the offline shop, the
 # per-device snapshot page and the 404 page stay out of search. Preview and
-# *.pages.dev hosts get noindex from _worker.js so they never compete with
+# *.workers.dev hosts get noindex from _worker.js so they never compete with
 # isitkickingoff.com.
 
 /*
