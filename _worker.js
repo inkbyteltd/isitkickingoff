@@ -393,27 +393,45 @@ async function handlePolymarket(url, ctx) {
   let cached = await cache.match(cacheKey);
   if (cached) return cached;
 
-  // Pull the 500 most-traded active markets (two pages of 250, in parallel)
-  // and filter server-side for UK relevance. The second page is best-effort.
-  const page = (offset) => fetch(
-    `https://gamma-api.polymarket.com/markets?active=true&closed=false&order=volume24hr&ascending=false&limit=250&offset=${offset}`,
-    {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IIKO-Worker/1.0)', 'Accept': 'application/json' },
-      cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
-    }
-  );
-  let firstRes, secondRes;
-  try {
-    [firstRes, secondRes] = await Promise.all([page(0), page(250).catch(() => null)]);
-  } catch (e) {
-    return jsonError('Polymarket fetch failed: ' + e.message, 502);
+  // Two sources, fetched in parallel, both best-effort:
+  //  1. Polymarket's own "uk" tag (events). Most UK markets are low-volume, so
+  //     they never reach the global top 500; the tag finds them.
+  //  2. The 500 most-traded active markets (two pages of 250), which catches
+  //     big UK-relevant markets that aren't tagged (e.g. Premier League clubs
+  //     in a Champions League outright).
+  // Everything still goes through isUKMarket: the tag alone isn't trusted
+  // (it includes things like "European military action against Iran").
+  const gamma = (path) => fetch(`https://gamma-api.polymarket.com/${path}`, {
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IIKO-Worker/1.0)', 'Accept': 'application/json' },
+    cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
+  }).catch(() => null);
+  const [tagRes, firstRes, secondRes] = await Promise.all([
+    gamma('events?tag_slug=uk&active=true&closed=false&order=volume24hr&ascending=false&limit=50'),
+    gamma('markets?active=true&closed=false&order=volume24hr&ascending=false&limit=250&offset=0'),
+    gamma('markets?active=true&closed=false&order=volume24hr&ascending=false&limit=250&offset=250'),
+  ]);
+  if ((!tagRes || !tagRes.ok) && (!firstRes || !firstRes.ok)) {
+    return jsonError(`Polymarket HTTP ${firstRes ? firstRes.status : 'unreachable'}`, 502);
   }
-  if (!firstRes.ok) return jsonError(`Polymarket HTTP ${firstRes.status}`, 502);
 
   const asList = (j) => Array.isArray(j) ? j : ((j && j.markets) || []);
-  let markets = asList(await firstRes.json());
-  if (secondRes && secondRes.ok) {
-    try { markets = markets.concat(asList(await secondRes.json())); } catch (_) {}
+  let markets = [];
+  // Tagged events → the most-traded open market in each, carrying its event
+  if (tagRes && tagRes.ok) {
+    try {
+      const events = await tagRes.json();
+      for (const ev of (Array.isArray(events) ? events : [])) {
+        const open = (Array.isArray(ev.markets) ? ev.markets : [])
+          .filter(mk => mk && mk.question && mk.active !== false && mk.closed !== true)
+          .sort((a, b) => (parseFloat(b.volume24hr || 0) || 0) - (parseFloat(a.volume24hr || 0) || 0));
+        if (open[0]) markets.push({ ...open[0], events: [{ id: ev.id, slug: ev.slug, title: ev.title }] });
+      }
+    } catch (_) {}
+  }
+  for (const res of [firstRes, secondRes]) {
+    if (res && res.ok) {
+      try { markets = markets.concat(asList(await res.json())); } catch (_) {}
+    }
   }
 
   // One market per event (the most-traded), so a single outright with a
