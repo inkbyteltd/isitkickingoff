@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Legal · Privacy · Terms · Disclaimer — Is It Kicking Off?</title>
 <meta name="description" content="The dull-but-necessary bit. Privacy, terms, disclaimer and contact for Is It Kicking Off?, the UK Aggravation Threat Index." />
-<link rel="canonical" href="https://isitkickingoff.com/legal.html" />
+<link rel="canonical" href="https://isitkickingoff.com/legal" />
 <meta name="theme-color" content="#07090c" />
 <meta name="robots" content="index,follow" />
 
@@ -123,7 +123,7 @@
 
   <section class="legal" id="privacy">
     <h2>Privacy Notice</h2>
-    <div class="upd">Last updated: 27 April 2026</div>
+    <div class="upd">Last updated: 15 October 2026</div>
 
     <p><b>Is It Kicking Off?</b> ("the site", "we") is a satirical UK aggravation threat-index dashboard run by RAW (<a href="mailto:commiepinko1968@gmail.com">commiepinko1968@gmail.com</a>). This notice explains what data the site touches, where it goes, and how to get in touch.</p>
 
@@ -145,20 +145,22 @@
       <li>BBC News, The Guardian, Sky News, Daily Mail and Mirror RSS feeds</li>
       <li>Open-Meteo (weather)</li>
       <li>UK Government bank-holidays API and gov.uk</li>
+      <li>Transport for London (tube status)</li>
       <li>GDELT Project (news tone)</li>
       <li>data.police.uk and news.met.police.uk</li>
       <li>data.elexon.co.uk and api.nationalgrideso.com (electricity grid)</li>
       <li>Reddit, TVMaze, TheSportsDB, Wikipedia</li>
-      <li>Apple Marketing Tools (charts)</li>
-      <li>National Lottery (jackpot)</li>
-      <li>Twitter/X embed widget (only when a live tweet is rendered)</li>
+      <li>Apple Marketing Tools and iTunes (charts)</li>
+      <li>CoinGecko and exchange-rate APIs (finance row)</li>
+      <li>lottery.co.uk (jackpot figures)</li>
     </ul>
+    <p>A few sources are fetched by our own server (a Cloudflare Worker) rather than your browser: football fixtures from football-data.org, Polymarket prediction markets, and oil prices. Those providers see our server, not you.</p>
 
     <h3>CORS proxies</h3>
-    <p>Some upstream feeds block direct cross-origin browser access. Where that's the case, the dashboard routes the request through a public CORS proxy (currently <code>api.allorigins.win</code> and <code>corsproxy.io</code>). Those proxies see the URL being requested and your IP. They do not see anything personal you have typed into the dashboard, because the dashboard does not collect anything personal. If you would rather not use proxies, blocking them in your browser will simply cause the affected modules to fall back to their cached or modelled values — the rest of the page still works.</p>
+    <p>Some upstream feeds block direct cross-origin browser access. Where that's the case, the dashboard routes the request through a public CORS proxy (currently <code>api.rss2json.com</code>, <code>api.allorigins.win</code>, <code>corsproxy.io</code> and <code>api.codetabs.com</code>). Those proxies see the URL being requested and your IP. They do not see anything personal you have typed into the dashboard, because the dashboard does not collect anything personal. If you would rather not use proxies, blocking them in your browser will simply cause the affected modules to fall back to their cached or modelled values — the rest of the page still works.</p>
 
-    <h3>Optional history (Supabase)</h3>
-    <p>If, in the future, the dashboard records its daily snapshots to a database for historical charting, that database is hosted on <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">Supabase</a> (EU region). Only the score, tier, region and signal scores are written. No IP addresses, no device identifiers, no personal information.</p>
+    <h3>Reading history (Supabase)</h3>
+    <p>When the dashboard loads, it records the reading it has just calculated to a database on <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">Supabase</a> (EU region), so we can chart the index over time. Only the score, tier, selected region and signal scores are written. We don't store IP addresses, device identifiers or anything personal in that table. As with any web request, Supabase sees the IP address of the browser sending it.</p>
 
     <h3>Analytics</h3>
     <p>The site uses <a href="https://www.cloudflare.com/web-analytics/" target="_blank" rel="noopener noreferrer">Cloudflare Web Analytics</a> to count visits and page views. It is a privacy-respecting analytics product that <b>does not set cookies, does not fingerprint visitors, and does not require a cookie banner</b>. The data captured is aggregated and limited to: page URL, country (derived from IP, not stored), browser, OS, and referrer. No individual visitor is identifiable from this data. Cloudflare's documentation: <a href="https://developers.cloudflare.com/analytics/web-analytics/" target="_blank" rel="noopener noreferrer">developers.cloudflare.com/analytics/web-analytics</a>.</p>

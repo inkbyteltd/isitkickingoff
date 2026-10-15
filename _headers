@@ -1,6 +1,12 @@
 # Cloudflare Pages reads this file at deploy time and applies the listed
 # headers to matching paths. Defence-in-depth on top of the CSP / X-Content
-# meta tags already in each page. Edit before going public.
+# meta tags already in each page.
+#
+# v3.30: the site-wide "X-Robots-Tag: noindex, nofollow" from the test-deploy
+# days is gone, so Google can index the site. Only the offline shop, the
+# per-device snapshot page and the 404 page stay out of search. Preview and
+# *.pages.dev hosts get noindex from _worker.js so they never compete with
+# isitkickingoff.com.
 
 /*
   X-Content-Type-Options: nosniff
@@ -8,10 +14,30 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/shop.html
   X-Robots-Tag: noindex, nofollow
+
+/shop
+  X-Robots-Tag: noindex, nofollow
+
+/snapshot.html
+  X-Robots-Tag: noindex
+
+/snapshot
+  X-Robots-Tag: noindex
+
+/404.html
+  X-Robots-Tag: noindex
 
 /favicon.ico
   Cache-Control: public, max-age=86400
 
 /*.html
   Cache-Control: public, max-age=300, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600

@@ -1,4 +1,8 @@
-# TEST DEPLOY — block all crawlers while we shake down hosting.
-# Replace this entire file with the production robots.txt before launch.
+# isitkickingoff.com — production robots.txt (v3.30)
+# The site is public and indexable. The /api/ routes are data endpoints
+# for the dashboard, not pages.
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /api/
+
+Sitemap: https://isitkickingoff.com/sitemap.xml

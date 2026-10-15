@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Changelog · Is It Kicking Off?</title>
+<link rel="canonical" href="https://isitkickingoff.com/changelog" />
 <meta name="description" content="Release notes and build log for Is It Kicking Off? — every signal added, model tweaked, bug squashed." />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪵%3C/text%3E%3C/svg%3E" />
@@ -175,7 +176,80 @@
 
   <details class="release" open>
     <summary class="release-head">
-      <div class="release-ver">v3.29 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.30 <span class="stamp">live</span></div>
+      <div class="release-tag">🔧 Audit fixes: football back from the dead, honest Live labels, Satire chips, visible to Google · 15 Oct 2026</div>
+    <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
+    <p class="intro">First release from the October code audit. A live test on 15 Oct found the Firm Factor card crashing off the page, a results endpoint that no longer exists, kick-offs an hour out, "UK" prediction markets about the Fed and the NFL, the whole site hidden from Google, and a "Live" header pill that could never say anything else. This release fixes all of that, and relabels every card honestly: Live, Calculated, Estimate or Satire.</p>
+    <h3>⚽ Football</h3>
+    <ul>
+      <li><b>New data source.</b> Premier League, Championship and Champions League fixtures and results now come from <b>football-data.org</b>, fetched by our Cloudflare Worker at <code>/api/football</code> with the key kept server-side (secret <code>FOOTBALL_DATA_TOKEN</code>). Cached 5 minutes, 60 seconds while a match is in play, with a 6-hour stale copy if the API rate-limits. TheSportsDB still covers League One, League Two, the Scottish Premiership, Europa League and Conference League. Its free key now returns only one next and one past match per league, so it's a backstop.</li>
+      <li><b>Firm Factor crash fixed.</b> <code>isUKvsEuro</code> was declared inside the fixture loop and read outside it, which threw and dropped the 9%-weighted card off the page. It's now worked out per fixture.</li>
+      <li><b>Results endpoint fixed.</b> <code>eventslastleague.php</code> returns 404; the past-results endpoint is <code>eventspastleague.php</code>.</li>
+      <li><b>MLS removed.</b> League ID 4346, added in v3.24 as "World Cup", is Major League Soccer.</li>
+      <li><b>UK time everywhere on the football cards.</b> TheSportsDB timestamps are UTC with no zone marker, so browsers read them as local time and every kick-off was an hour out during BST. Kick-offs now show in UK time ("19:45", or "Sat 15:00" when not today), the police-favoured kick-off amplifier uses the UK hour, and "today" means today in the UK. Works either side of the 25 October clock change.</li>
+      <li><b>Header clock, Time &amp; Day and the time-of-day envelope</b> now use UK time too. The clock showed the visitor's own time with "GMT" stuck on the end (wrong all summer, and wrong anywhere outside the UK). Time &amp; Day (12%) and the envelope that multiplies the whole index used the visitor's local hour, so the same moment scored 17 in London, 5 in New York and 53 in Tokyo. Wetherspoons and Telly Drama moved to UK time as well. A handful of smaller cards still read the visitor's clock; moving everything to UK time is on the list for a later release.</li>
+      <li><b>Whole-word team matching.</b> The old substring match had "OM" (Marseille) matching Como, "Rangers" matching QPR and "Forest" matching Forest Green Rovers. Names are now normalised (accents, FC/AFC/AS prefixes) and matched as whole words, most specific first.</li>
+      <li><b>UK-only filter.</b> The UK view only counts fixtures with a UK club or home nation, so a Swiss v Serbian Conference League tie can't headline the card. Last Results gets the same filter.</li>
+      <li><b>Stale data isn't Live.</b> If football-data.org rate-limits, the Worker serves its last good copy flagged as stale, and the cards show Estimate instead of Live.</li>
+      <li><b>Invented firm chatter removed.</b> The <code>FIRM_HOLDING</code> pool, which made up activity for real, named supporter groups, is gone (legal risk). When the feeds answer and nothing is on, the card now says "No UK fixtures".</li>
+    </ul>
+    <h3>🎯 Polymarket UK</h3>
+    <ul>
+      <li>The filter matched "uk" inside "Ukraine", "pm" inside "11:59 PM" in market descriptions, and words like championship, interest rate and royal. It now matches whole words, on the question and event title only, against UK-specific terms. One market per event, so a single outright can't fill the row. Tested against the Fed, NFL, Brazil and Ukraine markets from the live test. "Labour" and "Conservatives" count only when no other country is mentioned (New Zealand has a Labour party, Canada has Conservatives), and "nuclear arsenal" no longer counts as football. When nothing UK-related is trading, the row says so instead of "Loading…" forever.</li>
+    </ul>
+    <h3>🔎 Visible to Google</h3>
+    <ul>
+      <li>Production <code>robots.txt</code> (was "TEST DEPLOY, Disallow: /"), a new <code>sitemap.xml</code>, and the site-wide <code>X-Robots-Tag: noindex, nofollow</code> header removed. Canonical tags added to the Essays and Changelog pages, and every canonical and sitemap URL now uses the clean address Cloudflare actually serves (<code>/about</code>, not <code>/about.html</code>, which redirects). The offline shop, the per-device Snapshot page and the 404 page stay out of search, and preview / pages.dev hosts get noindex from the Worker so they never compete with isitkickingoff.com.</li>
+    </ul>
+    <h3>🛡️ Security</h3>
+    <ul>
+      <li><b>CSP:</b> added Cloudflare Web Analytics (our own CSP was blocking the beacon), TfL (Transport Chaos could never go live) and the 14 supermarket and fuel-company price feeds behind Petrol Pump Rage, which the CSP had been blocking since launch. Removed the dead nitter, national-lottery and Interpol hosts. <code>snapshot.html</code> now has a CSP of its own.</li>
+      <li><b>Escaping:</b> <code>snapshot.html</code> put unescaped Reddit, chart and TV text into the page. Everything is escaped now, and the tier colour must be a plain hex value. The election-banner headlines and links are escaped too, with http(s) links only.</li>
+    </ul>
+    <h3>🏷️ Honest labels</h3>
+    <ul>
+      <li><b>Four chips replace Live/Modelled:</b> <b>Live</b> (fetched just now), <b>Calculated</b> (clock, astronomy, calendars), <b>Estimate</b> (real figures but not a live reading) and <b>Satire</b> (made up for laughs). Ambient cards whose feed didn't answer say <b>Unavailable</b>. One function, <code>provenanceOf()</code>, decides every card's chip, and the methodology table has a new Chip column.</li>
+      <li><b>Header pill:</b> was hard-wired to "Live" because Time & Day, Lunacy Factor and Patriot were always flagged live. It now counts the real feeds that answered on the latest refresh (for example "Live · 13/21 feeds"), shows Partial when fewer than half answered, and Offline when the data is more than 10 minutes old.</li>
+      <li><b>Unearned Live chips removed:</b> Royal Drama, Road Rage and Search Panic went Live whenever any news loaded; Social on one Reddit number; England On Tour on a hardcoded calendar; A&amp;E on a regex that could match the 95% target; the Shit Index on a fallback rain value. Satire cards with a real input (Kettle, Social, Road Rage) keep the real figure in the sub-line.</li>
+      <li><b>Renamed:</b> "Wetherspoons Live" → "Wetherspoons Capacity"; "Spoons Menu · Top 5 right now" → "Spoons Menu · Top 5"; "Live Indicators" → "Satire Indicators"; "Recent UK Racing" → "UK Racing · 2026 Big Winners".</li>
+      <li><b>Trend chart and "vs yesterday" pill</b> are labelled illustrative: past days come from a model, not recorded readings. Real stored history is the next big job.</li>
+      <li><b>Storm Watch:</b> "red " matched words like "covered" and "required" and could flag a false RED; a level now needs the words "red warning". A dead feed shows Unavailable instead of a false all-clear.</li>
+      <li><b>Transport:</b> the Live card no longer mixes invented rail incidents in with real TfL rows.</li>
+    </ul>
+    <h3>⚖️ Legal-risk content removed</h3>
+    <ul>
+      <li>Invented Met Police appeals and arrests, and the Interpol Red Notice fallback that put real wanted people's names on the page. The crime card now links to the real Met newsroom when its feed is down.</li>
+      <li>The "Epstein files" royal quip. The other royal quips stay, under a Satire chip.</li>
+      <li>Civil Unrest's fallback said named organisations and causes had a "demo expected". It's now generic satire (pothole vigils, parking-fine marches).</li>
+      <li>Invented lottery jackpots when the scrape fails, and an invented NHS 4-hour figure on the A&amp;E card.</li>
+      <li>The News card's fallback headlines about named politicians, the Met and the Home Office (one still had Starmer as PM). They're generic satire now, under a Satire chip, as is the Telly card's fallback. Two petrol quips that put words in OPEC's and the RAC's mouths were reworded.</li>
+    </ul>
+    <h3>📊 Facts refreshed and checked</h3>
+    <ul>
+      <li><b>Polls:</b> YouGov voting intention 11–12 Oct 2026 (Lab 24, Con 23, Ref 21, LD 12, Grn 11) and YouGov net favourability 9–10 Sep 2026. Andy Burnham has been PM since 20 July, so "Presumed next PM" and Starmer are gone.</li>
+      <li><b>Racing:</b> the 2026 season's big-race winners, each checked against Sporting Life or Racing Post. The old list mixed 2023 and 2024 and had the wrong 2000 Guineas winner.</li>
+      <li><b>Sewage:</b> the Shit Index used 3.6M spill <i>hours</i> as spill <i>events</i>, overstating spills about 8×. Now based on the EA's 2025 count (291,492 spills).</li>
+      <li><b>Threat level fallback:</b> SEVERE since 30 April 2026 (was SUBSTANTIAL).</li>
+      <li><b>Wetherspoons:</b> Curry Club is Thursday, not Wednesday; Steak Club ended in 2025 (Tuesday Club now). The Spoons Menu was also reading its day table one day out.</li>
+      <li><b>Calendar:</b> Glastonbury 2026 was a fallow year (next festival 23–27 June 2027); Trooping the Colour 2026 was 13 June.</li>
+    </ul>
+    <h3>🔒 Privacy wording</h3>
+    <ul>
+      <li>The methodology said "no data leaves your device" and the privacy notice described the Supabase reading history as a future plan. Both now say what actually happens: each reading (score, tier, region, signal scores, nothing personal) is saved for charting, and some sources are fetched by our own server.</li>
+    </ul>
+    <h3>🩺 Checks</h3>
+    <ul>
+      <li>Inline scripts parse clean on every page. Unit tests for the Worker (Polymarket filter, football mapping, caching, stale fallback, no token leak) and for team matching and UK time, run under London, New York and Tokyo clocks. Headless render with the network blocked to check every fallback state.</li>
+    </ul>
+    <h3>🔄 Deploy</h3>
+    <ul>
+      <li>Built directly in the GitHub repo on a <code>v3.30</code> branch and reviewed on a Cloudflare preview before merging. The old <code>deploy-test/</code> rsync step is retired. New Cloudflare secret needed: <code>FOOTBALL_DATA_TOKEN</code>.</li>
+    </ul>
+  </details>
+
+  <details class="release">
+    <summary class="release-head">
+      <div class="release-ver">v3.29</div>
       <div class="release-tag">🗑 Delete "It's not coming home" banner — World Cup 2026 fully off the site · 20 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Tournament's over — Argentina beat Spain in the Final yesterday. The v3.28 mourning banner has served its purpose. Ripped it out entirely. World Cup 2026 is now fully off the visible dashboard.</p>
@@ -203,7 +277,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.28 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.28</div>
       <div class="release-tag">💔 World Cup tracker → "IT'S NOT COMING HOME" banner · polls refreshed · Lottery now live · summer-break fixes · 16 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Post-semi-final release. England lost <b>1-2 to Argentina on Wednesday 15 July</b> — Anthony Gordon opened, Enzo Fernández equalised from range, Lautaro Martínez headed the winner in the third minute of injury time. First England World Cup Final since 1966 was 90 seconds away. The entire World Cup 2026 tracker (v3.24–v3.26) has been ripped out and replaced with a long mourning-red <b>"IT'S NOT COMING HOME"</b> banner. Also refreshed Westminster polls + leader approval to the latest YouGov numbers, and finally fixed the National Lottery module which had been a modelled fake for months.</p>
@@ -250,7 +324,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.27 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.27</div>
       <div class="release-tag">⚽ "Last Results · Football" fixed for summer / tournament · 🐎 horses now leans summer-flat · 6 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">User flagged the Calendar &amp; Sport row was serving stale nonsense: the "Last Results · Football" card was quietly falling through to a <b>hardcoded fallback of five 2024 Premier League fixtures</b> (Arsenal 2-1 Chelsea, Man City 1-1 Liverpool, etc.) because the domestic season ended in May and the fetch window was too narrow to catch any of the World Cup that's actually on. And the "Recent UK Racing" card was rotating through the whole pool without seasonal awareness — showing Cheltenham Gold Cup (March) in the middle of Ascot / Newmarket July Festival. Fixed both.</p>
@@ -292,7 +366,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.26 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.26</div>
       <div class="release-tag">🦁 World Cup tracker → Quarter-Finals · England 3-2 Mexico R16 · v Norway Sat 11 Jul · 6 Jul 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Post-Mexico refresh. England beat Mexico <b>3-2 at the Azteca yesterday</b> in a Round-of-16 classic — Bellingham brace inside 98 seconds, Kane penalty, then hung on for 40+ minutes with 10 men after Quansah's second-half red. Now in the quarter-final v <b>Norway on Saturday 11 July at Arrowhead, Kansas City</b>. The World Cup tracker was still frozen on the group stage — pivoted the whole module to a knockout view, updated the fixture list, and broadened the news keyword filter for Norway / quarter-final / last-eight stories.</p>
@@ -318,7 +392,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.25 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.25</div>
       <div class="release-tag">🪑 Labour Leadership Challenge tracker removed — Burnham coronation, no contest · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Political-desk clarity update. It's now clear there won't be a Labour leadership contest — Burnham is expected to be crowned rather than face a race. So the <i>Labour Leadership Challenge · The Path To Number 10</i> tracker (v3.23) is redundant and has been binned in one clean cut. The dashboard now sits quieter on the politics side: polls + leader-approval widgets remain, and Burnham's row in the leader-approval table has been relabelled to reflect his new standing.</p>
@@ -354,7 +428,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.24 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.24</div>
       <div class="release-tag">⚽ Firm Factor fix (was blind to World Cup) · 🏆 new World Cup 2026 tracker module · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro"><b>Significant bug fix + new module.</b> The user flagged that the Firm Factor card has been flatlining around zero for days, despite the 2026 FIFA World Cup being in full swing. Audit confirmed: <code>fetchAllFootballEvents()</code>'s league-ID list was missing <b>4346 (FIFA World Cup)</b> entirely, so the gauge was completely blind to the tournament — England's 4-2 opener against Croatia on 17 June didn't move the needle by a single point. Three surgical fixes to Firm Factor, plus a new dedicated World Cup tracker module sitting above the Labour Leadership section.</p>
@@ -386,7 +460,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.23 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.23</div>
       <div class="release-tag">🪑 Makerfield → Labour Leadership Challenge tracker · Burnham wins · polls refreshed YouGov 14-15 Jun · 19 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Major post-Makerfield update. Andy Burnham won the Makerfield by-election on 18 June 2026 with a comfortable margin over Reform UK's Rob Kenyon (pre-poll: 49% to 37%). The by-election tracker has therefore been <b>pivoted in place</b> into a <i>Labour Leadership Challenge · The Path To Number 10</i> tracker — same module, same layout, new purpose: track the procedural and political run-up to the leadership election that will decide the next prime minister. Module is now permanently visible (auto-hide removed). Westminster polls refreshed to the latest YouGov / PollCheck numbers.</p>
@@ -421,7 +495,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.22 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.22</div>
       <div class="release-tag">📊 Data refresh — Makerfield 11→14 final ballot · YouGov 31 May–1 Jun polls · May 2026 leader approval · gauge audit fixes · 4 Jun 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Mid-campaign refresh ahead of the 18 June Makerfield by-election. The full statement of persons nominated is now published — <b>14 candidates standing</b>, three more than we previously listed (we'd missed Ed Gemmell · Climate Party, John Alfred Dyer · Independent, Paul Richard Gould · Independent — and Robert Pownall stood as an Independent, not for Protect The Wild). Westminster voting intention and leader approval refreshed to the latest YouGov / PollCheck numbers. While we were in there, ran a quick sanity sweep across the live data pipelines and fixed four pieces of dead weight that were quietly misleading or wasting fetch budget.</p>
@@ -467,7 +541,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.21 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.21</div>
       <div class="release-tag">📐 Money &amp; Predictions polish — fix section-title overlap, fill 4 grid gaps (Polymarket 6 → 8 + 2 KEEP CALM fillers) · 27 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Two visual snags in the v3.19 Money &amp; Predictions reshape needed sorting. First, the combined <i>"💷 Money &amp; 🎯 Predictions"</i> section title was clipping into the top edge of the first card — caused by a negative <code>-4px</code> bottom margin on <code>.feature-title</code> plus a <code>-8px</code> top margin on the polymarket wrap. Second, the layout had <b>4 visible empty slots</b>: 2 in the finance row (Crypto + FX in a 4-column grid) and 2 in the polymarket row (6 cards in a 4-column grid trails off in row 2).</p>
@@ -494,7 +568,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.20 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.20</div>
       <div class="release-tag">🗳️ Makerfield full ballot · 🔍 Search Panic pool 37 → ~70 with dynamic seasonal/shopping gates · 27 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Two-part refresh. Wigan Council has now published the statement of persons nominated for the Makerfield by-election — <b>11 candidates standing</b>, including <b>Count Binface</b> entering the race — so the candidates panel has been updated from a 6-row "declared / expected" sketch to the final ballot. And the Search Panic Index has been visibly broken for weeks (same five generic queries no matter the weather), so the query pool has been roughly doubled with proper temperature, calendar and day-of-week gates so it actually reflects what the country is typing.</p>
@@ -529,7 +603,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.19 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.19</div>
       <div class="release-tag">💷 Money &amp; Predictions reshape — drop Stocks/Pharma, bump Polymarket to 6, single combined header · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Reshaping the Finance &amp; Markets row. Two of the four finance cards (Stock Indices · Today's Moves, Tech &amp; Pharma Movers) were permanently <i>Modelled</i> and offered weak signal — dropped them. Bumped the Polymarket section from 4 to 6 live UK prediction markets to fill the space. Combined the two clipping section headers into a single cleaner <b>"💷 Money &amp; 🎯 Predictions"</b> banner.</p>
@@ -556,7 +630,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.18 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.18</div>
       <div class="release-tag">🚑 HOTFIX — gauge offline after v3.17; restored swallowed feature-row + filler functions · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Hotfix to restore the gauge after v3.17 took it offline. The NCB removal regex used a greedy non-greedy <code>.*?</code> between the NCB header comment and the closing brace of <code>_zeitgeistMountWidget</code> — which inadvertently swallowed <b>five completely unrelated functions</b> that happened to be code-positioned in the same region: <code>_envFeatureHtml</code>, <code>_financeFeatureHtml</code>, <code>_polymarketFeatureHtml</code>, <code>KEEP_CALM_FILLERS</code>, and <code>_fillerCardHtml</code>. The render loop calls all five — they were missing → silent ReferenceError → render aborted → gauge never appeared.</p>
@@ -579,7 +653,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.17 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.17</div>
       <div class="release-tag">🪓 Killed NCB Zeitgeist module + Makerfield candidates locked in · 20 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Two changes. (1) Killed the <b>Zeitgeist · No Context Brits Pulse</b> module entirely — it's been silently falling back to modelled mode for over a year because Nitter (the X mirror we relied on) was effectively destroyed by X's auth crackdown in 2024. A module that promises live data and never delivers it is worse than no module. Stripped it cleanly. (2) <b>Makerfield candidates panel</b> refreshed — Burnham and Kenyon were both officially confirmed yesterday (19 May).</p>
@@ -604,7 +678,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.16 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.16</div>
       <div class="release-tag">🗳️ Makerfield candidates refresh — Monster Raving Loony confirmed · 18 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Morning candidate check before nominations close. Overnight, <b>Howling "Laud" Hope</b> of the Official Monster Raving Loony Party became one of only two officially-confirmed candidates alongside Burnham. Refreshed the panel, refined Burnham's status to reflect that NEC approval (15 May) is the gate to the formal selection meeting on 21 May, and added the close-of-nominations date to the stake paragraph.</p>
@@ -626,7 +700,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.15 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.15</div>
       <div class="release-tag">🐛 Filler bug — duplicate KEEP CALM cards side-by-side, fixed · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">User spotted two identical "KEEP CALM · and queue politely" filler cards sitting next to each other in a Sport &amp; Live Events row. Investigated and found a real bug in the filler-rotation logic — every 8 seconds the rotation interval was picking a single pool item and applying it to <i>every</i> <code>.filler-rotating</code> card on the page. So after the first rotation tick, all visible fillers became identical, regardless of where they were placed.</p>
@@ -653,7 +727,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.14 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.14</div>
       <div class="release-tag">📝 Essays page — accordion + Expand/Collapse all + deep-link auto-open · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">As the essay count climbed past five, the Essays page was becoming a long scroll — Essay 005 alone is 1,300 words with two big inline SVG charts. Applied the same accordion pattern we use on the Changelog: each essay collapses into a preview card showing pills + title + deck + chevron, with one click to expand. Latest essay opens by default; older ones sit as cards beneath.</p>
@@ -681,7 +755,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.13 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.13</div>
       <div class="release-tag">🗳️ Makerfield By-Election Tracker + Burnham added to leader approval · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Two changes to capture the moment. The leadership-challenge story was largely missed by the gauge during 12–15 May (we wrote about why in <a href="./news.html#post-005" style="color:var(--accent)">Essay 005</a>) — this release adds dedicated infrastructure so the next month of the Makerfield campaign gets properly tracked, and adds Andy Burnham to the leader approval module so the only politician in net-positive territory is no longer missing from the chart.</p>
@@ -710,7 +784,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.12 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.12</div>
       <div class="release-tag">📝 Essay № 005 "Vote Burnham, Get Starmer Out" — Makerfield paradox + gauge post-mortem · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">A new essay built from the post-election data. Opens on the peculiar paradox that the only path to evicting the Labour Prime Minister now runs through a Labour by-election in Wigan, for which Reform voters cannot vote. Pivots into a forensic walk through the last 13 days of gauge snapshots — what showed up (election week + Unite the Kingdom rally), and what didn't (the entire Westminster leadership-challenge story).</p>
@@ -733,7 +807,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.11 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.11</div>
       <div class="release-tag">🗳️ Post-election scan — Labour decimated, Reform clean up, Election Tracker stood down · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">The 7 May 2026 locals are done. <b>Labour got decimated to a historic low</b>, <b>Reform are the headline winners</b>, the <b>Greens held up better than expected</b>, the <b>Conservatives had an OK-not-great night</b>, and the <b>Lib Dems quietly hoovered up Tory shires</b>. Numbers updated, tracker stood down.</p>
@@ -774,7 +848,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.10 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.10</div>
       <div class="release-tag">📊 Polls refresh — Greens surge, Labour collapse · Election Tracker auto-hide tomorrow · 8 May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Results-day refresh. Council counts have been coming in overnight, and the most recent national polling (YouGov 4-5 May 2026) is now in the dashboard. The headline isn't the Reform lead — that was already known. The headline is what's happened to the other parties: <b>Greens have nearly doubled (8% → 16%)</b> and <b>Labour has collapsed below the Conservatives (24% → 18%)</b>. Pulled the leader approval table to the same May 2026 reading at the same time. Election Day Tracker stays on for today only and auto-hides tomorrow morning.</p>
@@ -815,7 +889,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.9 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.9</div>
       <div class="release-tag">🗳️ Election Day Tracker + Essays № 003 "What the Cousins Know" & № 004 "It Used to Be About Bins" + Polanski fix + changelog reorder · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">A consolidated release timed for tomorrow's UK local elections (7 May 2026). Headline change is a new <b>Election Day Tracker</b> that auto-shows under the main gauge during election windows, with live headlines and a polarisation meter. Bundled with the third essay (this one about Florida), a long-overdue refresh of the leader approval table (Polanski in, all 6 figures updated), the changelog's version-ordering cleanup, and a quick fix for the Florida Subreddits card.</p>
@@ -868,7 +942,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.8 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.8</div>
       <div class="release-tag">🇺🇸 Florida Man Index — LIVE on isitkickingoff.com/florida.html · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">After eight versions of dev iteration, the <b>🇺🇸 Florida Man Index</b> is live. Britain's satirical eye on our cousins now has a permanent home at <a href="./florida.html" style="color:var(--accent)">/florida.html</a> — 52 modules across 11 themed groups, its own Atlantic-time gauge, its own tier scale (Sweet Tea → Hold My Beer), its own region selector (Miami / Tampa / Orlando / Jax / Keys / Panhandle), and its own live-data layer for hurricanes, Reddit chatter, SpaceX launches, FBI/ICE press feeds and Florida-flavoured news. The UK and Florida gauges remain entirely independent — no shared signals, no shared aggregation. Two cousins, two dashboards.</p>
@@ -892,7 +966,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.7 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.7</div>
       <div class="release-tag">🐊 Gator Incident Index — wide card + top 5 daily nuisance reports · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">The Gator Incident Index was the funniest tile on the Florida page but visually it was the same size as everything else and only listed three rotating reports. Promoted to a <b>wide (2-cell) card</b> and bumped the daily list to the <b>top 5 nuisance reports</b>. Event pool tripled to 15 entries — pickleball court invasions, Walmart car-park crossings, wedding photobombs, doggy door breaches, the works.</p>
@@ -916,7 +990,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.6 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.6</div>
       <div class="release-tag">🇺🇸 Florida grid — fillers spread across rows instead of clustering at the end · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">Visual polish to the Florida dashboard. When a signal group's cell-count didn't divide evenly into 4-column rows, the trailing-fill logic appended Americana filler banners to the end of the group — meaning all of them stacked side-by-side in a single row of identical-looking joke cards. User flagged it: three banner fillers (Case Dismissed, 88 MPH, Freedom Fries) sat in a row, breaking the visual rhythm. Fix: <b>interleave fillers throughout the group</b>, not append.</p>
@@ -936,7 +1010,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v3.0 <span class="stamp">live</span></div>
+      <div class="release-ver">v3.0</div>
       <div class="release-tag">🇺🇸 Florida Man Index — sister gauge for our cousins · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">First major version bump since v2 launch. The site now has a <b>second dashboard</b> — <a href="./florida.html" style="color:var(--accent)">/florida.html</a> — a satirical Florida-flavoured aggravation gauge that runs entirely independently of the UK index. Britain watches the cousins. Stars-and-stripes themed, 28 signal modules across 9 groups, its own tier scale (Sweet Tea → Hold My Beer), its own Florida-specific blurbs, its own region selector (Miami / Tampa / Orlando / Jax / Keys). Same toolkit as the UK gauge — gauge SVG, signal-card pattern, methodology table — re-skinned and re-modelled for Florida.</p>
@@ -981,7 +1055,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v2.18 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.18</div>
       <div class="release-tag">🛍️ Shop nav button removed — keeping the shop offline for now · May 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">The Shop has been pulled from the top navigation across the whole site. Print fulfillment, stock decisions and the merch range are still being worked through, so rather than leave a half-baked shop in the nav, we've taken it down for now. The <code>shop.html</code> page still exists in the project but is no longer linked from anywhere on the live site. We'll bring it back when the merch story is sorted.</p>
@@ -1001,7 +1075,7 @@
 
   <details class="release">
     <summary class="release-head">
-      <div class="release-ver">v2.16 <span class="stamp">live</span></div>
+      <div class="release-ver">v2.16</div>
       <div class="release-tag">🛡️ UK Threat Level fix — was confidently mis-reading CRITICAL when actual was SEVERE · Apr 2026</div>
     <svg class="chev" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,3 11,8 6,13"/></svg></summary>
     <p class="intro">User caught a serious accuracy bug. Yesterday the UK national terrorism threat level was raised to <b>SEVERE</b> — but the dashboard's UK Threat Level module was confidently reporting <b>CRITICAL</b>. Over-reporting a security signal by one full tier is exactly the kind of mistake that erodes trust on a satirical-but-data-honest site. Investigated, fixed, regression-tested.</p>

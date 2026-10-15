@@ -4,6 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Snapshot · Is It Kicking Off?</title>
+<meta name="robots" content="noindex,follow" />
+<!-- v3.30 — CSP. This page renders data from sessionStorage only, so it needs
+     nothing beyond its own inline script/styles and the analytics beacon. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data:;
+  connect-src 'self' https://cloudflareinsights.com;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+" />
 <meta name="description" content="A narrative snapshot of the UK Kick-Off Index right now — what the score means, which signals are firing, and the funny verdict." />
 <meta name="theme-color" content="#07090c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📸%3C/text%3E%3C/svg%3E" />
@@ -81,6 +94,9 @@
   .sig-row .pts{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);text-align:right}
   .sig-row .lv{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;text-align:right;color:var(--ink-faint)}
   .sig-row .lv.live{color:var(--accent)}
+  .sig-row .lv.calculated{color:var(--ink-dim)}
+  .sig-row .lv.estimate{color:#ffb347}
+  .sig-row .lv.satire{color:#d98cff}
   @media (max-width:560px){
     .sig-row{grid-template-columns:30px 1fr 60px 50px;gap:8px;padding:8px 10px}
     .sig-row .body .nm{font-size:11px}
@@ -171,14 +187,46 @@
   const root = document.getElementById('snap-root');
   if (!root) return;
 
-  // ---- Helpers ----
+  // ---- v3.30: sanitise everything before it goes near innerHTML ----
+  // The snapshot carries third-party text (Reddit titles, chart entries,
+  // TV listings, news headlines). Every string is HTML-escaped once here,
+  // numbers are coerced, and the tier colour must be a plain hex value.
+  const esc = v => String(v == null ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  const num = (v, d = 0) => Number.isFinite(+v) ? +v : d;
+  const safeColor = c => /^#[0-9a-f]{3,8}$/i.test(String(c || '')) ? String(c) : '#ff8a1f';
+  const LABELS = ['live', 'calculated', 'estimate', 'satire'];
+  s = {
+    ts:        typeof s.ts === 'string' && !isNaN(Date.parse(s.ts)) ? Date.parse(s.ts) : num(s.ts, Date.now()),
+    score:     Math.round(num(s.score)),
+    tier:      esc(s.tier),
+    tierBlurb: esc(s.tierBlurb),
+    tierColor: safeColor(s.tierColor),
+    region:    { name: esc(s.region && s.region.name), flag: esc(s.region && s.region.flag) },
+    signals:   (Array.isArray(s.signals) ? s.signals : []).filter(x => x && typeof x === 'object').map(x => ({
+      key:          String(x.key || ''),
+      icon:         esc(x.icon),
+      title:        esc(x.title),
+      valueLabel:   esc(x.valueLabel),
+      subLabel:     esc(x.subLabel),
+      contribution: num(x.contribution),
+      live:         !!x.live,
+      label:        LABELS.includes(x.label) ? x.label : (x.live ? 'live' : 'estimate'),
+    })),
+  };
+
+  // ---- Helpers (v3.30: UK time, whatever the reader's clock says) ----
   const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const time = new Date(s.ts);
-  const hour = time.getHours();
-  const dow  = time.getDay();
-  const fmtClock = d => d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
-  const fmtDate  = d => `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+  const ukP = {};
+  for (const p of new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/London', weekday:'long',
+      day:'numeric', month:'long', hour:'2-digit', minute:'2-digit', hourCycle:'h23' }).formatToParts(time)) ukP[p.type] = p.value;
+  const ukHour = ukP.hour === '24' ? '00' : ukP.hour;
+  const hour = +ukHour;
+  const dow  = days.indexOf(ukP.weekday);
+  const fmtClock = () => `${ukHour}:${ukP.minute}`;
+  const fmtDate  = () => `${ukP.weekday} ${ukP.day} ${ukP.month}`;
 
   // ---- Story generation ----
   const tierLow  = s.score < 31;
@@ -231,7 +279,7 @@
     social:    sig => `social media is humming at <b>${sig.valueLabel}</b>`,
     icecream:  sig => `the McFlurry machine is, predictably, broken at <b>${sig.valueLabel}</b>`,
   };
-  const sentenceFor = sig => (narrative[sig.key] || (s => `${s.title} (${s.valueLabel})`))(sig);
+  const sentenceFor = sig => (Object.prototype.hasOwnProperty.call(narrative, sig.key) ? narrative[sig.key] : (x => `${x.title} (${x.valueLabel})`))(sig);
 
   let body = `${intro} ${verdictLine}`;
   if (top){
@@ -258,7 +306,7 @@
       <div class="meta-row">
         <span class="pill">${s.region.flag} ${s.region.name}</span>
         <span class="pill">${fmtDate(time)}</span>
-        <span class="pill">${fmtClock(time)} GMT</span>
+        <span class="pill">${fmtClock(time)} UK time</span>
       </div>
     </section>
 
@@ -278,7 +326,7 @@
               <span class="vl">${sig.valueLabel} · ${sig.subLabel}</span>
             </div>
             <span class="pts">+${sig.contribution.toFixed(1)} pts</span>
-            <span class="lv ${sig.live?'live':''}">${sig.live?'live':'modelled'}</span>
+            <span class="lv ${sig.label}">${sig.label}</span>
           </div>`).join('')}
       </div>
     </section>
